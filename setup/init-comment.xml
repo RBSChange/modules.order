@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<script>
+	<binding fileName="modules/list/persistentdocument/import/list_binding.xml" />
+	<binding fileName="modules/notification/persistentdocument/import/notification_binding.xml" />
+	<systemfolder module="list" relatedmodule="order">
+		<staticlist listid="modules_order/commentreminderreferences" 
+			label="&amp;modules.order.bo.general.list.Comment-reminder-references;"
+			description="&amp;modules.order.bo.general.list.Comment-reminder-references;">
+			<staticitem label="&amp;modules.order.bo.general.list.comment-reminder-refrence-payment;" value="payment" />
+			<staticitem label="&amp;modules.order.bo.general.list.comment-reminder-refrence-shipment;" value="shipment" />
+		</staticlist>
+		<staticlist listid="modules_order/commentreminderselections" 
+			label="&amp;modules.order.bo.general.list.Comment-reminder-selections;"
+			description="&amp;modules.order.bo.general.list.Comment-reminder-selections;">
+			<staticitem label="&amp;modules.order.bo.general.list.comment-reminder-selection-random;" value="random" />
+			<staticitem label="&amp;modules.order.bo.general.list.comment-reminder-selection-all;" value="all" />
+		</staticlist>
+	</systemfolder>
+	<systemfolder module="notification" relatedmodule="order">
+		<notification codename="modules_order/comment-reminder"
+			label="Suggestion de commenter les produits commandés"
+			availableparameters="{reminderProductBlock}, {orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			subject="Donnez votre avis"
+			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
+			body="Vous avez commandé dernièrement les produits suivants. Vous pouvez publier votre avis les concernant en suivant les liens indiqués : {reminderProductBlock}"
+			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			template="default"
+			senderUsername="no-reply" />
+	</systemfolder>
+</script>

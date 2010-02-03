@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel>
+	<section labeli18n="modules.order.bo.general.Order-informations">
+		<sectionrow labeli18n="modules.order.bo.general.Website" id="website" />
+		<sectionrow labeli18n="modules.order.bo.general.Reference" id="reference" />
+		<sectionrow labeli18n="modules.order.bo.general.Date" id="creationdate" />
+		<field name="orderStatus" />
+		<sectionrow labeli18n="modules.order.document.order.ShippingMode" id="shippingMode" />
+		<field name="packageTrackingNumber" anonid="field_packageTrackingNumber" id="order_order_packageTrackingNumber" labeli18n="modules.order.bo.general.Package-tracking-number" type="text" />
+		<field name="commentadmin" type="longtext" />
+		<field name="billBoUrl" type="billgenerator" />
+	</section>
+	<section labeli18n="modules.order.bo.general.Customer">
+		<section class="customer" />
+		<section labeli18n="modules.order.bo.general.Billing-address">
+			<sectionrow id="billingAddressLabel" />
+			<sectionrow id="billingAddressLine1" />
+			<sectionrow id="billingAddressLine2" />
+			<sectionrow id="billingAddressLine3" />
+			<sectionrow id="billingAddressZipAndCity" />
+			<sectionrow id="billingAddressProvince" />
+			<sectionrow id="billingAddressCountry" />
+			<sectionrow id="billingAddressPhone" />
+			<sectionrow id="billingAddressFax" />
+		</section>
+		<section labeli18n="modules.order.bo.general.Shipping-address">
+			<sectionrow id="shippingAddressLabel" />
+			<sectionrow id="shippingAddressLine1" />
+			<sectionrow id="shippingAddressLine2" />
+			<sectionrow id="shippingAddressLine3" />
+			<sectionrow id="shippingAddressZipAndCity" />
+			<sectionrow id="shippingAddressProvince" />
+			<sectionrow id="shippingAddressCountry" />
+			<sectionrow id="shippingAddressPhone" />
+			<sectionrow id="shippingAddressFax" />
+		</section>
+	</section>
+
+	<section labeli18n="modules.order.bo.general.Order-details" class="lines" />
+	<section labeli18n="modules.order.bo.general.Amount">
+		<sectionrow labeli18n="modules.order.bo.general.Sub-total" id="subTotal" />
+		<sectionrow labeli18n="modules.order.frontoffice.Coupon-name" id="couponName" />
+		<sectionrow labeli18n="modules.order.frontoffice.Coupon-value" id="couponValue" />
+		<sectionrow labeli18n="modules.order.bo.general.Shipping-fees" id="shippingFees" />
+		<sectionrow labeli18n="modules.order.bo.general.Billing-mode" id="billingMode" />
+		<sectionrow labeli18n="modules.order.bo.general.Billing-fees" id="billingFees" />
+		<sectionrow labeli18n="modules.order.bo.doceditor.panel.carts.Tva-amounts" id="tvaAmounts" />
+		<sectionrow labeli18n="modules.order.bo.general.Total-to-pay" id="totalAmount" />
+	</section>
+	<section labeli18n="modules.order.bo.general.Coupon" class="couponSection">
+		<sectionrow labeli18n="modules.order.bo.general.Coupon-name" id="couponSectionName" />
+		<sectionrow labeli18n="modules.order.bo.general.Coupon-description" id="couponSectionDescription" />
+		<sectionrow labeli18n="modules.order.bo.general.Coupon-code" id="couponSectionCode" />
+		<sectionrow labeli18n="modules.order.bo.general.Coupon-reduction" id="couponSectionValue" />
+	</section>
+	<xul>
+		<javascript>
+			<constructor><![CDATA[
+				var me = this
+				this.fields['orderStatus'].addEventListener('fieldChanged', function (event) {me.orderStatusChanged(event);}, true);
+			]]></constructor>
+			<field name="mPropIds">[
+				"billingAddressLabel",
+				"billingAddressLine1",
+				"billingAddressLine2",
+				"billingAddressLine3",
+				"billingAddressZipAndCity",
+				"billingAddressProvince",
+				"billingAddressCountry",
+				"billingAddressPhone",
+				"billingAddressFax",
+				"shippingAddressLabel",
+				"shippingAddressLine1",
+				"shippingAddressLine2",
+				"shippingAddressLine3",
+				"shippingAddressZipAndCity",
+				"shippingAddressProvince",
+				"shippingAddressCountry",
+				"shippingAddressPhone",
+				"shippingAddressFax",
+				"website",
+				"reference",
+				"creationdate",
+				"shippingMode",
+				"subTotal",
+				"couponName",
+				"couponValue",
+				"shippingFees",
+				"billingMode",
+				"billingFees",
+				"tvaAmounts",
+				"totalAmount",
+				"couponSectionName",
+				"couponSectionDescription",
+				"couponSectionCode",
+				"couponSectionValue",
+			]</field>
+
+			<method name="orderStatusChanged">
+				<body><![CDATA[
+					
+				]]></body>
+			</method>
+
+			<method name="fireInitializeComplete">
+				<parameter name="result" />
+				<body><![CDATA[	
+					// Information.
+					this.mDocumentId = result.contents.id;
+					var informations = result.contents.informations;
+					var node;
+					for each (var name in this.mPropIds)
+					{
+						node = document.getAnonymousElementByAttribute(this, "anonid", name);
+						if (informations[name])
+						{
+							node.setAttribute('value', informations[name]);
+							node.parentNode.removeAttribute('collapsed');
+						}
+						else
+						{
+							node.parentNode.setAttribute('collapsed', 'true');
+						}
+					}
+					
+					var customerSection = document.getAnonymousElementByAttribute(this, 'class', 'customer');
+					customerSection.setAttribute('customerId', informations['customerId']);
+					customerSection.setAttribute('email', informations['email']);
+					
+					if (!informations['couponName'])
+					{
+						document.getAnonymousElementByAttribute(this, 'class', 'couponSection').setAttribute('collapsed', 'true');
+					}
+					else
+					{
+						document.getAnonymousElementByAttribute(this, 'class', 'couponSection').removeAttribute('collapsed');
+					}
+					
+					// Lines handling.
+					var section = document.getAnonymousElementByAttribute(this, 'class', 'lines');
+					var lines = result.contents.lines;
+					var line;
+					var row;
+					if (section.childNodes.length == 0)
+					{
+						row = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:row');
+						row.setAttribute('linetype', 'grid-header');
+						section.appendChild(row);
+					}
+					for (var j = 0; j < lines.length; j++)
+					{
+						line = lines[j];
+						row = section.childNodes[j+1];
+						if (row == null)
+						{
+							row = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:row');
+							section.appendChild(row);
+						}
+						else
+						{
+							row.removeAttribute('collapsed');
+						}
+						
+						for (var name in line)
+						{
+							row.setAttribute(name, line[name]);
+							if (line[name] && line[name] != '')
+							{
+								row.removeAttribute(name+'hidden');
+							}
+							else
+							{
+								row.setAttribute(name+'hidden', true);
+							}
+						}
+					}
+					while (row = section.childNodes[j+1])
+					{
+						row.setAttribute('collapsed', 'true');
+						j++;
+					}
+					
+					// Populate fields.
+					var fields = this.fields;
+					var valid = true;
+					var field = null;
+					this.documentEditor.documentInfos.revision = result.contents.documentversion;
+					for (var name in fields)
+					{
+						field = fields[name];
+						if (name in result.contents && result.contents[name] !== null)
+						{
+							field.setInitialValue(result.contents[name]);
+						}
+						else
+						{
+							field.setInitialValue("");
+						}
+						valid = valid && field.valid; 
+					}
+					
+					this.modified = false;
+					this.error = !valid;
+					this.updateCommandsUI();
+					
+					this.mInitialized = true;
+					this.fireEvent("panelInitializeComplete");
+					this.gotoTop();
+				]]></body>
+			</method>
+
+			<method name="getUpdateParameters">
+				<body><![CDATA[
+					var documentInfos = this.documentEditor.documentInfos;
+					 
+					var attributes = {
+						action: 'UpdateJSON',
+						cmpref: documentInfos.id, 
+						lang : documentInfos.vo,
+						documentversion: documentInfos.revision,
+						documentproperties: this.mFieldNames.join(',')
+					};
+
+					var fields = this.fields;
+					var field = null;
+					for (var name in fields)
+					{
+						field = fields[name];
+						if (field.modified) 
+						{
+							attributes[name] = field.value;
+						}
+					}
+
+					if ("preparePropertiesValues" in this)
+					{
+						this.preparePropertiesValues(attributes);
+					}
+					return attributes;
+				]]></body>
+			</method>
+		</javascript>
+	</xul>
+</panel>

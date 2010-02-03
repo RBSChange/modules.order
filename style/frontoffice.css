@@ -1,0 +1,177 @@
+a.button{
+	color: #696a12/*@var orderbuttonfgcolor*/;
+	border-color: #ccc/*@var orderbuttonbdcolor*/;
+	background-color: #b9c101/*@var orderbuttonbgcolor*/;
+	font-weight: bold;
+}
+ol.steps li dl{
+	color: #6e6a12/*@var orderstepfgcolor*/;
+}
+ol.steps li dl dd{
+	border-color: #ccc/*@var orderstepbdcolor*/;
+	background-color: #b9c101/*@var orderstepbgcolor*/;
+}
+ol.steps li dl dd.current{
+	background-image: url(/media/frontoffice/cart.gif) /*@var ordercurrentstepbgimage*/;
+	background-color: #6e6a12/*@var ordercurrentstepbgcolor*/;
+	border-color: #ccc/*@var ordercurrentstepbdcolor*/;
+	color: #fff/*@var ordercurrentstepfgcolor*/;
+}
+.pricetotal{
+	font-size: 1.2em/*@var orderpricetotalsize*/;
+	background-color: #b9c101/*@var orderpricetotalbgcolor*/;
+	color: #fff/*@var orderpricetotalfgcolor*/;
+}
+a.button{
+	text-decoration: none;
+	padding: 3px 5px 3px 5px;
+	border-width: 1px;
+	border-style: solid;
+	text-align: center;
+}
+a.button:hover{
+	text-decoration: none;
+}
+p.bottom-buttons{
+	text-align: center;
+	margin-top: 18px;
+}
+.column-one{
+	float: left;
+	display: block;
+	width: 49%;
+}
+.column-two{
+	float: right;
+	display: block;
+	width: 49%;
+}
+ol.steps{
+	width: 37.5em;
+	margin: 0 auto;
+}
+ol.steps li{
+	width: 6.5em;
+	float: left;
+	margin-right: 1em;
+	text-align: center;
+}
+ol.steps li.last{
+	margin-right: 0;
+}
+ol.steps li dl{
+	display: block;
+	height: 6em;
+}
+ol.steps li dl dd{
+	text-decoration: none;
+	font-size: 1.6em;
+	font-weight: bold;
+	padding: 4px 0 4px 0;
+	display: block;
+	border-width: 1px;
+	border-style: solid;
+}
+ol.steps li dl dd.current{
+	background-repeat: no-repeat;
+	background-position: bottom right;
+	border-width: 1px;
+	border-style: solid;
+}
+ol.steps li dl dt{
+	padding-top: 2px;
+}
+ol.delivery{
+	float: left;
+	display: block;
+	width: 100%;
+}
+ol.delivery li{
+	margin-bottom: 10px;
+}
+ol.delivery li label{
+	display: block;
+	width: 100%;
+	font-weight: bold;
+}
+ol.delivery li form{
+	margin-top: 10px;
+}
+ol.delivery ul li{
+	margin: 0px;
+}
+.order-recap-information{
+	display: block;
+	width: 100%;
+	margin-bottom: 20px;
+}
+.payment-information-block,.block-shipping-mode,.block-payment-mode,.block-confirm-order{
+	float: left;
+	display: block;
+	width: 100%;
+	margin-bottom: 20px;
+}
+.block-confirm-order ul.mini-navigation li .button{
+	display: block;
+	float: right;
+	margin-top: 10px;
+}
+.payment-information-block dd,.payment-information-block dt,.shipping-mode-block dd,.payment-mode-block dd,.shipping-mode-block dt,.payment-mode-block dt{
+	width: 50%;
+	font-weight: bold;
+	text-align: right;
+	float: left;
+}
+.payment-information-block dt{
+	float: right;
+}
+.payment-information-block dd.total,.payment-information-block dt.total{
+	padding: 10px;
+	font-size: 1.4em;
+}
+.pricetotal{
+	white-space: nowrap;
+	font-weight: bold;
+}
+.modules-order .column-one h3.title,.modules-order .column-two h3.title,.modules-order .column-one h4.title{
+	margin-bottom: 6px;
+}
+.modules-order-ShortCart .ecom-block .content,.modules-order-Cartsummary .ecom-block .content{
+	text-align: center;
+}
+ul.cartsummary{
+	width: 100%;
+}
+ul.cartsummary li{
+	display: inline;
+}
+.modules-order-Cart table.normal select{
+	max-width: 86%;
+}
+.messages-form{
+	margin-bottom: 40px;
+}
+li.on1col{
+	clear: both;
+	width: 100%;
+}
+li.on2col{
+	float: left;
+	width: 49%;
+	margin-right: 2%;
+}
+li.on3col{
+	float: left;
+	width: 32%;
+	margin-right: 2%;
+}
+li.first{
+	clear: left;
+}
+li.last{
+	margin-right: 0;
+}
+
+@import url(/modules/order/style/frontoffice.!trident.5.css);
+@import url(/modules/order/style/frontoffice.trident.4.css);
+@import url(/modules/order/style/frontoffice.trident.5.css);

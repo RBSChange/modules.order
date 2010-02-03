@@ -1,0 +1,84 @@
+<div class="orderprocess billing">
+	<tal:block change:include="module 'order'; template 'Order-Inc-Process-NavigationTop'; type 'html';process cart/getOrderProcess" />
+	<form change:form="beanName billingStep">
+	<ul change:errors="" />
+
+	<p change:translate="modules.order.document.billingstepbean.Transaction-amount-overview-text" />
+	<br />
+	<div class="payment-information-block" id="payment" tal:define="shop cart/getShop">
+		<h4 change:h="" change:translate="modules.order.document.billingstepbean.Transaction-amount-overview-head" />
+		<dl>
+			<tal:block tal:condition="shop/getDisplayPriceWithoutTax">
+				<dd change:translate="&modules.order.frontoffice.Sub-total-withouttax-abrLabel;; currency shop/getCurrency">Sous-total HT :</dd>
+				<dt tal:content="cart/getFormattedSubTotalWithoutTax">120,00€</dt>
+			</tal:block>
+			<tal:block tal:condition="shop/getDisplayPriceWithTax">
+				<dd change:translate="&modules.order.frontoffice.Sub-total-withtax-abrLabel;; currency shop/getCurrency">Sous-total HT :</dd>
+				<dt tal:content="cart/getFormattedSubTotalWithTax">120,00€</dt>
+			</tal:block>
+
+			
+			<tal:block tal:condition="billingStep/coupon">
+				<dd change:translate="&modules.order.frontoffice.Coupon-nameLabel;" />
+				<dt><tal:block tal:content="billingStep/coupon" />
+					(<a class="link" change:actionlink="" block="order_billingStep" action="RemoveCoupon"><tal:block change:translate="modules.order.document.billingstepbean.RemoveCoupon" /> </a>)
+				</dt>
+				<dd change:translate="&modules.order.frontoffice.Coupon-valueLabel;" />
+				<dt tal:content="php:shop.formatPrice(billingStep.couponValue)" />
+			</tal:block>
+			
+			<tal:block tal:condition="cart/hasDiscount">
+				<dd change:translate="&modules.order.frontoffice.Discount-nameLabel;" />
+				<dt tal:content="cart/getFormattedDiscountTotalWithTax" />
+			</tal:block>
+			
+			<tal:block tal:condition="cart/getShippingMode">
+				<!-- Mode d'envoi -->
+				<dd change:translate="&modules.order.frontoffice.Shipping-modeLabel;" />
+				<dt tal:content="cart/getShippingMode/getLabel" />
+				<!-- Frais d'envoi -->
+				<dd change:translate="&modules.order.frontoffice.Shipping-feesLabel;" />
+				<dt tal:content="cart/getFormatedShippingPriceWithTax" />
+			</tal:block>
+		
+
+
+			<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-withtax-abrLabel;" />
+			<dt class="pricetotal" tal:content="cart/getFormattedTotalWithTax" />			
+		</dl>
+		
+
+	</div>
+
+	<tal:block tal:condition="cart/useCoupon">
+	<dl tal:condition="not: billingStep/coupon">
+		<dd change:translate="&modules.order.frontoffice.Coupon-codeLabel;" />
+		<dt>	
+			<input change:textinput="name coupon" size="10"/>
+			<input class="button" change:submit="name Refresh" label="&modules.order.document.billingstepbean.Refresh;" />
+		</dt>		
+	</dl>
+	</tal:block>
+	<br />
+	<h3 change:h="" change:translate="modules.order.document.billingstepbean.Mops-legend"/>
+	
+		
+	<ol id="paymentselector" style="clear: both">
+		<li tal:repeat="connectorFilter cart/getPaymentConnectors">
+
+			<input tal:condition="php:billingStep.selected(connectorFilter.getId(), repeat.connectorFilter.start)" checked="checked" id="mode_${connectorFilter/getId}" 
+				type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
+			<input tal:condition="php:!billingStep.selected(connectorFilter.getId(), repeat.connectorFilter.start)" id="mode_${connectorFilter/getId}" 
+				type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
+	
+			<label class="nocmx" for="mode_${connectorFilter/getId}">					
+				<tal:block tal:replace="connectorFilter/getConnector/getSelectionAsHtml" />
+			</label>
+		</li>
+	</ol>			
+		<p class="buttons">
+			<input class="button" change:submit="name Select" label="&modules.order.document.billingstepbean.Select;" />				
+		</p>
+	</form>
+	<a class="link" change:actionlink="" block="order_shippingStep"><tal:block change:translate="&modules.order.frontoffice.Back-to-previous-step;" /></a>
+</div>

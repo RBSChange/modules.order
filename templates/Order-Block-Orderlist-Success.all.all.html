@@ -1,0 +1,27 @@
+<h2 class="title" change:translate="&modules.order.frontoffice.Orderlist-title;" />
+<p change:translate="&modules.order.frontoffice.Orderlist-description;" />
+<table border="0" class="normal">
+	<thead>
+		<tr>
+			<th class="first" change:translate="&modules.order.frontoffice.Orderlist-order;" />
+			<th change:translate="&modules.order.frontoffice.Orderlist-date;" />
+			<th change:translate="&modules.order.frontoffice.Orderlist-billing-mode;" />
+			<th change:translate="&modules.order.frontoffice.Orderlist-price-with-tax;" />
+			<th change:translate="&modules.order.frontoffice.Orderlist-status;" />
+			<th class="last" change:translate="&modules.order.frontoffice.Orderlist-bill;" />
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="order orders" class="row-${repeat/order/odd}">	
+			<td><a change:link="document order" tal:content="order/getOrderNumber" /></td>
+			<td><tal:block change:datetime="order/getCreationdate" /></td>
+			<td tal:content="order/getBillingMode" />
+			<td class="pricettc" tal:content="php:order.formatPrice(order.getTotalAmountWithTax())">-</td>
+			<td tal:content="order/getOrderStatusLabel" />
+			<td>
+				<a tal:condition="order/getBill" change:download="document order/getBill" change:translate="&modules.order.frontoffice.Orderlist-bill;">Facture</a>
+				<span tal:condition="not: order/getBill" change:translate="&modules.order.frontoffice.Orderlist-billNotAvailable;">Facture non disponible</span>
+			</td>
+		</tr>
+	</tbody>
+</table>

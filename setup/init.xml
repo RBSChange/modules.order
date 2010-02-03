@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<script>
+	<binding fileName="modules/list/persistentdocument/import/list_binding.xml" />
+	<binding fileName="modules/notification/persistentdocument/import/notification_binding.xml" />
+	<binding fileName="modules/generic/persistentdocument/import/generic_binding.xml" />
+	<binding fileName="modules/order/persistentdocument/import/order_binding.xml" />
+	
+	<rootfolder module="preferences">
+		<orderpreferences />
+	</rootfolder>
+	
+	<systemfolder module="list" relatedmodule="order">	
+		<staticlist listid="modules_order/orderstatuses" 
+			label="&amp;modules.order.frontoffice.list.Order-statuses;"
+			description="&amp;modules.order.frontoffice.list.Order-statuses;">
+			<staticitem label="&amp;modules.order.frontoffice.status.Payment_SUCCESS;" value="PAYMENT_SUCCESS" />
+			<staticitem label="&amp;modules.order.frontoffice.status.Payment_WAITING;" value="PAYMENT_WAITING" />
+			<staticitem label="&amp;modules.order.frontoffice.status.Payment_FAILED;" value="PAYMENT_FAILED" />
+			<staticitem label="&amp;modules.order.frontoffice.status.Payment_DELAYED;" value="PAYMENT_DELAYED" />
+			<staticitem label="&amp;modules.order.frontoffice.status.Canceled;" value="CANCELED" />
+			<staticitem label="&amp;modules.order.frontoffice.status.Shipped;" value="SHIPPED" />
+		</staticlist>
+		
+		<staticlist listid="modules_order/qttfilter" 
+			label="Quantité de produit concerné par le filtre"
+			description="Quantité de produit concerné par le filtre">
+			<staticitem label="&amp;modules.order.bo.documentfilters.Qttfilter-one;" value="ONE" />
+			<staticitem label="&amp;modules.order.bo.documentfilters.Qttfilter-all;" value="ALL" />
+			<staticitem label="&amp;modules.order.bo.documentfilters.Qttfilter-none;" value="NONE" />
+		</staticlist>
+		
+		<staticlist listid="modules_order/dashboardshopstatisticscolums" 
+			label="Colonnes de statistiques"
+			description="Colones disponibles dnas le block du tableau de bord affichant les statistiques de commandes d'une boutique.">
+			<staticitem label="&amp;modules.order.bo.blocks.dashboardgeneralstatistics.column-orders;" value="orders" />
+			<staticitem label="&amp;modules.order.bo.blocks.dashboardgeneralstatistics.column-amount;" value="amount" />
+			<staticitem label="&amp;modules.order.bo.blocks.dashboardgeneralstatistics.column-toDeliver;" value="toDeliver" />
+		</staticlist>
+	</systemfolder>
+	
+	<systemfolder module="notification" relatedmodule="order">
+		<notification codename="modules_order/status_PAYMENT_WAITING"
+			label="Commande enregistrée"
+			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			subject="Votre commande sur le site {company-name} est enregistrée"
+			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
+			body="Votre commande d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt; a été enregistrée sous le numéro &lt;em&gt;{orderId}&lt;/em&gt;."
+			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			template="default"
+			senderUsername="no-reply" />
+			
+		<notification codename="modules_order/status_PAYMENT_SUCCESS"
+			label="Paiement accepté"
+			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			subject="Le paiement de votre commande {orderId} sur le site {company-name} est validé"
+			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
+			body="Nous avons le plaisir de vous informer que le paiement concernant votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;validé&lt;/strong&gt; par notre banque."
+			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			template="default"
+			senderUsername="no-reply" />			
+			
+		<notification codename="modules_order/status_PAYMENT_FAILED"
+			label="Paiement refusé"
+			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			subject="Le paiement de votre commande {orderId} sur le site {company-name} a été refusé"
+			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
+			body="Nous avons le regret de vous informer que le paiement concernant votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;refusé&lt;/strong&gt; par notre banque."
+			footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			template="default"
+			senderUsername="paiement-refuse" />
+			
+		<notification codename="modules_order/status_CANCELED"
+			label="Commande annulée"
+			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			subject="Votre commande {orderId} sur le site {company-name} a été annulée"
+			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
+			body="Nous avons le regret de vous informer que votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;annulée&lt;/strong&gt;."
+			footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			template="default"
+			senderUsername="no-reply" />
+			
+		<notification codename="modules_order/status_SHIPPED"
+			label="Commande expédiée"
+			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			subject="Votre commande {orderId} sur le site {company-name} est expédiée"
+			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
+			body="Nous avons le plaisir de vous informer que votre commande &lt;em&gt;{orderId}&lt;/em&gt; a été &lt;strong&gt;expédiée&lt;/strong&gt;. Le numéro du colis ({shippingMode}) est : &lt;em&gt;{packageNumber}&lt;/em&gt;."
+			footer="&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			template="default"
+			senderUsername="no-reply" />
+			
+		<notification codename="modules_order/orderconfirmed"
+			label="Nouvelle commande (administrateur)"
+			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			subject="Nouvelle commande : numéro : {orderId}, client : {fullname}, montant : {orderAmount}"
+			header="&lt;strong&gt;Une nouvelle commande est validée et payée.&lt;/strong&gt;"
+			body="&lt;dl&gt;&lt;dt&gt;Numéro de commande&lt;/dt&gt;&lt;dd&gt;{orderId}&lt;/dd&gt;&lt;dt&gt;Montant&lt;/dt&gt;&lt;dd&gt;{orderAmount}&lt;/dd&gt;&lt;dt&gt;Client&lt;/dt&gt;&lt;dd&gt;{fullname}&lt;/dd&gt;&lt;/dl&gt;."
+			template="default"
+			senderUsername="no-reply" />
+			
+		<notification codename="modules_order/messageFromCustomer"
+			label="Message envoyé par un client"
+			availableparameters="{content}, {orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			subject="Message à propos de la commande numéro : {orderId}, client : {fullname}"
+			header="&lt;strong&gt;Message à propos de la commande numéro {orderId}.&lt;/strong&gt;"
+			body="&lt;p&gt;{content}&lt;/p&gt;"
+			template="default"
+			senderUsername="no-reply" />
+			
+		<notification codename="modules_order/messageToCustomer"
+			label="Message envoyé à un client"
+			availableparameters="{content}, {orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			subject="Message à propos de votre commande numéro {orderId} sur le site {company-name}"
+			header="&lt;strong&gt;Message à propos de la commande numéro {orderId}.&lt;/strong&gt;"
+			body="&lt;p&gt;{content}&lt;/p&gt;"
+			template="default"
+			senderUsername="no-reply" />
+	</systemfolder>
+		
+	<rootfolder module="order">
+		<smartfolder byLabel="Commandes des dernières 24 heures" query='[{"class":"order_CreationDateOrderFilter","parameters":{"count":[null,null,"1"],"unit":[null,null,"day"]}}]' />
+		<smartfolder byLabel="Commandes des sept derniers jours" query='[{"class":"order_CreationDateOrderFilter","parameters":{"count":[null,null,"1"],"unit":[null,null,"week"]}}]' />
+	</rootfolder>
+</script>

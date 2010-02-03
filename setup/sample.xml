@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<script>
+	<!-- 
+		WARNING: before importing this file, import :
+			- catalog/sample.xml
+			- marketing/sample.xml
+	-->
+	
+	<!-- Declarations -->
+	<binding fileName="modules/generic/persistentdocument/import/generic_binding.xml" />
+	<binding fileName="modules/website/persistentdocument/import/website_binding.xml" />
+	<binding fileName="modules/users/persistentdocument/import/users_binding.xml" />
+	<binding fileName="modules/zone/persistentdocument/import/zone_binding.xml" />
+	<binding fileName="modules/customer/persistentdocument/import/customer_binding.xml" />
+	<binding fileName="modules/catalog/persistentdocument/import/catalog_binding.xml" />
+	<binding fileName="modules/payment/persistentdocument/import/payment_binding.xml" />
+	<binding fileName="modules/shipping/persistentdocument/import/shipping_binding.xml" />
+	<binding fileName="modules/marketing/persistentdocument/import/marketing_binding.xml" />
+	<binding fileName="modules/order/persistentdocument/import/order_binding.xml" />
+
+	<!--  Begin -->
+	<shop byLabel="Boutique" id="shop" />
+	<customer id="customer1" byLogin="johndoe1" />
+	<customer id="customer2" byLogin="johndoe2" />
+	<customer id="customer3" byLogin="johndoe3" />
+	<customer id="customer4" byLogin="joedoe" />
+	
+	<mode id="shipping" byLabel="Colissimo"  />
+	
+	<chequeconnector id="payment" byLabel="Paiement par chèque" />
+
+	<product id="product1" byCodeReference="L1" />
+	<product id="product2" byCodeReference="L2" />
+	<product id="product3" byCodeReference="L3" />
+	<product id="product4" byCodeReference="D150" />
+	<product id="product5" byCodeReference="000000-3" />
+	<product id="product6" byCodeReference="P3-1" />
+	<product id="product7" byCodeReference="P3-2" />
+		
+	<address id="address" byLabel="L'adresse de livraison de JohnDoe1" />
+	
+	<website id="website" byTag="default_modules_website_default-website" />
+
+	<coupon id="coupon1" byCode="test1"  />
+	<coupon id="coupon2" byCode="test2" />
+	
+	<cart id="cart1" shop-refid="shop" customer-refid="customer2" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10"
+		coupon-refid="coupon2"
+		billingMode-refid="payment">
+		<cartline product-refid="product1" quantity="1" />
+		<cartline product-refid="product2" quantity="2" />
+	</cart>
+	<order cart-refid="cart1" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart2" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="20"
+		coupon-refid="coupon1"
+		billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product5" quantity="2" />
+		<cartline product-refid="product3" quantity="1" />
+	</cart>
+	<order cart-refid="cart2" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart3" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+	</cart>	
+	<order cart-refid="cart3" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart4" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product5" quantity="7" />
+	</cart>	
+	<order cart-refid="cart4" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart5" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product2" quantity="1" />
+	</cart>	
+	<order cart-refid="cart5" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart6" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="3" />
+		<cartline product-refid="product5" quantity="1" />
+	</cart>	
+	<order cart-refid="cart6" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart7" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="3" />
+		<cartline product-refid="product5" quantity="2" />
+	</cart>	
+	<order cart-refid="cart7" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart8" shop-refid="shop" customer-refid="customer2" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product5" quantity="1" />
+		<cartline product-refid="product2" quantity="1" />
+	</cart>	
+	<order cart-refid="cart8" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart9" shop-refid="shop" customer-refid="customer2" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product5" quantity="3" />
+		<cartline product-refid="product2" quantity="1" />
+	</cart>	
+	<order cart-refid="cart9" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart10" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product5" quantity="3" />
+		<cartline product-refid="product1" quantity="1" />
+		<cartline product-refid="product3" quantity="1" />
+	</cart>	
+	<order cart-refid="cart10" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart11" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product5" quantity="3" />
+		<cartline product-refid="product1" quantity="1" />
+		<cartline product-refid="product3" quantity="1" />
+	</cart>	
+	<order cart-refid="cart11" orderStatus="SHIPPED"/>
+	
+	<cart id="cart12" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product2" quantity="4" />
+		<cartline product-refid="product1" quantity="1" />
+		<cartline product-refid="product3" quantity="1" />
+	</cart>	
+	<order cart-refid="cart12" orderStatus="CANCELED"/>
+	
+	<cart id="cart13" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product6" quantity="1" />
+	</cart>	
+	<order cart-refid="cart13" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart14" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product7" quantity="1" />
+	</cart>	
+	<order cart-refid="cart14" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart15" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product7" quantity="1" />
+	</cart>	
+	<order cart-refid="cart15" orderStatus="PAYMENT_SUCCESS"/>
+	
+	<cart id="cart16" shop-refid="shop" customer-refid="customer1" 
+		address-refid="address" shippingMode-refid="shipping"
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		<cartline product-refid="product4" quantity="1" />
+		<cartline product-refid="product7" quantity="1" />
+	</cart>	
+	<order cart-refid="cart16" orderStatus="PAYMENT_SUCCESS"/>
+</script>

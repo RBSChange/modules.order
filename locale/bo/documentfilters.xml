@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localization>
+	<entity id="query-on-cart">
+		<locale lang="fr">Ensemble des conditions nécessaires</locale>
+	</entity>
+	<entity id="query-on-order">
+		<locale lang="fr">les commandes cumulant les conditions suivantes</locale>
+	</entity>
+	<entity id="cartfilter-label">
+		<locale lang="fr">propriétés du panier</locale>
+	</entity>
+	<entity id="cartfilter-text">
+		<locale lang="fr">panier dont {cart}</locale>
+	</entity>
+	<entity id="cart-totalAmountWithTax">
+		<locale lang="fr">montant total TTC</locale>
+	</entity>
+	<entity id="cart-totalAmountWithoutTax">
+		<locale lang="fr">montant total HT</locale>
+	</entity>
+	<entity id="cart-lineCount">
+		<locale lang="fr">nombre total de produits distincts</locale>
+	</entity>
+	<entity id="cart-productCount">
+		<locale lang="fr">nombre total de produits</locale>
+	</entity>
+	<entity id="SommeProductAttributeFilter-label">
+		<locale lang="fr">somme d'un attribut de produit</locale>
+	</entity>
+	<entity id="SommeProductAttributeFilter-text">
+		<locale lang="fr">dont la somme de l'attribut {attribute}</locale>
+	</entity>
+	<entity id="HasProductAttributeFilter-label">
+		<locale lang="fr">produit ayant un attribut</locale>
+	</entity>
+	<entity id="HasProductAttributeFilter-text">
+		<locale lang="fr">dont {qtt} à un attribut {attribute}</locale>
+	</entity>
+	<entity id="Qttfilter-one">
+		<locale lang="fr">au moins un produit</locale>
+	</entity>
+	<entity id="Qttfilter-all">
+		<locale lang="fr">tout les produits</locale>
+	</entity>
+	<entity id="Qttfilter-none">
+		<locale lang="fr">aucun produit</locale>
+	</entity>
+	<entity id="MostFrequentlyOrderedFilter-label">
+		<locale lang="fr">Les produits les plus commandés</locale>
+	</entity>
+	<entity id="MostFrequentlyOrderedFilter-text">
+		<locale lang="fr">Les {maxcount} produits les plus commandés de la boutique</locale>
+	</entity>
+	<entity id="CustomerCartFilter-label">
+		<locale lang="fr">clients</locale>
+	</entity>
+	<entity id="CustomerCartFilter-text">
+		<locale lang="fr">les clients compris dans {customer}</locale>
+	</entity>
+
+	<entity id="orderfilter-label">
+		<locale lang="fr">propriétés de la commande</locale>
+	</entity>
+	<entity id="orderfilter-text">
+		<locale lang="fr">les commandes qui ont {field}</locale>
+		<locale lang="en">orders having {field}</locale>
+	</entity>
+
+	<entity id="creationdateorderfilter-label">
+		<locale lang="fr">commandes passées dans les N derniers jours/mois/années</locale>
+	</entity>
+	<entity id="creationdateorderfilter-text">
+		<locale lang="fr">qui on été passées dans les {count} derniers {unit}</locale>
+	</entity>
+</localization>

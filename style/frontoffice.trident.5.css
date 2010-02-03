@@ -1,0 +1,13 @@
+li.on2col{
+	margin-right: 1.9%;
+}
+li.on1col,li.on2col,li.on3col{
+	margin-bottom: 16px;
+}
+li.first{
+	clear: both;
+}
+li.last{
+	margin-right: 0;
+	float: none;
+}

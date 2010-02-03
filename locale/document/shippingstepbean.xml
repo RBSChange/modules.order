@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localization>
+	<entity id="usesameaddressforbilling">
+		<locale lang="fr">Utiliser votre adresse de livraison</locale>
+		<locale lang="en">Use your shipping address</locale>
+		<locale lang="de">Verwenden Sie Ihre Lieferadresse</locale>
+	</entity>
+	<entity id="select">
+		<locale lang="fr">Continuer</locale>
+		<locale lang="en">Continue</locale>
+		<locale lang="de">Weiter</locale>
+	</entity>
+	<entity id="shippingMode-Error">
+		<locale lang="fr">Le mode de livraison choisi n'est pas valide</locale>
+		<locale lang="en">The delivery method chosen is not valid</locale>
+		<locale lang="de">Die Lieferung der gewählten Methode ist nicht gültig</locale>
+	</entity>
+	<entity id="delivery-address-legend">
+		<locale lang="fr">Adresse de livraison</locale>
+		<locale lang="en">Delivery Address</locale>
+		<locale lang="de">Lieferanschrift</locale>
+	</entity>
+	<entity id="delivery-address-text">
+		<locale lang="fr">Pour que votre colis arrive à destination sans ecombres, merci de bien vouloir remplir le fomulaire ci-dessous.</locale>
+		<locale lang="en">To ensure that your package has arrived without ecombres, thank you fill out this request form below.</locale>
+		<locale lang="de">Um sicherzustellen, dass Ihr Paket ohne ecombres angekommen ist, ich danke Ihnen, füllen Sie das Formular unten.</locale>
+	</entity>
+	<entity id="billing-address-legend">
+		<locale lang="fr">Adresse de facturation</locale>
+		<locale lang="en">Billing Address</locale>
+		<locale lang="de">Rechnungsadresse</locale>
+	</entity>
+	<entity id="billing-address-text">
+		<locale lang="fr">Vous pouvez choisir une adresse de facturation différente de l'adresse de livraison ou simplement ré-utiliser la même adresse.</locale>
+		<locale lang="en">You can select a billing address different from shipping address or just re-use the same address.</locale>
+		<locale lang="de">Sie können wählen, eine Rechnungsadresse anders als Lieferadresse oder einfach nur die Wiederverwendung der gleichen Adresse.</locale>
+	</entity>
+	<entity id="choose-delivery-legend">
+		<locale lang="fr">Choix du mode de livraison</locale>
+		<locale lang="en">Choice of delivery method</locale>
+		<locale lang="de">Wahl der Versandart der</locale>
+	</entity>
+	<entity id="choose-delivery-text">
+		<locale lang="fr">Parmi la liste ci-dessous, veuillez sélectionner le mode de livraison pour votre commande.</locale>
+		<locale lang="en">Among the list below, please select the delivery method for your order.</locale>
+		<locale lang="de">Unter der unten stehenden Liste, wählen Sie bitte die Lieferzeit für Ihre Bestellung.</locale>
+	</entity>
+	<entity id="registered-address-text">
+		<locale lang="fr">Utiliser une adresse prédéfinie de votre compte</locale>
+		<locale lang="en">Use a predefined address of your account</locale>
+		<locale lang="de">Verwenden Sie eine vordefinierte Adresse Ihres Kontos</locale>
+	</entity>
+	<entity id="registered-address-choose">
+		<locale lang="fr">[Sélectionner]</locale>
+		<locale lang="en">[Select]</locale>
+		<locale lang="de">[Select]</locale>
+	</entity>
+	<entity id="registered-address-select">
+		<locale lang="fr">Utiliser cette adresse</locale>
+		<locale lang="en">Use this address</locale>
+		<locale lang="de">Verwenden Sie diese Adresse</locale>
+	</entity>
+</localization>

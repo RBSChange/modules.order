@@ -1,0 +1,34 @@
+row[linetype="grid-header"]{
+	font-weight: bold;
+}
+row[linetype="cart-line"]:nth-child(even){
+	background: whitesmoke;
+}
+row[linetype="discount-cart-line"]{
+	background: #aca;
+}
+row[linetype="sub-cart-line"]:nth-child(even){
+	background: #ded;
+}
+row[linetype="sub-cart-line"]:nth-child(odd){
+	background: #efe;
+}
+section[messageType="fromCustomer"] groupbox{
+	border: 1px solid #6a6!important;
+	-moz-border-radius: 5px!important;
+	background-color: #efe!important;
+}
+section[messageType="toCustomer"] groupbox{
+	border: 1px solid #66a!important;
+	-moz-border-radius: 5px!important;
+	background-color: #eef!important;
+}
+groupbox.messageForm{
+	border: 1px solid #bbb!important;
+	-moz-border-radius: 5px!important;
+	background-color: #f9f9f9!important;
+}
+div[anonid="content"]{
+	margin-left: 6px;
+	white-space: pre;
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localization>
+	<entity id="document-name">
+		<locale lang="fr">ligne de commande</locale>
+		<locale lang="en">order line</locale>
+		<locale lang="de">Befehlszeile</locale>
+	</entity>
+	<entity id="codeReference">
+		<locale lang="fr">code référence</locale>
+		<locale lang="en">reference code</locale>
+		<locale lang="de">Code Reference</locale>
+	</entity>
+	<entity id="genCode">
+		<locale lang="fr">gen code</locale>
+		<locale lang="en">gen code</locale>
+		<locale lang="de">Gen code</locale>
+	</entity>
+	<entity id="articleId">
+		<locale lang="fr">identificant de l'article</locale>
+		<locale lang="en">article id</locale>
+		<locale lang="de">Identifikation der Artikel</locale>
+	</entity>
+	<entity id="productId">
+		<locale lang="fr">identifiant du produit</locale>
+		<locale lang="en">procuct id</locale>
+		<locale lang="de">Produkt-ID</locale>
+	</entity>
+</localization>

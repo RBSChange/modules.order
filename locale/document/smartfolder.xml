@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<localization>
+	<entity id="document-name">
+		<locale lang="fr">dossier intelligent</locale>
+		<locale lang="en">smatrt folder</locale>
+	</entity>
+	<entity id="label">
+		<locale lang="fr">libellé</locale>
+		<locale lang="en">label</locale>
+	</entity>
+	<entity id="description">
+		<locale lang="fr">description</locale>
+		<locale lang="en">description</locale>
+	</entity>
+	<entity id="query">
+		<locale lang="fr">requête</locale>
+		<locale lang="en">query</locale>
+	</entity>
+	<entity id="query-help">
+		<locale lang="fr">la requête permettant de retrouver les commandes de ce dossier.</locale>
+		<locale lang="en">the query to find order of this folder.</locale>
+	</entity>
+</localization>

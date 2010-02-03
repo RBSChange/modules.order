@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlrewriting>
+	<rules>
+		<rule pageTag="contextual_website_website_modules_order_process" lang="fr">
+			<template>/commande/</template>
+		</rule>
+		
+		<rule pageTag="contextual_website_website_modules_order_process" lang="en">
+			<template>/order/</template>
+		</rule>
+
+		<rule pageTag="contextual_website_website_modules_order_cart" lang="fr">
+			<template>/panier/</template>
+		</rule>
+
+		<rule pageTag="contextual_website_website_modules_order_cart" lang="en">
+			<template>/cart/</template>
+		</rule>
+
+		<rule documentModel="order" viewMode="detail">
+			<template>/orderdetail/$id/$orderNumber</template>
+			<parameters>
+				<parameter name="orderNumber" method="getOrderNumber" />
+			</parameters>
+		</rule>
+		
+		<rule pageTag="contextual_website_website_modules_order_order-list" lang="fr">
+			<template>/mon-compte/commandes/</template>
+		</rule>
+	</rules>
+</urlrewriting>

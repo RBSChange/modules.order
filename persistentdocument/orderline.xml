@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd"
+	model-version="3.0" icon="shoppingcart_full" publish-on-day-change="false" 
+	backoffice-indexable="false" has-url="false">
+	<properties>
+		<add name="label" type="String" min-occurs="1" />
+		<add name="codeReference" type="String" min-occurs="1" />
+		<add name="productId" type="Integer" min-occurs="1" />	
+		<add name="unitPriceWithTax" type="Double" min-occurs="1" />
+		<add name="unitPriceWithoutTax" type="Double" min-occurs="1" />
+		<add name="quantity" type="Double" min-occurs="1" />
+		<add name="amountWithTax" type="Double" min-occurs="1" />
+		<add name="amountWithoutTax" type="Double" min-occurs="1" />
+
+		<add name="globalProperties" type="Lob" />
+		<!--
+			<add name="genCode" type="String" />
+			<add name="articleId" type="Integer" min-occurs="1" />
+			<add name="baseUnitPriceWithTax" type="Double" min-occurs="1" />
+			<add name="baseUnitPriceWithoutTax" type="Double" min-occurs="1" />
+			<add name="taxAmount" type="Double" min-occurs="1" />
+			<add name="taxRate" type="Double" min-occurs="1" />
+			<add name="taxCode" type="String" min-occurs="1" />
+		-->
+	</properties>
+	<statuses default="ACTIVE" />
+</document>

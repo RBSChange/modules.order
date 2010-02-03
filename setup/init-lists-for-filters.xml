@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<script>
+	<binding fileName="modules/list/persistentdocument/import/list_binding.xml" />
+	<binding fileName="modules/notification/persistentdocument/import/notification_binding.xml" />
+	
+	<systemfolder module="list" relatedmodule="order">
+		<staticlist listid="modules_order/paymentstatuscategories" 
+			label="&amp;modules.order.bo.general.list.Payment-status-categories;"
+			description="&amp;modules.order.bo.general.list.Payment-status-categories;">
+			<staticitem label="&amp;modules.order.bo.general.list.payment-status-category-paid;" value="paid" />
+			<staticitem label="&amp;modules.order.bo.general.list.payment-status-category-paid-or-waiting;" value="paid-or-waiting" />
+			<staticitem label="&amp;modules.order.bo.general.list.payment-status-category-all;" value="all" />
+		</staticlist>
+	</systemfolder>
+</script>

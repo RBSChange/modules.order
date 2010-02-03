@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localization>
+	<entity id="document-name">
+		<locale lang="fr">message</locale>
+		<locale lang="en">message</locale>
+		<locale lang="de">Nachricht</locale>
+	</entity>
+	<entity id="sender">
+		<locale lang="fr">émetteur</locale>
+		<locale lang="en">sender</locale>
+		<locale lang="de">Emittent</locale>
+	</entity>
+	<entity id="creationdate">
+		<locale lang="fr">date d'envoi</locale>
+		<locale lang="en">sending date</locale>
+		<locale lang="de">Versanddatum</locale>
+	</entity>
+	<entity id="content">
+		<locale lang="fr">contenu</locale>
+		<locale lang="en">content</locale>
+		<locale lang="de">Inhalt</locale>
+	</entity>
+</localization>

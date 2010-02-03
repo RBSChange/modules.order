@@ -1,0 +1,321 @@
+<?xml version="1.0"?>
+<bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<!-- Properties panel -->
+
+	<binding id="customerSection">
+		<content>
+			<xul:hbox align="center">
+				<xul:clabel value="&amp;modules.order.bo.general.Email;" />
+				<xul:label xbl:inherits="value=email" />
+				<xul:toolbarbutton label="&amp;modules.order.bo.doceditor.panel.properties.View-customer;" image="{HttpHost}/icons/small/shadow/view.png" oncommand="showCustomer()" />
+				<xul:spacer flex="1" />
+			</xul:hbox>
+		</content>
+		<implementation>
+			<method name="showCustomer">
+				<body><![CDATA[
+					var id = this.getAttribute('customerId');
+					var uri = ['customer', 'openDocument', 'modules_customer_customer', id].join(',');
+					var pnode = this.parentNode;
+					while(!pnode.hasAttribute('documentid')) {pnode = pnode.parentNode;}
+					var orderId = pnode.getAttribute('documentid')
+					var from = ['order', 'openDocument', 'modules_order_order', orderId, 'properties'].join(',');
+					openActionUri(uri, from);
+				]]></body>
+			</method>
+		</implementation>
+	</binding>
+
+	<binding id="linesSection">
+		<resources>
+			<stylesheet src="modules.uixul.cFieldsGroup" />
+		</resources>
+		<content>
+			<xul:groupbox flex="1">
+				<xul:caption xbl:inherits="label" />
+				<xul:grid class="cart-lines">
+					<xul:columns>
+						<xul:column flex="2" />
+						<xul:column flex="1"/>
+						<xul:column />
+						<xul:column />
+						<xul:column />
+					</xul:columns>
+					<xul:rows>
+						<xbl:children />
+					</xul:rows>
+				</xul:grid>
+			</xul:groupbox>
+		</content>
+	</binding>
+	
+	<binding id="headRow">
+		<resources>
+			<stylesheet src="modules.order.cOrderEditor" />
+		</resources>
+		<content>
+			<xul:label value="&amp;modules.order.frontoffice.Designation;" />
+			<xul:label value="&amp;modules.order.frontoffice.CodeReference;" />
+			<xul:label value="&amp;modules.customer.bo.doceditor.panel.carts.Unit-price;" />
+			<xul:label value="&amp;modules.order.frontoffice.Quantity;" />
+			<xul:label value="&amp;modules.customer.bo.doceditor.panel.carts.Total-price;" />
+		</content>
+	</binding>	
+	
+	<binding id="lineRow">
+		<resources>
+			<stylesheet src="modules.order.cOrderEditor" />
+		</resources>
+		<content>
+			<xul:vbox>
+				<xul:label xbl:inherits="value=productLabel" />
+			</xul:vbox>
+			<xul:label xbl:inherits="value=codeReference" />
+			<xul:vbox>
+				<xul:label xbl:inherits="value=unitPriceWithoutTax" />
+				<xul:label xbl:inherits="value=unitPriceWithTax" />
+			</xul:vbox>
+			<xul:label xbl:inherits="value=quantity" />
+			<xul:vbox>
+				<xul:label xbl:inherits="value=totalPriceWithoutTax" />
+				<xul:label xbl:inherits="value=totalPriceWithTax" />
+			</xul:vbox>
+		</content>
+	</binding>	
+	
+	<!-- Messages panel -->
+	
+	<binding id="cMessagesPanel" extends="layout.cDocumentEditor#cDocumentEditorPanel">
+		<resources>
+			<stylesheet src="modules.uixul.cFieldsGroup" />
+			<stylesheet src="modules.order.cOrderEditor" />
+		</resources>
+		<content>
+			<xul:vbox flex="1">
+				<xul:cmessageinfo anonid="message" />
+				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
+					<xul:groupbox class="messageForm">
+						<xul:caption label="&amp;modules.order.bo.doceditor.panel.messages.Title;" />
+						<vbox>
+							<xul:cfield name="messageContent" anonid="field_messageContent" fieldtype="longtext" cols="100" hidehelp="true" />
+							<hbox><xul:button anonid="sendMessageButton" label="&amp;modules.order.bo.doceditor.panel.messages.Send;" image="{HttpHost}/icons/small/shadow/mail_forward.png" /></hbox>
+						</vbox>
+					</xul:groupbox>
+					<xul:vbox anonid="messages" />
+					<xul:spacer flex="1" />
+				</xul:scrollbox>					
+			</xul:vbox>
+		</content>
+		<implementation>
+			<constructor><![CDATA[
+				var _this = this;
+				var node = document.getAnonymousElementByAttribute(this, 'anonid', 'sendMessageButton');
+				node.addEventListener('command', function () { _this.sendNewMessage(); }, true);
+			]]></constructor>
+		
+			<method name="getInitializeParameters">
+				<body><![CDATA[
+					return {
+						action: "LoadOrderMessages", 
+						cmpref: this.documentEditor.documentid, 
+						lang : Context.W_LANG
+					};
+				]]></body>
+			</method>
+									
+			<method name="fireInitializeComplete">
+				<parameter name="result" />
+				<body><![CDATA[
+					if (result.status != "OK")
+					{
+						this.showErrorMessage(result.contents.errorMessage);
+					}
+					else
+					{									
+						var messages = result.contents.messages;
+						var message;
+						var section;
+						var messagesNode = document.getAnonymousElementByAttribute(this, "anonid", 'messages');
+						for (var i = 0; i < messages.length; i++)
+						{
+							message = messages[i];
+							section = messagesNode.childNodes[i];
+							if (section == null)
+							{
+								section = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'section');
+								section.className = 'message';
+								messagesNode.appendChild(section);
+							}
+							else
+							{
+								section.removeAttribute('collapsed');
+								section.removeChild(section.firstChild);
+							}
+							
+							for (var name in message)
+							{
+								section.setAttribute(name, message[name]);
+								if (message[name] && message[name] != '')
+								{
+									section.removeAttribute(name+'hidden');
+								}
+								else
+								{
+									section.setAttribute(name+'hidden', true);
+								}
+							}
+							
+							section.appendChild(document.createTextNode(message['content']));
+						}
+						while (section = messagesNode.childNodes[i])
+						{
+							section.setAttribute('collapsed', 'true');
+							i++;
+						}
+					}
+					this.mInitialized = true;
+					this.gotoTop();
+				]]></body>
+			</method>
+			
+			<method name="sendNewMessage">
+				<body><![CDATA[
+					var node = document.getAnonymousElementByAttribute(this, 'anonid', 'field_messageContent');
+					if (node.value)
+					{
+						var result = wCore.executeJSON('order', 'SendMessageForOrder', {cmpref: this.documentEditor.documentid, content: node.value}, null, true);
+						if (result.status != 'OK')
+						{	
+							this.showErrorMessage(result.contents.errorMessage);
+						}
+						else
+						{
+							this.showTextMessage("&amp;modules.order.bo.doceditor.panel.messages.Success-sending-message;");
+							this.fireInitializeComplete(result);
+							node.value = '';
+						}
+					}
+					else
+					{
+						this.showErrorMessage("&amp;modules.order.bo.doceditor.panel.messages.Error-no-message-to-send;");
+					}
+				]]></body>
+			</method>
+		</implementation>
+	</binding>	
+
+	<binding id="messageSection">
+		<resources>
+			<stylesheet src="modules.order.cOrderEditor" />
+		</resources>
+		<content>
+			<xul:groupbox flex="1">
+				<xul:caption xbl:inherits="label" />
+				<xul:grid flex="1">
+					<xul:columns>
+						<xul:column />
+						<xul:column flex="1" />
+					</xul:columns>
+					<xul:rows>
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.message.Creationdate;" />
+							<xul:label xbl:inherits="value=date" />
+						</xul:row>
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.message.Content;" />
+							<xul:hbox flex="1">
+								<html:div flex="1" anonid="content"><xbl:children /></html:div>
+							</xul:hbox>
+						</xul:row>
+					</xul:rows>
+				</xul:grid>
+			</xul:groupbox>
+		</content>
+	</binding>
+	
+	<binding id="cBillgenerator" extends="form.cField#cHiddenField">
+		<content>
+			<children />
+			<xul:vbox>
+				<xul:hbox>
+					<xul:button xbl:inherits="hidden=hide-generate,disabled=disable-generate" label="&amp;modules.order.bo.actions.GenerateBill;" oncommand="generate()" image="{HttpHost}/icons/small/funnel.png" />
+					<xul:button xbl:inherits="hidden=hide-dl" hidden="true" label="&amp;modules.order.bo.actions.DownloadBill;" oncommand="download()" image="{HttpHost}/icons/small/download.png" />
+				</xul:hbox>
+			</xul:vbox>
+		</content>
+		<implementation>
+			<field name="tmpBillUrl"></field>
+			<method name="setInitialValue">
+				<parameter name="val" />
+				<body><![CDATA[
+					var fval = this.fixString(val);
+					if (fval != "")
+					{
+						this.setAttribute('hide-generate', true);
+						this.removeAttribute('hide-dl');
+					}
+					else if (fval == "-1")
+					{
+						this.setAttribute('hide-generate', true);
+						this.setAttribute('hide-dl', true);
+					}
+					else
+					{
+						this.setAttribute('hide-dl', true);
+						this.removeAttribute('hide-generate');
+					}
+					this.setAttribute("initialvalue", fval);
+					this.setAttribute("value", fval);
+				]]></body>
+			</method>
+			<method name="generate">
+				<body><![CDATA[
+					var propspanel = this.parentNode;
+					while (propspanel && propspanel.tagName != "cpropertiespanel")
+					{
+						propspanel = propspanel.parentNode;
+					}
+					var edt = propspanel.documentEditor;
+					this.setAttribute("disable-generate", true);
+					try
+					{
+						
+						propspanel.showTextMessage("&amp;modules.order.bo.actions.GeneratingBill;");
+						var result = wCore.executeJSON("order", "GenerateBill", { {K::COMPONENT_ID_ACCESSOR}: edt.documentid, {K::COMPONENT_LANG_ACCESSOR} : edt.mDocumentInfos.vo}, null , true); 	
+						if (result.status === 'OK')
+						{
+							propspanel.showTextMessage("&amp;modules.order.bo.actions.GeneratingBillDone;");
+							this.tmpBillUrl = result.contents.url;
+							this.setAttribute('hide-generate', true);
+							this.removeAttribute('hide-dl');
+							
+						}
+						else
+						{
+							propspanel.showErrorMessage(result.contents.errorMessage);
+						}
+					}
+					catch (e)
+					{
+						wCore.error('onGenerateBill', [], e);
+					}
+					this.removeAttribute("disable-generate", true);
+				]]></body>
+			</method>
+			<method name="download">
+				<body><![CDATA[
+					if (this.value != "")
+					{
+						wToolkit.downloadurl(this.value);
+					}
+					else if (this.tmpBillUrl != "")
+					{
+						wToolkit.downloadurl(this.tmpBillUrl)
+					}
+				]]></body>
+			</method>
+		</implementation>
+	</binding>
+</bindings>

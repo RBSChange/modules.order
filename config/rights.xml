@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rights>
+	<actions>
+		<document name="rootfolder" />
+		<document name="order" />
+		<document name="orderline" />
+		<document name="message" />
+		<document name="smartfolder" />
+	</actions>
+	<roles>
+		<role name="Admin">
+			<permission name="*" />
+			<permission name="LoadPermissions.*" />
+			<permission name="SavePermissions.*" />
+			<permission name="GetPreferencesDocument" />
+			<permission name="Enabled" />
+			<permission name="List.*" />
+			<permission name="Delete.*" />
+			<permission name="Save.*" />
+			<permission name="Insert.*" />
+			<permission name="Update.*" />
+			<permission name="Load.*" />			
+			<permission name="LoadTags" />
+			<permission name="ReActivate.*" />
+			<permission name="Deactivated.*" />
+			<permission name="EditLocale" />
+		</role>
+	</roles>
+</rights>

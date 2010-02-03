@@ -1,0 +1,10 @@
+li.on2col{
+	margin-right: 1.9%;
+}
+li.on3col{
+	margin-right: 2%;
+}
+li.last{
+	float: none;
+	width: 100%;
+}

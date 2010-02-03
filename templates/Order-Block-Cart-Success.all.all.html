@@ -1,0 +1,190 @@
+<h2 class="title" change:translate="&modules.order.frontoffice.My-cart;" />
+
+<ul class="mini-navigation">
+	<li class="print"><a class="link" tal:attributes="href printLink" onclick="accessiblePrint(this); return false;">
+	<span change:translate="&modules.catalog.frontoffice.Print;" tal:omit-tag="" /></a></li>
+	<li>
+		<a change:link="tag contextual_website_website_modules_catalog_favorite-product-list; catalogParam[addCartToList] cart/getCatalogId"
+			change:translate="&modules.order.frontoffice.Add-cart-to-list;" />
+	</li>
+	<li>
+		<a change:link="module order; action ContinueShopping; cmpref cart/getShopId"
+			change:translate="&modules.order.frontoffice.Continue-shopping;" />
+	</li>
+</ul>
+<div id="cart-errors">
+	<h3 change:h="" class="error" tal:condition="errorMessages" change:translate="&modules.order.frontoffice.Cart-can-not-order;" />
+	<ul class="normal">
+		<li tal:condition="warningMessages" class="error" tal:repeat="message warningMessages" tal:content="message" />
+		<li tal:condition="errorMessages" class="error" tal:repeat="message errorMessages" tal:content="message" />
+	</ul>
+</div>
+
+<form class="" method="post" tal:attributes="action updateActionUrl">
+	<input name="orderParam[shopId]" type="hidden" tal:attributes="value cart/getShopId" />
+	<p class="normal">
+		<input change:submit="name Refresh" class="button" label="&modules.order.frontoffice.Update-button;" />
+	</p>
+	<table class="normal" border="0" change:i18nattr="summary &modules.order.frontoffice.Cart-table-summary;">
+		<thead>
+			<tr>
+				<th class="first">&nbsp;</th>
+				<th change:translate="&modules.order.frontoffice.Designation;" />
+				<th change:translate="&modules.order.frontoffice.Availability;" />
+				<th tal:condition="shop/getDisplayPriceWithTax">
+					<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-with-tax; currency shop/getCurrency"
+						change:translate="&modules.order.frontoffice.unitprice-with-tax-abr;; currency shop/getCurrency" />
+				</th>
+				<th change:translate="&modules.order.frontoffice.Quantity;" />
+				<th tal:condition="shop/getDisplayPriceWithTax" change:translate="&modules.order.frontoffice.Tva-column;"></th>
+				<th tal:condition="shop/getDisplayPriceWithTax">
+					<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-with-tax; currency shop/getCurrency"
+						change:translate="&modules.order.frontoffice.totalprice-with-tax-abr;; currency shop/getCurrency" />
+				</th>
+				<th class="last">&nbsp;</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tal:block tal:repeat="cartLine cart/getCartLineArray">
+				<tr class="row-${repeat/cartLine/odd}"
+					tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
+	
+					<!-- Visual -->
+					<td>
+						<a change:link="document product" tal:condition="product/getVisualId">
+							<img change:media="document product/getVisualId; format 'modules.catalog.frontoffice/subdetailproduct'" />
+						</a>
+						<tal:block tal:condition="not: product/getVisualId">&nbsp;</tal:block>
+					</td>
+	
+					<!-- Désignation / Article -->
+					<td tal:condition="readonly"><a change:link="document product" tal:content="product/getLabel" /> <br /></td>
+					<td tal:condition="not: readonly">
+						<a change:link="document product" tal:content="product/getLabel" /> <br />
+						<tal:block tal:define="name string:orderParam[lines][${cartLineIndex}][productId]">
+							<input type="hidden" tal:attributes="name name; value product/getId" />
+						</tal:block>
+					</td>
+	
+					<!-- Disponibilite -->
+					<td tal:content="product/getAvailability" />
+					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax"
+						tal:content="php:shop.formatPrice(cartLine.getValueWithTax())" />
+	
+					<!-- Quantity -->
+					<td tal:define="name string:orderParam[lines][${cartLineIndex}][quantity]">
+						<label class="hidden" tal:attributes="for name" change:translate="&modules.order.frontoffice.QuantityLabel" /> 
+						<input class="textfield" tal:condition="not: readonly" type="text"
+							size="3" tal:attributes="name name; value cartLine/getQuantity" />
+						<tal:block tal:condition="readonly" tal:replace="cartLine/getQuantity" />
+					</td>
+	
+					<!-- TVA -->
+					<td class="priceht" tal:condition="shop/getDisplayPriceWithTax" tal:content="cartLine/getFormattedTaxCode" />
+					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax" tal:content="php:shop.formatPrice(cartLine.getTotalValueWithTax())" />
+	
+					<!-- Remove link -->
+					<td class="sale">
+						<a tal:condition="not: readonly" change:link="module order; action RemoveCartLine; cartLineIndex cartLineIndex; pageref pageref">
+							<img change:image="front/cross.gif" change:i18nattr="alt &modules.order.frontoffice.Delete-link;" />
+						</a>
+						<tal:block tal:condition="readonly">&nbsp;</tal:block>
+					</td>
+				</tr>
+			</tal:block>
+		</tbody>
+	</table>
+</form>
+
+<!-- ANCIEN EMPLACEMENT COLUMN-ONE -->
+
+<div class="column-two">
+<div class="payment-information-block">
+<dl>
+	<tal:block tal:condition="shop/getDisplayPriceWithoutTax">
+		<dd change:translate="&modules.order.frontoffice.Sub-total-withouttax-abrLabel;; currency shop/getCurrency" />
+		<dt tal:content="cart/getFormattedSubTotalWithoutTax" />
+	</tal:block>
+
+	<tal:block tal:condition="shop/getDisplayPriceWithTax">
+		<dd change:translate="&modules.order.frontoffice.Sub-total-withtax-abrLabel;; currency shop/getCurrency" />
+		<dt tal:content="cart/getFormattedSubTotalWithTax" />
+	</tal:block>
+
+	<!-- Montants par taxe -->
+	<tal:block tal:repeat="PriceByTax cart/getFormattedSubTotalTaxByRate">
+		<dd change:translate="&modules.order.frontoffice.TvaLabel;; rate PriceByTax/formattedTaxRate" />
+		<dt tal:content="PriceByTax/formattedTaxAmount" />
+	</tal:block>
+
+	<tal:block tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
+		<!-- shipping -->
+		<dd change:translate="&modules.order.frontoffice.Shipping-modeLabel;" />
+		<dt tal:content="cart/getShippingLabel" />
+		<dd change:translate="&modules.order.frontoffice.Shipping-feesLabel;" />
+		<dt tal:content="cart/getFormatedShippingPriceWithoutTax" />
+	
+		<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-withtax-abrLabel;" />
+		<dt class="pricetotal" tal:content="cart/getFormattedTotalAmount" />
+	</tal:block>
+	<tal:block tal:condition="php: !configuration.getShowTotalWithFees() || !cart.getShippingModeId()">
+		<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-withtax-withoutfees-abrLabel;" />
+		<dt class="pricetotal" tal:content="cart/getFormattedTotalAmount" />
+	</tal:block>
+	
+</dl>
+</div>
+
+<p class="help" tal:condition="orderProcess/open" change:translate="&modules.order.frontoffice.Cart-help-updatecart;" />
+<div class="block-confirm-order">
+	<ul class="mini-navigation">
+		<li>
+			<a change:link="tag contextual_website_website_modules_catalog_favorite-product-list; catalogParam[addCartToList] cart/getCatalogId"
+				change:translate="&modules.order.frontoffice.Add-cart-to-list;" />
+		</li>
+		<li>
+			<a change:link="module order; action ContinueShopping; cmpref cart/getShopId"
+				change:translate="&modules.order.frontoffice.Continue-shopping;" />
+		</li>
+
+	</ul>
+</div>
+</div>
+
+<div class="column-one">
+	<div class="productcart-information-block">
+		<h3 class="title" change:translate="&modules.order.frontoffice.Cart-help-title;" />
+		<h4 class="title" change:translate="&modules.order.frontoffice.Cart-help-removeline-titleLabel;" />
+		<p change:translate="&modules.order.frontoffice.Cart-help-removeline;" />
+		<h4 class="title" change:translate="&modules.order.frontoffice.Cart-help-updatequantity-titleLabel;" />
+		<p change:translate="&modules.order.frontoffice.Cart-help-updatequantity;" />
+		<h4 class="title" change:translate="&modules.order.frontoffice.Cart-help-addproduct-titleLabel;" />
+		<p change:translate="&modules.order.frontoffice.Cart-help-addproduct;" />
+		<h4 class="title" change:translate="&modules.order.frontoffice.Cart-help-updatecart-titleLabel;" />
+		<p change:translate="&modules.order.frontoffice.Cart-help-updatecart;" />
+	</div>
+</div>
+
+<div class="cleaner"></div>
+
+
+<br />
+<h3 change:h="" change:translate="&modules.order.frontoffice.orderProcess.Do-order;" />
+<p class="error" tal:condition="not: orderProcess/open" tal:content="orderProcess/message" />
+<tal:block tal:condition="orderProcess/open">
+	<tal:block tal:condition="not: errorMessages">
+		<ul change:errors="" class="normal" />
+	
+		<p> 
+			<tal:block change:translate="&modules.order.frontoffice.orderProcess.Pre-read-general-sales-conditions;" /> <a change:link="tag contextual_website_website_modules_order_cgv" change:translate="&modules.order.frontoffice.orderProcess.read-general-sales-conditions;" />
+			<tal:block change:translate="&modules.order.frontoffice.orderProcess.post-read-general-sales-conditions;" />
+		</p>
+	
+		<form change:form="">
+			<input required="true" change:checkboxinput="" class="nocmx" name="cgv" value="true" label="&modules.order.frontoffice.OrderProcess.Agree-with-general-sales-conditions;" />
+			<p class="buttons">
+				<input change:submit="name Order"  class="button" label="&modules.order.frontoffice.Order-button;" />
+			</p>
+		</form>
+	</tal:block>
+</tal:block>

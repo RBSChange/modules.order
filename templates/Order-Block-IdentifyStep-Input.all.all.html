@@ -1,0 +1,28 @@
+<div class="orderprocess identify">
+	<tal:block change:include="module 'order'; template 'Order-Inc-Process-NavigationTop'; type 'html';process cart/getOrderProcess" />
+	
+	<form change:form="beanName identifyStep">
+		<fieldset>
+		<legend change:translate="modules.order.document.identifystepbean.You-have-an-account-legend">Vos coordonnées</legend>
+		<p change:translate="modules.order.document.identifystepbean.You-have-an-account-text" />
+		<br />
+		<ul change:errors="" />
+		<ol>
+			<li><input change:field="name email" size="30"/></li>
+			<li><input change:passwordinput="name password" value="" labeled="true" class="textfield passwordinput" size="30" /></li>
+		</ol>
+		<p class="buttons">
+			<input change:submit="name Login" class="button" label="&modules.order.document.identifystepbean.Login;" />
+			&nbsp;<a change:link="tag contextual_website_website_modules_customer_password-lost" change:translate="&modules.order.document.identifystepbean.Lost-password" />
+		</p>
+		</fieldset>		
+		<fieldset>
+			<legend change:translate="modules.order.document.identifystepbean.No-account-yet-legend" />
+			<p change:translate="modules.order.document.identifystepbean.No-account-yet-text" />
+			<br />
+			<p class="buttons">
+				<input change:submit="name NewAccount" class="button" label="&modules.order.document.identifystepbean.NewAccount;"/>
+			</p>
+		</fieldset>
+	</form>
+</div>

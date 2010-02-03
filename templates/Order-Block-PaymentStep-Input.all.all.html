@@ -1,0 +1,49 @@
+<div class="orderprocess confirm">
+	<tal:block change:include="module 'order'; template 'Order-Inc-Process-NavigationTop'; type 'html';process cart/getOrderProcess" />
+
+<h3 change:h="">Commande : <a change:link="document order">${order/getOrderNumber}</a></h3>
+	<div class="payment-information-block" id="payment" tal:define="shop cart/getShop">
+		<dl>
+			<tal:block tal:condition="shop/getDisplayPriceWithoutTax">
+				<dd change:translate="&modules.order.frontoffice.Sub-total-withouttax-abrLabel;; currency shop/getCurrency">Sous-total HT :</dd>
+				<dt tal:content="php:order.formatPrice(order.getLinesAmountWithoutTax())">120,00€</dt>
+			</tal:block>
+			<tal:block tal:condition="shop/getDisplayPriceWithTax">
+				<dd change:translate="&modules.order.frontoffice.Sub-total-withtax-abrLabel;; currency shop/getCurrency">Sous-total HT :</dd>
+				<dt tal:content="php:order.formatPrice(order.getLinesAmountWithTax())">120,00€</dt>
+			</tal:block>
+
+			
+			<tal:block tal:condition="order/getCouponId" tal:define="coupon order/getCouponData">
+				<dd change:translate="&modules.order.frontoffice.Coupon-codeLabel;"></dd>
+				<dt tal:content="coupon/code"></dt>
+				<dd change:translate="&modules.order.frontoffice.Coupon-valueLabel;"></dd>
+				<dt tal:content="php:order.formatPrice(coupon['valueWithTax'])"></dt>
+			</tal:block>
+
+			
+
+			<!-- discount -->
+			<tal:block tal:condition="order/hasDiscount">
+				<dd change:translate="&modules.order.frontoffice.Discount-nameLabel;" />
+				<dt tal:content="php:order.formatPrice(order.getDiscountTotalWithTax())" />
+			</tal:block>
+			
+			<!-- shipping -->
+			<tal:block tal:condition="order/getShippingFeesWithTax">
+				<dd change:translate="&modules.order.frontoffice.Shipping-modeLabel;"></dd>
+				<dt tal:content="order/getShippingMode"></dt>
+				<dd change:translate="&modules.order.frontoffice.Shipping-feesLabel;"></dd>
+				<dt  tal:content="php:order.formatPrice(order.getShippingFeesWithTax())" />
+			</tal:block>
+		
+			<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-withtax-abrLabel;" />
+			<dt class="pricetotal" tal:content="php:order.formatPrice(order.getTotalAmountWithTax())" /			
+		</dl>
+		
+
+	</div>
+	
+<div class="cleaner"></div>
+<tal:block change:block="" name="payment" module="payment" orderid="${order/getId}" connectorid="${order/getBillingModeId}" />
+</div>

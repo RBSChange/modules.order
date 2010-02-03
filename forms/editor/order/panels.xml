@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panels>
+	<panel name="resume" />
+	<panel name="properties" />
+	<panel name="history" />
+	
+	<xul>
+		<javascript>
+			<constructor><![CDATA[
+				this.addTab('messages', '&modules.order.bo.doceditor.tab.Messages;', 'mail');
+			]]></constructor>
+		</javascript>
+	</xul>	 
+</panels>

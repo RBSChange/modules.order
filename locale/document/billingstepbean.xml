@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localization>
+	<entity id="refresh">
+		<locale lang="fr">Ajouter</locale>
+		<locale lang="en">Add</locale>
+		<locale lang="de">Hinzufügen</locale>
+	</entity>
+	<entity id="RemoveCoupon">
+		<locale lang="fr">Supprimer</locale>
+		<locale lang="en">Remove</locale>
+		<locale lang="de">Entfernen</locale>
+	</entity>
+	<entity id="select">
+		<locale lang="fr">Continuer</locale>
+		<locale lang="en">Continue</locale>
+		<locale lang="de">Weiter</locale>
+	</entity>
+	<entity id="invalid-coupon-code">
+		<locale lang="fr">Le code {coupon} ne correspond pas à un coupon valide</locale>
+		<locale lang="en">The coupon {coupon} is not a valid coupon</locale>
+		<locale lang="de">Der Gutschein {coupon} ist kein gültiger Gutschein</locale>
+	</entity>
+	<entity id="transaction-amount-overview-legend">
+		<locale lang="fr">Mode de paiment</locale>
+		<locale lang="en">Mode of payment</locale>
+		<locale lang="de">Zahlungsweise</locale>
+	</entity>
+	<entity id="transaction-amount-overview-text">
+		<locale lang="fr">Veuillez trouver ci-dessous les informations sur la transaction que vous souhaitez effectuer. Merci de choisir le mode de paiement que vous désirez utiliser. A l'issu de cette étape, vous pourrez visualiser le récapitulatif de votre commande et en effectuer le paiement.</locale>
+		<locale lang="en">Please find below information on the transaction you want to perform. Thank you to choose the mode of payment you want to use. At the end of this step, you can view the summary of your order and make payment.</locale>
+		<locale lang="de">Nachstehend finden Sie Informationen über die Transaktion, die Sie ausführen möchten. Wir danken Ihnen, die Art der Zahlung, die Sie verwenden möchten, zu wählen. Am Ende dieses Schrittes können Sie die Zusammenfassung Ihrer Bestellung einsehen und Zahlung.</locale>
+	</entity>
+	<entity id="transaction-amount-overview-head">
+		<locale lang="fr">Informations sur la transaction</locale>
+		<locale lang="en">Transaction information</locale>
+		<locale lang="de">Transaktionsinformationen</locale>
+	</entity>
+	<entity id="mops-legend">
+		<locale lang="fr">Modes de paiement disponibles</locale>
+		<locale lang="en">Payment methods available</locale>
+		<locale lang="de">Zahlungsmethoden zur Verfügung</locale>
+	</entity>
+</localization>

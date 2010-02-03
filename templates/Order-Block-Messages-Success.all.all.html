@@ -1,0 +1,42 @@
+<h2 change:h="" change:translate="&modules.customer.frontoffice.Messages-for-order-title;" />
+
+<ul class="mini-navigation">
+	<li><a change:link="tag contextual_website_website_modules_order_order-list; orderParam[cmpref] order/getId" change:translate="&modules.customer.frontoffice.Back-to-order;" /></li>
+</ul>
+
+<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Write-messages-for-order; orderId order/getId" /> <span change:datetime="order/getOrderDate" /></h3>
+
+<div class="messages-form">
+	<ul change:messages="" />
+	<ul change:errors="" />
+	
+	<form method="POST">
+		<ol>
+			<li>
+				<label class="standard" for="comment" change:translate="&modules.customer.frontoffice.Your-message;" />
+				<textarea rows="10" cols="60" class="textfield" id="comment" name="orderParam[comment]" tal:content="comment" />	
+				<input type="hidden" tal:attributes="orderParam[cmpref] order/getId" />	
+			</li>
+			<li class="buttons">
+				<input class="button" change:i18nattr="value &modules.customer.frontoffice.Cancel;" type="reset" />
+		  		<input class="button" change:i18nattr="value &modules.customer.frontoffice.Send;" type="submit" />
+			</li>
+		</ol>
+	</form>
+</div>
+
+<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Messages-for-order; orderId order/getId" /> <span change:datetime="order/getOrderDate" /></h3>
+
+<ul tal:condition="messages" class="messagecustomer">
+	<tal:block tal:repeat="message messages">
+		<li class="fromcustomer" tal:condition="message/isSentByCustomer">
+			<p><strong><tal:block change:translate="&modules.customer.frontoffice.Message-sent-by-customer; companyName companyName" /> <span change:datetime="message/getMessageDate" /></strong></p>
+			<blockquote tal:content="message/getContent" />
+		</li>
+		<li class="tocustomer" tal:condition="not: message/isSentByCustomer">
+			<p><strong><tal:block change:translate="&modules.customer.frontoffice.Message-sent-by-company; companyName companyName" /> <span change:datetime="message/getMessageDate" /></strong></p>
+			<blockquote tal:content="message/getContent" />
+		</li>	
+	</tal:block>
+</ul>
+<p tal:condition="not: messages" change:translate="&modules.customer.frontoffice.No-message-for-this-order;" />

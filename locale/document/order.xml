@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localization>
+	<entity id="edition-form-title">
+		<locale lang="fr">propriétés d'une commande</locale>
+		<locale lang="en">order properties</locale>
+		<locale lang="de">Eigenschaften Auftrag</locale>
+	</entity>
+	<entity id="document-name">
+		<locale lang="fr">commande</locale>
+		<locale lang="en">order</locale>
+		<locale lang="de">Befehl</locale>
+	</entity>
+	<entity id="creationdate">
+		<locale lang="fr">date de création</locale>
+		<locale lang="en">creation date</locale>
+		<locale lang="de">Erstellungsdatum</locale>
+	</entity>
+	<entity id="commentadmin">
+		<locale lang="fr">commentaire de l'administrateur</locale>
+		<locale lang="en">admin comment's</locale>
+		<locale lang="de">Administrator Kommentar</locale>
+	</entity>
+	<entity id="commentadmin-help">
+		<locale lang="fr">ce commentaire ne sera visible qu'ici. Il est destiné à notter des remarques concernant cette commande.</locale>
+		<locale lang="en">admin comment's</locale>
+		<locale lang="de">Dieser Kommentar wird hier sichtbar. Es ist zu Notter Rückmeldungen, die diese Ordnung bestimmt sind.</locale>
+	</entity>
+	<entity id="orderStatus">
+		<locale lang="fr">état</locale>
+		<locale lang="en">status</locale>
+		<locale lang="de">Staat</locale>
+	</entity>
+	<entity id="orderStatus-help">
+		<locale lang="fr">Le changement de statut d'une commande envoie une notification par e-mail au client ({customerName}). Vous pouvez modifier ce comportement dans le module Notification, accessible depuis le menu Administration du menu principal de RBS Change.</locale>
+		<locale lang="en">Changing the status of an order will send an e-mail notification for the customer ({customerName}). This behaviour may be changed in the Notification module, located in the Administration main menu.</locale>
+		<locale lang="de">Die Veränderung des Status einer Bestellung sendet eine Benachrichtigung per E-Mail-Client (customerName ()). Sie können dieses Verhalten in der Notification-Modul, erreichbar über das Menü Verwaltung aus dem Hauptmenü wechseln Change to RBS.</locale>
+	</entity>
+	<entity id="amountWithTax">
+		<locale lang="fr">sous-total TTC</locale>
+		<locale lang="en">sub-total with tax</locale>
+		<locale lang="de">Zwischensumme Steuern</locale>
+	</entity>
+	<entity id="amountWithoutTax">
+		<locale lang="fr">sous-total hors taxes</locale>
+		<locale lang="en">sub-total without tax</locale>
+		<locale lang="de">Zwischensumme ohne Steuern</locale>
+	</entity>
+	<entity id="totalAmountWithTax">
+		<locale lang="fr">montant total TTC</locale>
+		<locale lang="en">total amount with tax</locale>
+		<locale lang="de">Total Steuern</locale>
+	</entity>
+	<entity id="totalAmountWithoutTax">
+		<locale lang="fr">montant total hors taxes</locale>
+		<locale lang="en">total amount without tax</locale>
+		<locale lang="de">gesamten Dienstzeiten,</locale>
+	</entity>
+	<entity id="currencyCode">
+		<locale lang="fr">code devise</locale>
+		<locale lang="en">currency code</locale>
+		<locale lang="de">Währungscode</locale>
+	</entity>
+	<entity id="currencySymbol">
+		<locale lang="fr">symbole devise</locale>
+		<locale lang="en">currency symbol</locale>
+		<locale lang="de">Währungssymbol</locale>
+	</entity>
+	<entity id="orderNumber">
+		<locale lang="fr">numéro</locale>
+		<locale lang="en">number</locale>
+		<locale lang="de">Anzahl</locale>
+	</entity>
+	<entity id="reference">
+		<locale lang="fr">référence</locale>
+		<locale lang="en">reference</locale>
+		<locale lang="de">Referenz</locale>
+	</entity>
+	<entity id="shippingMode">
+		<locale lang="fr">mode de livraison</locale>
+		<locale lang="de">shipping mode</locale>
+		<locale lang="de">Delivery Mode</locale>
+	</entity>
+</localization>

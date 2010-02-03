@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<localization>
+
+	<entity id="message-label">
+		<locale lang="fr">message relatif à la commande n°{orderId} envoyé le {date}</locale>
+		<locale lang="en">message on the order n°{orderId} sent on {date}</locale>
+		<locale lang="de">Nachricht von der Reihenfolge n°{orderId} gesendet am {date}</locale>
+	</entity>
+	
+</localization>

@@ -1,0 +1,3 @@
+Version: 3.0.0
+
+Remove the numberofmailing column from m_order_doc_coupon.

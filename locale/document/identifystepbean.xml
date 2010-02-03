@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localization>
+	<entity id="email">
+		<locale lang="fr">e-mail</locale>
+		<locale lang="en">e-mail</locale>
+		<locale lang="de">E-Mail</locale>
+	</entity>
+	<entity id="emaillabel">
+		<locale lang="fr">Entrez votre adresse e-mail</locale>
+		<locale lang="en">Enter your e-mail</locale>
+		<locale lang="de">Geben Sie Ihre E-Mail</locale>
+	</entity>
+	<entity id="newaccount">
+		<locale lang="fr">Créer mon compte client</locale>
+		<locale lang="en">Create my account customer</locale>
+		<locale lang="de">Mein Konto Kunden</locale>
+	</entity>
+	<entity id="you-have-an-account-legend">
+		<locale lang="fr">Vous possédez déjà un compte client</locale>
+		<locale lang="en">Already have an account customer</locale>
+		<locale lang="de">Haben Sie ein Kunden-Konto</locale>
+	</entity>
+	<entity id="you-have-an-account-text">
+		<locale lang="fr">Si vous possédez déjà un compte client, il vous suffit de vous identifier à l'aide de votre adresse e-mail et du mot de passe de votre compte.</locale>
+		<locale lang="en">If you already have a customer account, simply log in using your e-mail and password for your account.</locale>
+		<locale lang="de">Wenn Sie bereits ein Kunden-Konto haben, loggen Sie sich einfach mit Ihrer E-Mail und Passwort für Ihr Konto.</locale>
+	</entity>
+	<entity id="password">
+		<locale lang="fr">mot de passe</locale>
+		<locale lang="en">Password</locale>
+		<locale lang="de">Passwort</locale>
+	</entity>
+	<entity id="passwordlabel">
+		<locale lang="fr">et votre mot de passe</locale>
+		<locale lang="en">and password</locale>
+		<locale lang="de">und Passwort</locale>
+	</entity>
+	<entity id="lost-password">
+		<locale lang="fr">Mot de passe perdu?</locale>
+		<locale lang="en">Forgot your password?</locale>
+		<locale lang="de">Passwort vergessen?</locale>
+	</entity>
+	<entity id="login">
+		<locale lang="fr">M'identifier</locale>
+		<locale lang="en">Identify myself</locale>
+		<locale lang="de">Identifiziere mich</locale>
+	</entity>
+	<entity id="no-account-yet-legend">
+		<locale lang="fr">Vous ne possédez pas encore de compte client?</locale>
+		<locale lang="en">You do not have an account?</locale>
+		<locale lang="de">Sie haben noch kein Konto?</locale>
+	</entity>
+	<entity id="no-account-yet-text">
+		<locale lang="fr">Pour passer votre commande, vous devez vous inscrire sur le site. Il vous suffit de cliquer sur le bouton ci-dessous pour continuer votre commande.</locale>
+		<locale lang="en">To place your order, you must register on the site. Simply click on the button below to continue your order.</locale>
+		<locale lang="de">Um Ihre Bestellung aufgeben, müssen Sie sich auf der Website. Klicken Sie einfach auf den Button unten, um weiterhin Ihre Bestellung.</locale>
+	</entity>
+	<entity id="your-login-details-legend">
+		<locale lang="fr">Vos informations de connexion</locale>
+		<locale lang="en">Your login information</locale>
+		<locale lang="de">Ihre Login-Daten</locale>
+	</entity>
+	<entity id="your-login-details-text">
+		<locale lang="fr">Pour suivre votre commande en ligne, recevoir la confirmation de votre commande par e-mail, merci de remplir le formulaire ci-dessous.</locale>
+		<locale lang="en">To track your order online, receive confirmation of your order by e-mail, thank you to fill out the form below.</locale>
+		<locale lang="de">Um Ihre Bestellung online zu verfolgen, erhalten eine Bestätigung Ihrer Bestellung per E-Mail, ich danke Ihnen, füllen Sie das unten stehende Formular aus.</locale>
+	</entity>
+	<entity id="newemail">
+		<locale lang="fr">e-mail</locale>
+		<locale lang="en">e-mail</locale>
+		<locale lang="de">E-Mail</locale>
+	</entity>
+	<entity id="newemaillabel">
+		<locale lang="fr">Votre adresse e-mail</locale>
+		<locale lang="en">Your e-mail</locale>
+		<locale lang="de">Ihre E-Mail</locale>
+	</entity>
+	<entity id="firstname">
+		<locale lang="fr">prénom</locale>
+		<locale lang="en">first name</locale>
+		<locale lang="de">Vorname</locale>
+	</entity>
+	<entity id="firstnamelabel">
+		<locale lang="fr">Votre prénom</locale>
+		<locale lang="en">Your name</locale>
+		<locale lang="de">Ihr Name</locale>
+	</entity>
+	<entity id="lastname">
+		<locale lang="fr">nom</locale>
+		<locale lang="en">name</locale>
+		<locale lang="de">Name</locale>
+	</entity>
+	<entity id="lastnamelabel">
+		<locale lang="fr">Votre nom</locale>
+		<locale lang="en">Your name</locale>
+		<locale lang="de">Ihr Name</locale>
+	</entity>
+	<entity id="newpassword">
+		<locale lang="fr">mot de passe</locale>
+		<locale lang="en">Password</locale>
+		<locale lang="de">Passwort</locale>
+	</entity>
+	<entity id="newpasswordlabel">
+		<locale lang="fr">Choisissez votre mot de passe</locale>
+		<locale lang="en">Choose your password</locale>
+		<locale lang="de">Wählen Sie Ihr Passwort</locale>
+	</entity>
+	<entity id="newpasswordconfirm">
+		<locale lang="fr">confirmation du mot de passe</locale>
+		<locale lang="en">Confirmation password</locale>
+		<locale lang="de">Bestätigung Passwort</locale>
+	</entity>
+	<entity id="newpasswordconfirmlabel">
+		<locale lang="fr">Confirmez votre mot de passe</locale>
+		<locale lang="en">Confirm your password</locale>
+		<locale lang="de">Bestätigen Sie Ihr Passwort</locale>
+	</entity>
+	<entity id="createaccount">
+		<locale lang="fr">Créer votre compte</locale>
+		<locale lang="en">Create your account</locale>
+		<locale lang="de">Erstellen Sie Ihr Konto</locale>
+	</entity>
+	<entity id="CreateAccount-error">
+		<locale lang="fr">Erreur lors de la création de votre compte</locale>
+		<locale lang="en">Error when creating your account</locale>
+		<locale lang="de">Fehler beim Erstellen Ihres Kontos</locale>
+	</entity>
+	<entity id="Login-error">
+		<locale lang="fr">Votre e-mail ou votre mot de passe n'est pas valide</locale>
+		<locale lang="en">Your e-mail or your password is not valid</locale>
+		<locale lang="de">Ihre E-Mail oder Ihr Kennwort ist ungültig</locale>
+	</entity>
+	<entity id="useraccount-already-exist">
+		<locale lang="fr">Un compte existe deja pour cette e-mail</locale>
+		<locale lang="en">An account already exists for this e-mail</locale>
+		<locale lang="de">Ein Konto existiert bereits für diese E-Mail</locale>
+	</entity>
+	<entity id="Passwordconfirm-error">
+		<locale lang="fr">Votre mot de passe n'est pas confirmé</locale>
+		<locale lang="en">Your password is not confirmed</locale>
+		<locale lang="de">Ihr Passwort ist nicht bestätigt</locale>
+	</entity>
+	<entity id="Back">
+		<locale lang="fr">Revenir à l'écran précédent</locale>
+		<locale lang="en">Return to the previous screen</locale>
+		<locale lang="de">Zurück zum vorherigen Bildschirm</locale>
+	</entity>
+	<entity id="Login-already-exists-error">
+		<locale lang="fr">Une personne qui utilise cette adresse e-mail est déjà enregistrée sur le site.</locale>
+		<locale lang="en">A person who uses this e-mail address is already registered on the site.</locale>
+		<locale lang="de">Eine Person, die diese E-Mail-Adresse verwendet, ist bereits auf der Website registriert.</locale>
+	</entity>
+</localization>

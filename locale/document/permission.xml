@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<localization>
+
+  <entity id="edition-form-title">
+    <locale lang="fr">gestion des droits</locale>
+    <locale lang="en">right management</locale>
+  </entity>
+
+  <entity id="Admin">
+    <locale lang="fr">Administrateur</locale>
+    <locale lang="en">Administrator</locale>
+  </entity>
+  <entity id="Admin-help">
+    <locale lang="fr">Administrateur</locale>
+    <locale lang="en">Administrator</locale>
+  </entity>
+  <entity id="Writer">
+    <locale lang="fr">Rédacteur</locale>
+    <locale lang="en">Writer</locale>
+  </entity>
+  <entity id="Writer-help">
+    <locale lang="fr">Rédacteur</locale>
+    <locale lang="en">Writer</locale>
+  </entity>
+  <entity id="Translator">
+    <locale lang="fr">Traducteur</locale>
+    <locale lang="en">Translator</locale>
+  </entity>
+  <entity id="Translator-help">
+    <locale lang="fr">Traducteur</locale>
+    <locale lang="en">Translator</locale>
+  </entity>
+  <entity id="Validator">
+    <locale lang="fr">Validateur</locale>
+    <locale lang="en">Validator</locale>
+  </entity>
+  <entity id="Validator-help">
+    <locale lang="fr">Validateur du contenu avant publication</locale>
+    <locale lang="en">Validator</locale>
+  </entity>
+  <entity id="User">
+    <locale lang="fr">Utilisateur</locale>
+    <locale lang="en">User</locale>
+  </entity>
+  <entity id="User-help">
+    <locale lang="fr">Utilisateur</locale>
+    <locale lang="en">User</locale>
+  </entity>
+</localization>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localization>
+	<entity id="title">
+		<locale lang="fr">civilité</locale>
+		<locale lang="en">title</locale>
+		<locale lang="de">Anrede</locale>
+	</entity>
+	<entity id="firstname">
+		<locale lang="fr">prénom</locale>
+		<locale lang="en">firstname</locale>
+		<locale lang="de">Vorname</locale>
+	</entity>
+	<entity id="lastname">
+		<locale lang="fr">nom</locale>
+		<locale lang="en">lastname</locale>
+		<locale lang="de">Name</locale>
+	</entity>
+	<entity id="email">
+		<locale lang="fr">adresse e-mail</locale>
+		<locale lang="en">email</locale>
+		<locale lang="de">E-Mail</locale>
+	</entity>
+	<entity id="company">
+		<locale lang="fr">société</locale>
+		<locale lang="en">company</locale>
+		<locale lang="de">Firma</locale>
+	</entity>
+	<entity id="addressline1">
+		<locale lang="fr">adresse (ligne 1)</locale>
+		<locale lang="en">address (line 1)</locale>
+		<locale lang="de">Adresse (Zeile 1)</locale>
+	</entity>
+	<entity id="addressline2">
+		<locale lang="fr">adresse (ligne 2)</locale>
+		<locale lang="en">address (line 2)</locale>
+		<locale lang="de">Adresse (Zeile 2)</locale>
+	</entity>
+	<entity id="addressline3">
+		<locale lang="fr">adresse (ligne 3)</locale>
+		<locale lang="en">addressline3</locale>
+		<locale lang="de">Adresse (Zeile 3)</locale>
+	</entity>
+	<entity id="zipcode">
+		<locale lang="fr">code postal</locale>
+		<locale lang="en">zipcode</locale>
+		<locale lang="de">PLZ</locale>
+	</entity>
+	<entity id="city">
+		<locale lang="fr">ville</locale>
+		<locale lang="en">city</locale>
+		<locale lang="de">Stadt</locale>
+	</entity>
+	<entity id="province">
+		<locale lang="fr">province</locale>
+		<locale lang="en">province</locale>
+		<locale lang="de">Provinz</locale>
+	</entity>
+	<entity id="countryid">
+		<locale lang="fr">pays</locale>
+		<locale lang="en">country</locale>
+		<locale lang="de">Land</locale>
+	</entity>
+	<entity id="phone">
+		<locale lang="fr">téléphone</locale>
+		<locale lang="en">phone</locale>
+		<locale lang="de">Telefon</locale>
+	</entity>
+	<entity id="fax">
+		<locale lang="fr">fax</locale>
+		<locale lang="en">fax</locale>
+		<locale lang="de">Fax</locale>
+	</entity>
+</localization>

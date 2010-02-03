@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localization>
+	<entity id="Identify">
+		<locale lang="fr">Identification</locale>
+		<locale lang="en">Identification</locale>
+		<locale lang="de">Identification</locale>
+	</entity>
+	<entity id="Shipping">
+		<locale lang="fr">Adresse de livraison</locale>
+		<locale lang="en">Delivery Address</locale>
+		<locale lang="de">Lieferanschrift</locale>
+	</entity>
+	<entity id="Billing">
+		<locale lang="fr">Moyen de paiement</locale>
+		<locale lang="en">Payment Method</locale>
+		<locale lang="de">Zahlungsart</locale>
+	</entity>
+	<entity id="Confirm">
+		<locale lang="fr">Confirmation</locale>
+		<locale lang="en">Confirmation</locale>
+		<locale lang="de">Bestätigung</locale>
+	</entity>
+	<entity id="Payment">
+		<locale lang="fr">Paiement</locale>
+		<locale lang="en">Payment</locale>
+		<locale lang="de">Zahlung</locale>
+	</entity>
+</localization>

@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<localization>
+	<entity id="module-name">
+		<locale lang="fr">commandes</locale>
+		<locale lang="en">order</locale>
+	</entity>
+
+	<entity id="tree-root-name">
+		<locale lang="fr">commandes</locale>
+		<locale lang="en">order</locale>
+	</entity>
+
+	<entity id="system-folder-name">
+		<locale lang="fr">commandes</locale>
+		<locale lang="en">order</locale>
+	</entity>
+
+	<entity id="orders">
+		<locale lang="fr">commandes</locale>
+		<locale lang="en">order</locale>
+	</entity>
+
+	<entity id="order-details">
+		<locale lang="fr">détail de la commande</locale>
+		<locale lang="en">order details</locale>
+	</entity>
+
+	<entity id="order">
+		<locale lang="fr">gestion des commandes</locale>
+		<locale lang="en">orders management</locale>
+	</entity>
+
+	<entity id="mode">
+		<locale lang="fr">modes de paiement et de livraison</locale>
+		<locale lang="en">shipping and billing modes</locale>
+	</entity>
+
+	<entity id="Order-Identify-Step">
+		<locale lang="fr">commande - Identification</locale>
+		<locale lang="en">order - Identify</locale>
+	</entity>
+	
+	<entity id="Order-Shipping-Step">
+		<locale lang="fr">commande - Adresse de livraison</locale>
+		<locale lang="en">order - Shipping</locale>
+	</entity>
+	
+	<entity id="Order-Billing-Step">
+		<locale lang="fr">commande - Moyen de paiement</locale>
+		<locale lang="en">order - Billing</locale>
+	</entity>
+	
+	<entity id="Order-Confirm-Step">
+		<locale lang="fr">commande - Confirmation</locale>
+		<locale lang="en">order - Confirm</locale>
+	</entity>
+	
+	<entity id="Order-Payment-Step">
+		<locale lang="fr">commande - Paiement</locale>
+		<locale lang="en">order - Payment</locale>
+	</entity>
+	
+	<entity id="tags.cart">
+		<locale lang="fr">Détail du panier</locale>
+		<locale lang="en">Cart detail</locale>
+	</entity>
+
+	<entity id="tags.cart-empty">
+		<locale lang="fr">Panier vide</locale>
+		<locale lang="en">Empty cart</locale>
+	</entity>
+
+	<entity id="tags.Cgv">
+		<locale lang="fr">conditions générales de vente</locale>
+		<locale lang="en">general sales conditions</locale>
+	</entity>
+
+	<entity id="tags.Order">
+		<locale lang="fr">détail d'une commande</locale>
+		<locale lang="en">order detail</locale>
+	</entity>
+	
+	<entity id="tags.Order-list">
+		<locale lang="fr">mes commandes</locale>
+		<locale lang="en">my orders</locale>
+	</entity>
+
+	<entity id="tags.Order-messages">
+		<locale lang="fr">messagerie</locale>
+		<locale lang="en">messaging</locale>
+	</entity>
+	
+	<!-- Backoffice order edition -->
+	<entity id="back-to-order-list">
+		<locale lang="fr">retour à la liste des commandes</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="back-to-customer">
+		<locale lang="fr">retour au détail du client</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="back-to-top">
+		<locale lang="fr">haut de page</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="refresh">
+		<locale lang="fr">actualiser</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="print">
+		<locale lang="fr">imprimer</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="email">
+		<locale lang="fr">e-mail</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="shipping-address">
+		<locale lang="fr">adresse de livraison</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="billing-address">
+		<locale lang="fr">adresse de facturation</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="customer">
+		<locale lang="fr">client</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="order-state">
+		<locale lang="fr">état de la commande</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="amount">
+		<locale lang="fr">montant</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="sub-total">
+		<locale lang="fr">sous-total</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="sub-total-with-modificators">
+		<locale lang="fr">sous-total après réduction</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="total-to-pay">
+		<locale lang="fr">total à payer</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="shipping-fees">
+		<locale lang="fr">frais d'envoi</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="shipping-mode">
+		<locale lang="fr">mode d'envoi</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="billing-mode">
+		<locale lang="fr">mode de paiement</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="ref">
+		<locale lang="fr">ref.</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="label">
+		<locale lang="fr">désignation</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="unit-price-with-tax">
+		<locale lang="fr">prix unitaire TTC</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="total-price-with-tax">
+		<locale lang="fr">prix total TTC</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="quantity">
+		<locale lang="fr">quantité</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="current-state">
+		<locale lang="fr">état actuel</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="commentary">
+		<locale lang="fr">commentaire</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="save">
+		<locale lang="fr">enregistrer</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="general">
+		<locale lang="fr">général</locale>
+		<locale lang="en">general</locale>
+	</entity>
+
+	<entity id="website">
+		<locale lang="fr">site web</locale>
+		<locale lang="en">website</locale>
+	</entity>
+
+	<entity id="reference">
+		<locale lang="fr">référence</locale>
+		<locale lang="en">reference</locale>
+	</entity>
+
+	<entity id="date">
+		<locale lang="fr">date</locale>
+		<locale lang="en">date</locale>
+	</entity>
+
+	<entity id="tva">
+		<locale lang="fr">TVA ({rate})</locale>
+		<locale lang="en"></locale>
+	</entity>
+
+	<entity id="order-informations">
+		<locale lang="fr">informations sur la commande</locale>
+		<locale lang="en">order informations</locale>
+	</entity>
+
+	<entity id="cheque-advanced">
+		<locale lang="fr">instructions de paiement</locale>
+		<locale lang="en">billing instructions</locale>
+	</entity>
+
+	<entity id="package-tracking-number">
+		<locale lang="fr">n° de suivi du colis</locale>
+		<locale lang="en">package tracking number</locale>
+	</entity>
+
+	<entity id="order-status-change-help">
+		<locale lang="fr">Le changement de statut d'une commande envoie une notification par e-mail au client ({customerName}). Vous pouvez modifier ce comportement dans le module Notification, accessible depuis le menu Administration du menu principal de RBS Change.</locale>
+		<locale lang="en">Changing the status of an order will send an e-mail notification for the customer ({customerName}). This behaviour may be changed in the Notification module, located in the Administration main menu.</locale>
+	</entity>
+
+	<entity id="order-update-success">
+		<locale lang="fr">les informations de cette commande ont bient été mises à jour.</locale>
+	</entity>
+
+	<!-- Messages -->
+	<entity id="messages">
+		<locale lang="fr">messages</locale>
+	</entity>
+	
+	<entity id="messages-for-order-title">
+		<locale lang="fr">liste des messages associés à la commande n°{orderId}</locale>
+	</entity>
+
+	<entity id="send-message-for-order">
+		<locale lang="fr">envoyer un message relatif à la commande n°{orderId}</locale>
+	</entity>
+
+	<entity id="send-message">
+		<locale lang="fr">envoyer le message</locale>
+	</entity>
+
+	<entity id="message-sent-by-customer">
+		<locale lang="fr">message envoyé par le client</locale>
+	</entity>
+
+	<entity id="message-sent-to-customer">
+		<locale lang="fr">message envoyé au client par {sender}</locale>
+	</entity>
+
+	<entity id="send-message-error">
+		<locale lang="fr">Une erreur s'est produite lors de l'envoi du message.</locale>
+	</entity>
+
+	<entity id="send-message-success">
+		<locale lang="fr">Le message a bien été envoyé.</locale>
+	</entity>
+
+	<!-- Order-process closing -->
+	<entity id="order-process-closing">
+		<locale lang="fr">fermeture</locale>
+		<locale lang="en">closing</locale>
+	</entity>
+
+	<entity id="planned-closing">
+		<locale lang="fr">fermeture plannifiée</locale>
+		<locale lang="en">planned</locale>
+	</entity>
+	<entity id="planned-closing-tooltip">
+		<locale lang="fr">plannifier la fermeture de la boutique</locale>
+		<locale lang="en">plan store closing</locale>
+	</entity>
+	<entity id="planned-closing-help">
+		<locale lang="fr">Vous pouvez définir ici des dates de fermeture de votre boutique. Pendant la période ainsi sélectionnée, les clients ne peuvent pas passer de commande. Ceci peut-être utile pour les congés de votre service de traitement des commandes.</locale>
+		<locale lang="en">You can specify dates between which the store will be closed. During this time, customers can't purchase any items. This can be used when your delivery department is on holiday.</locale>
+	</entity>
+	<entity id="temporarily-closing">
+		<locale lang="fr">fermeture temporaire</locale>
+		<locale lang="en">temporarily</locale>
+	</entity>
+	<entity id="temporarily-closing-tooltip">
+		<locale lang="fr">fermer temporairement la boutique</locale>
+		<locale lang="en">temporarily close the store</locale>
+	</entity>
+	<entity id="temporarily-closing-help">
+		<locale lang="fr">Vous pouvez ici fermer temporairement votre boutique. Ceci peut être utile pour réaliser des tests de paiement, ou simplement si votre service de traitement des commandes n'est pas disponible. N'oubliez pas de ré-ouvrir votre boutique dès que possible.</locale>
+		<locale lang="en">You can temporarily close your store here. This may be useful if your delivery departement is not available, or just for testing purpose.</locale>
+	</entity>
+	<entity id="allowed-customers">
+		<locale lang="fr">clients autorisés</locale>
+		<locale lang="en">allowed customers</locale>
+	</entity>
+	<entity id="allowed-customers-tooltip">
+		<locale lang="fr">autoriser des comptes clients à passer commande pendant la fermeture</locale>
+		<locale lang="en">allow customers to purchase items while the store is closed</locale>
+	</entity>
+	<entity id="allowed-customers-help">
+		<locale lang="fr">Il est possible de définir des comptes clients qui pourront passer commande, même si le processus de commande est fermé. Ceci est très utile pour effectuer des tests de paiement, par exemple. Pour sélectionner des comptes clients dans l'arbre de ressources à droite, cliquer dans le champ ci-dessous pour afficher la vue adéquate à droite. Ensuite, il faut utiliser le champ de recherche (petite loupe) et glisser/déposer les comptes clients sélectionnés dans le champ ci-dessous.</locale>
+		<locale lang="en">While the order process is closed, you can nevertheless allow customers to purchase items. This is useful to test the payment process.</locale>
+	</entity>
+
+	<entity id="order-process-closing-help">
+		<locale lang="fr">Il est possible de fermer le processus de commande sur une période donnée, ou de le fermer temporairement. Pendant cette période, le site reste bien entendu accessible, ainsi que le catalogue en ligne, mais les clients ne peuvent pas commander (sauf les clients autorisés).</locale>
+		<locale lang="en">It is possible to close the order process during a while, or temporarily. During this period, the website and the catalog are still available, but customers can't purchase any items (except allowed customers).</locale>
+	</entity>
+
+	<entity id="order-process-is-closed-warning1">
+		<locale lang="fr">Attention : le processus de commande est actuellement fermé. Les clients ne peuvent pas passer commande.</locale>
+		<locale lang="en">Caution: order process is now closed. Customers can't purchase any item.</locale>
+	</entity>
+	<entity id="order-process-is-closed-warning2">
+		<locale lang="fr">Pour l'ouvrir, veuillez vous rendre dans les</locale>
+		<locale lang="en">To re-open it, please go to the </locale>
+	</entity>
+	<entity id="order-process-is-closed-warning3">
+		<locale lang="fr">préférences du module Commandes</locale>
+		<locale lang="en">Orders module preferences</locale>
+	</entity>
+
+	<!-- Coupons -->	
+	<entity id="coupon">
+		<locale lang="fr">coupon de réduction</locale>
+	</entity>
+	
+	<entity id="coupon-name">
+		<locale lang="fr">libellé</locale>
+	</entity>
+	
+	<entity id="coupon-description">
+		<locale lang="fr">description</locale>
+	</entity>
+	
+	<entity id="coupon-code">
+		<locale lang="fr">code</locale>
+	</entity>
+	
+	<entity id="coupon-reduction">
+		<locale lang="fr">réduction</locale>
+	</entity>
+	
+	<entity id="coupons-disabled-warning1">
+		<locale lang="fr">Attention : des coupons de réduction sont publiés alors que leur saisie est désactivée sur le site.</locale>
+	</entity>
+	<entity id="coupons-disabled-warning2">
+		<locale lang="fr">Pour activer les coupons, rendez-vous dans les péférences</locale>
+	</entity>
+	<entity id="coupons-disabled-warning3">
+		<locale lang="fr">péférences du module Commandes</locale>
+	</entity>
+	
+	<!-- Lists -->	
+	<entity id="list.payment-status-categories">
+		<locale lang="fr">catégories de statut de paiement</locale>
+		<locale lang="en">payment status categories</locale>
+	</entity>
+	<entity id="list.payment-status-category-paid">
+		<locale lang="fr">payées</locale>
+		<locale lang="en">paid</locale>
+	</entity>
+	<entity id="list.payment-status-category-paid-or-waiting">
+		<locale lang="fr">payées ou en attente de paiement</locale>
+		<locale lang="en">paid or waiting payment</locale>
+	</entity>
+	<entity id="list.payment-status-category-all">
+		<locale lang="fr">toutes</locale>
+		<locale lang="en">toutes</locale>
+	</entity>
+	
+	<entity id="list.comment-reminder-references">
+		<locale lang="fr">références pour le rappel de commentaires</locale>
+	</entity>
+	<entity id="list.comment-reminder-refrence-payment">
+		<locale lang="fr">date du paiement</locale>
+	</entity>
+	<entity id="list.comment-reminder-refrence-shipment">
+		<locale lang="fr">date d'expédition</locale>
+	</entity>
+	
+	<entity id="list.comment-reminder-selections">
+		<locale lang="fr">modes de sélection pour le rappel de commentaires</locale>
+	</entity>
+	<entity id="list.comment-reminder-selection-all">
+		<locale lang="fr">tous</locale>
+	</entity>
+	<entity id="list.comment-reminder-selection-random">
+		<locale lang="fr">aléatoire</locale>
+	</entity>
+	
+	<entity id="column.date">
+		<locale lang="fr">Date</locale>
+		<locale lang="en">date</locale>
+	</entity>
+
+	<entity id="column.reference">
+		<locale lang="fr">référence</locale>
+		<locale lang="en">reference</locale>
+	</entity>
+
+	<entity id="column.orderStatus">
+		<locale lang="fr">statut</locale>
+		<locale lang="en">status</locale>
+	</entity>
+
+	<entity id="column.totalAmountWithTax">
+		<locale lang="fr">montant TTC</locale>
+		<locale lang="en">amount with tax</locale>
+	</entity>
+
+	<entity id="column.customer">
+		<locale lang="fr">client</locale>
+		<locale lang="en">customer</locale>
+	</entity>
+
+	<entity id="column.email">
+		<locale lang="fr">e-mail</locale>
+		<locale lang="en">e-mail</locale>
+	</entity>
+
+	<entity id="feeder-orderedtogetherproductfeeder">
+		<locale lang="fr">commandés ensemble</locale>
+	</entity>
+</localization>

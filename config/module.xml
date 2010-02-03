@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<module>
+		<enabled>true</enabled>
+		<visible>true</visible>
+		<icon>order</icon>
+		<category>e-commerce</category>
+		<usetopic>false</usetopic>
+	</module>
+	<project>
+		<!-- Feeders for product suggestions. -->
+		<modulesCatalogProductSuggestionFeeder>
+			<entry name="1">order_OrderedTogetherProductFeeder</entry>
+		</modulesCatalogProductSuggestionFeeder>
+		<!-- In normal cases, genPDF needs genNumber.
+		If genPDF is setted to true and genNumber to false,
+		be sure some code set the orderNumber in OrderService::preInsert() -->
+		<entry name="genNumber">true</entry>
+		<entry name="genBill">true</entry>
+		<entry name="odtphp2pdfURL">http://odtphp2pdf.rd.devlinux.france.rbs.fr</entry>
+	</project>
+</config>

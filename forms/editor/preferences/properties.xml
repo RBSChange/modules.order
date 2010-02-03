@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel>
+	<section labeli18n="modules.order.document.preferences.Edition-form-title">
+		<field name="orderConfirmedNotificationUser" />
+		<field name="disableCoupons" />
+	</section>
+	<section labeli18n="modules.order.document.preferences.tab.Comments">
+		<field name="enableCommentReminder" />
+		<field name="commentReminderPeriod" />
+		<field name="commentReminderReference" />
+		<field name="commentReminderSelection" />
+		<field name="commentReminderCount" />
+	</section>
+	<section labeli18n="modules.order.bo.general.Planned-closing">
+		<field name="orderProcessClosedBeginDate" />
+		<field name="orderProcessClosedEndDate" />
+		<field name="orderProcessClosedDateMessage" />
+	</section>
+	
+	<section labeli18n="modules.order.bo.general.Temporarily-closing">
+		<field name="orderProcessClosed" />
+		<field name="orderProcessClosedMessage" />
+	</section>
+	
+	<section labeli18n="modules.order.bo.general.Allowed-customers">
+		<field name="orderProcessAllowedCustomer" />
+	</section>
+</panel>

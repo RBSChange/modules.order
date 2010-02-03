@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<listeners>
+	<listener listenerClass="order_UserLoginListener"/>
+	<listener listenerClass="order_CommentRemiderListener"/>
+	<listener listenerClass="order_OrderBillListener"/>
+</listeners>

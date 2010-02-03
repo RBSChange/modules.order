@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<localization>
+	<entity id="create_">
+		<locale lang="fr">créer</locale>
+		<locale lang="en">create</locale>
+	</entity>
+	<entity id="create2_">
+		<locale lang="fr">créer</locale>
+		<locale lang="en">create</locale>
+	</entity>
+	<entity id="create-shippingmode">
+		<locale lang="fr">créer un mode de livraison</locale>
+		<locale lang="en">create a shipping mode</locale>
+	</entity>
+	<entity id="Create-Order">
+		<locale lang="fr">Create order</locale>
+		<locale lang="en">Create order</locale>
+	</entity>
+	<entity id="Create-Orderline">
+		<locale lang="fr">Create orderline</locale>
+		<locale lang="en">Create orderline</locale>
+	</entity>
+	<entity id="cancelOrder">
+		<locale lang="fr">annuler</locale>
+		<locale lang="en">cancel</locale>
+	</entity>
+	<entity id="cancel-multiple-orders-confirm-message">
+		<locale lang="fr">L'annulation d'une commande entraîne l'envoi d'une notification d'annulation de commande au client. Souhaitez-vous réellement annuler les {count} commandes sélectionnées ?</locale>
+		<locale lang="en">Do you really want to cancel the {count} selected orders? Customers will receive a notification.</locale>
+	</entity>
+	<entity id="cancel-order-confirm-message">
+		<locale lang="fr">L'annulation d'une commande entraîne l'envoi d'une notification d'annulation de commande au client. Souhaitez-vous réellement annuler la commande n° {order} de {customer} passée le {date} ?</locale>
+		<locale lang="en">Do you really want to cancel the order {order} of {customer} created on {date}? Customer will receive a notification.</locale>
+	</entity>
+	<entity id="Create-Cartrule">
+		<locale lang="fr">créer une règle de panier</locale>
+		<locale lang="en">create cart rule</locale>
+	</entity>
+	<entity id="Create-Cartrulecondition">
+		<locale lang="fr">ajouter une condition</locale>
+		<locale lang="en">add condition</locale>
+	</entity>
+	<entity id="Create-Cartruleresult">
+		<locale lang="fr">ajouter des produits à prix réduit</locale>
+		<locale lang="en">add low-priced products</locale>
+	</entity>
+	<entity id="set-cart-rules-conditions-order">
+		<locale lang="fr">définir l'ordre des conditions</locale>
+		<locale lang="en">sort conditions</locale>
+	</entity>
+	<entity id="set-cart-rules-result-order">
+		<locale lang="fr">définir l'ordre des produits à prix réduit</locale>
+		<locale lang="en">sort low-priced conditions</locale>
+	</entity>
+	<entity id="Create-Billingmode">
+		<locale lang="fr">Create billingmode</locale>
+		<locale lang="en">Create billingmode</locale>
+	</entity>
+	<entity id="Create-Discountorderline">
+		<locale lang="fr">Create discountorderline</locale>
+		<locale lang="en">Create discountorderline</locale>
+	</entity>
+	<entity id="Create-Condition">
+		<locale lang="fr">Create condition</locale>
+		<locale lang="en">Create condition</locale>
+	</entity>
+	<entity id="Create-Coupon">
+		<locale lang="fr">Créer un coupon</locale>
+		<locale lang="en">Create coupon</locale>
+	</entity>
+	<entity id="Create-Smartfolder">
+		<locale lang="fr">Créer un dossier intelligent</locale>
+		<locale lang="en">Create smart folder</locale>
+	</entity>
+	<entity id="GeneratingBill">
+		<locale lang="fr">Facture en cours de génération...</locale>
+	</entity>
+	<entity id="GeneratingBillDone">
+		<locale lang="fr">Facture générée!</locale>
+	</entity>
+	<entity id="GenerateBill">
+		<locale lang="fr">Générer la facture</locale>
+	</entity>
+	<entity id="DownloadBill">
+		<locale lang="fr">Télécharger la facture</locale>
+	</entity>
+	<entity id="Unable-to-generate-pdf-bill">
+		<locale lang="fr">Une erreur est survenue pendant la génération de la facture. Si le problème persiste, contactez votre administrateur.</locale>
+	</entity>
+</localization>

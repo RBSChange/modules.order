@@ -1,0 +1,715 @@
+<?php
+/**
+ * order_CartService
+ * @package modules.order
+ */
+class order_CartService extends BaseService
+{
+	const CART_SESSION_NAMESPACE = 'order_cart';
+	const CARTLINE_NUMBER_LIMIT = 100;
+	
+	const REFERENCE_WEIGHT_UNIT = 'g';
+	
+	/**
+	 * Singleton
+	 * @var order_CartService
+	 */
+	private static $instance = null;
+	
+	/**
+	 * @return order_CartService
+	 */
+	public static function getInstance()
+	{
+		if (is_null(self::$instance))
+		{
+			self::$instance = self::getServiceClassInstance(get_class());
+		}
+		return self::$instance;
+	}
+	
+	/**
+	 * @var order_CartInfo
+	 */
+	private $cartInfo;
+	
+	
+	/**
+	 * @return order_CartInfo
+	 */
+	public function getDocumentInstanceFromSession()
+	{	
+		if ($this->cartInfo === null)
+		{
+			$user = Controller::getInstance()->getContext()->getUser();
+			if ($user->hasAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE))
+			{
+				if (Framework::isDebugEnabled())
+				{
+					Framework::debug(__METHOD__ ." (FROM SESSION)");
+				}
+				$this->cartInfo = $user->getAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE);
+			}
+			
+			if (!$this->cartInfo instanceof order_CartInfo)
+			{
+				if (Framework::isDebugEnabled())
+				{
+					Framework::debug(__METHOD__ ." (NEW CART)");
+				}
+				$this->cartInfo = new order_CartInfo();
+				if (!is_null($customer = customer_CustomerService::getInstance()->getCurrentCustomer()))
+				{
+					$this->cartInfo->setCustomerId($customer->getId());
+				}
+		
+				$this->cartInfo->setShop(catalog_ShopService::getInstance()->getCurrentShop());
+			}
+		}
+		return $this->cartInfo;
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	public function saveToSession($cart)
+	{
+		$this->cartInfo = $cart;
+		if (Framework::isDebugEnabled())
+		{
+			Framework::debug(__METHOD__);
+			Framework::debug(var_export($cart, true));
+		}
+		$user = Controller::getInstance()->getContext()->getUser();
+		$user->setAttribute($this->getSessionKey('CartInfo'), $cart, self::CART_SESSION_NAMESPACE);
+		
+		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
+		if ($customer !== null)
+		{
+			$this->saveToDatabase($customer, $cart);
+		}
+	}
+	
+	/**
+	 * @param customer_persistentdocument_customer $customer
+	 * @param order_CartInfo $cart
+	 */
+	private function saveToDatabase($customer, $cart)
+	{
+		if (Framework::isDebugEnabled())
+		{
+			Framework::debug(__METHOD__);
+		}
+		$tm = f_persistentdocument_TransactionManager::getInstance();
+		try
+		{
+			$tm->beginTransaction();
+			$customer->setCart($cart);
+			$customer->save();
+			$tm->commit();
+		}
+		catch (Exception $e)
+		{
+			throw $tm->rollBack($e);
+		}
+	}
+	
+	public function deleteFromSession()
+	{
+		$this->cartInfo = null;
+		$user = Controller::getInstance()->getContext()->getUser();
+		$user->removeAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE);
+		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
+		if ($customer !== null)
+		{
+			$this->saveToDatabase($customer, null);
+		}
+	}
+	
+	/**
+	 * This method is meant to be called one or several time,
+	 * then the cart needs to be refreshed by calling refhresh($cart)
+	 * method.
+	 *
+	 * @param catalog_persistentdocument_product $product
+	 * @param Double $quantity
+	 * @param Array<String, Mixed> $properties
+	 * @return order_CartInfo The related cart
+	 */
+	public function addProduct($product, $quantity, $properties = array())
+	{
+		$cart = $this->getDocumentInstanceFromSession();
+		if (!$product instanceof catalog_persistentdocument_product) 
+		{
+			throw new Exception('Invalid product');
+		}
+		else
+		{
+			$product = $product->getDocumentService()->getProductToAddToCart($product, $cart->getShop(), $quantity, $properties);
+		}
+		
+		if ($product->isPublished() && ($quantity > 0))
+		{
+			$this->validateCartLineCount($cart); 
+			if ($this->validateProduct($cart, $product, $quantity))
+			{
+				$cartLine = new order_CartLineInfo();
+				$cartLine->setProduct($product);
+				$cartLine->setQuantity($quantity);
+				$cartLine->mergePropertiesArray($properties);								
+				$cart->addCartLine($cartLine);
+				
+				// Log action.
+				$params = array('product' => $product->getLabel());
+				UserActionLoggerService::getInstance()->addCurrentUserDocumentEntry('add-product-to-cart', null, $params, 'customer');
+			}
+			// If the article has no price the line is not added and a warning message is displayed.
+			else
+			{
+				$replacements = array('articleLabel' => $product->getLabel());
+				$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-price;', $replacements));
+			}
+		}
+		return $cart;
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 * @param marketing_persistentdocument_coupon $coupon
+	 */
+	public function setCoupon($cart, $coupon)
+	{
+		if ($coupon === null)
+		{
+			$cart->setCoupon(null);
+		}
+		else
+		{
+			$couponinfo = new order_CouponInfo();
+			$couponinfo->setId($coupon->getId());
+			$cart->setCoupon($couponinfo);
+			$this->refreshCoupon($cart);
+		}
+		return $cart->getCoupon();
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 * @param catalog_persistentdocument_product $product
+	 * @param double $quantity
+	 */
+	private function validateProduct($cart, $product, $quantity)
+	{
+		if ($product->isPublished() && $product->canBeOrdered($cart->getShop()) && 
+			$product->getPrice($cart->getShop(), $cart->getCustomer(), $quantity) != null)
+		{
+			if ($product instanceof catalog_StockableDocument)
+			{
+				if (!catalog_StockService::getInstance()->isAvailable($product, $quantity))
+				{
+					$replacements = array('articleLabel' => $product->getLabel(), 
+						'quantity' => $quantity, 'unit' => '', 
+						'availableQuantity' => $product->getStockQuantity(), 'availableUnit' => '');
+					$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-quantity;', $replacements));
+					return false;					
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+			
+	/**
+	 * @param order_CartLineInfo $cartLine
+	 * @param Double $weight
+	 * @param String $referenceUnit
+	 */
+	public function setWeightProperties($cartLine, $weight, $unit)
+	{
+		$quantity = $cartLine->getQuantity();
+		if (!is_null($weight) && !is_null($unit))
+		{
+			$cartLine->setProperties('_weight', $weight);
+			$cartLine->setProperties('_weightUnit', $unit);
+			$cartLine->setProperties('_formattedWeight', catalog_QuantityHelper::formatWeight($weight, $unit));
+			$cartLine->setProperties('_totalWeight', $quantity * $weight);
+			$cartLine->setProperties('_formattedTotalWeight', catalog_QuantityHelper::formatWeight($quantity * $weight, $unit));
+			$convertedWeight = catalog_QuantityHelper::convertWeight($weight, $unit, self::REFERENCE_WEIGHT_UNIT);
+			if (!is_null($convertedWeight))
+			{
+				$cartLine->setProperties('_referenceWeight', $quantity * $convertedWeight);
+			}
+			else
+			{
+				$cartLine->setProperties('_referenceWeight', null);
+			}
+		}
+		else
+		{
+			$cartLine->setProperties('_weight', null);
+			$cartLine->setProperties('_weightUnit', null);
+			$cartLine->setProperties('_formattedWeight', null);
+			$cartLine->setProperties('_totalWeight', null);
+			$cartLine->setProperties('_formattedTotalWeight', null);
+			$cartLine->setProperties('_referenceWeight', null);
+		}
+	}	
+	
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	protected function refreshTotalWeights($cart)
+	{
+		//TODO retrouve les informations dans le produit ?
+		/*
+		foreach ($cart->getCartLineArray() as $cartLine)
+		{
+			$this->setWeightProperties($cartLine, null, null);
+		}
+		*/
+	}
+	
+	/**
+	 * This method is meant to be called one or several time,
+	 * then the cart needs to be refreshed by calling the refresh($cart)
+	 * method.
+	 *
+	 * @param order_CartInfo $cart
+	 * @param Integer $cartLineIndex
+	 * @param catalog_persistentdocument_product $product
+	 * @param Double $quantity
+	 * @param Array<String, Mixed> $properties
+	 */
+	public function updateLine($cart, $cartLineIndex, $product, $quantity, $properties = array())
+	{
+		$cartLine = $cart->getCartLine($cartLineIndex);
+		if (is_null($cartLine))
+		{
+			throw new order_Exception('The line with index "' . $cartLineIndex . '" doesn\'t exist.');
+		}
+		$cartLine->setQuantity($quantity);
+		$cartLine->setProduct($product);
+		$cartLine->mergePropertiesArray($properties);
+	}
+
+	/**
+	 * This method is meant to be called one or several time,
+	 * then the cart needs to be refreshed by calling the refresh($cart)
+	 * method.
+	 *
+	 * @param order_CartInfo $cart
+	 * @param Integer $cartLineInfoIndex
+	 */
+	public function removeLine($cart, $cartLineIndex)
+	{
+		$cart->removeCartLine($cartLineIndex);
+	}
+	
+	/**
+	 * Validate the cart.
+	 * Update prices info.
+	 *
+	 * @param order_CartInfo $cart
+	 * @throws order_ValidationException
+	 */
+	public function refresh($cart)
+	{
+		if (Framework::isDebugEnabled())
+		{
+			Framework::info(__METHOD__);
+			
+		}
+		Framework::startBench();		
+		// Validate the cart.
+		$this->validateCart($cart);
+		
+		Framework::bench('validateCart');
+		
+		// Refresh the prices infos.
+		$this->refreshCartPrice($cart);
+		Framework::bench('refreshCartPrice');
+		
+		$this->refreshDiscount($cart);
+		Framework::bench('refreshDiscount');
+	
+		$this->refreshCoupon($cart);
+		Framework::bench('refreshCoupon');	
+		
+		
+		//TODO Cancel process ?
+		order_OrderProcess::getInstance()->setCurrentStep(null);
+
+		$this->saveToSession($cart);
+		
+		Framework::endBench(__METHOD__);
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	protected function refreshCartPrice($cart)
+	{
+		$cartLines = $cart->getCartLineArray();
+		$shop = $cart->getShop();
+		$customer = $cart->getCustomer();
+		foreach ($cartLines as $cartLine)
+		{
+			$product = $cartLine->getProduct();
+			$price = $product->getPrice($shop, $customer, $cartLine->getQuantity());
+			$cartLine->importPrice($price);			
+		}
+	}
+
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	protected function refreshDiscount($cart)
+	{
+		$result = array();
+		if (ModuleService::getInstance()->isInstalled('marketing'))
+		{
+			$discountArray = marketing_DiscountService::getInstance()->getDiscountArrayForCart($cart);
+			if (count($discountArray) > 0)
+			{
+				$subTotalWithoutTax = $cart->getSubTotalWithoutTax();
+				$subTotalWithTax = $cart->getSubTotalWithTax();
+				foreach ($discountArray as $discountDoc) 
+				{
+					$discount = new order_DiscountInfo();
+					$discount->setId($discountDoc->getId());
+					$value = $discountDoc->getValue();
+					if ($discountDoc->getIsRate())
+					{
+						$discount->setValueWithoutTax($subTotalWithoutTax * $value);
+						$discount->setValueWithTax($subTotalWithTax * $value);
+					}
+					else
+					{
+						$discount->setValueWithTax($value);
+						$discount->setValueWithoutTax(($subTotalWithoutTax / $subTotalWithTax) * $value);
+					}				
+					$result[] = $discount;
+				}
+			}
+		}
+		$cart->setDiscountArray($result);
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	protected function refreshCoupon($cart)
+	{
+		if ($cart->hasCoupon())
+		{
+			$coupon = $cart->getCoupon();
+			$document = DocumentHelper::getDocumentInstance($coupon->getId(), 'modules_marketing/coupon');
+			$coupon->setLabel($document->getCode());
+			if ($document->getIsRate())
+			{
+				$coupon->setValueWithoutTax($cart->getSubTotalWithoutTax() * $document->getValue());
+				$coupon->setValueWithTax($cart->getSubTotalWithTax() * $document->getValue());
+			}
+			else
+			{
+				$coupon->setValueWithTax($document->getValue());
+				$coupon->setValueWithoutTax(($cart->getSubTotalWithoutTax() / $cart->getSubTotalWithTax()) * $document->getValue());
+			}
+		}
+	}
+
+	/**
+	 * Merge equivalent lines (same product/article), with adding quantities.
+	 * Remove lines with quantities set to 0.
+	 * Check products, cartrules and articles publication.
+	 * Check if the qiantities are valid.
+	 *
+	 * @param order_CartInfo $cart
+	 * @return Boolean
+	 * @throws order_ValidationException
+	 */
+	protected function validateCart($cart)
+	{
+		// Clear error messages (error message are re-generated by this method each times it is called.
+		$cart->clearErrorMessages();		
+		// If there are lines, clean them.
+		$cartLines = $cart->getCartLineArray();
+		$removeCartLineIndex = array();
+		foreach ($cartLines as $index => $cartLine)
+		{
+			if (!in_array($index, $removeCartLineIndex))
+			{
+				// Remove line with quantity set to 0.
+				if ($cartLine->getQuantity() <= 0)
+				{
+					$removeCartLineIndex[] = $index;
+					continue;
+				}
+				
+				if (!$this->validateCartLine($cartLine, $cart))
+				{
+					continue;
+				}
+	
+				// Merge equivalent lines.
+				$eqCartLines = $this->getEquivalentCartLine($cart, $cartLine);
+				foreach ($eqCartLines as $eqIndex => $eqCartLine)
+				{
+					if ($index != $eqIndex)
+					{
+						$cartLine->addToQuantity($eqCartLine->getQuantity());
+						$removeCartLineIndex[] = $eqIndex;
+					}
+				}
+			}
+		}
+		
+		$cart->removeCartLines($removeCartLineIndex);
+
+		// Refresh total weights.
+		$this->refreshTotalWeights($cart);
+		
+		if (count($cart->getWarningMessageArray()) > 0 || count($cart->getErrorMessageArray()) > 0)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	/**
+	 * @param order_CartLineInfo $cartLine
+	 * @param order_CartInfo $cart
+	 * @return Boolean
+	 */
+	protected function validateCartLine($cartLine, $cart)
+	{
+		try 
+		{
+			$product = $cartLine->getProduct();
+			if ($product !== null && $product->isPublished())
+			{
+				if ($product instanceof catalog_StockableDocument)
+				{
+					if (!catalog_StockService::getInstance()->isAvailable($product, $cartLine->getQuantity()))
+					{
+						$replacements = array('articleLabel' => $product->getLabel(), 
+							'quantity' => $cartLine->getQuantity(), 'unit' => '', 
+							'availableQuantity' => $product->getStockQuantity(), 'availableUnit' => '');
+						$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-quantity;', $replacements));
+						return false;					
+					}
+				}
+				return true;
+			}
+		}			
+		catch (Exception $e)
+		{
+			Framework::exception($e);
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * @return Integer
+	 */
+	protected function getCartLineNumberLimit()
+	{
+		return self::CARTLINE_NUMBER_LIMIT;
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 * @param order_CartLineInfo $CartLine
+	 * @return Array<order_CartLineInfo>
+	 */
+	protected function getEquivalentCartLine($cart, $cartLine)
+	{
+		$cartLines = $cart->getCartLineArray();
+		$result = array();
+		if (count($cartLines) > 0)
+		{
+			foreach ($cartLines as $index => $otherCartLine)
+			{
+				if ($this->isEquivalentCartLine($cartLine, $otherCartLine))
+				{
+					$result[$index] = $otherCartLine;
+				}
+			}
+		}
+		return $result;
+	}
+	
+	/**
+	 * @param order_CartLineInfo $cartLine1
+	 * @param order_CartLineInfo $cartLine2
+	 * @return Boolean
+	 */
+	protected function isEquivalentCartLine($cartLine1, $cartLine2)
+	{
+		if ($cartLine1 === $cartLine2)
+		{
+			return true;
+		}
+		else if ($cartLine1->getProductId() != $cartLine2->getProductId())
+		{
+			return false;
+		}
+		else
+		{
+			return $this->hasEquivalentKeyProperties($cartLine1, $cartLine2);
+		}
+	}
+	
+	/**
+	 * @param order_CartLineInfo $cartLine1
+	 * @param order_CartLineInfo $cartLine2
+	 * @return Boolean
+	 */
+	protected function hasEquivalentKeyProperties($cartLine1, $cartLine2)
+	{
+		$keyPropertiesArray = $this->getLineKeyProperties();
+		foreach ($keyPropertiesArray as $property)
+		{
+			if ($cartLine1->getProperties($property) != $cartLine2->getProperties($property))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 * @throw order_ValidationException
+	 */
+	protected function validateCartLineCount($cart)
+	{
+		$cartLines = $cart->getCartLineArray();		
+		if (count($cartLines) >= $this->getCartLineNumberLimit())
+		{
+			throw new order_ValidationException("The cart can't hold more than " . $this->getCartLineNumberLimit() . " items");
+		}
+	}
+	
+	/**
+	 * Return an array indexed by product ids and containing the quantities for each article.
+	 * @param order_CartInfo $cart
+	 * @return Array<Integer, Double>
+	 */
+	protected function getProductQuantityFromCart($cart)
+	{
+		$quantities = array();
+		$cartLines = $cart->getCartLineArray();
+		foreach ($cartLines as $cartLine)
+		{
+			// Simple case : juste get the quantity.
+			if ($cartLine->isBasicLine())
+			{
+				$productId = $cartLine->getProductId();
+				if (!isset($quantities[$productId]))
+				{
+					$quantities[$productId] = 0;
+				}
+				$quantities[$productId] += $cartLine->getQuantity();
+			}
+			// Cart rule case : get the quantities in the sublines and multiply them by the cart rule quantity.
+			else
+			{
+				//TODO Composite Line
+			}
+		}
+
+		return $quantities;
+	}
+	
+	/**
+	 * @return String
+	 */
+	protected function getSessionKey($catalogId)
+	{
+		return self::CART_SESSION_NAMESPACE . 'order_cart' . $catalogId;
+	}
+			
+	/**
+	 * @var Array<String>
+	 */
+	private $lineKeyProperties = null;
+	
+	/**
+	 * If no properties set, look for them in the configuration file at the following place : modules/order/line-key-properties
+	 *
+	 * @return Array<String>
+	 */
+	public function getLineKeyProperties()
+	{
+		if ($this->lineKeyProperties === null)
+		{
+			$this->lineKeyProperties = array();
+			try
+			{
+				if (Framework::hasConfiguration('modules/order/line-key-properties'))
+				{
+					$keys = explode(',', Framework::getConfiguration('modules/order/line-key-properties'));
+					foreach ($keys as $key) 
+					{
+						if ($key !== '') { $this->lineKeyProperties[] = $key;}
+					}
+				}
+			}
+			catch (Exception $e)
+			{
+				Framework::exception($e);
+				
+			}
+		}
+		return $this->lineKeyProperties;
+	}
+	
+	/**
+	 * @param Array<String> $lineKeyProperties
+	 * @return void
+	 */
+	public function setLineKeyProperties($lineKeyProperties)
+	{
+		$this->lineKeyProperties = $lineKeyProperties;
+	}
+	
+	/**
+	 * @param customer_persistentdocument_address $address
+	 * @param order_CartInfo $cart
+	 * @return Boolean
+	 */
+	public function validateBillingAddress($address, $cart)
+	{
+		$isCountryInZone = zone_ZoneService::getInstance()->isCountryInZone($address->getCountry(), $cart->getShop()->getBillingZone());
+		return $isCountryInZone && zone_CountryService::getInstance()->isZipCodeValid($address->getCountry()->getId(), $address->getZipCode());
+	}
+	
+	/**
+	 * @param customer_persistentdocument_address $address
+	 * @param order_CartInfo $cart
+	 * @return Boolean
+	 */
+	public function validateShippingAddress($address, $cart)
+	{
+		$isCountryInZone = zone_ZoneService::getInstance()->isCountryInZone($address->getCountry(), $cart->getShop()->getShippingZone());
+		return $isCountryInZone && zone_CountryService::getInstance()->isZipCodeValid($address->getCountry()->getId(), $address->getZipCode());
+	}
+	
+	/**
+	 * This method validates that the cart is ready to start order process.
+	 * Basically is just checks that the cart contains at least one product
+	 * and there is no validation errors.
+	 *
+	 * @param order_CartInfo $cart
+	 * @return Boolean
+	 */
+	public function canOrder($cart)
+	{
+		return (!is_null($cart) && !$cart->isEmpty() && count($cart->getErrorMessageArray()) === 0);
+	}
+}

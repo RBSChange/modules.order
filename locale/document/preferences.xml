@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<localization>
+	<entity id="document-name">
+		<locale lang="fr">préférences</locale>
+	</entity>
+	<entity id="edition-form-title">
+		<locale lang="fr">préférences du module Commandes</locale>
+		<locale lang="en">preferences for module Orders</locale>
+	</entity>
+	<entity id="orderConfirmedNotificationUser">
+		<locale lang="fr">destinataires des nouvelles commandes</locale>
+		<locale lang="en">order confirmed notification user</locale>
+	</entity>
+	<entity id="orderConfirmedNotificationUser-help">
+		<locale lang="fr">Les destinataires sélectionnés ici recevront une notification pour chaque nouvelle commande validée et payée.</locale>
+		<locale lang="en">order confirmed notification user</locale>
+	</entity>
+	<entity id="disableCoupons">
+		<locale lang="fr">désactiver les coupons</locale>
+		<locale lang="en">disable coupons</locale>
+	</entity>
+	<entity id="disableCoupons-help">
+		<locale lang="fr">cette option permet de désactiver l'affichage des champs de saisie des coupons de réduction en frontoffice.</locale>
+		<locale lang="en">this option disable coupons forms in frontoffice.</locale>
+	</entity>
+	<entity id="orderProcessClosedBeginDate">
+		<locale lang="fr">fermeture (début)</locale>
+		<locale lang="en">closed (start date)</locale>
+	</entity>
+	<entity id="orderProcessClosedBeginDate-help">
+		<locale lang="fr">Date de début de fermeture du processus de commande.</locale>
+		<locale lang="en">closed (start date)</locale>
+	</entity>
+	<entity id="orderProcessClosedEndDate">
+		<locale lang="fr">fermeture (fin)</locale>
+		<locale lang="en">closed (end date)</locale>
+	</entity>
+	<entity id="orderProcessClosedEndDate-help">
+		<locale lang="fr">Date de fin de fermeture du processus de commande.</locale>
+		<locale lang="en">closed (end date)</locale>
+	</entity>
+	<entity id="orderProcessClosed">
+		<locale lang="fr">fermé</locale>
+		<locale lang="en">closed</locale>
+	</entity>
+	<entity id="orderProcessClosed-help">
+		<locale lang="fr">Femreture temporaire du processus de commande. Si le champ est positionné sur 'Oui', le processus de commande est fermé, indépendamment des dates indiquées ci-dessus.</locale>
+		<locale lang="en">Order process is temporarily closed.</locale>
+	</entity>
+	<entity id="orderProcessClosedMessage">
+		<locale lang="fr">message de fermeture</locale>
+		<locale lang="en">closed message</locale>
+	</entity>
+	<entity id="orderProcessClosedMessage-help">
+		<locale lang="fr">Message de fermeture, affiché sur la page du panier pour indiquer aux clients que le processus de commande est fermé.</locale>
+		<locale lang="en">Message to tell customers the store is closed.</locale>
+	</entity>
+	<entity id="orderProcessClosedDateMessage">
+		<locale lang="fr">message de fermeture</locale>
+		<locale lang="en">closed message</locale>
+	</entity>
+	<entity id="orderProcessClosedDateMessage-help">
+		<locale lang="fr">Message de fermeture plannifiée, affiché sur la page du panier pour indiquer aux clients que le processus de commande est fermé. Les marqueurs {beginDate} et {endDate} seront respectivement remplacés par la date de début et la date de fin de fermeture.</locale>
+		<locale lang="en">Message to tell customers the store is closed.</locale>
+	</entity>
+	<entity id="orderProcessAllowedCustomer">
+		<locale lang="fr">clients autorisés</locale>
+		<locale lang="en">allowed customers</locale>
+	</entity>
+	<entity id="orderProcessAllowedCustomer-help">
+		<locale lang="fr">Choisissez les clients autorisés à passer des commandes pendant que la boutique est fermée.</locale>
+		<locale lang="en">Choose customers allowed to purchase items while the store is closed.</locale>
+	</entity>
+	
+	<!-- Comments -->
+	<entity id="tab.comments">
+		<locale lang="fr">commentaires</locale>
+		<locale lang="en">comments</locale>
+	</entity>
+	
+	<entity id="enableCommentReminder">
+		<locale lang="fr">activer le rappel</locale>
+		<locale lang="en">enable reminder</locale>
+	</entity>
+	<entity id="enableCommentReminder-help">
+		<locale lang="fr">activer ou non l'envoi d'une notification passé un certain délai après une commande pour suggérer au client de commenter ses produits.</locale>
+	</entity>
+	<entity id="commentReminderPeriod">
+		<locale lang="fr">délai avant le rappel</locale>
+		<locale lang="en">period before reminder</locale>
+	</entity>
+	<entity id="commentReminderPeriod-help">
+		<locale lang="fr">délai en jours après lequel un rappel sera envoyé.</locale>
+	</entity>
+	<entity id="commentReminderReference">
+		<locale lang="fr">date de référence</locale>
+		<locale lang="en">référence date</locale>
+	</entity>
+	<entity id="commentReminderReference-help">
+		<locale lang="fr">date à partir de laquelle le délai est appliqué.</locale>
+	</entity>
+	<entity id="commentReminderSelection">
+		<locale lang="fr">sélection des prduits</locale>
+		<locale lang="en">product selection</locale>
+	</entity>
+	<entity id="commentReminderSelection-help">
+		<locale lang="fr">mode de sélection des produits pour lesquels la notification de rappel suggérera de donner un avis.</locale>
+	</entity>
+	<entity id="commentReminderCount">
+		<locale lang="fr">nombre maximum de produits</locale>
+		<locale lang="en">product maximum count</locale>
+	</entity>
+	<entity id="commentReminderCount-help">
+		<locale lang="fr">nombre maximum de produit pour lesquels la notification de rappel suggérera de donner un avis.</locale>
+	</entity>
+</localization>

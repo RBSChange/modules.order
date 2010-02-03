@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<actions>
+	<action name="cancelOrder">
+		<parameter name="listWidget" />
+		<body><![CDATA[
+			var docs = listWidget.getSelectedItems();
+			var ids = [ ];
+
+			var confirmed = false;
+			if (docs.document.length() == 1)
+			{
+				ids[0] = docs.id;
+				var locale = new wLocale("&modules.order.bo.actions.Cancel-order-confirm-message;");
+				locale.setAttribute('order', docs.reference);
+				locale.setAttribute('customer', docs.customer);
+				locale.setAttribute('date', docs.date);
+				confirmed = confirm(locale.toString());
+			}
+			else
+			{
+				ids = listWidget.getSelectedIds();
+				var locale = new wLocale("&modules.order.bo.actions.Cancel-multiple-orders-confirm-message;");
+				locale.setAttribute('count', ids.length);
+				confirmed = confirm(locale.toString());
+			}
+
+			var lang = this.getContextLang(listWidget);
+			if (confirmed)
+			{
+				this.execute("%label%", "CancelOrder", { {K::COMPONENT_ID_ACCESSOR}: ids, {K::COMPONENT_LANG_ACCESSOR} : lang });
+			}
+		]]></body>
+		<checkDisplay><![CDATA[
+			var status = document.component.(@name=='orderStatus').toString().toUpperCase();
+	    	return 'CANCELED' != status && 'SHIPPED' != status;
+		]]></checkDisplay>
+	</action>
+	<action name="cancelOrderIsActive">
+		<parameter name="itemData" />
+		<body><![CDATA[
+			return itemData.orderStatus != 'CANCELED' && itemData.orderStatus != 'SHIPPED';
+		]]></body>
+	</action>
+	<action name="createSmartfolder">
+		<parameter name="listWidget" />
+		<body><![CDATA[
+			this.createDocumentEditor('modules_order_smartfolder', listWidget.getSelectedItems()[0].id);
+		]]></body>
+	</action>
+</actions>

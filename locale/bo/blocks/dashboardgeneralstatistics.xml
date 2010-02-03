@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<localization>
+	<entity id="title">
+		<locale lang="fr">commandes de la boutique</locale>
+		<locale lang="en">orders of the shop</locale>
+	</entity>
+	<entity id="shop">
+		<locale lang="fr">boutique</locale>
+		<locale lang="en">shop</locale>
+	</entity>
+	<entity id="shop-help">
+		<locale lang="fr">sélectionner la boutique dont vous voulez afficher les statistiques</locale>
+		<locale lang="en">shop</locale>
+	</entity>
+	<entity id="usecharts">
+		<locale lang="fr">utiliser des graphiques</locale>
+	</entity>
+	<entity id="usecharts-help">
+		<locale lang="fr">positionner à 'oui' pour afficher les statistiques sous forme de graphique et positionner à 'non' pour les afficher sous forme de tableau.</locale>
+	</entity>
+	<entity id="columns">
+		<locale lang="fr">colonnes</locale>
+		<locale lang="en">columns</locale>
+	</entity>
+	<entity id="columns-help">
+		<locale lang="fr">cocher les colonnes à afficher.</locale>
+	</entity>
+	<entity id="statistics-for-shop">
+		<locale lang="fr">statistiques de commandes pour la boutique</locale>
+	</entity>
+	<entity id="column-month">
+		<locale lang="fr">mois</locale>
+		<locale lang="en">month</locale>
+	</entity>
+	<entity id="column-orders">
+		<locale lang="fr">commandes</locale>
+		<locale lang="en">orders</locale>
+	</entity>
+	<entity id="column-amount">
+		<locale lang="fr">chiffre d'affaire</locale>
+		<locale lang="en">total amount</locale>
+	</entity>
+	<entity id="column-toDeliver">
+		<locale lang="fr">à expédier</locale>
+		<locale lang="en">to deliver</locale>
+	</entity>
+</localization>

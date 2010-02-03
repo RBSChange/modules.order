@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<tags>
+	<tag label="&amp;modules.order.bo.general.tags.Cart;" icon="cart">contextual_website_website_modules_order_cart</tag>
+	<tag label="&amp;modules.order.bo.general.tags.Cart-empty;" icon="cart">contextual_website_website_modules_order_cart-empty</tag>
+	<tag label="&amp;modules.order.bo.general.tags.Cgv;" icon="page">contextual_website_website_modules_order_cgv</tag>	
+	<tag label="&amp;modules.order.bo.general.tags.Order;" icon="order">contextual_website_website_modules_order_order</tag>
+	<tag label="&amp;modules.order.bo.general.tags.Order-list;" icon="list-block">contextual_website_website_modules_order_order-list</tag>
+	<tag label="&amp;modules.order.bo.general.tags.Order-messages;" icon="mail">contextual_website_website_modules_order_order-messages</tag>
+</tags>
