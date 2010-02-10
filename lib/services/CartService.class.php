@@ -49,24 +49,76 @@ class order_CartService extends BaseService
 					Framework::debug(__METHOD__ ." (FROM SESSION)");
 				}
 				$this->cartInfo = $user->getAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE);
+				
+				$this->checkCartValidity();
 			}
 			
 			if (!$this->cartInfo instanceof order_CartInfo)
 			{
-				if (Framework::isDebugEnabled())
-				{
-					Framework::debug(__METHOD__ ." (NEW CART)");
-				}
-				$this->cartInfo = new order_CartInfo();
-				if (!is_null($customer = customer_CustomerService::getInstance()->getCurrentCustomer()))
-				{
-					$this->cartInfo->setCustomerId($customer->getId());
-				}
-		
-				$this->cartInfo->setShop(catalog_ShopService::getInstance()->getCurrentShop());
+				$this->cartInfo = $this->initNewCart();
 			}
 		}
 		return $this->cartInfo;
+	}
+	
+	/**
+	 * Initialize a new cart
+	 * @return order_CartInfo
+	 */
+	protected function initNewCart()
+	{
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__);
+		}
+		$cartInfo = new order_CartInfo();
+		if (!is_null($customer = customer_CustomerService::getInstance()->getCurrentCustomer()))
+		{
+			$cartInfo->setCustomerId($customer->getId());
+		}
+
+		$cartInfo->setShop(catalog_ShopService::getInstance()->getCurrentShop());
+		return $cartInfo;	
+	}
+	
+	/**
+	 * Verification du cart en fonction de l'état de la commande
+	 */
+	protected function checkCartValidity()
+	{
+		if ($this->cartInfo instanceof order_CartInfo && !$this->cartInfo->isEmpty())
+		{
+			$order = $this->cartInfo->getOrder();
+			if ($order !== null)
+			{
+				switch ($order->getPaymentStatus())
+				{
+					case 'PAYMENT_SUCCESS':
+					case 'PAYMENT_DELAYED':
+						if (Framework::isInfoEnabled())
+						{
+							Framework::info(__METHOD__ . ' RESET ' . $order->getPaymentStatus());
+						}						
+						$cart = $this->initNewCart();
+						$cart->setOrderId($order->getId());
+						$this->saveToSession($cart);
+					break;
+				}
+			}
+		}
+	}
+	
+	protected function resetCartOrder()
+	{
+		$order = $this->cartInfo->getOrder();
+		if ($order !== null && $order->getPaymentStatus() !== 'PAYMENT_WAITING')
+		{
+			if (Framework::isInfoEnabled())
+			{
+				Framework::info(__METHOD__);
+			}
+			$this->cartInfo->setOrderId(null);
+		}
 	}
 	
 	/**
@@ -78,7 +130,6 @@ class order_CartService extends BaseService
 		if (Framework::isDebugEnabled())
 		{
 			Framework::debug(__METHOD__);
-			Framework::debug(var_export($cart, true));
 		}
 		$user = Controller::getInstance()->getContext()->getUser();
 		$user->setAttribute($this->getSessionKey('CartInfo'), $cart, self::CART_SESSION_NAMESPACE);
@@ -114,18 +165,6 @@ class order_CartService extends BaseService
 		}
 	}
 	
-	public function deleteFromSession()
-	{
-		$this->cartInfo = null;
-		$user = Controller::getInstance()->getContext()->getUser();
-		$user->removeAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE);
-		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
-		if ($customer !== null)
-		{
-			$this->saveToDatabase($customer, null);
-		}
-	}
-	
 	/**
 	 * This method is meant to be called one or several time,
 	 * then the cart needs to be refreshed by calling refhresh($cart)
@@ -158,7 +197,7 @@ class order_CartService extends BaseService
 				$cartLine->setQuantity($quantity);
 				$cartLine->mergePropertiesArray($properties);								
 				$cart->addCartLine($cartLine);
-				
+				$this->resetCartOrder();
 				// Log action.
 				$params = array('product' => $product->getLabel());
 				UserActionLoggerService::getInstance()->addCurrentUserDocumentEntry('add-product-to-cart', null, $params, 'customer');

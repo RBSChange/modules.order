@@ -28,12 +28,11 @@ class order_UserLoginListener
 					 	$cart->setShop($shop);
 					 	$cart->setCustomer($customer);
 					}
-					else
+					else if (!$cart->isEmpty())
 					{
 						$addMessage = true;
 					}
-					
-							
+								
 					if ($sessionCart->getCartLineCount())
 					{
 						foreach ($sessionCart->getCartLineArray() as $line)
