@@ -683,6 +683,26 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 	}
 	
 	/**
+	 * @see payment_Order::getPaymentBillingAddress()
+	 *
+	 * @return customer_persistentdocument_address
+	 */
+	function getPaymentBillingAddress()
+	{
+		return $this->getBillingAddress();
+	}
+	
+	/**
+	 * @see payment_Order::getPaymentShippingAddress()
+	 *
+	 * @return customer_persistentdocument_address
+	 */
+	function getPaymentShippingAddress()
+	{
+		return $this->getShippingAddress();
+	}
+	
+	/**
 	 * @see payment_Order::getPaymentCurrency()
 	 * @return string "EUR", "GBP", "CHF"
 	 */
