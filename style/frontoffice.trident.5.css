@@ -1,13 +1,13 @@
-li.on2col{
+.modules-order li.on2col{
 	margin-right: 1.9%;
 }
-li.on1col,li.on2col,li.on3col{
+.modules-order li.on1col,.modules-order li.on2col,.modules-order li.on3col{
 	margin-bottom: 16px;
 }
-li.first{
+.modules-order li.first{
 	clear: both;
 }
-li.last{
+.modules-order li.last{
 	margin-right: 0;
 	float: none;
 }

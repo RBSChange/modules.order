@@ -1,4 +1,4 @@
-a.button{
+.modules-order a.button{
 	color: #696a12/*@var orderbuttonfgcolor*/;
 	border-color: #ccc/*@var orderbuttonbdcolor*/;
 	background-color: #b9c101/*@var orderbuttonbgcolor*/;
@@ -22,26 +22,26 @@ ol.steps li dl dd.current{
 	background-color: #b9c101/*@var orderpricetotalbgcolor*/;
 	color: #fff/*@var orderpricetotalfgcolor*/;
 }
-a.button{
+.modules-order a.button{
 	text-decoration: none;
 	padding: 3px 5px 3px 5px;
 	border-width: 1px;
 	border-style: solid;
 	text-align: center;
 }
-a.button:hover{
+.modules-order a.button:hover{
 	text-decoration: none;
 }
 p.bottom-buttons{
 	text-align: center;
 	margin-top: 18px;
 }
-.column-one{
+.modules-order .column-one{
 	float: left;
 	display: block;
 	width: 49%;
 }
-.column-two{
+.modules-order .column-two{
 	float: right;
 	display: block;
 	width: 49%;
@@ -151,24 +151,24 @@ ul.cartsummary li{
 .messages-form{
 	margin-bottom: 40px;
 }
-li.on1col{
+.modules-order li.on1col{
 	clear: both;
 	width: 100%;
 }
-li.on2col{
+.modules-order li.on2col{
 	float: left;
 	width: 49%;
 	margin-right: 2%;
 }
-li.on3col{
+.modules-order li.on3col{
 	float: left;
 	width: 32%;
 	margin-right: 2%;
 }
-li.first{
+.modules-order li.first{
 	clear: left;
 }
-li.last{
+.modules-order li.last{
 	margin-right: 0;
 }
 
