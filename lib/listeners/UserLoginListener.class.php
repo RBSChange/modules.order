@@ -56,11 +56,11 @@ class order_UserLoginListener
 						{
 							if ($recup)
 							{
-								$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.Cart-recup;'));
+								$sessionCart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.Cart-recup;'));
 							}
 							else
 							{
-								$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.Cart-fusion;'));
+								$sessionCart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.Cart-fusion;'));
 							}
 						}
 					}
