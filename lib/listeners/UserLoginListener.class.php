@@ -18,38 +18,53 @@ class order_UserLoginListener
 			{
 				$cartService = order_CartService::getInstance();
 				$sessionCart = $cartService->getDocumentInstanceFromSession();
+				
 				if ($sessionCart->getMergeWithUserCart())
 				{
+					if (Framework::isInfoEnabled())
+					{
+						Framework::info(__METHOD__ . ' MergeWithUserCart');
+					}
+					$sessionCart->setCustomer($customer);
+					$sessionCart->setShop($shop);
+					$sessionCart->setMergeWithUserCart(false);		
 					$cart = $customer->getCart();
-					$addMessage = false;
-					if ($cart === null)
+			
+					if ($cart !== null && !$cart->isEmpty())
 					{
-						$cart = new order_CartInfo();
-					 	$cart->setShop($shop);
-					 	$cart->setCustomer($customer);
-					}
-					else if (!$cart->isEmpty())
-					{
-						$addMessage = true;
-					}
-								
-					if ($sessionCart->getCartLineCount())
-					{
-						foreach ($sessionCart->getCartLineArray() as $line)
+						$recup = $sessionCart->isEmpty();
+						$added = false;
+						
+						foreach ($cart->getCartLineArray() as $line)
 						{
-							$cart->addCartLine($line);
+							try 
+							{
+								$product = $line->getProduct();
+								if ($product !== null)
+								{
+									$cartService->addProduct($product, $line->getQuantity());
+									$added = true;
+								}
+							}
+							catch (Exception $e)
+							{
+								Framework::warn(__METHOD__ . ' ' . $e->getMessage());
+							}
 						}
-						if ($addMessage == true)
+						
+						if ($added)
 						{
-							$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.Cart-fusion;'));
+							if ($recup)
+							{
+								$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.Cart-recup;'));
+							}
+							else
+							{
+								$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.Cart-fusion;'));
+							}
 						}
 					}
-					else if ($addMessage == true)
-					{
-						$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.Cart-recup;'));
-					}
-					
-					$cartService->refresh($cart);
+					$cartService->refresh($sessionCart);
 				}
 			}
 		}
