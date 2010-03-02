@@ -735,11 +735,17 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			switch ($document->getOrderStatus())
 			{
 				case self::PAYMENT_SUCCESS :
-					$document->setPaymentDate(date_Calendar::getInstance()->toString());
+					if ($document->getPaymentDate() == null)
+					{
+						$document->setPaymentDate(date_Calendar::getInstance()->toString());
+					}
 					break;
 						
 				case self::SHIPPED :
-					$document->setShipmentDate(date_Calendar::getInstance()->toString());
+					if ($document->getShipmentDate() == null)
+					{
+						$document->setShipmentDate(date_Calendar::getInstance()->toString());
+					}
 					break;
 			}
 		}

@@ -742,7 +742,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 	 */
 	function getPaymentDate()
 	{
-		return $this->getCreationdate();
+		return parent::getPaymentDate();
 	}
 	
 	/**
