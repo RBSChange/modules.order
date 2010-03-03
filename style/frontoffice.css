@@ -2,7 +2,10 @@
 	color: #696a12/*@var orderbuttonfgcolor*/;
 	border-color: #ccc/*@var orderbuttonbdcolor*/;
 	background-color: #b9c101/*@var orderbuttonbgcolor*/;
-	font-weight: bold;
+	text-align: center;
+}
+.modules-order a.button:hover{
+	text-decoration: none;
 }
 ol.steps li dl{
 	color: #6e6a12/*@var orderstepfgcolor*/;
@@ -21,16 +24,6 @@ ol.steps li dl dd.current{
 	font-size: 1.2em/*@var orderpricetotalsize*/;
 	background-color: #b9c101/*@var orderpricetotalbgcolor*/;
 	color: #fff/*@var orderpricetotalfgcolor*/;
-}
-.modules-order a.button{
-	text-decoration: none;
-	padding: 3px 5px 3px 5px;
-	border-width: 1px;
-	border-style: solid;
-	text-align: center;
-}
-.modules-order a.button:hover{
-	text-decoration: none;
 }
 p.bottom-buttons{
 	text-align: center;
