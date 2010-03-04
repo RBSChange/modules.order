@@ -21,8 +21,8 @@
 		<locale lang="de">Lieferanschrift</locale>
 	</entity>
 	<entity id="delivery-address-text">
-		<locale lang="fr">Pour que votre colis arrive à destination sans ecombres, merci de bien vouloir remplir le fomulaire ci-dessous.</locale>
-		<locale lang="en">To ensure that your package has arrived without ecombres, thank you fill out this request form below.</locale>
+		<locale lang="fr">Pour que votre colis arrive à destination sans encombres, merci de bien vouloir remplir le fomulaire ci-dessous.</locale>
+		<locale lang="en">To ensure that your package has arrived without a hitch, thank you fill out this request form below.</locale>
 		<locale lang="de">Um sicherzustellen, dass Ihr Paket ohne ecombres angekommen ist, ich danke Ihnen, füllen Sie das Formular unten.</locale>
 	</entity>
 	<entity id="billing-address-legend">
