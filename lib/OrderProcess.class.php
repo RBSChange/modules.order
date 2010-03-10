@@ -1,20 +1,20 @@
 <?php
-class order_OrderProcess
+class order_OrderProcess extends BaseService 
 {
 	/**
 	 * @var string
 	 */
-	private $currentStep;
+	protected $currentStep;
 	
 	/**
 	 * @var string
 	 */
-	private $startStep = 'Identify';
+	protected $startStep = 'Identify';
 	
 	/**
 	 * @var array
 	 */
-	private $config = array(
+	protected $config = array(
 		'Identify' => array('blocType' => 'order_IdentifyStep', 'nextStep' => 'Shipping'),
 		'Shipping' => array('blocType' => 'order_ShippingStep', 'nextStep' => 'Billing'),
 		'Billing' => array('blocType' => 'order_BillingStep', 'nextStep' => 'Confirm'),
@@ -32,7 +32,7 @@ class order_OrderProcess
 		{
 			return $orderProcess;
 		}
-		return new self();
+		return self::getServiceClassInstance(get_class());
 	}
 	
 	/**
