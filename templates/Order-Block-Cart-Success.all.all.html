@@ -122,14 +122,14 @@
 		<dd change:translate="&modules.order.frontoffice.Shipping-modeLabel;" />
 		<dt tal:content="cart/getShippingLabel" />
 		<dd change:translate="&modules.order.frontoffice.Shipping-feesLabel;" />
-		<dt tal:content="cart/getFormatedShippingPriceWithoutTax" />
+		<dt tal:content="cart/getFormatedShippingPriceWithTax" />
 	
 		<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-withtax-abrLabel;" />
 		<dt class="pricetotal" tal:content="cart/getFormattedTotalAmount" />
 	</tal:block>
 	<tal:block tal:condition="php: !configuration.getShowTotalWithFees() || !cart.getShippingModeId()">
 		<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-withtax-withoutfees-abrLabel;" />
-		<dt class="pricetotal" tal:content="cart/getFormattedTotalAmount" />
+		<dt class="pricetotal" tal:content="cart/getFormattedSubTotalWithTax" />
 	</tal:block>
 	
 </dl>
