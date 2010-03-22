@@ -481,29 +481,39 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 * @param order_persistentdocument_order $order
 	 * @return Boolean
 	 */
+	protected function sendPendingNotification($order)
+	{
+		if ($order->hasNotificationPending())
+		{
+			return $this->sendNotification($order);
+		}
+		return true;
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return Boolean
+	 */
 	private function sendNotification($order)
 	{
-		if ('test' != PROFILE)
+		// If there is no current website, set it with the order one.
+		$this->setCurrentWebsiteIfNeeded($order);
+			
+		$ns = notification_NotificationService::getInstance();
+		$ns->setMessageService($this->getMessageService());
+		$ns1 = $ns->send($this->getNotificationByStatus($order->getOrderStatus()), $this->getMessageRecipients($order), $this->getNotificationParameters($order), 'order');
+		if ($order->getOrderStatus() == self::PAYMENT_SUCCESS)
 		{
-			// If there is no current website, set it with the order one.
-			$this->setCurrentWebsiteIfNeeded($order);
-				
-			$ns = notification_NotificationService::getInstance();
-			$ns->setMessageService($this->getMessageService());
-			$ns1 = $ns->send($this->getNotificationByStatus($order->getOrderStatus()), $this->getMessageRecipients($order), $this->getNotificationParameters($order), 'order');
-			if ($order->getOrderStatus() == self::PAYMENT_SUCCESS)
-			{
-				$recipients = $this->getAdminRecipients();
-				$ns2 = $ns->send($ns->getNotificationByCodeName(self::ADMINISTRATOR_ORDER_CONFIRMED), $recipients, $this->getNotificationParameters($order), 'order');
-			}
-			else
-			{
-				$ns2 = true;
-			}
-				
-			$order->hasNotificationPending(false);
-			return $ns1 && $ns2;
+			$recipients = $this->getAdminRecipients();
+			$ns2 = $ns->send($ns->getNotificationByCodeName(self::ADMINISTRATOR_ORDER_CONFIRMED), $recipients, $this->getNotificationParameters($order), 'order');
 		}
+		else
+		{
+			$ns2 = true;
+		}
+			
+		$order->hasNotificationPending(false);
+		return $ns1 && $ns2;
 	}
 
 	/**
@@ -832,10 +842,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				array('document' => $document));
 			$document->hasOrderStatusChanged(false);
 		}
-		if ($document->hasNotificationPending())
-		{
-			$this->sendNotification($document);
-		}
+		$this->sendPendingNotification($document);
 
 		// If there is a coupon, add it in the list of coupons used by the customer.
 		$coupon = $this->getUsedCouponByOrder($document);
