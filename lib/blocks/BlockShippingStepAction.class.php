@@ -40,6 +40,7 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 				$shippingStep->shippingAddress->LastName = $user->getLastname();
 				$shippingStep->shippingAddress->Title = $user->getTitle();
 			}
+			$shippingStep->billingAddress->Email = $customer->getUser()->getEmail();
 			$cartInfo->setAddressInfo($shippingStep);
 			$cartInfo->save();
 		}

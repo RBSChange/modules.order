@@ -85,7 +85,7 @@
 		<locale lang="en">Generate invoice</locale>
 	</entity>
 	<entity id="CannotGenerateBillMsg">
-		<locale lang="fr">La commande n'est ni payée, ni expédié : la génération de la facture est donc impossible.</locale>
+		<locale lang="fr">La commande n'est ni payée, ni expédiée : la génération de la facture est donc impossible.</locale>
 		<locale lang="en">This order has not yet been paid or shipped : the invoice can not be generated.</locale>
 	</entity>
 	<entity id="DownloadBill">
