@@ -3,5 +3,6 @@
 	<panel name="create"/>
 	<panel name="resume"/>
 	<panel name="properties"/>
+	<panel name="permission"/>
 	<panel name="history"/>
 </panels>
