@@ -846,15 +846,15 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 	
 	public function getBillBoURL()
 	{
+		if (!in_array($this->getOrderStatus(), array(order_OrderService::PAYMENT_SUCCESS, order_OrderService::SHIPPED)))
+		{
+			return "-1";
+		}
 		if ($this->getBill() !== null)
 		{
-			if (in_array($this->getOrderStatus(), array(order_OrderService::PAYMENT_SUCCESS, order_OrderService::SHIPPED)))
-			{
-				$actionUrl = LinkHelper::getUIActionLink("media", "BoDisplay");
-				$actionUrl->setQueryParameter('cmpref', $this->getBill()->getId());
-				return $actionUrl->getUrl();
-			}
-			return "-1";
+			$actionUrl = LinkHelper::getUIActionLink("media", "BoDisplay");
+			$actionUrl->setQueryParameter('cmpref', $this->getBill()->getId());
+			return $actionUrl->getUrl();
 		}
 		return "";
 	}

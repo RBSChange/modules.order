@@ -74,17 +74,26 @@
 	</entity>
 	<entity id="GeneratingBill">
 		<locale lang="fr">Facture en cours de génération...</locale>
+		<locale lang="en">Generating invoice...</locale>
 	</entity>
 	<entity id="GeneratingBillDone">
 		<locale lang="fr">Facture générée!</locale>
+		<locale lang="en">Invoice generated!</locale>
 	</entity>
 	<entity id="GenerateBill">
 		<locale lang="fr">Générer la facture</locale>
+		<locale lang="en">Generate invoice</locale>
+	</entity>
+	<entity id="CannotGenerateBillMsg">
+		<locale lang="fr">La commande n'est ni payée, ni expédié : la génération de la facture est donc impossible.</locale>
+		<locale lang="en">This order has not yet been paid or shipped : the invoice can not be generated.</locale>
 	</entity>
 	<entity id="DownloadBill">
 		<locale lang="fr">Télécharger la facture</locale>
+		<locale lang="en">Download invoice</locale>
 	</entity>
 	<entity id="Unable-to-generate-pdf-bill">
 		<locale lang="fr">Une erreur est survenue pendant la génération de la facture. Si le problème persiste, contactez votre administrateur.</locale>
+		<locale lang="en">An error occured while generating the invoice.</locale>
 	</entity>
 </localization>

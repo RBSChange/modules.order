@@ -240,8 +240,10 @@
 			<children />
 			<xul:vbox>
 				<xul:hbox>
-					<xul:button xbl:inherits="hidden=hide-generate,disabled=disable-generate" label="&amp;modules.order.bo.actions.GenerateBill;" oncommand="generate()" image="{HttpHost}/icons/small/funnel.png" />
+					<xul:button xbl:inherits="hidden=hide-generate,disabled=disable-generate" label="&amp;modules.order.bo.actions.GenerateBill;" oncommand="generate()" image="{HttpHost}/icons/small/document-text.png" />
 					<xul:button xbl:inherits="hidden=hide-dl" hidden="true" label="&amp;modules.order.bo.actions.DownloadBill;" oncommand="download()" image="{HttpHost}/icons/small/download.png" />
+					<xul:label xbl:inherits="hidden=hide-msg" value="&amp;modules.order.bo.actions.CannotGenerateBillMsg;" />
+					
 				</xul:hbox>
 			</xul:vbox>
 		</content>
@@ -250,20 +252,23 @@
 			<method name="setInitialValue">
 				<parameter name="val" />
 				<body><![CDATA[
-					var fval = this.fixString(val);
-					if (fval != "")
+					var fval = this.fixString(val);					
+					if (fval == "-1")
 					{
-						this.setAttribute('hide-generate', true);
-						this.removeAttribute('hide-dl');
+						this.setAttribute('hide-generate', 'true');
+						this.setAttribute('hide-dl', 'true');
+						this.removeAttribute('hide-msg');
 					}
-					else if (fval == "-1")
+					else if (fval != "")
 					{
-						this.setAttribute('hide-generate', true);
-						this.setAttribute('hide-dl', true);
+						this.setAttribute('hide-generate', 'true');
+						this.setAttribute('hide-msg', 'true');
+						this.removeAttribute('hide-dl');
 					}
 					else
 					{
-						this.setAttribute('hide-dl', true);
+						this.setAttribute('hide-dl', 'true');
+						this.setAttribute('hide-msg', 'true');
 						this.removeAttribute('hide-generate');
 					}
 					this.setAttribute("initialvalue", fval);
