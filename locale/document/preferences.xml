@@ -100,7 +100,7 @@
 		<locale lang="fr">date à partir de laquelle le délai est appliqué.</locale>
 	</entity>
 	<entity id="commentReminderSelection">
-		<locale lang="fr">sélection des prduits</locale>
+		<locale lang="fr">sélection des produits</locale>
 		<locale lang="en">product selection</locale>
 	</entity>
 	<entity id="commentReminderSelection-help">
