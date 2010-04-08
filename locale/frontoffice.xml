@@ -800,6 +800,21 @@
 		<locale lang="en">failed</locale>
 		<locale lang="de">abgebrochen</locale>
 	</entity>
+	<entity id="paymentstatus.delayed">
+		<locale lang="fr">en cours</locale>
+		<locale lang="en">in progress</locale>
+		<locale lang="de">im Gang</locale>
+	</entity>
+	<entity id="shippingstatus.prepare">
+		<locale lang="fr">préparation</locale>
+		<locale lang="en">building</locale>
+	</entity>
+	<entity id="shippingstatus.progress">
+		<locale lang="fr">en cours</locale>
+		<locale lang="en">in progress</locale>
+		<locale lang="de">im Gang</locale>
+	</entity>	
+	
 	<entity id="list.order-statuses">
 		<locale lang="fr">états des commandes</locale>
 		<locale lang="en">order statuses</locale>

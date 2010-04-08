@@ -31,6 +31,14 @@
 		<locale lang="fr">statut</locale>
 		<locale lang="en">status</locale>
 	</entity>
+	<entity id="property.payment-status">
+		<locale lang="fr">paiement</locale>
+		<locale lang="en">payment</locale>
+	</entity>
+	<entity id="property.shipping-status">
+		<locale lang="fr">livraison</locale>
+		<locale lang="en">shipping</locale>
+	</entity>
 	<entity id="property.customer-full-name">
 		<locale lang="fr">nom complet du client</locale>
 		<locale lang="en">customer full name</locale>

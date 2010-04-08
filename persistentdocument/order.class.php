@@ -21,7 +21,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 			$nodeAttributes['orderStatus'] = $this->getOrderStatus();
 			if ($treeType === 'wlist')
 			{
-				$nodeAttributes['date'] = date_DateFormat::format($this->getOrderDate());
+				$nodeAttributes['date'] = date_DateFormat::format($this->getUICreationdate());
 				$nodeAttributes['orderStatusLabel'] = $this->getOrderStatusLabel();
 				$nodeAttributes['formattedTotalAmountWithTax'] = $this->formatPrice($this->getTotalAmountWithTax());
 				$user = $this->getCustomer()->getUser();
@@ -73,6 +73,45 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 			return null;
 		}
 	}
+	
+	/**
+	 * @return string
+	 */
+	public function getBoStatusAsJSON()
+	{
+		//PAYMENT_SUCCESS, PAYMENT_WAITING, PAYMENT_FAILED, PAYMENT_DELAYED, CANCELED, SHIPPED
+		$status = array(
+			'order' => $this->getOrderStatus(),
+			'payment' => $this->getPaymentStatus(),
+			'shipping' => $this->getShippingStatus()
+		);
+		
+		return JsonService::getInstance()->encode($status);
+	}
+	
+	
+	/**
+	 * @param string $json
+	 */
+	public function setBoStatusAsJSON($json)
+	{
+		if (f_util_StringUtils::isNotEmpty($json))
+		{
+			$status = JsonService::getInstance()->decode($json);
+			if (isset($status['order']))
+			{
+				$this->setOrderStatus($status['order']);
+			}
+			if (isset($status['payment']))
+			{
+				$this->setPaymentStatus($status['payment']);
+			}
+			if (isset($status['shipping']))
+			{
+				$this->setShippingStatus($status['shipping']);
+			}
+		}
+	}	
 	
 	/**
 	 * @param double $value
@@ -570,6 +609,15 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 	}
 	
 	/**
+	 * @return string
+	 */
+	public function getShippingStatus()
+	{
+		return $this->getShippingProperty('shippingStatus');
+	}
+
+	
+	/**
 	 * @param String $shippingMode
 	 */
 	public function setShippingMode($shippingMode)
@@ -601,6 +649,13 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 		$this->setShippingProperty('shippingModeTaxRate', $shippingModeTaxRate);
 	}
 	
+	/**
+	 * @param string $status
+	 */
+	public function setShippingStatus($status)
+	{
+		return $this->setShippingProperty('shippingStatus', $status);
+	}
 	/**
 	 * @return Double
 	 */

@@ -1,9 +1,15 @@
 treechildren::-moz-tree-image(modules_order_preferences){
-	list-style-image: url(/icons/small/order.png) ;
+	list-style-image: url(/changeicons/small/order.png) ;
 }
 treechildren::-moz-tree-image(modules_order_order){
-	list-style-image: url(/icons/small/order.png) ;
+	list-style-image: url(/changeicons/small/order.png) ;
 }
 treechildren::-moz-tree-image(modules_order_smartfolder){
-	list-style-image: url(/icons/small/folder.png);
+	list-style-image: url(/changeicons/small/folder.png);
+}
+treechildren::-moz-tree-image(modules_order_message){
+	list-style-image: url(/changeicons/small/document.png);
+}
+treechildren::-moz-tree-image(modules_order_orderline){
+	list-style-image: url(/changeicons/small/shoppingcart_full.png);
 }

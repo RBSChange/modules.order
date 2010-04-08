@@ -9,7 +9,7 @@
 			<xul:hbox align="center">
 				<xul:clabel value="&amp;modules.order.bo.general.Email;" />
 				<xul:label xbl:inherits="value=email" />
-				<xul:toolbarbutton label="&amp;modules.order.bo.doceditor.panel.properties.View-customer;" image="{HttpHost}/icons/small/shadow/view.png" oncommand="showCustomer()" />
+				<xul:toolbarbutton label="&amp;modules.order.bo.doceditor.panel.properties.View-customer;" image="{IconsBase}/small/shadow/view.png" oncommand="showCustomer()" />
 				<xul:spacer flex="1" />
 			</xul:hbox>
 		</content>
@@ -100,7 +100,7 @@
 						<xul:caption label="&amp;modules.order.bo.doceditor.panel.messages.Title;" />
 						<vbox>
 							<xul:cfield name="messageContent" anonid="field_messageContent" fieldtype="longtext" cols="100" hidehelp="true" />
-							<hbox><xul:button anonid="sendMessageButton" label="&amp;modules.order.bo.doceditor.panel.messages.Send;" image="{HttpHost}/icons/small/shadow/mail_forward.png" /></hbox>
+							<hbox><xul:button anonid="sendMessageButton" label="&amp;modules.order.bo.doceditor.panel.messages.Send;" image="{IconsBase}/small/shadow/mail_forward.png" /></hbox>
 						</vbox>
 					</xul:groupbox>
 					<xul:vbox anonid="messages" />
@@ -240,8 +240,8 @@
 			<children />
 			<xul:vbox>
 				<xul:hbox>
-					<xul:button xbl:inherits="hidden=hide-generate,disabled=disable-generate" label="&amp;modules.order.bo.actions.GenerateBill;" oncommand="generate()" image="{HttpHost}/icons/small/document-text.png" />
-					<xul:button xbl:inherits="hidden=hide-dl" hidden="true" label="&amp;modules.order.bo.actions.DownloadBill;" oncommand="download()" image="{HttpHost}/icons/small/download.png" />
+					<xul:button xbl:inherits="hidden=hide-generate,disabled=disable-generate" label="&amp;modules.order.bo.actions.GenerateBill;" oncommand="generate()" image="{IconsBase}/small/document-text.png" />
+					<xul:button xbl:inherits="hidden=hide-dl" hidden="true" label="&amp;modules.order.bo.actions.DownloadBill;" oncommand="download()" image="{IconsBase}/small/download.png" />
 					<xul:label xbl:inherits="hidden=hide-msg" value="&amp;modules.order.bo.actions.CannotGenerateBillMsg;" />
 					
 				</xul:hbox>
@@ -322,5 +322,208 @@
 				]]></body>
 			</method>
 		</implementation>
+	</binding>
+	
+	<binding id="cEditOrderStatus" extends="form.cField#cAbstractField">
+		<content>
+		<children />
+			<xul:hbox>
+				 <xul:menulist anonid="orderStatus">
+				    <xul:menupopup>
+				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_WAITING;" value="PAYMENT_WAITING"/>
+				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_FAILED;" value="PAYMENT_FAILED"/>
+				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_SUCCESS;" value="PAYMENT_SUCCESS"/>
+				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_DELAYED;" value="PAYMENT_DELAYED"/>
+				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Canceled;" value="CANCELED"/>
+				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Shipped;" value="SHIPPED"/>
+				    </xul:menupopup>
+				  </xul:menulist>
+				  
+				<xul:label value="&amp;modules.order.bo.doceditor.property.Payment-statusLabel;" />			
+				<xul:menulist anonid="paymentStatus">
+				    <xul:menupopup>
+				       <xul:menuitem label="" value=""/>
+				      <xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Waiting;" value="PAYMENT_WAITING"/>
+				      <xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Failed;" value="PAYMENT_FAILED"/>
+				      <xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Success;" value="PAYMENT_SUCCESS"/>
+				      <xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Delayed;" value="PAYMENT_DELAYED"/>
+				    </xul:menupopup>
+				  </xul:menulist>		
+				  						
+				<xul:label value="&amp;modules.order.bo.doceditor.property.Shipping-statusLabel;" />	
+			 	<xul:menulist anonid="shippingStatus">
+			    	<xul:menupopup>
+				    	<xul:menuitem label="" value=""/>
+				      	<xul:menuitem label="&amp;modules.order.frontoffice.shippingstatus.Prepare;" value="SHIPPING_PREPARE"/>
+				      	<xul:menuitem label="&amp;modules.order.frontoffice.shippingstatus.Progress;" value="SHIPPING_PROGRESS"/>
+				      	<xul:menuitem label="&amp;modules.order.frontoffice.status.Shipped;" value="SHIPPED"/>
+			    	</xul:menupopup>
+			  	</xul:menulist>
+			</xul:hbox>
+		</content>
+		<implementation>
+			<field name="_statuses">null</field>
+			<field name="_values">null</field>		
+			<field name="_stateLabels">null</field>
+			
+			
+			<property name="orderStatus" readonly="true">
+				<getter><![CDATA[
+					return this._values.order;
+				]]></getter>			
+			</property>
+			
+			<property name="paymentStatus" readonly="true">
+				<getter><![CDATA[
+					return this._values.payment;
+				]]></getter>			
+			</property>
+			
+			<property name="shippingStatus" readonly="true">
+				<getter><![CDATA[
+					return this._values.shipping;
+				]]></getter>			
+			</property>		
+			
+			<method name="setInitialValue">
+				<parameter name="val" />
+				<body><![CDATA[
+					var fval = this.fixString(val);
+					if (fval != '')
+					{
+						this._statuses = wCore.parseJSON(fval);
+					}
+					else
+					{
+						this._statuses = {order:null, payment:null, shipping:null};
+					}
+					fval = wCore.stringifyJSON(this._statuses);
+					this.setAttribute("initialvalue", fval);
+					this._values = wCore.parseJSON(fval);	
+					this.updateUI();									
+					if (this.modified)
+					{
+						this.removeAttribute("modified");
+						this.dispatchFieldEvent('fieldRestored');						
+					}
+					this.setValidity(null);
+				]]></body>
+			</method>
+			
+			<method name="updateUI">
+				<body><![CDATA[
+					
+					var elem = this.getElementByAnonId('orderStatus');
+					elem.value = this._values.order;
+					
+					elem = this.getElementByAnonId('paymentStatus');
+					elem.value = (this._values.payment) ? this._values.payment : '';
+					
+					elem = this.getElementByAnonId('shippingStatus');
+					elem.value = (this._values.shipping) ? this._values.shipping : '';					
+				]]></body>
+			</method>			
+			
+			<property name="value">
+				<getter><![CDATA[
+					return wCore.stringifyJSON(this._values);
+				]]></getter>
+				<setter><![CDATA[
+					var fval = this.fixString(val);
+					if (fval != '')
+					{
+						this._values = wCore.parseJSON(fval);
+					}
+					else
+					{
+						this._values = {order:null, payment:null, shipping:null};
+					}
+					this.updateUI();
+					this.valueChanged();
+				]]></setter>
+			</property>
+						
+			<method name="reset">
+				<body><![CDATA[
+					this.setInitialValue(this.initialvalue);
+					this.valueChanged();
+				]]></body>
+			</method>
+				
+			<constructor><![CDATA[
+				this.setInitialValue(this.initialvalue);
+			]]></constructor>
+	
+			<method name="valueChanged">
+				<body><![CDATA[
+					this.dispatchFieldEvent('fieldChanged');
+					if (this.checkIsModified())
+					{
+						if (!this.modified) 
+						{
+							this.setAttribute("modified", "true");
+							this.dispatchFieldEvent('fieldModified');
+						}
+					}
+					else
+					{
+						if (this.modified) 
+						{
+							this.removeAttribute("modified");
+							this.dispatchFieldEvent('fieldRestored');
+						}			
+					}
+				]]></body>
+			</method>
+
+			<method name="checkIsModified">
+				<body><![CDATA[
+					return this.initialvalue != this.value;
+				]]></body>
+			</method>
+						
+			<method name="focus">
+				<body><![CDATA[
+					if (!this.focused)
+					{
+						this.getElementByAnonId('orderStatus').focus();
+					}
+				]]></body>
+			</method>
+		</implementation>
+		
+		<handlers>	
+			<handler event="select"><![CDATA[
+				if (event.originalTarget.localName === 'menulist')
+				{
+					var list = event.originalTarget;
+					var value = (list.value.length > 0) ? list.value : null;
+					switch (list.getAttribute('anonid'))
+					{
+						case 'orderStatus':
+							if (this._values.order != value)
+							{
+								this._values.order = value;
+								this.valueChanged();
+							}
+							break;
+						case 'paymentStatus':
+							if (this._values.payment != value)
+							{
+								this._values.payment = value;
+								this.valueChanged();
+							}							
+							break;
+						case 'shippingStatus':
+							if (this._values.shipping != value)
+							{
+								this._values.shipping = value;
+								this.valueChanged();
+							}							
+							break;							
+					}
+				}
+			]]></handler>
+		</handlers>				
 	</binding>
 </bindings>

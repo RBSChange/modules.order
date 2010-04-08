@@ -30,7 +30,12 @@
 		<locale lang="en">status</locale>
 		<locale lang="de">Staat</locale>
 	</entity>
-	<entity id="orderStatus-help">
+	<entity id="boStatusAsJSON">
+		<locale lang="fr">état</locale>
+		<locale lang="en">status</locale>
+		<locale lang="de">Staat</locale>
+	</entity>	
+	<entity id="boStatusAsJSON-help">
 		<locale lang="fr">Le changement de statut d'une commande envoie une notification par e-mail au client ({customerName}). Vous pouvez modifier ce comportement dans le module Notification, accessible depuis le menu Administration du menu principal de RBS Change.</locale>
 		<locale lang="en">Changing the status of an order will send an e-mail notification for the customer ({customerName}). This behaviour may be changed in the Notification module, located in the Administration main menu.</locale>
 		<locale lang="de">Die Veränderung des Status einer Bestellung sendet eine Benachrichtigung per E-Mail-Client (customerName ()). Sie können dieses Verhalten in der Notification-Modul, erreichbar über das Menü Verwaltung aus dem Hauptmenü wechseln Change to RBS.</locale>

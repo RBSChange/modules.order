@@ -22,3 +22,6 @@ cdocumenteditor#edt_order_order section.message{
 cfield[fieldtype="billgenerator"]{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cBillgenerator);
 }
+cfield[fieldtype="editorderstatus"]{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cEditOrderStatus);
+}

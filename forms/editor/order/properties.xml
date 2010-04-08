@@ -4,7 +4,7 @@
 		<sectionrow labeli18n="modules.order.bo.general.Website" id="website" />
 		<sectionrow labeli18n="modules.order.bo.general.Reference" id="reference" />
 		<sectionrow labeli18n="modules.order.bo.general.Date" id="creationdate" />
-		<field name="orderStatus" />
+		<field name="boStatusAsJSON" type="editorderstatus" labeli18n="modules.order.document.order.boStatusAsJSON" />
 		<sectionrow labeli18n="modules.order.document.order.ShippingMode" id="shippingMode" />
 		<field name="packageTrackingNumber" anonid="field_packageTrackingNumber" id="order_order_packageTrackingNumber" labeli18n="modules.order.bo.general.Package-tracking-number" type="text" />
 		<field name="commentadmin" type="longtext" />
@@ -57,7 +57,7 @@
 		<javascript>
 			<constructor><![CDATA[
 				var me = this
-				this.fields['orderStatus'].addEventListener('fieldChanged', function (event) {me.orderStatusChanged(event);}, true);
+				this.fields['boStatusAsJSON'].addEventListener('fieldChanged', function (event) {me.orderStatusChanged(event);}, true);
 			]]></constructor>
 			<field name="mPropIds">[
 				"billingAddressLabel",

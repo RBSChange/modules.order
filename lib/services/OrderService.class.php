@@ -1115,7 +1115,21 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			// Informations.
 			$billingAddress = $document->getBillingAddress();
 			$data['properties']['orderNumber'] = $document->getOrderNumber();
+			
 			$data['properties']['orderStatus'] = $document->getOrderStatusLabel();
+			$status = $document->getPaymentStatus();
+			$data['properties']['paymentStatus'] = $this->getBoStatusLabel($status);
+			if ($status == self::PAYMENT_SUCCESS)
+			{
+				$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
+				$data['properties']['paymentStatus'] .= ' '	. date_DateFormat::format($document->getPaymentDate(), $dateTimeFormat);
+			}
+			$status = $document->getShippingStatus();
+			if ($status)
+			{
+				$data['properties']['shippingStatus'] = $this->getBoStatusLabel($status);		
+			}
+			
 			$data['properties']['customerFullName'] = $billingAddress->getDocumentService()->getFullName($billingAddress);
 			$data['properties']['customerCode'] = $document->getCustomer()->getUser()->getEmail();
 			$data['properties']['totalAmount'] = $document->formatPrice($document->getTotalAmountWithTax());

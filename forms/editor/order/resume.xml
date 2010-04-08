@@ -2,9 +2,11 @@
 <panel>	
 	<section name="properties" linkedtab="properties" actiontexti18n="modules.uixul.bo.doceditor.section.action.View"
 		labeli18n="modules.uixul.bo.doceditor.section.Properties" 
-		image="{HttpHost}/icons/small/edit-properties.png">
+		image="{IconsBase}/small/edit-properties.png">
 		<property name="orderNumber" labeli18n="modules.order.bo.doceditor.property.Reference" />
 		<property name="orderStatus" labeli18n="modules.order.bo.doceditor.property.Order-status" />
+		<property name="paymentStatus" labeli18n="modules.order.bo.doceditor.property.Payment-status" />
+		<property name="shippingStatus" labeli18n="modules.order.bo.doceditor.property.Shipping-status" />
 		<property name="customerFullName" labeli18n="modules.order.bo.doceditor.property.Customer-full-name" />
 		<property name="customerCode" labeli18n="modules.order.bo.doceditor.property.Customer-code" />
 		<property name="totalAmount" labeli18n="modules.order.bo.doceditor.property.Total-amount" />
@@ -14,13 +16,13 @@
 	
 	<section name="history" linkedtab="history" actiontexti18n="modules.uixul.bo.doceditor.section.action.View"
 		labeli18n="modules.uixul.bo.doceditor.section.History" 
-		image="{HttpHost}/icons/small/history.png">
+		image="{IconsBase}/small/history.png">
 		<property name="modificationdate" labeli18n="modules.uixul.bo.doceditor.property.Modificationdate"/>
 	</section>		
 			
 	<section name="messages" linkedtab="messages" actiontexti18n="modules.uixul.bo.doceditor.section.action.View"
 		labeli18n="modules.order.bo.doceditor.section.Messages" 
-		image="{HttpHost}/icons/small/mail.png">
+		image="{IconsBase}/small/mail.png">
 		<property name="totalCount" labeli18n="modules.order.bo.doceditor.property.Total-count"/>
 		<property name="fromCustomerCount" labeli18n="modules.order.bo.doceditor.property.From-customer-message-count"/>
 		<property name="toCustomerCount" labeli18n="modules.order.bo.doceditor.property.To-customer-message-count"/>
