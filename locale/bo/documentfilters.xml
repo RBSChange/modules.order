@@ -66,10 +66,19 @@
 		<locale lang="en">orders having {field}</locale>
 	</entity>
 
+	<entity id="shoporderfilter-label">
+		<locale lang="fr">commandes des boutiques</locale>
+		<locale lang="en">orders from shops</locale>
+	</entity>
+	<entity id="shoporderfilter-text">
+		<locale lang="fr">les commandes de {shop}</locale>
+		<locale lang="en">orders from {shop}</locale>
+	</entity>
+
 	<entity id="creationdateorderfilter-label">
 		<locale lang="fr">commandes passées dans les N derniers jours/mois/années</locale>
 	</entity>
 	<entity id="creationdateorderfilter-text">
-		<locale lang="fr">qui on été passées dans les {count} derniers {unit}</locale>
+		<locale lang="fr">qui ont été passées dans les {count} derniers {unit}</locale>
 	</entity>
 </localization>
