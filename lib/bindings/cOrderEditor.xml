@@ -259,6 +259,12 @@
 						this.setAttribute('hide-dl', 'true');
 						this.removeAttribute('hide-msg');
 					}
+					else if (fval == "-2")
+					{
+						this.setAttribute('hide-generate', 'true');
+						this.setAttribute('hide-dl', 'true');
+						this.setAttribute('hide-msg', 'true');
+					}
 					else if (fval != "")
 					{
 						this.setAttribute('hide-generate', 'true');

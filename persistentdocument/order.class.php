@@ -901,6 +901,10 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 	
 	public function getBillBoURL()
 	{
+		if (!$this->getDocumentService()->generateBillIsActive())
+		{
+			return "-2";
+		}
 		if (!in_array($this->getOrderStatus(), array(order_OrderService::PAYMENT_SUCCESS, order_OrderService::SHIPPED)))
 		{
 			return "-1";

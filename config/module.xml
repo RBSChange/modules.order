@@ -16,7 +16,7 @@
 		If genPDF is setted to true and genNumber to false,
 		be sure some code set the orderNumber in OrderService::preInsert() -->
 		<entry name="genNumber">true</entry>
-		<entry name="genBill">true</entry>
+		<entry name="genBill">false</entry>
 		<entry name="odtphp2pdfURL">http://odtphp2pdf.rd.devlinux.france.rbs.fr</entry>
 	</project>
 </config>

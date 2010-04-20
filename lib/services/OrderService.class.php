@@ -62,7 +62,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function genBill($order)
 	{	
-		if (!Framework::getConfigurationValue("modules/order/genBill"))
+		if (!$this->generateBillIsActive())
 		{
 			return;
 		}
@@ -95,7 +95,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	
 	public function genBills()
 	{
-		if (!Framework::getConfigurationValue("modules/order/genBill"))
+		if (!$this->generateBillIsActive())
 		{
 			return;
 		}
@@ -1134,9 +1134,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$data['properties']['customerFullName'] = $billingAddress->getDocumentService()->getFullName($billingAddress);
 			$data['properties']['customerCode'] = $document->getCustomer()->getUser()->getEmail();
 			$data['properties']['totalAmount'] = $document->formatPrice($document->getTotalAmountWithTax());
-			if ($document->getBill() !== null)
+			if ($this->generateBillIsActive() && $document->getBill() !== null)
 			{
-				
 				$billBoURL = $document->getBillBoURL();
 				$billLink = array("href" => $billBoURL,
 				 "label" => f_Locale::translateUI("&modules.order.bo.doceditor.property.bill-download;"));
@@ -1154,6 +1153,14 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		}
 
 		return $data;
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	public function generateBillIsActive()
+	{
+		return Framework::getConfigurationValue("modules/order/genBill") == 'true';
 	}
 
 	/**
