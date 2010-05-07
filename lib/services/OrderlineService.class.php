@@ -57,6 +57,9 @@ class order_OrderlineService extends f_persistentdocument_DocumentService
 		
 		$product = $cartLine->getProduct();
 		$orderLine->setLabel($product->getLabel());
+		$orderLine->setOrderLabel($product->getOrderLabel());
+		$orderLine->setOrderLabelAsHtml($product->getOrderLabelAsHtml());
+		
 		$orderLine->setCodeReference($product->getCodeReference());
 		$orderLine->setProductId($cartLine->getProductId());
 		$orderLine->setQuantity($cartLine->getQuantity());

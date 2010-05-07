@@ -58,12 +58,9 @@
 					</td>
 	
 					<!-- Désignation / Article -->
-					<td tal:condition="readonly"><a change:link="document product" tal:content="product/getLabel" /> <br /></td>
+					<td tal:condition="readonly">${product/getOrderLabelAsHtml}</td>
 					<td tal:condition="not: readonly">
-						<a change:link="document product" tal:content="product/getLabel" /> <br />
-						<tal:block tal:define="name string:orderParam[lines][${cartLineIndex}][productId]">
-							<input type="hidden" tal:attributes="name name; value product/getId" />
-						</tal:block>
+						${product/getOrderLabelAsHtml} <input type="hidden" tal:define="name string:orderParam[lines][${cartLineIndex}][productId]" tal:attributes="name name; value product/getId" />
 					</td>
 	
 					<!-- Disponibilite -->

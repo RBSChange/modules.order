@@ -6,21 +6,48 @@
 class order_persistentdocument_orderline extends order_persistentdocument_orderlinebase 
 {
 	/**
-	 * @return catalog_persistentdocument_product
-	 *
+	 * @return catalog_persistentdocument_product or null
 	 */
 	public function getProduct()
 	{
 		try 
 		{
-			return DocumentHelper::getDocumentInstance($this->getProductId());
+			return DocumentHelper::getDocumentInstance($this->getProductId(), 'modules_catalog/product');
 		}
 		catch (Exception $e)
 		{
-			Framework::exception($e);
-			return null;		
+			if (Framework::isInfoEnabled())
+			{
+				Framework::info(__METHOD__ . ' ' . $e->getMessage());
+			}		
 		}
+		return null;
 	}
+	
+	/**
+	 * @return string
+	 */
+	public function getLabelAsHtml()
+	{
+		$product = $this->getProduct();
+		if ($product)
+		{
+			$l = $this->getOrderLabelAsHtml();
+			if (f_util_StringUtils::isEmpty($l))
+			{
+				return $product->getOrderLabelAsHtml();
+			}
+			return $l;
+		}
+		$l = $this->getOrderLabel();
+		if (f_util_StringUtils::isEmpty($l))
+		{
+			return $this->getLabel();
+		}
+		return $l; 	
+	}
+	
+	
 	
 	/**
 	 * @param String $propertyName
@@ -220,10 +247,37 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	
 
 	
+	/**
+	 * @param string $label
+	 */
+	public function setOrderLabel($label)
+	{
+		$this->setGlobalProperty('orderLabel', $label);
+	}	
 
-	
+	/**
+	 * @return string
+	 */
+	public function getOrderLabel()
+	{
+		return $this->getGlobalProperty('orderLabel');
+	}		
 
+	/**
+	 * @param string $label
+	 */
+	public function setOrderLabelAsHtml($label)
+	{
+		$this->setGlobalProperty('orderLabelAsHtml', $label);
+	}	
 
+	/**
+	 * @return string
+	 */
+	public function getOrderLabelAsHtml()
+	{
+		return  $this->getGlobalProperty('orderLabelAsHtml');
+	}
 	
 	/**
 	 * @deprecated 

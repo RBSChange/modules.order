@@ -1315,18 +1315,23 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * Enter description here...
-	 *
 	 * @param order_persistentdocument_order $order
 	 */
 	private function updateStock($order)
 	{
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__);
+		}
 		foreach ($order->getLineArray() as $line) 
 		{
 			try 
 			{
-				$product = DocumentHelper::getDocumentInstance($line->getProductId());
-				catalog_StockService::getInstance()->decreaseQuantity($product, $line->getQuantity());
+				$product = DocumentHelper::getDocumentInstance($line->getProductId(), 'modules_catalog/product');
+				if ($product instanceof catalog_StockableDocument) 
+				{
+					catalog_StockService::getInstance()->decreaseQuantity($product, $line->getQuantity());
+				}
 			}
 			catch (Exception $e)
 			{

@@ -1,14 +1,13 @@
 <!-- Désignation / référence -->
 <td tal:define="product line/getProduct">
-	<a tal:condition="product" change:link="document product" tal:content="line/getLabel" />
-	<tal:block tal:condition="not: product" tal:replace="line/getLabel" />
+	${line/getLabelAsHtml}
 	<br/>
-	<tal:block tal:replace="line/getCodeReference" />
+	${line/getCodeReference}
 	<tal:block tal:condition="not:ignoreComments">
-	<tal:block tal:condition="line/showCommentLink">
-		<br/>
-		<a tal:condition="product" change:link="document product; anchor 'catalog_comments_comment-form'" change:translate="&modules.catalog.frontoffice.Comment-this-product;" />
-	</tal:block>
+		<tal:block tal:condition="line/showCommentLink">
+			<br/>
+			<a tal:condition="product" change:link="document product; anchor 'catalog_comments_comment-form'" change:translate="&modules.catalog.frontoffice.Comment-this-product;" />
+		</tal:block>
 	</tal:block>
 </td>
 
