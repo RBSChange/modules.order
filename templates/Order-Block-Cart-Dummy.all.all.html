@@ -3,7 +3,7 @@
 <p i18n:translate="&modules.order.frontoffice.Cart-empty-info1;" />
 <p>
 	<span i18n:translate="&modules.order.frontoffice.Cart-empty-info21;" tal:omit-tag=""/>
- 	<a 	tal:attributes="href hrefCatalog;" 
+ 	<a 	tal:condition="shop" change:link="document shop"
  		change:i18nattr="title &modules.order.frontoffice.hrefCatalogTitle;"
- 		i18n:translate="&modules.order.frontoffice.cart-empty-info22;" />.
+ 		change:translate="&modules.order.frontoffice.cart-empty-info22;" />.
 </p>

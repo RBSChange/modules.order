@@ -36,6 +36,11 @@ class order_BlockCartAction extends website_BlockAction
 					'contextual_website_website_modules_order_cart-empty',
 					website_WebsiteModuleService::getInstance()->getCurrentWebsite()
 				);
+				if ($emptyCartPage->getId() != $pageId)
+				{
+					$url = LinkHelper::getUrl($emptyCartPage);
+					HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
+				}
 			}
 			catch (TagException $e)
 			{
@@ -43,15 +48,9 @@ class order_BlockCartAction extends website_BlockAction
 				{
 					Framework::warn($e->getMessage());
 				}
-				return website_BlockView::DUMMY;
 			}
-
-			if ($emptyCartPage->getId() != $pageId)
-			{
-				$url = LinkHelper::getUrl($emptyCartPage);
-				HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
-			}
-
+			$shop = catalog_ShopService::getInstance()->getCurrentShop();
+			$request->setAttribute('shop', $shop);
 			return website_BlockView::DUMMY;
 		}
 
