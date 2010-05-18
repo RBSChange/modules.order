@@ -5,7 +5,7 @@
     <locale lang="en">order process started</locale>
   </entity>
   <entity id="update-order">
-    <locale lang="fr">Mise à jour de la commande numéro ${orderNumber} associée au client ${customerFullName}</locale>
+    <locale lang="fr">Mise à jour de la commande numéro {orderNumber} associée au client {customerFullName}</locale>
   </entity>
   <entity id="log-update-order">
     <locale lang="fr">log-update-order</locale>
@@ -17,13 +17,13 @@
     <locale lang="fr">log-update-smartfolder</locale>
   </entity>
   <entity id="create-new-order">
-    <locale lang="fr">Création de la commande numéro ${orderNumber} associée au client ${customerFullName}</locale>
+    <locale lang="fr">Création de la commande numéro {orderNumber} associée au client {customerFullName}</locale>
   </entity>
   <entity id="log-create-new-order">
     <locale lang="fr">log-create-new-order</locale>
   </entity>
   <entity id="update-order-status">
-    <locale lang="fr">La commande numéro ${orderNumber} associée au client ${customerFullName} passe au statut ${orderStatus}</locale>
+    <locale lang="fr">La commande numéro {orderNumber} associée au client {customerFullName} passe au statut {orderStatus}</locale>
   </entity>
   <entity id="log-update-order-status">
     <locale lang="fr">log-update-order-status</locale>
