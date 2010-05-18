@@ -113,7 +113,10 @@
 		<dd change:translate="&modules.order.frontoffice.TvaLabel;; rate PriceByTax/formattedTaxRate" />
 		<dt tal:content="PriceByTax/formattedTaxAmount" />
 	</tal:block>
-
+<tal:block tal:condition="cart/hasDiscount">
+				<dd change:translate="&modules.order.frontoffice.Discount-nameLabel;" />
+				<dt tal:content="cart/getFormattedDiscountTotalWithTax" />
+			</tal:block>
 	<tal:block tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
 		<!-- shipping -->
 		<dd change:translate="&modules.order.frontoffice.Shipping-modeLabel;" />
@@ -167,7 +170,10 @@
 
 <br />
 <h3 change:h="" change:translate="&modules.order.frontoffice.orderProcess.Do-order;" />
-<p class="error" tal:condition="not: orderProcess/open" tal:content="orderProcess/message" />
+<p class="error" tal:condition="not: orderProcess/open">
+	<tal:block tal:condition="orderProcess/message" tal:content="orderProcess/message" />
+	<tal:block tal:condition="not: orderProcess/message" change:translate="&modules.order.frontoffice.orderProcess.closed-default-message;" />
+</p>
 <tal:block tal:condition="orderProcess/open">
 	<tal:block tal:condition="not: errorMessages">
 		<ul change:errors="" class="normal" />

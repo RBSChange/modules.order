@@ -550,6 +550,10 @@
 		<locale lang="en">The total amount of the order can not exceed {amount} for the mode of transmission {modeLabel} is used</locale>
 		<locale lang="de">Der Gesamtbetrag der Bestellung kann nicht überschreiten {amount} für die Art der Übertragung {modeLabel} wird verwendet</locale>
 	</entity>
+	<entity id="orderProcess.closed-default-message">
+		<locale lang="fr">Le processus de commande est actuellement désactivé. Nous vous prions d'essayer de passer votre commande ultérieurement.</locale>
+		<locale lang="en">The checkout process has been disable. Please try again later.</locale>
+	</entity>
 	<entity id="orderProcess.error">
 		<locale lang="fr">processus de commande - Erreur</locale>
 		<locale lang="en">order process - Error</locale>
