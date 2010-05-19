@@ -124,3 +124,22 @@ class order_OrderNumberDefaultStrategy implements order_OrderNumberStrategy
 		return date("Y").$newCount;
 	}
 }
+
+class order_OrderNumberSequenceStrategy implements order_OrderNumberStrategy
+{
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return String
+	 */
+	public function generate($order)
+	{
+		$orderCount = $order->getDocumentService()->createQuery()
+			->setProjection(Projections::rowCount("orderCount"))->findColumn("orderCount");
+		$newCount = strval($orderCount[0]+1);
+		while (strlen($newCount) < 10)
+		{
+			$newCount = "0".$newCount;
+		}
+		return $newCount;
+	}
+}
