@@ -3,7 +3,6 @@
 	<!-- 
 		WARNING: before importing this file, import :
 			- catalog/sample.xml
-			- marketing/sample.xml
 	-->
 	
 	<!-- Declarations -->
@@ -15,7 +14,6 @@
 	<binding fileName="modules/catalog/persistentdocument/import/catalog_binding.xml" />
 	<binding fileName="modules/payment/persistentdocument/import/payment_binding.xml" />
 	<binding fileName="modules/shipping/persistentdocument/import/shipping_binding.xml" />
-	<binding fileName="modules/marketing/persistentdocument/import/marketing_binding.xml" />
 	<binding fileName="modules/order/persistentdocument/import/order_binding.xml" />
 
 	<!--  Begin -->
@@ -41,30 +39,6 @@
 	
 	<website id="website" byTag="default_modules_website_default-website" />
 
-	<coupon id="coupon1" byCode="test1"  />
-	<coupon id="coupon2" byCode="test2" />
-	
-	<cart id="cart1" shop-refid="shop" customer-refid="customer2" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10"
-		coupon-refid="coupon2"
-		billingMode-refid="payment">
-		<cartline product-refid="product1" quantity="1" />
-		<cartline product-refid="product2" quantity="2" />
-	</cart>
-	<order cart-refid="cart1" orderStatus="PAYMENT_SUCCESS"/>
-	
-	<cart id="cart2" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="20"
-		coupon-refid="coupon1"
-		billingMode-refid="payment">
-		<cartline product-refid="product4" quantity="1" />
-		<cartline product-refid="product5" quantity="2" />
-		<cartline product-refid="product3" quantity="1" />
-	</cart>
-	<order cart-refid="cart2" orderStatus="PAYMENT_SUCCESS"/>
-	
 	<cart id="cart3" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
 		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment">
