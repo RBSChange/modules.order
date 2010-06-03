@@ -26,6 +26,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 				$nodeAttributes['formattedTotalAmountWithTax'] = $this->formatPrice($this->getTotalAmountWithTax());
 				$user = $this->getCustomer()->getUser();
 				$nodeAttributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
+				$nodeAttributes['canBeCanceled'] = $this->canBeCanceled();
 			}
 		}
 	}
@@ -42,7 +43,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 			$formProperties[$key] = $value;
 		}
 	}
-	
 
 	/**
 	 * @return String
@@ -654,7 +654,8 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 	 */
 	public function setShippingStatus($status)
 	{
-		return $this->setShippingProperty('shippingStatus', $status);
+		$this->setShippingProperty('shippingStatus', $status);
+		$this->refreshOrderStatus();
 	}
 	/**
 	 * @return Double
@@ -857,7 +858,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 	function setPaymentStatus($status)
 	{
 		$this->setBillingProperty('bankstatus', $status);
-		$this->setOrderStatus($status);
+		$this->refreshOrderStatus();
 	}
 	
 	/**
@@ -923,4 +924,31 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase 
 		return $this->getTotalAmountWithTax()-$this->getTotalAmountWithoutTax();
 	}
 
+	/**
+	 * @return string
+	 */
+	public function refreshOrderStatus()
+	{
+		if ($this->getOrderStatus() == order_OrderService::CANCELED)
+		{
+			return;
+		}
+		else if ($this->getShippingStatus() == order_OrderService::SHIPPED)
+		{
+			$this->setOrderStatus(order_OrderService::SHIPPED);
+		}
+		else
+		{
+			$this->setOrderStatus($this->getPaymentStatus());
+		}
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	public function canBeCanceled()
+	{
+		$orderStatus = $this->getOrderStatus();
+		return $orderStatus != order_OrderService::CANCELED && $orderStatus != order_OrderService::SHIPPED;
+	}
 }

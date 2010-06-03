@@ -2,7 +2,9 @@
 <rights>
 	<actions>
 		<document name="rootfolder" />
-		<document name="order" />
+		<document name="order">
+			<action name="CancelOrder" />
+		</document>
 		<document name="orderline" />
 		<document name="message" />
 		<document name="smartfolder" />
@@ -23,6 +25,7 @@
 			<permission name="LoadTags" />
 			<permission name="ReActivate.*" />
 			<permission name="Deactivated.*" />
+			<permission name="CancelOrder.order" />
 			<permission name="EditLocale" />
 		</role>
 	</roles>

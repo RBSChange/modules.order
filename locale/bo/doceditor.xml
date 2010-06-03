@@ -88,4 +88,11 @@
 		<locale lang="fr">montant TVA</locale>
 		<locale lang="en">VAT amount</locale>
 	</entity>
+	
+	<entity id="cancelation-in-progress">
+		<locale lang="fr">annulation de cette commande en cours.</locale>
+	</entity>
+	<entity id="message.order-canceled">
+		<locale lang="fr">commande annulée.</locale>
+	</entity>
 </localization>

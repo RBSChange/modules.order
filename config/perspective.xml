@@ -60,7 +60,7 @@
 		<action name="openFolder" icon="open-folder" label="&amp;modules.uixul.bo.actions.OpenFolder;" />
 		<action name="edit" single="true" permission="Load" icon="edit" label="&amp;modules.uixul.bo.actions.Edit;" />
 		<action name="delete" permission="Delete" icon="delete" label="&amp;modules.uixul.bo.actions.Delete;" />
-		<action name="cancelOrder" icon="delete" label="&amp;modules.order.bo.actions.CancelOrder;" />
+		<action name="cancelOrder" permission="CancelOrder" icon="reject" label="&amp;modules.order.bo.actions.CancelOrder;" />
 		<action name="createSmartfolder" single="true" permission="Insert_smartfolder" icon="create-folder" label="&amp;modules.order.bo.actions.Create-smartfolder;" />
 	</actions>
 </perspective>

@@ -789,6 +789,15 @@
 		<locale lang="en">shipped</locale>
 		<locale lang="de">Schiffe</locale>
 	</entity>
+	<entity id="status.shipping_prepare">
+		<locale lang="fr">préparation</locale>
+		<locale lang="en">building</locale>
+	</entity>
+	<entity id="status.shipping_progress">
+		<locale lang="fr">en cours</locale>
+		<locale lang="en">in progress</locale>
+		<locale lang="de">im Gang</locale>
+	</entity>
 	<entity id="paymentstatus.success">
 		<locale lang="fr">validé</locale>
 		<locale lang="en">validated</locale>

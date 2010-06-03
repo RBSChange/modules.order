@@ -182,6 +182,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 
 		// Read-only informations.
 		$informations = array();
+		$informations['canBeCanceled'] = $order->canBeCanceled();
 		$informations['customerId'] = $customer->getId();
 		$informations['email'] = $customer->getUser()->getEmail();
 		$informations['bill'] = $order->getBillURL();
@@ -758,10 +759,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 					}
 					break;
 			}
-		}
-		elseif ($document->isPropertyModified('shippingProperties'))
-		{
-			$document->hasNotificationPending(true);
 		}
 		
 		if ($document->isPropertyModified('orderStatus'))

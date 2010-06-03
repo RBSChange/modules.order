@@ -334,27 +334,27 @@
 		<content>
 		<children />
 			<xul:hbox>
-				 <xul:menulist anonid="orderStatus">
+				<xul:menulist disabled="true" anonid="orderStatus">
 				    <xul:menupopup>
-				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_WAITING;" value="PAYMENT_WAITING"/>
-				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_FAILED;" value="PAYMENT_FAILED"/>
-				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_SUCCESS;" value="PAYMENT_SUCCESS"/>
-				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_DELAYED;" value="PAYMENT_DELAYED"/>
-				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Canceled;" value="CANCELED"/>
-				      <xul:menuitem label="&amp;modules.order.frontoffice.status.Shipped;" value="SHIPPED"/>
+						<xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_WAITING;" value="PAYMENT_WAITING"/>
+						<xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_FAILED;" value="PAYMENT_FAILED"/>
+						<xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_SUCCESS;" value="PAYMENT_SUCCESS"/>
+						<xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_DELAYED;" value="PAYMENT_DELAYED"/>
+						<xul:menuitem label="&amp;modules.order.frontoffice.status.Canceled;" value="CANCELED"/>
+						<xul:menuitem label="&amp;modules.order.frontoffice.status.Shipped;" value="SHIPPED"/>
 				    </xul:menupopup>
-				  </xul:menulist>
+				</xul:menulist>
 				  
 				<xul:label value="&amp;modules.order.bo.doceditor.property.Payment-statusLabel;" />			
 				<xul:menulist anonid="paymentStatus">
-				    <xul:menupopup>
-				       <xul:menuitem label="" value=""/>
-				      <xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Waiting;" value="PAYMENT_WAITING"/>
-				      <xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Failed;" value="PAYMENT_FAILED"/>
-				      <xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Success;" value="PAYMENT_SUCCESS"/>
-				      <xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Delayed;" value="PAYMENT_DELAYED"/>
-				    </xul:menupopup>
-				  </xul:menulist>		
+					<xul:menupopup>
+						<xul:menuitem label="" value=""/>
+						<xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Waiting;" value="PAYMENT_WAITING"/>
+						<xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Failed;" value="PAYMENT_FAILED"/>
+						<xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Success;" value="PAYMENT_SUCCESS"/>
+						<xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Delayed;" value="PAYMENT_DELAYED"/>
+					</xul:menupopup>
+				</xul:menulist>		
 				  						
 				<xul:label value="&amp;modules.order.bo.doceditor.property.Shipping-statusLabel;" />	
 			 	<xul:menulist anonid="shippingStatus">
@@ -371,7 +371,6 @@
 			<field name="_statuses">null</field>
 			<field name="_values">null</field>		
 			<field name="_stateLabels">null</field>
-			
 			
 			<property name="orderStatus" readonly="true">
 				<getter><![CDATA[
@@ -418,7 +417,6 @@
 			
 			<method name="updateUI">
 				<body><![CDATA[
-					
 					var elem = this.getElementByAnonId('orderStatus');
 					elem.value = this._values.order;
 					

@@ -24,6 +24,10 @@
 		<locale lang="fr">annuler</locale>
 		<locale lang="en">cancel</locale>
 	</entity>
+	<entity id="cancel-order">
+		<locale lang="fr">annuler cette commande</locale>
+		<locale lang="en">cancel this order</locale>
+	</entity>
 	<entity id="cancel-multiple-orders-confirm-message">
 		<locale lang="fr">L'annulation d'une commande entraîne l'envoi d'une notification d'annulation de commande au client. Souhaitez-vous réellement annuler les {count} commandes sélectionnées ?</locale>
 		<locale lang="en">Do you really want to cancel the {count} selected orders? Customers will receive a notification.</locale>

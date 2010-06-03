@@ -4,7 +4,7 @@
 		<sectionrow labeli18n="modules.order.bo.general.Website" id="website" />
 		<sectionrow labeli18n="modules.order.bo.general.Reference" id="reference" />
 		<sectionrow labeli18n="modules.order.bo.general.Date" id="creationdate" />
-		<field name="boStatusAsJSON" type="editorderstatus" labeli18n="modules.order.document.order.boStatusAsJSON" />
+		<field name="boStatusAsJSON" type="editorderstatus" labeli18n="modules.order.document.order.BoStatusAsJSON" />
 		<sectionrow labeli18n="modules.order.document.order.ShippingMode" id="shippingMode" />
 		<field name="packageTrackingNumber" anonid="field_packageTrackingNumber" id="order_order_packageTrackingNumber" labeli18n="modules.order.bo.general.Package-tracking-number" type="text" />
 		<field name="commentadmin" type="longtext" />
@@ -56,9 +56,13 @@
 	<xul>
 		<javascript>
 			<constructor><![CDATA[
-				var me = this
-				this.fields['boStatusAsJSON'].addEventListener('fieldChanged', function (event) {me.orderStatusChanged(event);}, true);
+				// Cancel order button.
+				this.mCancelOrderButton = this.addActionButton('&modules.order.bo.actions.Cancel-order;', wToolkit.getIcon('reject', 'small'));
+				var me = this;
+				this.mCancelOrderButton.addEventListener('command', function(event) {me.onCancelOrder();}, true);			
+				this.extendMethod("updateCommandsUI", this.updateCancelOrderUI);
 			]]></constructor>
+			
 			<field name="mPropIds">[
 				"billingAddressLabel",
 				"billingAddressLine1",
@@ -95,13 +99,58 @@
 				"couponSectionCode",
 				"couponSectionValue",
 			]</field>
+			
+			<field name="mCancelOrderButton">null</field>
+			<field name="mCanBeCanceled">false</field>
 
-			<method name="orderStatusChanged">
+			<method name="updateCancelOrderUI">
+				<parameter name="event" />
 				<body><![CDATA[
-					
+					this.mCancelOrderButton.disabled = (this.modified || !this.mCanBeCanceled);
 				]]></body>
 			</method>
 
+			<method name="onCancelOrder">
+				<parameter name="event" />
+				<body><![CDATA[
+					this.lockCommandsUI();
+					this.showTextMessage("&modules.order.bo.doceditor.Cancelation-in-progress;");
+					this.documentEditor.executeServerAction('properties', 'CancelOrder');
+				]]></body>
+			</method>
+			
+			<method name="getCancelOrderParameters">
+				<body><![CDATA[
+					var documentInfos = this.documentEditor.documentInfos;
+					var attributes = {
+						action: 'CancelOrderJSON',
+						cmpref: this.mDocumentId, 
+						lang : this.mLang,
+						documentversion: this.mRevision,
+						documentproperties: this.mFieldNames.join(',')
+					};
+					return attributes;
+				]]></body>
+			</method>
+			
+			<method name="fireCancelOrderComplete">
+				<parameter name="result" />
+				<body><![CDATA[			
+					if (result.status == "OK")
+					{
+						this.modified = false;						
+						this.documentEditor.clearTabs();
+						//wCore.debug('fireCancelOrderComplete' + wCore.dump(result));						
+						this.fireInitializeComplete(result);						
+						this.showTextMessage("&modules.order.bo.doceditor.message.Order-canceled;");
+					}
+					else
+					{
+						this.showErrorMessage(result.contents.errorMessage);					
+					}
+				]]></body>
+			</method>
+			
 			<method name="fireInitializeComplete">
 				<parameter name="result" />
 				<body><![CDATA[	
@@ -109,6 +158,10 @@
 					this.mDocumentId = result.contents.id;
 					var informations = result.contents.informations;
 					var node;
+					
+					this.mCanBeCanceled = informations['canBeCanceled'];
+					this.updateCancelOrderUI();
+					
 					for each (var name in this.mPropIds)
 					{
 						node = document.getAnonymousElementByAttribute(this, "anonid", name);
