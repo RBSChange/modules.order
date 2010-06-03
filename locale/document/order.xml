@@ -21,7 +21,7 @@
 		<locale lang="de">Administrator Kommentar</locale>
 	</entity>
 	<entity id="commentadmin-help">
-		<locale lang="fr">ce commentaire ne sera visible qu'ici. Il est destiné à notter des remarques concernant cette commande.</locale>
+		<locale lang="fr">ce commentaire ne sera visible qu'ici. Il est destiné à noter des remarques concernant cette commande.</locale>
 		<locale lang="en">admin comment's</locale>
 		<locale lang="de">Dieser Kommentar wird hier sichtbar. Es ist zu Notter Rückmeldungen, die diese Ordnung bestimmt sind.</locale>
 	</entity>
