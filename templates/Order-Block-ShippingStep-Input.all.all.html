@@ -64,15 +64,15 @@
 			</div>
 		</div>
 		<script type="text/javascript">//<![CDATA[
-			$(document).ready(function()
+			jQuery(document).ready(function()
 			{
-				$('#order_shippingStep_useSameAddressForBilling_false').bind('click change', function()
-						{$('#order_billingAddressContainer').show();});
-				$('#order_shippingStep_useSameAddressForBilling_true').bind('click change', function()
-						{$('#order_billingAddressContainer').hide();});
-				if ($('#order_shippingStep_useSameAddressForBilling_true').attr('checked'))
+				jQuery('#order_shippingStep_useSameAddressForBilling_false').bind('click change', function()
+						{jQuery('#order_billingAddressContainer').show();});
+				jQuery('#order_shippingStep_useSameAddressForBilling_true').bind('click change', function()
+						{jQuery('#order_billingAddressContainer').hide();});
+				if (jQuery('#order_shippingStep_useSameAddressForBilling_true').attr('checked'))
 				{
-					$('#order_billingAddressContainer').hide();
+					jQuery('#order_billingAddressContainer').hide();
 				}			
 			});
 
