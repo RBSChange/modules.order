@@ -7,7 +7,7 @@
 			<constraints>unique:true</constraints>
 		</add>
 		<add name="orderStatus" type="String" from-list="modules_order/orderstatuses" default-value="PAYMENT_WAITING" preserve-old-value="true"/>
-		<add name="customer" type="modules_customer/customer" inverse="true" />		
+		<add name="customer" type="modules_customer/customer" inverse="true" min-occurs="1" />		
 
 		<add name="shopId" type="Integer" min-occurs="1" />
 		<add name="websiteId" type="Integer" min-occurs="1" />

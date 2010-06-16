@@ -33,6 +33,32 @@ class order_GetTreeChildrenJSONAction extends generic_GetTreeChildrenJSONAction
 			}
 			return array();
 		}
+		else if ($document instanceof order_persistentdocument_smartfolder)
+		{
+			$queryIntersection = f_persistentdocument_DocumentFilterService::getInstance()->getQueryIntersectionFromJson($document->getQuery());
+			$totalCount = 0;
+			$result = $queryIntersection->findAtOffset($this->getStartIndex(), $this->getPageSize(), $totalCount);
+			$this->setTotal($totalCount);		
+			return $result;
+		}
 		return parent::getVirtualChildren($document, $subModelNames, $propertyName);
+	}
+	
+	/**
+	 * @param Integer $offset
+	 * @param Integer $count
+	 * @param Integer $totalCount 
+	 * @return f_persistentdocument_PersistentDocument[]
+	 */
+	function findAtOffset($offset, $count, &$totalCount = null)
+	{
+		$ids = $this->findIds();
+		$totalCount = count($ids);
+		if ($totalCount || $offset >= $totalCount)
+		{
+			return array();
+		}
+		$pp = f_persistentdocument_PersistentProvider::getInstance();
+		return $pp->find($pp->createQuery($this->getDocumentModel()->getName())->add(Restrictions::in("id", array_slice($ids, $offset, $count))));
 	}
 }
