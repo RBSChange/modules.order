@@ -52,7 +52,10 @@ class order_CartInfoScriptElement extends import_ScriptObjectElement
      			case 'billingMode-refid':
     				$billingMode = $this->script->getElementById($value)->getPersistentDocument();
     				$cart->setBillingMode($billingMode);
-    				break;   				
+    				break;
+    			 case 'creationdate':
+    				$cart->setProperties('creationdate', $value);
+    				break; 
     			default:
     				throw new Exception("Invalid attribute : $name => $value");
     		}

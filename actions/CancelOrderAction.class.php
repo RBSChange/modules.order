@@ -15,7 +15,11 @@ class order_CancelOrderAction extends f_action_BaseAction
 		$os = order_OrderService::getInstance();
 		foreach ($this->getDocumentInstanceArrayFromRequest($request) as $order)
 		{
-			$os->cancelOrder($order, true); // Save the order after it has been cancelled.
+			if ($order instanceof order_persistentdocument_order)
+			{
+				$os->cancelOrder($order); // Save the order after it has been cancelled.
+				$this->logAction($order);
+			}
 		}
 		return self::getSuccessView();
 	}

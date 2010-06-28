@@ -7,6 +7,12 @@ class order_Setup extends object_InitDataSetup
 {
 	public function install()
 	{
+		$task = task_PlannedtaskService::getInstance()->getNewDocumentInstance();
+		$task->setSystemtaskclassname('order_BackgroundOrderCheck');
+		$task->setUniqueExecutiondate(date_Calendar::getInstance());
+		$task->setLabel('order_BackgroundOrderCheck');
+		$task->save(ModuleService::getInstance()->getSystemFolderId('task', 'order'));
+		
 		try
 		{
 			$scriptReader = import_ScriptReader::getInstance();

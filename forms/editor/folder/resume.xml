@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <panel>	
-	<section name="properties" linkedtab="properties" linkedtab="properties" labeli18n="modules.uixul.bo.doceditor.section.Properties" 
+	<section name="properties" linkedtab="properties" labeli18n="modules.uixul.bo.doceditor.section.Properties" 
 		image="{IconsBase}/small/edit-properties.png">
 		<property name="label" labeli18n="modules.uixul.bo.doceditor.property.Label" />
 		<property name="author" labeli18n="modules.uixul.bo.doceditor.property.Author" />

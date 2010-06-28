@@ -28,4 +28,4 @@
   <entity id="log-update-order-status">
     <locale lang="fr">log-update-order-status</locale>
   </entity>
-</localization>
+<entity id="insert-smartfolder"><locale lang="fr">insert.smartfolder {documentlabel}</locale></entity><entity id="log-insert-smartfolder"><locale lang="fr">log-insert-smartfolder</locale></entity><entity id="move-smartfolder"><locale lang="fr">move.smartfolder {destinationlabel} {documentlabel}</locale></entity><entity id="log-move-smartfolder"><locale lang="fr">log-move-smartfolder</locale></entity><entity id="cancelorder-order"><locale lang="fr">cancelorder.order {documentlabel}</locale></entity><entity id="log-cancelorder-order"><locale lang="fr">log-cancelorder-order</locale></entity></localization>

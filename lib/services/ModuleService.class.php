@@ -273,8 +273,6 @@ class order_ModuleService extends ModuleBaseService
 	 */
 	public function areCommentRemindersEnabled()
 	{
-		Framework::debug(__METHOD__ . ' : ' . var_export($this->areCommentsEnabled(), true));
-		Framework::debug(__METHOD__ . ' : ' . var_export(ModuleService::getInstance()->getPreferenceValue('order', 'enableCommentReminder'), true));
 		return $this->areCommentsEnabled() && ModuleService::getInstance()->getPreferenceValue('order', 'enableCommentReminder');
 	}
 	
@@ -332,5 +330,213 @@ class order_ModuleService extends ModuleBaseService
 			$this->preferencesDocument = ModuleService::getInstance()->getPreferencesDocument('order');
 		}
 		return $this->preferencesDocument;
+	}
+	
+	/**
+	 * @param string $notifCodeName
+	 * @param order_persistentdocument_order $order
+	 * @param order_persistentdocument_bill $bill
+	 * @param order_persistentdocument_expedition $expedition
+ 	 * @return boolean
+	 */
+	public function sendCustomerNotification($notifCodeName, $order, $bill = null, $expedition = null)
+	{
+		$this->setCurrentWebsiteIfNeeded($order);
+		$ns = notification_NotificationService::getInstance();	
+		$notif = $ns->getNotificationByCodeName($notifCodeName);
+		if ($notif)
+		{
+			$recipents = $this->getMessageRecipients($order);
+			if ($recipents)
+			{
+				$parameters = $order->getDocumentService()->getNotificationParameters($order);
+				if ($bill instanceof order_persistentdocument_bill)
+				{
+					$parameters = array_merge($parameters, $bill->getDocumentService()->getNotificationParameters($bill));
+				}
+				if ($expedition instanceof order_persistentdocument_expedition)
+				{
+					$parameters = array_merge($parameters, $expedition->getDocumentService()->getNotificationParameters($expedition));
+				}
+				if (Framework::isInfoEnabled())
+				{
+					Framework::info(__METHOD__ . ' ' . $notifCodeName . ' '. var_export($parameters, true));
+				}
+				$ns->setMessageService(MailService::getInstance());		
+				return $ns->send($notif, $recipents, $parameters, 'order');
+			}
+			else
+			{
+				if (Framework::isInfoEnabled())
+				{
+					Framework::info(__METHOD__ . " $notifCodeName has no customer email");
+				}				
+			}
+		}
+		else
+		{
+			if (Framework::isInfoEnabled())
+			{
+				Framework::info(__METHOD__ . " $notifCodeName not found");
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * @param string $notifCodeName
+	 * @param order_persistentdocument_order $order
+	 * @param order_persistentdocument_bill $bill
+	 * @param order_persistentdocument_expedition $expedition
+	 * @return boolean
+	 */
+	public function sendAdminNotification($notifCodeName, $order, $bill = null, $expedition = null)
+	{
+		$this->setCurrentWebsiteIfNeeded($order);
+		$ns = notification_NotificationService::getInstance();
+		$notif = $ns->getNotificationByCodeName($notifCodeName);
+		if ($notif)
+		{
+			$recipents = $this->getAdminRecipients();
+			if ($recipents !== null)
+			{
+				$parameters = $order->getDocumentService()->getNotificationParameters($order);
+				if ($bill instanceof order_persistentdocument_bill)
+				{
+					$parameters = array_merge($parameters, $bill->getDocumentService()->getNotificationParameters($bill));
+				}
+				if ($expedition instanceof order_persistentdocument_expedition)
+				{
+					$parameters = array_merge($parameters, $expedition->getDocumentService()->getNotificationParameters($expedition));
+				}
+				
+				if (Framework::isInfoEnabled())
+				{
+					Framework::info(__METHOD__ . ' ' . $notifCodeName . ' '. var_export($parameters, true));
+				}			
+				$ns->setMessageService(MailService::getInstance());		
+				return $ns->send($notif, $recipents, $parameters, 'order');				
+			}
+			else
+			{
+				if (Framework::isInfoEnabled())
+				{
+					Framework::info(__METHOD__ . " $notifCodeName has no admin recipient");
+				}
+			}
+		}
+		else
+		{
+			if (Framework::isInfoEnabled())
+			{
+				Framework::info(__METHOD__ . " $notifCodeName not found");
+			}
+		}	
+		return true;			
+	}	
+	
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return mail_MessageRecipients
+	 */
+	public function getMessageRecipients($order)
+	{
+		if ($order->getCustomer() && $order->getCustomer()->getUser())
+		{
+			$recipients = new mail_MessageRecipients();
+			$recipients->setTo($order->getCustomer()->getUser()->getEmail());
+			return $recipients;
+		}
+		return null;
+	}
+	
+	/**
+	 * @return mail_MessageRecipients
+	 */
+	public function getAdminRecipients()
+	{
+		$recipients = new mail_MessageRecipients();
+		$emails = array();
+		$admins = ModuleService::getPreferenceValue('order', 'orderConfirmedNotificationUser');
+		if (is_array($admins))
+		{
+			foreach ($admins as $admin)
+			{
+				$emails[] = $admin->getEmail();
+			}
+		}
+		if (count($emails))
+		{
+			$recipients->setTo($emails);
+			return $recipients;
+		}
+		return null;
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 */
+	private function setCurrentWebsiteIfNeeded($order)
+	{
+		$website = $order->getWebsite();
+		$websiteModule = website_WebsiteModuleService::getInstance();
+		if ($websiteModule->getCurrentWebsite() !== $website)
+		{
+			$websiteModule->setCurrentWebsite($website);
+		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 */	
+	public function checkOrderProcessing($order)
+	{
+		if ($order->getOrderStatus() == order_OrderService::IN_PROGRESS)
+		{
+			if (order_BillService::getInstance()->hasPublishedBill($order))
+			{
+				$result = order_ExpeditionService::getInstance()->createQuery()
+						->add(Restrictions::eq('order', $order))
+						->add(Restrictions::eq('status', order_ExpeditionService::PREPARE))
+						->setProjection(Projections::rowCount('rowcount'))->find();
+				
+				if ($result[0]['rowcount'] == 0)
+				{
+					$expedition = order_ExpeditionService::getInstance()->createForOrder($order);
+					if ($expedition)
+					{
+						$expedition->save();
+						Framework::info(__METHOD__ . ' Expedition (' . $expedition->getId() . ') generated for order ' . $order->getOrderNumber());
+					}
+					else
+					{
+						Framework::info(__METHOD__ . ' all expedition shipped for order ' . $order->getOrderNumber());
+						order_OrderService::getInstance()->completeOrder($order);
+					}
+				}
+			}
+		}
+		else if (f_util_StringUtils::isEmpty($order->getOrderStatus()))
+		{
+			//Payment interompu en cours de processus
+			if (date_Calendar::getInstance()->sub(date_Calendar::MINUTE, 10)->isAfter(date_Calendar::getInstance($order->getCreationdate())))
+			{
+				$cancel = true;
+				$bill = new order_persistentdocument_bill();
+				foreach ($order->getBillArrayInverse() as $bill) 
+				{
+					if ($bill->getPublicationstatus() == 'DRAFT')
+					{
+						$cancel = false;
+						break;
+					}
+				}
+				if ($cancel)
+				{
+					$order->getDocumentService()->cancelOrder($order);
+				}
+			}
+		}
 	}
 }

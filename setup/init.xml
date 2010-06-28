@@ -10,15 +10,23 @@
 	</rootfolder>
 	
 	<systemfolder module="list" relatedmodule="order">	
-		<staticlist listid="modules_order/orderstatuses" 
-			label="&amp;modules.order.frontoffice.list.Order-statuses;"
-			description="&amp;modules.order.frontoffice.list.Order-statuses;">
-			<staticitem label="&amp;modules.order.frontoffice.status.Payment_SUCCESS;" value="PAYMENT_SUCCESS" />
-			<staticitem label="&amp;modules.order.frontoffice.status.Payment_WAITING;" value="PAYMENT_WAITING" />
-			<staticitem label="&amp;modules.order.frontoffice.status.Payment_FAILED;" value="PAYMENT_FAILED" />
-			<staticitem label="&amp;modules.order.frontoffice.status.Payment_DELAYED;" value="PAYMENT_DELAYED" />
-			<staticitem label="&amp;modules.order.frontoffice.status.Canceled;" value="CANCELED" />
-			<staticitem label="&amp;modules.order.frontoffice.status.Shipped;" value="SHIPPED" />
+		<staticlist listid="modules_order/orderstatuses" label="&amp;modules.order.frontoffice.list.Order-statuses;">
+			<staticitem label="&amp;modules.order.frontoffice.status.In_progress;" value="in_progress" />
+			<staticitem label="&amp;modules.order.frontoffice.status.Canceled;" value="canceled" />
+			<staticitem label="&amp;modules.order.frontoffice.status.Complete;" value="complete" />
+		</staticlist>
+		
+		<staticlist listid="modules_order/billstatuses" label="&amp;modules.order.frontoffice.list.Bill-statuses;">
+			<staticitem label="&amp;modules.order.frontoffice.status.bill.Waiting;" value="waiting" />
+			<staticitem label="&amp;modules.order.frontoffice.status.bill.Success;" value="success" />
+			<staticitem label="&amp;modules.order.frontoffice.status.bill.Failed;" value="failed" />
+		</staticlist>
+		
+		<staticlist listid="modules_order/expeditionstatuses" label="&amp;modules.order.frontoffice.list.Expedition-statuses;">
+			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Prepare;" value="prepare" />
+			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Shipped;" value="shipped" />
+			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Delivered;" value="delivered" />
+			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Canceled;" value="canceled" />
 		</staticlist>
 		
 		<staticlist listid="modules_order/qttfilter" 
@@ -39,7 +47,7 @@
 	</systemfolder>
 	
 	<systemfolder module="notification" relatedmodule="order">
-		<notification codename="modules_order/status_PAYMENT_WAITING"
+		<notification codename="modules_order/bill_waiting"
 			label="Commande enregistrée"
 			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
 			subject="Votre commande sur le site {company-name} est enregistrée"
@@ -49,7 +57,7 @@
 			template="default"
 			senderUsername="no-reply" />
 			
-		<notification codename="modules_order/status_PAYMENT_SUCCESS"
+		<notification codename="modules_order/bill_success"
 			label="Paiement accepté"
 			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
 			subject="Le paiement de votre commande {orderId} sur le site {company-name} est validé"
@@ -59,7 +67,7 @@
 			template="default"
 			senderUsername="no-reply" />			
 			
-		<notification codename="modules_order/status_PAYMENT_FAILED"
+		<notification codename="modules_order/bill_failed"
 			label="Paiement refusé"
 			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
 			subject="Le paiement de votre commande {orderId} sur le site {company-name} a été refusé"
@@ -69,7 +77,7 @@
 			template="default"
 			senderUsername="paiement-refuse" />
 			
-		<notification codename="modules_order/status_CANCELED"
+		<notification codename="modules_order/order_canceled"
 			label="Commande annulée"
 			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
 			subject="Votre commande {orderId} sur le site {company-name} a été annulée"
@@ -79,7 +87,7 @@
 			template="default"
 			senderUsername="no-reply" />
 			
-		<notification codename="modules_order/status_SHIPPED"
+		<notification codename="modules_order/order_complete"
 			label="Commande expédiée"
 			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
 			subject="Votre commande {orderId} sur le site {company-name} est expédiée"
@@ -89,7 +97,7 @@
 			template="default"
 			senderUsername="no-reply" />
 			
-		<notification codename="modules_order/orderconfirmed"
+		<notification codename="modules_order/bill_admin_success"
 			label="Nouvelle commande (administrateur)"
 			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
 			subject="Nouvelle commande : numéro : {orderId}, client : {fullname}, montant : {orderAmount}"
@@ -115,6 +123,11 @@
 			body="&lt;p&gt;{content}&lt;/p&gt;"
 			template="default"
 			senderUsername="no-reply" />
+			
+		<!-- 
+			modules_order/comment-reminder
+		
+		 -->
 	</systemfolder>
 		
 	<rootfolder module="order">

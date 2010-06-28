@@ -9,7 +9,7 @@
 			<xul:hbox align="center">
 				<xul:clabel value="&amp;modules.order.bo.general.Email;" />
 				<xul:label xbl:inherits="value=email" />
-				<xul:toolbarbutton label="&amp;modules.order.bo.doceditor.panel.properties.View-customer;" image="{IconsBase}/small/shadow/view.png" oncommand="showCustomer()" />
+				<xul:toolbarbutton label="&amp;modules.order.bo.doceditor.panel.properties.View-customer;" image="{IconsBase}/small/customer.png" oncommand="showCustomer()" />
 				<xul:spacer flex="1" />
 			</xul:hbox>
 		</content>
@@ -100,7 +100,7 @@
 						<xul:caption label="&amp;modules.order.bo.doceditor.panel.messages.Title;" />
 						<vbox>
 							<xul:cfield name="messageContent" anonid="field_messageContent" fieldtype="longtext" cols="100" hidehelp="true" />
-							<hbox><xul:button anonid="sendMessageButton" label="&amp;modules.order.bo.doceditor.panel.messages.Send;" image="{IconsBase}/small/shadow/mail_forward.png" /></hbox>
+							<hbox><xul:button anonid="sendMessageButton" label="&amp;modules.order.bo.doceditor.panel.messages.Send;" image="{IconsBase}/small//mail.png" /></hbox>
 						</vbox>
 					</xul:groupbox>
 					<xul:vbox anonid="messages" />
@@ -294,7 +294,7 @@
 					{
 						
 						propspanel.showTextMessage("&amp;modules.order.bo.actions.GeneratingBill;");
-						var result = wCore.executeJSON("order", "GenerateBill", { {K::COMPONENT_ID_ACCESSOR}: edt.documentid, {K::COMPONENT_LANG_ACCESSOR} : edt.mDocumentInfos.vo}, null , true); 	
+						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: edt.documentid, lang: edt.mDocumentInfos.vo}, null , true); 	
 						if (result.status === 'OK')
 						{
 							propspanel.showTextMessage("&amp;modules.order.bo.actions.GeneratingBillDone;");
@@ -330,204 +330,541 @@
 		</implementation>
 	</binding>
 	
-	<binding id="cEditOrderStatus" extends="form.cField#cAbstractField">
-		<content>
-		<children />
-			<xul:hbox>
-				<xul:menulist disabled="true" anonid="orderStatus">
-				    <xul:menupopup>
-						<xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_WAITING;" value="PAYMENT_WAITING"/>
-						<xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_FAILED;" value="PAYMENT_FAILED"/>
-						<xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_SUCCESS;" value="PAYMENT_SUCCESS"/>
-						<xul:menuitem label="&amp;modules.order.frontoffice.status.Payment_DELAYED;" value="PAYMENT_DELAYED"/>
-						<xul:menuitem label="&amp;modules.order.frontoffice.status.Canceled;" value="CANCELED"/>
-						<xul:menuitem label="&amp;modules.order.frontoffice.status.Shipped;" value="SHIPPED"/>
-				    </xul:menupopup>
-				</xul:menulist>
-				  
-				<xul:label value="&amp;modules.order.bo.doceditor.property.Payment-statusLabel;" />			
-				<xul:menulist anonid="paymentStatus">
-					<xul:menupopup>
-						<xul:menuitem label="" value=""/>
-						<xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Waiting;" value="PAYMENT_WAITING"/>
-						<xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Failed;" value="PAYMENT_FAILED"/>
-						<xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Success;" value="PAYMENT_SUCCESS"/>
-						<xul:menuitem label="&amp;modules.order.frontoffice.paymentstatus.Delayed;" value="PAYMENT_DELAYED"/>
-					</xul:menupopup>
-				</xul:menulist>		
-				  						
-				<xul:label value="&amp;modules.order.bo.doceditor.property.Shipping-statusLabel;" />	
-			 	<xul:menulist anonid="shippingStatus">
-			    	<xul:menupopup>
-				    	<xul:menuitem label="" value=""/>
-				      	<xul:menuitem label="&amp;modules.order.frontoffice.shippingstatus.Prepare;" value="SHIPPING_PREPARE"/>
-				      	<xul:menuitem label="&amp;modules.order.frontoffice.shippingstatus.Progress;" value="SHIPPING_PROGRESS"/>
-				      	<xul:menuitem label="&amp;modules.order.frontoffice.status.Shipped;" value="SHIPPED"/>
-			    	</xul:menupopup>
-			  	</xul:menulist>
-			</xul:hbox>
-		</content>
+	<binding id="cBillsSoratbleGrid" extends="widgets.cGrid#cAbstractSortableGrid">
 		<implementation>
-			<field name="_statuses">null</field>
-			<field name="_values">null</field>		
-			<field name="_stateLabels">null</field>
-			
-			<property name="orderStatus" readonly="true">
-				<getter><![CDATA[
-					return this._values.order;
-				]]></getter>			
-			</property>
-			
-			<property name="paymentStatus" readonly="true">
-				<getter><![CDATA[
-					return this._values.payment;
-				]]></getter>			
-			</property>
-			
-			<property name="shippingStatus" readonly="true">
-				<getter><![CDATA[
-					return this._values.shipping;
-				]]></getter>			
-			</property>		
-			
-			<method name="setInitialValue">
-				<parameter name="val" />
-				<body><![CDATA[
-					var fval = this.fixString(val);
-					if (fval != '')
-					{
-						this._statuses = wCore.parseJSON(fval);
-					}
-					else
-					{
-						this._statuses = {order:null, payment:null, shipping:null};
-					}
-					fval = wCore.stringifyJSON(this._statuses);
-					this.setAttribute("initialvalue", fval);
-					this._values = wCore.parseJSON(fval);	
-					this.updateUI();									
-					if (this.modified)
-					{
-						this.removeAttribute("modified");
-						this.dispatchFieldEvent('fieldRestored');						
-					}
-					this.setValidity(null);
-				]]></body>
-			</method>
-			
-			<method name="updateUI">
-				<body><![CDATA[
-					var elem = this.getElementByAnonId('orderStatus');
-					elem.value = this._values.order;
-					
-					elem = this.getElementByAnonId('paymentStatus');
-					elem.value = (this._values.payment) ? this._values.payment : '';
-					
-					elem = this.getElementByAnonId('shippingStatus');
-					elem.value = (this._values.shipping) ? this._values.shipping : '';					
-				]]></body>
-			</method>			
-			
-			<property name="value">
-				<getter><![CDATA[
-					return wCore.stringifyJSON(this._values);
-				]]></getter>
-				<setter><![CDATA[
-					var fval = this.fixString(val);
-					if (fval != '')
-					{
-						this._values = wCore.parseJSON(fval);
-					}
-					else
-					{
-						this._values = {order:null, payment:null, shipping:null};
-					}
-					this.updateUI();
-					this.valueChanged();
-				]]></setter>
-			</property>
-						
-			<method name="reset">
-				<body><![CDATA[
-					this.setInitialValue(this.initialvalue);
-					this.valueChanged();
-				]]></body>
-			</method>
-				
 			<constructor><![CDATA[
-				this.setInitialValue(this.initialvalue);
+				this.fireEvent('gridInitialised');
 			]]></constructor>
-	
-			<method name="valueChanged">
+			
+			<method name="execute_edit">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
 				<body><![CDATA[
-					this.dispatchFieldEvent('fieldChanged');
-					if (this.checkIsModified())
+					if (this.disabled) {return;}
+					var uri = ['order', 'openDocument', rowData.type, rowData.id].join(',');
+					openActionUri(uri);
+				]]></body>
+			</method>
+			
+			<method name="execute_validate">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
+				<body><![CDATA[
+					if (this.disabled) {return;}
+					var me = this;
+					var node = rowNode;
+					var data = rowData;
+					var callBack = function() {me.onValidate(node, data);}
+					getController().openModalDialog(this, 'ValidateBill', {callBack: callBack, rowData: rowData});
+				]]></body>
+			</method>
+					
+			<method name="onValidate">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
+				<body><![CDATA[
+					this.setCellValue(rowNode.childNodes[2], 'status', rowNode.mDataRow);
+					this.setCellArchiveValue(rowNode.childNodes[3], rowNode.mDataRow);
+				]]></body>
+			</method>
+			
+			<method name="execute_generate">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />	
+				<body><![CDATA[
+					var propspanel = this.parentNode;
+					var propspanel = this.parentNode;
+					while (propspanel && propspanel.tagName != "cpropertiespanel")
 					{
-						if (!this.modified) 
+						propspanel = propspanel.parentNode;
+					}
+					
+					try
+					{
+						propspanel.showTextMessage("&amp;modules.order.bo.actions.GeneratingBill;");
+						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: rowData.id, lang: rowData.lang}, null , true); 	
+						wCore.debug(wCore.dump(result));
+						if (result.status === 'OK')
 						{
-							this.setAttribute("modified", "true");
-							this.dispatchFieldEvent('fieldModified');
+							propspanel.showTextMessage("&amp;modules.order.bo.actions.GeneratingBillDone;");
+							rowNode.mDataRow.archive = result.contents.url;
+							this.setCellArchiveValue(rowNode.childNodes[3], rowNode.mDataRow);
+						}
+						else
+						{
+							propspanel.showErrorMessage(result.contents.errorMessage);
 						}
 					}
+					catch (e)
+					{
+						wCore.error('execute_generate', [rowNode, rowData], e);
+					}
+				]]></body>
+			</method>
+			
+			<method name="execute_download">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
+				<body><![CDATA[
+					if (this.disabled) {return;}					
+					wToolkit.downloadurl(rowData.archive);
+				]]></body>
+			</method>
+						
+			<method name="setCellValue">
+				<parameter name="cell" />
+				<parameter name="name" />
+				<parameter name="dataRow" />
+				<body><![CDATA[	
+					if (name === 'archive')
+					{
+						this.setCellArchiveValue(cell, dataRow);	
+					}
 					else
 					{
-						if (this.modified) 
+						cell.setAttribute('value', dataRow[name]);
+						if (name === 'status')
 						{
-							this.removeAttribute("modified");
-							this.dispatchFieldEvent('fieldRestored');
-						}			
+							if (dataRow.st == 'waiting')
+							{
+								cell.setAttribute('class', 'text-link');
+								cell.setAttribute('action', 'validate');
+							}
+							else
+							{
+								cell.removeAttribute('class');
+								cell.removeAttribute('action');								
+							}
+						}
 					}
+				]]></body>
+			</method>	
+			
+			<method name="setCellArchiveValue">
+				<parameter name="cell" />
+				<parameter name="dataRow" />
+				<body><![CDATA[	
+					if (dataRow.archive == "-1")
+					{
+						cell.setAttribute('value', "&amp;modules.order.bo.actions.CannotGenerateBillMsg;");
+					}
+					else if (dataRow.archive == "-2")
+					{
+						cell.setAttribute('value', "-");
+					}
+					else if (dataRow.archive == "")
+					{
+						cell.setAttribute('value', "&amp;modules.order.bo.actions.GenerateBill;");
+						cell.setAttribute('class', 'text-link');
+						cell.setAttribute('action', 'generate');
+					}
+					else
+					{
+						cell.setAttribute('value', "&amp;modules.order.bo.actions.DownloadBill;");
+						cell.setAttribute('class', 'text-link');
+						cell.setAttribute('action', 'download');
+					}
+				]]></body>
+			</method>	
+		</implementation>	
+		
+		<content>
+			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
+				<xul:columns>	
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+					<xul:column />
+				</xul:columns>
+				<xul:rows anonid="document-rows">
+					<xul:row class="head" anonid="head-row">
+						<xul:label name="label" value="Numéro" />
+						<xul:label name="amount" value="Montant" />
+						<xul:label name="status" value="Etat" />
+						<xul:label name="archive" value="Archive" />						
+						<xul:label name="actionrow" value="Actions" />
+					</xul:row>
+				</xul:rows>
+			</xul:grid>
+			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:toolbar class="actions">
+					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="&amp;modules.uixul.bo.actions.Edit;" />
+				</xul:toolbar>
+			</xul:row>				
+		</content>
+	</binding>
+	
+	<binding id="cExpeditionsSoratbleGrid" extends="widgets.cGrid#cAbstractSortableGrid">
+		<implementation>
+			<constructor><![CDATA[
+				this.fireEvent('gridInitialised');
+			]]></constructor>
+			
+			<method name="execute_edit">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
+				<body><![CDATA[
+					if (this.disabled) {return;}
+					var uri = ['order', 'openDocument', rowData.type, rowData.id].join(',');
+					openActionUri(uri);
+				]]></body>
+			</method>
+			
+			<method name="execute_shipped">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
+				<body><![CDATA[
+					if (this.disabled) {return;}
+					var me = this;
+					var node = rowNode;
+					var data = rowData;
+					var callBack = function() {me.onShipped(node, data);}
+					getController().openModalDialog(this, 'ShipExpedition', {callBack: callBack, rowData: rowData});
+				]]></body>
+			</method>
+					
+			<method name="onShipped">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
+				<body><![CDATA[
+					this.setCellValue(rowNode.childNodes[1], 'status', rowNode.mDataRow);
+					this.setCellValue(rowNode.childNodes[3], 'traking', rowNode.mDataRow);
+				]]></body>
+			</method>
+			
+			<method name="setCellValue">
+				<parameter name="cell" />
+				<parameter name="name" />
+				<parameter name="dataRow" />
+				<body><![CDATA[	
+					cell.setAttribute('value', dataRow[name]);
+					if (name === 'status')
+					{
+						if (dataRow.st == 'prepare')
+						{
+							cell.setAttribute('class', 'text-link');
+							cell.setAttribute('action', 'shipped');
+						}
+						else
+						{
+							cell.removeAttribute('class');
+							cell.removeAttribute('action');								
+						}
+					}
+				]]></body>
+			</method>		
+		</implementation>	
+		
+		<content>
+			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
+				<xul:columns>	
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+					<xul:column />
+				</xul:columns>
+				<xul:rows anonid="document-rows">
+					<xul:row class="head" anonid="head-row">
+						<xul:label name="label" value="Numéro" />
+						<xul:label name="status" value="Etat" />
+						<xul:label name="transporteur" value="Transporteur" />	
+						<xul:label name="traking" value="traking" />				
+						<xul:label name="actionrow" value="Actions" />
+					</xul:row>
+				</xul:rows>
+			</xul:grid>
+			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:toolbar class="actions">
+					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="&amp;modules.uixul.bo.actions.Edit;" />
+				</xul:toolbar>
+			</xul:row>				
+		</content>
+	</binding>
+	
+	<binding id="validateBillDialog" extends="core.wDialog#wDialog">
+		<implementation>
+				
+			<constructor><![CDATA[
+				wCore.debug('validateBillDialog.constructor');	
+			]]></constructor>
+			
+			<property name="transactionId" readonly="true">
+				<getter><![CDATA[
+					return document.getAnonymousElementByAttribute(this, 'anonid', 'transactionid').value;
+				]]></getter>
+			</property>
+
+			<property name="transactionText" readonly="true">
+				<getter><![CDATA[
+					return document.getAnonymousElementByAttribute(this, 'anonid', 'transactiontext').value;
+				]]></getter>
+			</property>
+			
+			<property name="transactionDate" readonly="true">
+				<getter><![CDATA[
+					return document.getAnonymousElementByAttribute(this, 'anonid', 'transactiondate').value;
+				]]></getter>
+			</property>
+			
+			<method name="onInitialize">
+				<body><![CDATA[
+					this.resizeTo(500, 200);
+					document.getAnonymousElementByAttribute(this, 'anonid', 'amount')
+						.setAttribute('value', this.parameters.rowData.amount);
+					document.getAnonymousElementByAttribute(this, 'anonid', 'number')
+						.setAttribute('value', this.parameters.rowData.label);
 				]]></body>
 			</method>
 
-			<method name="checkIsModified">
+			<method name="checkValidate">
 				<body><![CDATA[
-					return this.initialvalue != this.value;
+					var disabled = (this.transactionId.length == 0 || this.transactionText.length == 0 || this.transactionDate.length == 0);
+					document.getAnonymousElementByAttribute(this, 'anonid', 'ok').disabled = disabled;
 				]]></body>
 			</method>
-						
-			<method name="focus">
+
+
+			<method name="onCancel">
 				<body><![CDATA[
-					if (!this.focused)
+					this.controller.closeModalDialog();
+				]]></body>
+			</method>
+			
+			<method name="onOk">
+				<body><![CDATA[
+					var rowData = this.parameters.rowData;
+					var parameters = {cmpref: rowData.id, lang: rowData.lang, 
+							transactionDate: this.transactionDate, transactionId: this.transactionId, 
+							transactionText: this.transactionText};
+					var result = wCore.executeJSON("order", "ValidateBill", parameters, null , true); 	
+					if (result.status === 'OK')
 					{
-						this.getElementByAnonId('orderStatus').focus();
+						this.parameters.rowData.status = result.contents.status;
+						this.parameters.rowData.st = result.contents.st;
+						this.parameters.rowData.archive = result.contents.archive;
+						this.parameters.callBack();
+						this.controller.closeModalDialog();
+					}
+					else
+					{
+						alert(result.contents.errorMessage);
+					}						
+				]]></body>
+			</method>
+			
+			<method name="onFail">
+				<body><![CDATA[
+					if (confirm("&amp;modules.order.bo.general.Confirm-cancel-bill;"))
+					{
+						var rowData = this.parameters.rowData;		
+						var parameters = {cmpref: rowData.id, lang: rowData.lang, cancel: 'true'};
+						var result = wCore.executeJSON("order", "ValidateBill", parameters, null , true); 	
+						if (result.status === 'OK')
+						{
+							this.parameters.rowData.status = result.contents.status;
+							this.parameters.rowData.st = result.contents.st;
+							this.parameters.rowData.archive = result.contents.archive;
+							this.parameters.callBack();
+							this.controller.closeModalDialog();
+						}
+						else
+						{
+							alert(result.contents.errorMessage);
+						}
 					}
 				]]></body>
-			</method>
+			</method>			
+			
 		</implementation>
-		
-		<handlers>	
-			<handler event="select"><![CDATA[
-				if (event.originalTarget.localName === 'menulist')
-				{
-					var list = event.originalTarget;
-					var value = (list.value.length > 0) ? list.value : null;
-					switch (list.getAttribute('anonid'))
+		<xbl:content>
+			<xul:vbox flex="1">
+				<xul:hbox class="dialog-header">
+					<xul:label value="&amp;modules.order.bo.general.Validate-bill;" class="dialog-title" />
+					<xul:spacer flex="1" />
+					<xul:vbox pack="center">
+						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" tooltiptexts="&amp;modules.uixul.bo.dialog.Cancel;" />
+					</xul:vbox>
+				</xul:hbox>
+				<xul:grid flex="1">
+					<xul:columns>	
+						<xul:column />
+						<xul:column flex="1" />						
+					</xul:columns>
+					<xul:rows>
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.bill.Label;" />
+							<xul:label anonid="number" value="-" />
+						</xul:row>	
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.bill.Amount;" />
+							<xul:label anonid="amount" value="-" />
+						</xul:row>							
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.bill.transactionDate;" />
+							<xul:cfield name="transactiondate" anonid="transactiondate" hidehelp="true" fieldtype="datetime" initialvalue="" timeoffset="30"/>
+						</xul:row>
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.bill.Transactionid;" />
+							<xul:textbox anonid="transactionid" value="" size="30" maxlength="30" onchange="checkValidate()"/>							
+						</xul:row>	
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.bill.Transactiontext;" />
+							<xul:textbox anonid="transactiontext" value="" multiline="true" maxlength="512" cols="40" rows="5" oninput="checkValidate()" />
+						</xul:row>												
+					</xul:rows>
+				</xul:grid>
+				<xul:hbox pack="center" style="height: 32px">
+						<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="&amp;modules.order.bo.general.Validate;" />
+						<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="&amp;modules.order.bo.general.Cancel;" />
+						<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="&amp;modules.uixul.bo.dialog.Close;" />
+				</xul:hbox>
+			</xul:vbox>
+		</xbl:content>
+	</binding>
+	
+	
+	<binding id="shipExpeditionDialog" extends="core.wDialog#wDialog">
+		<implementation>
+				
+			<constructor><![CDATA[
+				wCore.debug('shipExpeditionDialog.constructor');	
+			]]></constructor>
+			
+			<property name="shippingDate" readonly="true">
+				<getter><![CDATA[
+					return document.getAnonymousElementByAttribute(this, 'anonid', 'shippingdate').value;
+				]]></getter>
+			</property>
+
+			<property name="trackingNumber" readonly="true">
+				<getter><![CDATA[
+					return document.getAnonymousElementByAttribute(this, 'anonid', 'trackingnumber').value;
+				]]></getter>
+			</property>
+			
+			<method name="onInitialize">
+				<body><![CDATA[
+					this.resizeTo(500, 200);
+					document.getAnonymousElementByAttribute(this, 'anonid', 'transporteur')
+						.setAttribute('value', this.parameters.rowData.transporteur);
+					document.getAnonymousElementByAttribute(this, 'anonid', 'number')
+						.setAttribute('value', this.parameters.rowData.label);
+				]]></body>
+			</method>
+
+			<method name="checkValidate">
+				<body><![CDATA[
+					var disabled = (this.shippingDate.length == 0);
+					document.getAnonymousElementByAttribute(this, 'anonid', 'ok').disabled = disabled;
+				]]></body>
+			</method>
+
+
+			<method name="onCancel">
+				<body><![CDATA[
+					this.controller.closeModalDialog();
+				]]></body>
+			</method>
+			
+			<method name="onOk">
+				<body><![CDATA[
+					var rowData = this.parameters.rowData;
+					var parameters = {cmpref: rowData.id, lang: rowData.lang, 
+							shippingDate: this.shippingDate, trackingNumber: this.trackingNumber};
+					var result = wCore.executeJSON("order", "ShipExpedition", parameters, null , true); 	
+					if (result.status === 'OK')
 					{
-						case 'orderStatus':
-							if (this._values.order != value)
-							{
-								this._values.order = value;
-								this.valueChanged();
-							}
-							break;
-						case 'paymentStatus':
-							if (this._values.payment != value)
-							{
-								this._values.payment = value;
-								this.valueChanged();
-							}							
-							break;
-						case 'shippingStatus':
-							if (this._values.shipping != value)
-							{
-								this._values.shipping = value;
-								this.valueChanged();
-							}							
-							break;							
+						this.parameters.rowData.status = result.contents.status;
+						this.parameters.rowData.st = result.contents.st;
+						this.parameters.rowData.traking = result.contents.traking;
+						this.parameters.callBack();
+						this.controller.closeModalDialog();
 					}
-				}
-			]]></handler>
-		</handlers>				
+					else
+					{
+						alert(result.contents.errorMessage);
+					}						
+				]]></body>
+			</method>
+			
+			<method name="onFail">
+				<body><![CDATA[
+					if (confirm("&amp;modules.order.bo.general.Confirm-cancel-expedition;"))
+					{
+						var rowData = this.parameters.rowData;		
+						var parameters = {cmpref: rowData.id, lang: rowData.lang, cancel: 'true'};
+						var result = wCore.executeJSON("order", "ShipExpedition", parameters, null , true); 	
+						if (result.status === 'OK')
+						{
+							this.parameters.rowData.status = result.contents.status;
+							this.parameters.rowData.st = result.contents.st;
+							this.parameters.rowData.traking = result.contents.traking;
+							this.parameters.callBack();
+							this.controller.closeModalDialog();
+						}
+						else
+						{
+							alert(result.contents.errorMessage);
+						}
+					}
+				]]></body>
+			</method>			
+			
+		</implementation>
+		<xbl:content>
+			<xul:vbox flex="1">
+				<xul:hbox class="dialog-header">
+					<xul:label value="&amp;modules.order.bo.general.Ship-Expedition;" class="dialog-title" />
+					<xul:spacer flex="1" />
+					<xul:vbox pack="center">
+						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" tooltiptexts="&amp;modules.uixul.bo.dialog.Cancel;" />
+					</xul:vbox>
+				</xul:hbox>
+				<xul:grid flex="1">
+					<xul:columns>	
+						<xul:column />
+						<xul:column flex="1" />						
+					</xul:columns>
+					<xul:rows>
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.expedition.Label;" />
+							<xul:label anonid="number" value="-" />
+						</xul:row>	
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.expedition.Transporteur;" />
+							<xul:label anonid="transporteur" value="-" />
+						</xul:row>							
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.expedition.Shippingdate;" />
+							<xul:cfield name="shippingdate" anonid="shippingdate" hidehelp="true" fieldtype="datetime" initialvalue="" timeoffset="30"/>
+						</xul:row>
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.expedition.Trackingnumber;" />
+							<xul:textbox anonid="trackingnumber" value="" size="30" maxlength="30" />							
+						</xul:row>										
+					</xul:rows>
+				</xul:grid>
+				<xul:hbox pack="center" style="height: 32px">
+						<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="&amp;modules.order.bo.general.Validate;" />
+						<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="&amp;modules.order.bo.general.Cancel;" />
+						<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="&amp;modules.uixul.bo.dialog.Close;" />
+				</xul:hbox>
+			</xul:vbox>
+		</xbl:content>
+		<xbl:handlers>
+			<xbl:handler event="fieldModified"><![CDATA[
+				this.checkValidate();
+			]]></xbl:handler>
+		</xbl:handlers>
 	</binding>
 </bindings>

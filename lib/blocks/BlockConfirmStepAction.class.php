@@ -23,8 +23,11 @@ class order_BlockConfirmStepAction extends order_BlockAbstractProcessStepAction
 		}
 		$this->setCurrentStep('Confirm');
 		$cartInfo = $this->getCurrentCart();
-		$request->setAttribute('order', $cartInfo->getOrder());
+		$order = $cartInfo->getOrder();
+		$bill = order_BillService::getInstance()->initializeByOrderForPayment($order);		
+		$request->setAttribute('order', $order);
 		$request->setAttribute('shop', $cartInfo->getShop());
+		$request->setAttribute('bill', $bill);
 		return $this->getInputViewName();
 	}
 }

@@ -11,7 +11,6 @@
 		<property name="customerCode" labeli18n="modules.order.bo.doceditor.property.Customer-code" />
 		<property name="totalAmount" labeli18n="modules.order.bo.doceditor.property.Total-amount" />
 		<property name="creationdate" labeli18n="modules.uixul.bo.doceditor.property.Creationdate" />
-		<property name="billLink" labeli18n="modules.order.bo.doceditor.property.Bill" class="downloadlink" />
 	</section>
 	
 	<section name="history" linkedtab="history" actiontexti18n="modules.uixul.bo.doceditor.section.action.View"

@@ -26,6 +26,8 @@ class order_BlockOrderAction extends website_TaggerBlockAction
 		}
 		$request->setAttribute('order', $order);
 		$request->setAttribute('shop', $order->getShop());
+		$bills = order_BillService::getInstance()->getByOrder($order);	
+		$request->setAttribute('bills', $bills);
 		return website_BlockView::SUCCESS;
 	}
 	

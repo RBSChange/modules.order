@@ -25,3 +25,15 @@ cfield[fieldtype="billgenerator"]{
 cfield[fieldtype="editorderstatus"]{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cEditOrderStatus);
 }
+gridlist.billsJSON{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cBillsSoratbleGrid);
+}
+gridlist.expeditionsJSON{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionsSoratbleGrid);
+}
+wdialog[template="ValidateBill"]{
+	-moz-binding: url(binding:modules.order.cOrderEditor#validateBillDialog);
+}
+wdialog[template="ShipExpedition"]{
+	-moz-binding: url(binding:modules.order.cOrderEditor#shipExpeditionDialog);
+}

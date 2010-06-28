@@ -17,16 +17,13 @@ class order_OrderScriptDocumentElement extends import_ScriptDocumentElement
     	}
     	return order_OrderService::getInstance()->createFromCartInfo($cart);
     }
-	
+    
 	/**
 	 * @return void
 	 */
 	protected function saveDocument()
 	{
 		$document = $this->getPersistentDocument();
-		$document->setPaymentStatus($document->getOrderStatus());
-		$document->setPaymentTransactionId('IMPORT-' . $document->getPaymentReference());
-		$document->setPaymentTransactionText($document->getOrderStatus());
-		parent::saveDocument();
+		$document->save();
 	}
 }

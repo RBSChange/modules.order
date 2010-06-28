@@ -18,9 +18,12 @@
 			<td tal:content="order/getBillingMode" />
 			<td class="pricettc" tal:content="php:order.formatPrice(order.getTotalAmountWithTax())">-</td>
 			<td tal:content="order/getOrderStatusLabel" />
-			<td>
-				<a tal:condition="order/getBill" change:download="document order/getBill" change:translate="&modules.order.frontoffice.Orderlist-bill;">Facture</a>
-				<span tal:condition="not: order/getBill" change:translate="&modules.order.frontoffice.Orderlist-billNotAvailable;">Facture non disponible</span>
+			<td tal:define="bills order/getBillsWithArchive">
+				<tal:block tal:repeat="bill bills">
+					<a change:download="document bill/getArchive" change:translate="&modules.order.frontoffice.Orderlist-bill;">Facture</a>
+					<tal:block tal:condition="not: repeat/bill/end">, </tal:block>
+				</tal:block>
+				<span tal:condition="not: bills/0" change:translate="&modules.order.frontoffice.Orderlist-billNotAvailable;">Facture non disponible</span>
 			</td>
 		</tr>
 	</tbody>

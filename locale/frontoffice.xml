@@ -759,45 +759,55 @@
 		<locale lang="en">error</locale>
 		<locale lang="de">Fehler</locale>
 	</entity>
-	<entity id="status.PAYMENT_SUCCESS">
+	<entity id="status.bill.success">
 		<locale lang="fr">paiement validé</locale>
 		<locale lang="en">payment validated</locale>
 		<locale lang="de">validiert Zahlung</locale>
 	</entity>
-	<entity id="status.PAYMENT_WAITING">
+	<entity id="status.bill.waiting">
 		<locale lang="fr">en attente de paiement</locale>
 		<locale lang="en">waiting payment</locale>
 		<locale lang="de">Erwartung der Zahlung</locale>
 	</entity>
-	<entity id="status.PAYMENT_FAILED">
+	<entity id="status.bill.failed">
 		<locale lang="fr">paiement echoué</locale>
 		<locale lang="en">payment failed</locale>
 		<locale lang="de">Zahlung nicht</locale>
 	</entity>
-	<entity id="status.PAYMENT_DELAYED">
-		<locale lang="fr">paiement en cours</locale>
-		<locale lang="en">payment in progress</locale>
-		<locale lang="de">Zahlung im Gang</locale>
-	</entity>
-	<entity id="status.CANCELED">
+	<entity id="status.canceled">
 		<locale lang="fr">annulé</locale>
 		<locale lang="en">canceled</locale>
 		<locale lang="de">abgebrochen</locale>
 	</entity>
-	<entity id="status.SHIPPED">
+	<entity id="status.complete">
 		<locale lang="fr">expédié</locale>
 		<locale lang="en">shipped</locale>
 		<locale lang="de">Schiffe</locale>
 	</entity>
-	<entity id="status.shipping_prepare">
+	<entity id="status.in_progress">
+		<locale lang="fr">en cours</locale>
+		<locale lang="de">in progress</locale>
+	</entity>		
+	
+	<entity id="status.expedition.shipped">
+		<locale lang="fr">expédié</locale>
+		<locale lang="en">shipped</locale>
+		<locale lang="de">Schiffe</locale>
+	</entity>
+	<entity id="status.expedition.prepare">
 		<locale lang="fr">préparation</locale>
 		<locale lang="en">building</locale>
 	</entity>
-	<entity id="status.shipping_progress">
-		<locale lang="fr">en cours</locale>
-		<locale lang="en">in progress</locale>
-		<locale lang="de">im Gang</locale>
+	<entity id="status.expedition.delivered">
+		<locale lang="fr">réceptioné</locale>
+		<locale lang="en">delivered</locale>
 	</entity>
+	<entity id="status.expedition.canceled">
+		<locale lang="fr">annulé</locale>
+		<locale lang="en">canceled</locale>
+		<locale lang="de">abgebrochen</locale>
+	</entity>
+		
 	<entity id="paymentstatus.success">
 		<locale lang="fr">validé</locale>
 		<locale lang="en">validated</locale>

@@ -41,90 +41,142 @@
 
 	<cart id="cart3" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment">
+		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment"
+		creationdate="2010-04-15 08:16:12">
 		<cartline product-refid="product4" quantity="1" />
 	</cart>	
-	<order cart-refid="cart3" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart3">
+		<bill transactionId="CHQ-5263785412" creationdate="2010-04-15 08:16:12"
+			transactionDate="2010-04-17 10:45:12" transactionText="Chèque receptionné le 2010-04-17"
+			status="success"/>
+	</order>
 	
 	<cart id="cart4" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment">
+		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment"
+		creationdate="2010-04-15 10:25:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product5" quantity="7" />
 	</cart>	
-	<order cart-refid="cart4" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart4">
+		<bill transactionId="CHQ-75123456215" creationdate="2010-04-15 10:25:40"
+			transactionDate="2010-04-18 10:45:12" transactionText="Chèque receptionné le 2010-04-18"
+			status="success"/>
+	</order>
 	
 	<cart id="cart5" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment">
+		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment"
+		creationdate="2010-04-15 11:03:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product2" quantity="1" />
 	</cart>	
-	<order cart-refid="cart5" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart5">
+		<bill transactionId="CHQ-623155115" creationdate="2010-04-15 11:03:40"
+			transactionDate="2010-04-18 09:45:12" transactionText="Chèque receptionné le 2010-04-18"
+			status="success"/>
+	</order>
 	
 	<cart id="cart6" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		creationdate="2010-05-10 11:03:40">
 		<cartline product-refid="product4" quantity="3" />
 		<cartline product-refid="product5" quantity="1" />
 	</cart>	
-	<order cart-refid="cart6" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart6">
+		<bill transactionId="CHQ-451231245" creationdate="2010-05-10 11:03:40"
+			transactionDate="2010-05-15 11:00:00"  transactionText="Chèque receptionné le 2010-05-15"
+			status="success"/>
+	</order>
 	
 	<cart id="cart7" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		creationdate="2010-05-10 15:03:40">
 		<cartline product-refid="product4" quantity="3" />
 		<cartline product-refid="product5" quantity="2" />
 	</cart>	
-	<order cart-refid="cart7" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart7">
+		<bill transactionId="CHQ-84212" creationdate="2010-05-10 15:03:40"
+			transactionDate="2010-05-16 11:00:00"  transactionText="Chèque receptionné le 2010-05-16"
+			status="success"/>
+	</order>
 	
 	<cart id="cart8" shop-refid="shop" customer-refid="customer2" 
 		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		creationdate="2010-05-10 16:15:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product5" quantity="1" />
 		<cartline product-refid="product2" quantity="1" />
 	</cart>	
-	<order cart-refid="cart8" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart8">
+		<bill transactionId="CHQ-75122315544" creationdate="2010-05-10 16:15:40"
+			transactionDate="2010-05-13 11:00:00"  transactionText="Chèque receptionné le 2010-05-13"
+			status="success"/>
+	</order>
 	
 	<cart id="cart9" shop-refid="shop" customer-refid="customer2" 
 		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		creationdate="2010-05-10 16:18:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product5" quantity="3" />
 		<cartline product-refid="product2" quantity="1" />
 	</cart>	
-	<order cart-refid="cart9" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart9">
+		<bill transactionId="CHQ-6121144" creationdate="2010-05-10 16:18:40"
+			transactionDate="2010-05-17 11:00:00"  transactionText="Chèque receptionné le 2010-05-17"
+			status="success"/>
+	</order>
 	
 	<cart id="cart10" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		creationdate="2010-05-10 17:00:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product5" quantity="3" />
 		<cartline product-refid="product1" quantity="1" />
 		<cartline product-refid="product3" quantity="1" />
 	</cart>	
-	<order cart-refid="cart10" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart10">
+		<bill transactionId="CHQ-41126544" creationdate="2010-05-10 17:00:40"
+			transactionDate="2010-05-16 10:00:00"  transactionText="Chèque receptionné le 2010-05-16"
+			status="success"/>
+	</order>
 	
 	<cart id="cart11" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		creationdate="2010-05-10 17:05:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product5" quantity="3" />
 		<cartline product-refid="product1" quantity="1" />
 		<cartline product-refid="product3" quantity="1" />
 	</cart>	
-	<order cart-refid="cart11" orderStatus="SHIPPED"/>
+	<order cart-refid="cart11">
+		<bill transactionId="CHQ-56213115" creationdate="2010-05-10 17:05:40"
+			transactionDate="2010-05-12 10:00:00"  transactionText="Chèque receptionné le 2010-05-16"
+			status="success"/>
+		<expedition creationdate="2010-05-13 08:05:40" trackingNumber="5623311551" shippingDate="2010-05-14 10:05:40"
+			status="shipped" />
+	</order>
 	
 	<cart id="cart12" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		creationdate="2010-05-10 17:08:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product2" quantity="4" />
 		<cartline product-refid="product1" quantity="1" />
 		<cartline product-refid="product3" quantity="1" />
 	</cart>	
-	<order cart-refid="cart12" orderStatus="CANCELED"/>
+	<order cart-refid="cart12">
+		<bill transactionId="CHQ-5222144" creationdate="2010-05-10 17:00:40"
+			transactionText="Chèque refusé le 2010-05-14"
+			status="failed"/>
+	</order>
 	
 	<cart id="cart13" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
@@ -132,7 +184,9 @@
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product6" quantity="1" />
 	</cart>	
-	<order cart-refid="cart13" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart13">
+		<bill status="waiting"/>
+	</order>
 	
 	<cart id="cart14" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
@@ -140,7 +194,9 @@
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product7" quantity="1" />
 	</cart>	
-	<order cart-refid="cart14" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart14">
+		<bill status="waiting"/>
+	</order>
 	
 	<cart id="cart15" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
@@ -148,7 +204,9 @@
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product7" quantity="1" />
 	</cart>	
-	<order cart-refid="cart15" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart15">
+		<bill status="waiting"/>
+	</order>
 	
 	<cart id="cart16" shop-refid="shop" customer-refid="customer1" 
 		address-refid="address" shippingMode-refid="shipping"
@@ -156,5 +214,7 @@
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product7" quantity="1" />
 	</cart>	
-	<order cart-refid="cart16" orderStatus="PAYMENT_SUCCESS"/>
+	<order cart-refid="cart16">
+		<bill status="waiting"/>
+	</order>
 </script>
