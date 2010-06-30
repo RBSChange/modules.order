@@ -360,7 +360,7 @@ class order_ModuleService extends ModuleBaseService
 				}
 				if (Framework::isInfoEnabled())
 				{
-					Framework::info(__METHOD__ . ' ' . $notifCodeName . ' '. var_export($parameters, true));
+					Framework::info(__METHOD__ . ' ' . $notifCodeName);
 				}
 				$ns->setMessageService(MailService::getInstance());		
 				return $ns->send($notif, $recipents, $parameters, 'order');

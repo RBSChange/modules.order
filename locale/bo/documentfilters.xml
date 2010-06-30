@@ -81,4 +81,31 @@
 	<entity id="creationdateorderfilter-text">
 		<locale lang="fr">qui ont été passées dans les {count} derniers {unit}</locale>
 	</entity>
+
+	<entity id="AddressCartFilter-label">
+		<locale lang="fr">propriétés de l'adresse</locale>
+	</entity>
+	<entity id="AddressCartFilter-text">
+		<locale lang="fr">dont l'addresse {addrtype} à {addrpart} de la zone {zone}</locale>
+	</entity>	
+	
+	<entity id="addrtypefilter-billing">
+		<locale lang="fr">de facturation</locale>
+		<locale lang="en">billing</locale>
+	</entity>
+	
+	<entity id="addrtypefilter-shipping">
+		<locale lang="fr">de livraison</locale>
+		<locale lang="en">shipping</locale>
+	</entity>		
+
+	<entity id="addrpartfilter-country">
+		<locale lang="fr">le pays</locale>
+		<locale lang="en">country</locale>
+	</entity>
+	
+	<entity id="addrpartfilter-zipCode">
+		<locale lang="fr">le code postal</locale>
+		<locale lang="en">zip code</locale>
+	</entity>
 </localization>

@@ -99,6 +99,8 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 		$cartInfo = $this->getCurrentCart();
 		$validationRules = $this->getSelectInputValidationRules($request, $shippingStep);
 		$ok = $this->processValidationRules($validationRules, $request, $shippingStep);
+		$cartInfo->setAddressInfo($shippingStep);
+		
 		if ($shippingStep->shippingFilterId)
 		{
 			$shippingFilter = DocumentHelper::getDocumentInstance($shippingStep->shippingFilterId);
@@ -108,7 +110,6 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 			}
 		}
 		
-		$cartInfo->setAddressInfo($shippingStep);
 		$cartInfo->save();
 		
 		if (!$shippingStep->shippingFilterId)
@@ -116,7 +117,7 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 			$ok = false;
 			$errMsg = f_Locale::translate('&modules.order.document.shippingstepbean.ShippingMode-Error;');
 			$this->addError($errMsg);
-			$this->addErrorForProperty('shippingFilterId', $errMsg);		
+			//$this->addErrorForProperty('shippingFilterId', $errMsg);		
 		}
 		return $ok;
 	}

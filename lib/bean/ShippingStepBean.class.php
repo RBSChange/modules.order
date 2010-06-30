@@ -142,7 +142,6 @@ class order_ShippingStepBean
 	
 	/**
 	 * @var Integer
-	 * @required
 	 */
 	public $shippingFilterId;	
 	
