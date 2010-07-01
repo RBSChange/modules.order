@@ -1048,6 +1048,11 @@
 		<locale lang="en">Retail Order</locale>
 		<locale lang="de">Retail Auftrag</locale>
 	</entity>
+	<entity id="order-number-title">
+		<locale lang="fr">détail de la commande numéro {orderNumber}</locale>
+		<locale lang="en">Retail Order {orderNumber}</locale>
+		<locale lang="de">Retail Auftrag {orderNumber}</locale>
+	</entity>
 	<entity id="Order-back-to-list">
 		<locale lang="fr">revenir à la liste des commandes</locale>
 		<locale lang="en">return to the list of commands</locale>

@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <localization>
-  <entity id="create-order">
-    <locale lang="fr">début du processus de commande</locale>
-    <locale lang="en">order process started</locale>
-  </entity>
-  <entity id="update-order">
-    <locale lang="fr">Mise à jour de la commande numéro {orderNumber} associée au client {customerFullName}</locale>
-  </entity>
-  <entity id="log-update-order">
-    <locale lang="fr">log-update-order</locale>
-  </entity>
-  <entity id="update-smartfolder">
-    <locale lang="fr">update.smartfolder {documentlabel}</locale>
-  </entity>
-  <entity id="log-update-smartfolder">
-    <locale lang="fr">log-update-smartfolder</locale>
-  </entity>
-  <entity id="create-new-order">
-    <locale lang="fr">Création de la commande numéro {orderNumber} associée au client {customerFullName}</locale>
-  </entity>
-  <entity id="log-create-new-order">
-    <locale lang="fr">log-create-new-order</locale>
-  </entity>
-  <entity id="update-order-status">
-    <locale lang="fr">La commande numéro {orderNumber} associée au client {customerFullName} passe au statut {orderStatus}</locale>
-  </entity>
-  <entity id="log-update-order-status">
-    <locale lang="fr">log-update-order-status</locale>
-  </entity>
+	<entity id="create-order">
+		<locale lang="fr">début du processus de commande</locale>
+		<locale lang="en">order process started</locale>
+	</entity>
+	<entity id="update-order">
+		<locale lang="fr">Mise à jour de la commande numéro {orderNumber} associée au client {customerFullName}</locale>
+	</entity>
+	<entity id="log-update-order">
+		<locale lang="fr">log-update-order</locale>
+	</entity>
+	<entity id="update-smartfolder">
+		<locale lang="fr">update.smartfolder {documentlabel}</locale>
+	</entity>
+	<entity id="log-update-smartfolder">
+		<locale lang="fr">log-update-smartfolder</locale>
+	</entity>
+	<entity id="create-new-order">
+		<locale lang="fr">Création de la commande numéro {orderNumber} associée au client {customerFullName}</locale>
+	</entity>
+	<entity id="log-create-new-order">
+		<locale lang="fr">log-create-new-order</locale>
+	</entity>
+	<entity id="update-order-status">
+		<locale lang="fr">La commande numéro {orderNumber} associée au client {customerFullName} passe au statut {orderStatus}</locale>
+	</entity>
+	<entity id="log-update-order-status">
+		<locale lang="fr">log-update-order-status</locale>
+	</entity>
+	<entity id="update-order">
+		<locale lang="fr">update.order {documentlabel}</locale>
+	</entity>
+	<entity id="log-update-order">
+		<locale lang="fr">log-update-order</locale>
+	</entity>
 </localization>

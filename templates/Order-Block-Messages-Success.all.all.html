@@ -10,21 +10,22 @@
 	<ul change:messages="" />
 	<ul change:errors="" />
 	
-	<form method="POST">
+	<form class="cmxform" method="POST">
 		<ol>
 			<li>
-				<label class="standard" for="comment" change:translate="&modules.customer.frontoffice.Your-message;" />
+				<label class="standard" for="comment" change:translate="&modules.customer.frontoffice.Your-messageLabel;" />
 				<textarea rows="10" cols="60" class="textfield" id="comment" name="orderParam[comment]" tal:content="comment" />	
 				<input type="hidden" tal:attributes="orderParam[cmpref] order/getId" />	
 			</li>
 			<li class="buttons">
+				<label>&nbsp;</label>
 				<input class="button" change:i18nattr="value &modules.customer.frontoffice.Cancel;" type="reset" />
 		  		<input class="button" change:i18nattr="value &modules.customer.frontoffice.Send;" type="submit" />
 			</li>
 		</ol>
 	</form>
 </div>
-
+<br />
 <h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Messages-for-order; orderId order/getId" /> <span change:datetime="order/getOrderDate" /></h3>
 
 <ul tal:condition="messages" class="messagecustomer">
