@@ -4,11 +4,14 @@
 		<sectionrow labeli18n="modules.order.bo.general.Website" id="website" />
 		<sectionrow labeli18n="modules.order.bo.general.Reference" id="reference" />
 		<sectionrow labeli18n="modules.order.bo.general.Date" id="creationdate" />
-		<field name="boStatusAsJSON" type="editorderstatus" labeli18n="modules.order.document.order.BoStatusAsJSON" />
 		<sectionrow labeli18n="modules.order.document.order.ShippingMode" id="shippingMode" />
-		<field name="packageTrackingNumber" anonid="field_packageTrackingNumber" id="order_order_packageTrackingNumber" labeli18n="modules.order.bo.general.Package-tracking-number" type="text" />
-		<field name="commentadmin" type="longtext" />
-		<field name="billBoUrl" type="billgenerator" />
+		<field name="commentadmin" type="longtext" />	
+	</section>
+	<section labeli18n="modules.order.bo.doceditor.Bills">
+		<fieldinput name="billsJSON" type="namedgridlist" flex="1" />
+	</section>
+	<section labeli18n="modules.order.bo.doceditor.Expeditions">
+		<fieldinput name="expeditionsJSON" type="namedgridlist" flex="1" />
 	</section>
 	<section labeli18n="modules.order.bo.general.Customer">
 		<section class="customer" />

@@ -6,7 +6,7 @@
 		<add name="orderNumber" type="String" min-occurs="1">
 			<constraints>unique:true</constraints>
 		</add>
-		<add name="orderStatus" type="String" from-list="modules_order/orderstatuses" default-value="PAYMENT_WAITING" preserve-old-value="true"/>
+		<add name="orderStatus" type="String" from-list="modules_order/orderstatuses" default-value="in_progress" preserve-old-value="true"/>
 		<add name="customer" type="modules_customer/customer" inverse="true" min-occurs="1" />		
 
 		<add name="shopId" type="Integer" min-occurs="1" />
@@ -27,35 +27,18 @@
 
 		<add name="couponId" type="Integer" />
 		<add name="couponValueWithTax" type="Double" />
-		
-		<add name="billingProperties" type="Lob" />
-		<!--
-				<add name="billingMode" type="String" min-occurs="1" />
-				<add name="billingModeCodeReference" type="String" min-occurs="1" />
-		-->
-		
-		<add name="shippingProperties" type="Lob" />
-		<!--
-			<add name="shippingMode" type="String" min-occurs="1" />
-			<add name="shippingModeCodeReference" type="String" min-occurs="1" />
-			<add name="shippingModeTaxCode" type="String" min-occurs="1" />
-			<add name="shippingModeTaxRate" type="Double" min-occurs="1" />	
-		-->	
-				
+						
 		<add name="globalProperties" type="Lob" />
-		<!--
-			<add name="priceFormat" type="String" min-occurs="1" default-value="%s €"/>
-		-->
-		
-		<add name="paymentDate" type="DateTime" />
-		<add name="shipmentDate" type="DateTime" />
 				
 		<add name="lastCommentReminder" type="DateTime" />
 		
 		<add name="commentuser" type="LongString" />
-		<add name="commentadmin" type="LongString" />		
-		
-		<add name="bill" type="modules_media/securemedia" />		
-	</properties>	
+		<add name="commentadmin" type="LongString" />			
+	</properties>
+	
 	<statuses default="ACTIVE" />
+	
+	<serializedproperties>
+		<add name="description" type="LongString"></add>
+	</serializedproperties>
 </document>

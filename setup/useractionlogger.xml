@@ -5,4 +5,7 @@
   <actiondef modulename="order" actionname="update-order" label="Mise à jour de la commande numéro ${orderNumber} associée au client ${customerFullName}"/>
   <actiondef modulename="order" actionname="update-order-status" label="La commande numéro ${orderNumber} associée au client ${customerFullName} passe au statut ${orderStatus}"/>
   <actiondef modulename="order" actionname="update.order" label="modules.order.bo.useractionlogger.update-order"/>
+  <actiondef modulename="order" actionname="insert.smartfolder" label="modules.order.bo.useractionlogger.insert-smartfolder"/>
+  <actiondef modulename="order" actionname="move.smartfolder" label="modules.order.bo.useractionlogger.move-smartfolder"/>
+  <actiondef modulename="order" actionname="cancelorder.order" label="modules.order.bo.useractionlogger.cancelorder-order"/>
 </script>

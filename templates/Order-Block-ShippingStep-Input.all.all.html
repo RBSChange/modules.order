@@ -79,7 +79,9 @@
 		//]]></script>	
 		<div class="cleaner" />
 		<br />
-		<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Choose-delivery-legend" />
+		<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Choose-delivery-legend" 
+			tal:define="global shippingModes cart/getShippingModes"	/>
+		<tal:block tal:condition="shippingModes/0">
 		<p change:translate="modules.order.document.shippingstepbean.Choose-delivery-text" />
 		<br />
 		<ol>
@@ -97,6 +99,10 @@
 					</p>
 			</li>
 		</ol>
+		</tal:block>
+		<tal:block tal:condition="not: shippingModes/0">
+			<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode" />
+		</tal:block>
 		<div class="cleaner" />
 		<p class="buttons">
 			<input class="button" change:submit="name Select" label="&modules.order.document.shippingstepbean.Select;" />

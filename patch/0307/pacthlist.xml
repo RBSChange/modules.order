@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<script>
+	<binding fileName="modules/list/persistentdocument/import/list_binding.xml" />
+	<binding fileName="modules/order/persistentdocument/import/order_binding.xml" />
+	
+	<systemfolder module="list" relatedmodule="order">	
+		<staticlist listid="modules_order/orderstatuses" label="&amp;modules.order.frontoffice.list.Order-statuses;">
+			<staticitem label="&amp;modules.order.frontoffice.status.In_progress;" value="in_progress" />
+			<staticitem label="&amp;modules.order.frontoffice.status.Canceled;" value="canceled" />
+			<staticitem label="&amp;modules.order.frontoffice.status.Complete;" value="complete" />
+		</staticlist>
+		
+		<staticlist listid="modules_order/billstatuses" label="&amp;modules.order.frontoffice.list.Bill-statuses;">
+			<staticitem label="&amp;modules.order.frontoffice.status.bill.Waiting;" value="waiting" />
+			<staticitem label="&amp;modules.order.frontoffice.status.bill.Success;" value="success" />
+			<staticitem label="&amp;modules.order.frontoffice.status.bill.Failed;" value="failed" />
+		</staticlist>
+		
+		<staticlist listid="modules_order/expeditionstatuses" label="&amp;modules.order.frontoffice.list.Expedition-statuses;">
+			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Prepare;" value="prepare" />
+			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Shipped;" value="shipped" />
+			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Delivered;" value="delivered" />
+			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Canceled;" value="canceled" />
+		</staticlist>
+	</systemfolder>
+	
+</script>

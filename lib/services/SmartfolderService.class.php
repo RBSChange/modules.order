@@ -3,7 +3,7 @@
  * order_SmartfolderService
  * @package order
  */
-class order_SmartfolderService extends generic_FolderService
+class order_SmartfolderService extends filter_QueryfolderService
 {
 	/**
 	 * @var order_SmartfolderService

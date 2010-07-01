@@ -461,4 +461,28 @@
 	<entity id="feeder-orderedtogetherproductfeeder">
 		<locale lang="fr">commandés ensemble</locale>
 	</entity>
+	
+	<entity id="validate-bill">
+		<locale lang="fr">Valider une facture</locale>
+	</entity>
+
+	<entity id="validate">
+		<locale lang="fr">valider</locale>
+	</entity>
+	
+	<entity id="cancel">
+		<locale lang="fr">annuler</locale>
+	</entity>		
+	
+	<entity id="confirm-cancel-bill">
+		<locale lang="fr">etes-vous sur de vouloir annuler cette facture ?</locale>
+	</entity>	
+
+	<entity id="ship-expedition">
+		<locale lang="fr">Envoyer une expedition</locale>
+	</entity>	
+	
+	<entity id="confirm-cancel-expedition">
+		<locale lang="fr">etes-vous sur de vouloir annuler cette expedition ?</locale>
+	</entity>	
 </localization>

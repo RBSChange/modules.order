@@ -11,16 +11,21 @@ class order_CancelOrderJSONAction extends f_action_BaseJSONAction
 	public function _execute($context, $request)
 	{
 		$order = $this->getDocumentInstanceFromRequest($request);
-		order_OrderService::getInstance()->cancelOrder($order, true);
-		
-		$this->logAction($order);
-		
-		$propertiesNames = explode(',', $request->getParameter('documentproperties', ''));
-		$propertiesNames[] = 'documentversion';
-		$propertiesNames[] = 'id';
-		$propertiesNames[] = 'lang';
-		$data = $this->exportFieldsData($order, $propertiesNames);
-		return $this->sendJSON($data); 
+		if ($order instanceof order_persistentdocument_order)
+		{
+			order_OrderService::getInstance()->cancelOrder($order);
+			$this->logAction($order);
+			$propertiesNames = explode(',', $request->getParameter('documentproperties', ''));
+			$propertiesNames[] = 'documentversion';
+			$propertiesNames[] = 'id';
+			$propertiesNames[] = 'lang';
+			$data = $this->exportFieldsData($order, $propertiesNames);
+			return $this->sendJSON($data); 
+		}		
+		else
+		{
+			return $this->sendJSONError('Invalid order parameter');
+		}
 	}
 	
 	/**

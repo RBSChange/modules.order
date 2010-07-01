@@ -13,3 +13,12 @@ treechildren::-moz-tree-image(modules_order_message){
 treechildren::-moz-tree-image(modules_order_orderline){
 	list-style-image: url(/changeicons/small/shoppingcart_full.png);
 }
+treechildren::-moz-tree-image(modules_order_bill){
+	list-style-image: url(/changeicons/small/bill.png);
+}
+treechildren::-moz-tree-image(modules_order_expeditionline){
+	list-style-image: url(/changeicons/small/document.png);
+}
+treechildren::-moz-tree-image(modules_order_expedition){
+	list-style-image: url(/changeicons/small/expedition.png);
+}

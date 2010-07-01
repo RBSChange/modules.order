@@ -83,7 +83,12 @@
 		<locale lang="fr">voir le client</locale>
 		<locale lang="en">view customer</locale>
 	</entity>
-	
+
+	<entity id="panel.properties.view-order">
+		<locale lang="fr">voir la commande</locale>
+		<locale lang="en">view order</locale>
+	</entity>
+		
 	<entity id="panel.carts.tva-amounts">
 		<locale lang="fr">montant TVA</locale>
 		<locale lang="en">VAT amount</locale>
@@ -94,5 +99,25 @@
 	</entity>
 	<entity id="message.order-canceled">
 		<locale lang="fr">commande annulée.</locale>
+	</entity>
+
+	<entity id="links">
+		<locale lang="fr">Documents associés</locale>
+	</entity>
+	
+	<entity id="customer">
+		<locale lang="fr">client</locale>
+	</entity>
+	
+	<entity id="order">
+		<locale lang="fr">commande</locale>
+	</entity>
+	
+	<entity id="bills">
+		<locale lang="fr">factures</locale>
+	</entity>
+	
+	<entity id="expeditions">
+		<locale lang="fr">expeditions</locale>
 	</entity>
 </localization>

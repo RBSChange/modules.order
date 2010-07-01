@@ -89,21 +89,15 @@ class order_CartService extends BaseService
 		if ($this->cartInfo instanceof order_CartInfo && !$this->cartInfo->isEmpty())
 		{
 			$order = $this->cartInfo->getOrder();
-			if ($order !== null)
+			if ($order !== null && order_BillService::getInstance()->hasValidBill($order))
 			{
-				switch ($order->getPaymentStatus())
+				if (Framework::isInfoEnabled())
 				{
-					case 'PAYMENT_SUCCESS':
-					case 'PAYMENT_DELAYED':
-						if (Framework::isInfoEnabled())
-						{
-							Framework::info(__METHOD__ . ' RESET ' . $order->getPaymentStatus());
-						}						
-						$cart = $this->initNewCart();
-						$cart->setOrderId($order->getId());
-						$this->saveToSession($cart);
-					break;
-				}
+					Framework::info(__METHOD__ . ' RESET CART');
+				}						
+				$cart = $this->initNewCart();
+				$cart->setOrderId($order->getId());
+				$this->saveToSession($cart);
 			}
 		}
 	}
@@ -111,7 +105,7 @@ class order_CartService extends BaseService
 	protected function resetCartOrder()
 	{
 		$order = $this->cartInfo->getOrder();
-		if ($order !== null && $order->getPaymentStatus() !== 'PAYMENT_WAITING')
+		if ($order !== null && order_BillService::getInstance()->hasValidBill($order))
 		{
 			if (Framework::isInfoEnabled())
 			{

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd"
+	model-version="1.0" has-url="false" publish-on-day-change="false" icon="bill">
+	<properties>
+		<add name="label" type="String"/>
+		<add name="order" type="modules_order/order" min-occurs="1" inverse="true"/>
+		<add name="amount" type="Double" />
+		<add name="currency" type="String" db-size="5"/>
+		<add name="address" type="modules_customer/address" />
+			
+		<add name="connectorId" type="Integer" />
+		<add name="transactionId" type="String"></add>
+		<add name="transactionDate" type="DateTime" />
+		<add name="status" type="String" />
+		<add name="archive" type="modules_media/securemedia" />
+	</properties>
+	<statuses default="DRAFT" />
+	
+	<serializedproperties>
+		<add name="transactionData" type="LongString"></add>
+		<add name="transactionText" type="LongString"></add>	
+	</serializedproperties>	
+</document>

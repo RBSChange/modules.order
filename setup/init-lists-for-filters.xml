@@ -11,5 +11,15 @@
 			<staticitem label="&amp;modules.order.bo.general.list.payment-status-category-paid-or-waiting;" value="paid-or-waiting" />
 			<staticitem label="&amp;modules.order.bo.general.list.payment-status-category-all;" value="all" />
 		</staticlist>
+		
+		<staticlist listid="modules_order/addrtypefilter" label="type d'adresse" >
+			<staticitem label="&amp;modules.order.bo.documentfilters.Addrtypefilter-billing;" value="billing" />
+			<staticitem label="&amp;modules.order.bo.documentfilters.Addrtypefilter-shipping;" value="shipping" />
+		</staticlist>
+		
+		<staticlist listid="modules_order/addrpartfilter" label="partie de l'adresse" >
+			<staticitem label="&amp;modules.order.bo.documentfilters.Addrpartfilter-country;" value="country" />
+			<staticitem label="&amp;modules.order.bo.documentfilters.Addrpartfilter-zipCode;" value="zipCode" />
+		</staticlist>		
 	</systemfolder>
 </script>

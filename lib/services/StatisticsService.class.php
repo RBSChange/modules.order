@@ -265,8 +265,9 @@ class order_StatisticsService extends BaseService
 	 */
 	private function getPaymentWaitingOrdersQuery($fromDate, $toDate)
 	{
-		return $this->buildQueryFromDateToDate($fromDate, $toDate)
-			->add(Restrictions::eq('orderStatus', order_OrderService::PAYMENT_WAITING));
+		$query = $this->buildQueryFromDateToDate($fromDate, $toDate);
+		$query->createCriteria('bill')->add(Restrictions::published())->add(Restrictions::eq('status', order_BillService::WAITING));
+		return $query;
 	}
 
 	/**
@@ -276,8 +277,9 @@ class order_StatisticsService extends BaseService
 	 */
 	private function getPaymentFailedOrdersQuery($fromDate, $toDate)
 	{
+		
 		return $this->buildQueryFromDateToDate($fromDate, $toDate)
-			->add(Restrictions::eq('orderStatus', order_OrderService::PAYMENT_FAILED));
+			->add(Restrictions::eq('orderStatus', order_OrderService::CANCELED));
 	}
 
 	/**
@@ -287,8 +289,9 @@ class order_StatisticsService extends BaseService
 	 */
 	private function getPaymentSuccessOrdersQuery($fromDate, $toDate)
 	{
-		return $this->buildQueryFromDateToDate($fromDate, $toDate)
-			->add(Restrictions::eq('orderStatus', order_OrderService::PAYMENT_SUCCESS));
+		$query = $this->buildQueryFromDateToDate($fromDate, $toDate);
+		$query->createCriteria('bill')->add(Restrictions::published())->add(Restrictions::eq('status', order_BillService::SUCCESS));
+		return $query;
 	}
 
 	/**

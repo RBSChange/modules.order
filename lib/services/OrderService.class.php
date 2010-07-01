@@ -5,17 +5,10 @@
  */
 class order_OrderService extends f_persistentdocument_DocumentService
 {
-	// Order statuses.
-	const PAYMENT_WAITING = "PAYMENT_WAITING";
-	const PAYMENT_SUCCESS = "PAYMENT_SUCCESS";
-	const PAYMENT_FAILED = "PAYMENT_FAILED";
-	const PAYMENT_DELAYED = "PAYMENT_DELAYED";
-	
-	const CANCELED = "CANCELED";
-	const SHIPPED = "SHIPPED";
-
-	const ADMINISTRATOR_ORDER_CONFIRMED = 'modules_order/orderconfirmed';
-
+	const IN_PROGRESS = "in_progress";
+	const CANCELED = "canceled";
+	const COMPLETE = "complete";
+		
 	const MESSAGE_FROM_USER = 'modules_order/messageFromCustomer';
 	const MESSAGE_TO_USER = 'modules_order/messageToCustomer';
 
@@ -57,115 +50,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		return $this->pp->createQuery('modules_order/order');
 	}
-	/**
-	 * @param order_persistentdocument_order $order
-	 */
-	public function genBill($order)
-	{	
-		if (!$this->generateBillIsActive())
-		{
-			return;
-		}
-		if (!in_array($order->getOrderStatus(), array(self::PAYMENT_SUCCESS, self::SHIPPED)))
-		{
-			return;
-		}
-		$billContent = $this->createBill($order);
-		$tmpPath = f_util_FileUtils::getTmpFile();
-		f_util_FileUtils::write($tmpPath, $billContent, f_util_FileUtils::OVERRIDE);
 		
-		try
-		{
-			$this->tm->beginTransaction();
-			$media = media_SecuremediaService::getInstance()->getNewDocumentInstance();
-			$label = "bill-".$order->getId();
-			$media->setLabel($label);
-			$media->setTitle($label);
-			$media->setNewFileName($tmpPath, $label.".pdf");
-			$media->save();
-			$order->setBill($media);
-			$order->save();
-			$this->tm->commit();
-		}
-		catch (Exception $e)
-		{
-			$this->tm->rollBack($e);
-		}
-	}
-	
-	public function genBills()
-	{
-		if (!$this->generateBillIsActive())
-		{
-			return;
-		}
 
-		$query = $this->createQuery()
-		->add(Restrictions::in("orderStatus", array(self::PAYMENT_SUCCESS, self::SHIPPED)))
-		->add(Restrictions::isNull("bill"));
-
-		foreach ($query->find() as $order)
-		{
-			$this->genBill($order);
-		}
-	}
-
-	/**
-	 * @param order_persistentdocument_order $order
-	 * @return String the pdf content
-	 */
-	public function createBill($order)
-	{
-		$shop = $order->getShop();
-		$customer = $order->getCustomer();
-		
-		// OK, ... I will code a dedicated getInfo method
-		$data = $this->getInfo($order);
-		foreach ($data['informations'] as $key => $value)
-		{
-			$data[$key] = $value;
-		}
-		unset($data['informations']);
-		
-		//
-		$data["number"] = $order->getOrderNumber();
-		$lines = $data['billingAddressLine1'];
-		if ($data['billingAddressLine2'] != "")
-		{
-			$lines .= "\n".$data['billingAddressLine2'];
-		}
-		if ($data['billingAddressLine3'] != "")
-		{
-			$lines .= "\n".$data['billingAddressLine3'];
-		}
-		$data['billingAddressLines'] = $lines;
-	
-		$taxes = array();
-		foreach ($order->getTotalTaxInfoArray() as $subTotal)
-		{
-			$taxes[] = array("rate" => $subTotal['formattedTaxRate'],
-				"amount" => $shop->formatPrice($subTotal['taxAmount']));
-		}
-		$data['taxes'] = $taxes;		
-		// Discounts
-		$discounts = array();
-		$cartModificators = $order->getGlobalProperty('__cartModificators');
-		if (count($cartModificators) > 0)
-		{
-			$coupon = f_util_ArrayUtils::firstElement($cartModificators);
-			$discounts[] = array("name" => $coupon["label"], "value" => $coupon['formattedValue']);
-		}
-		$data["discounts"] = $discounts;
-		$lang = RequestContext::getInstance()->getLang();
-		$data['creationdate'] = date_DateFormat::format($order->getUICreationdate(), date_DateFormat::getDateFormatForLang($lang));
-		$data['creationdatetime'] = date_DateFormat::format($order->getUICreationdate(), date_DateFormat::getDateTimeFormatForLang($lang));
-		$data['customerCode'] = $customer->getCode(); 
-		
-		$odt2pdf = new Odtphp2PDFClient(Framework::getConfigurationValue("modules/order/odtphp2pdfURL"));
-		$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate.odt");
-		
-		return $odt2pdf->getPdf($billTemplate, $data);
-	}
 
 	/**
 	 * @param order_persistentdocument_order $order
@@ -185,7 +71,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$informations['canBeCanceled'] = $order->canBeCanceled();
 		$informations['customerId'] = $customer->getId();
 		$informations['email'] = $customer->getUser()->getEmail();
-		$informations['bill'] = $order->getBillURL();
 
 		$billingAddress = $order->getBillingAddress();
 		$informations['billingAddressLabel'] = $billingAddress->getDocumentService()->getFullName($billingAddress);
@@ -320,10 +205,9 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$cartLineCount = $cartInfo->getCartLineCount();
 			
 			$orderDocument = $cartInfo->getOrder();
-			if ($orderDocument === null || $orderDocument->getOrderStatus() != self::PAYMENT_WAITING)
+			if ($orderDocument === null)
 			{
-				$orderDocument = $this->getNewDocumentInstance();
-				
+				$orderDocument = $this->getNewDocumentInstance();				
 				$shippingAddress = customer_AddressService::getNewDocumentInstance();
 				$orderDocument->setShippingAddress($shippingAddress);
 				
@@ -355,8 +239,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 					}					
 				}
 			}
+			$orderDocument->setOrderStatus(null);
 			
-			$orderDocument->setPaymentStatus(self::PAYMENT_WAITING);
 			$orderDocument->setCurrencyCode($shop->getCurrencyCode());
 			$orderDocument->setPriceFormat($shop->getDocumentService()->getPriceFormat($shop));
 					
@@ -373,6 +257,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$shippingAddress->setPublicationstatus('FILED');
 			$shippingAddress->save();
 			$cartInfo->setShippingAddressId($shippingAddress->getId());
+			
 			$orderDocument->setShippingModeDocument($cartInfo->getShippingMode());
 			$orderDocument->setShippingModeTaxCode($cartInfo->getShippingTaxCode());
 			$orderDocument->setShippingModeTaxRate(catalog_PriceHelper::getTaxRateByCode($cartInfo->getShippingTaxCode()));
@@ -441,10 +326,13 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			}
 			$orderDocument->setDiscountDataArray($discountDataArray);
 			
-	
 			// Save the cart properties.
 			$orderDocument->setGlobalProperty(self::PROPERTIES_CART_PROPERTIES, $cartInfo->getPropertiesArray());
-				
+			if ($cartInfo->hasProperties('creationdate'))
+			{
+				$orderDocument->setCreationdate($cartInfo->getProperties('creationdate'));
+			}
+			
 			$folder = $this->getFolderOfDay($orderDocument->getCreationdate());
 			$orderDocument->save($folder->getId());
 			$cartInfo->setOrderId($orderDocument->getId());
@@ -477,127 +365,21 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$cartInfo = $cartService->getDocumentInstanceFromSession();
 		$cartInfo->refresh();
 	}
-
-	/**
-	 * @param order_persistentdocument_order $order
-	 * @return Boolean
-	 */
-	protected function sendPendingNotification($order)
-	{
-		if ($order->hasNotificationPending())
-		{
-			return $this->sendNotification($order);
-		}
-		return true;
-	}
 	
-	/**
-	 * @param order_persistentdocument_order $order
-	 * @return Boolean
-	 */
-	private function sendNotification($order)
-	{
-		// If there is no current website, set it with the order one.
-		$this->setCurrentWebsiteIfNeeded($order);
-			
-		$ns = notification_NotificationService::getInstance();
-		$ns->setMessageService($this->getMessageService());
-		$ns1 = $ns->send($this->getNotificationByStatus($order->getOrderStatus()), $this->getMessageRecipients($order), $this->getNotificationParameters($order), 'order');
-		if ($order->getOrderStatus() == self::PAYMENT_SUCCESS)
-		{
-			$recipients = $this->getAdminRecipients();
-			$ns2 = $ns->send($ns->getNotificationByCodeName(self::ADMINISTRATOR_ORDER_CONFIRMED), $recipients, $this->getNotificationParameters($order), 'order');
-		}
-		else
-		{
-			$ns2 = true;
-		}
-			
-		$order->hasNotificationPending(false);
-		return $ns1 && $ns2;
-	}
-
-	/**
-	 * @param order_persistentdocument_order $order
-	 */
-	private function setCurrentWebsiteIfNeeded($order)
-	{
-		$website = $order->getWebsite();
-		$websiteModule = website_WebsiteModuleService::getInstance();
-		if ($websiteModule->getCurrentWebsite() !== $website)
-		{
-			$websiteModule->setCurrentWebsite($website);
-		}
-	}
-
-	/**
-	 * @param String $status
-	 * @return notification_persistentdocument_notification
-	 */
-	private function getNotificationByStatus($status)
-	{
-		return notification_NotificationService::getInstance()
-		->getNotificationByCodeName($this->getNotificationCodeNameByStatus($status));
-	}
-
-	/**
-	 * @param String $status
-	 * @return String
-	 */
-	protected function getNotificationCodeNameByStatus($status)
-	{
-		return 'modules_order/status_' . $status;
-	}
-
-	/**
-	 * @param order_persistentdocument_order $order
-	 * @return mail_MessageRecipients
-	 */
-	protected function getMessageRecipients($order)
-	{
-		$recipients = new mail_MessageRecipients();
-		$recipients->setTo($order->getCustomer()->getUser()->getEmail());
-		return $recipients;
-	}
-
-	/**
-	 * @return mail_MessageRecipients
-	 */
-	public function getAdminRecipients()
-	{
-		$recipients = new mail_MessageRecipients();
-		$emails = array();
-		$admins = ModuleService::getPreferenceValue('order', 'orderConfirmedNotificationUser');
-		if (is_array($admins))
-		{
-			foreach ($admins as $admin)
-			{
-				$emails[] = $admin->getEmail();
-			}
-		}
-		$recipients->setTo($emails);
-		return $recipients;
-	}
-
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @return Array<String=>String>
 	 */
-	protected function getNotificationParameters($order)
+	public function getNotificationParameters($order)
 	{
-		$trackingNumber = $order->getPackageTrackingNumber();
-		if (!is_null($trackingUrl = $order->getPackageTrackingURL()))
-		{
-			$trackingNumber = '<a href="' . $trackingUrl . '">' . $trackingNumber . '</a>';
-		}
-
-		$shop = $order->getShop();
+		$shop = $order->getShop();	
 		$orderAmount = $shop->formatPrice($order->getTotalAmountWithTax());
 		$shippingFeesWithTax = $shop->formatPrice($order->getShippingFeesWithTax());
 		$shippingFeesWithoutTax = $shop->formatPrice($order->getShippingFeesWithoutTax());
-		$orderAmount = $shop->formatPrice($order->getTotalAmountWithTax());
+		
 		$template = TemplateLoader::getInstance()->setPackageName('modules_order')->setMimeContentType(K::HTML)
 		->setDirectory('templates/mails')->load('Order-Inc-Lines');
+		
 		$template->setAttribute('order', $order);
 		$template->setAttribute('shop', $shop);
 		$template->setAttribute('orderAmount', $orderAmount);
@@ -612,7 +394,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			'title' => (!is_null($user->getTitle())) ? $user->getTitle()->getLabel() : '', 
 			'fullname' => $user->getFullname(), 
 			'orderDetail' => $template->execute(), 
-			'packageNumber' => $trackingNumber, 
 			'billingMode' => $order->getBillingMode(), 
 			'shippingMode' => $order->getShippingMode(), 
 			'shippingFeesWithTax' => $shippingFeesWithTax, 
@@ -682,7 +463,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$query = $this->createQuery();
 		$query->add(Restrictions::eq('customer.id', $customer->getId()));
-		$query->add(Restrictions::eq('orderStatus', self::PAYMENT_WAITING));
+		$query->add(Restrictions::eq('orderStatus', self::IN_PROGRESS));
 		$query->addOrder(Order::desc('document_creationdate'));
 		return $query->find();
 	}
@@ -700,81 +481,61 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param order_persistentdocument_order $order
+	 * @param boolean $sendNotification
 	 */
-	public function cancelOrder($order, $save = true)
+	public function cancelOrder($order, $sendNotification = true)
 	{
-		$order->setOrderStatus(self::CANCELED);
-		if ($save)
+		if ($order->getOrderStatus() != self::CANCELED)
 		{
-			$order->save();
+			Framework::info(__METHOD__ . ' '. $order->__toString());
+			$order->setOrderStatus(self::CANCELED);
+			$this->save($order);
+			if ($sendNotification)
+			{
+				order_ModuleService::getInstance()->sendCustomerNotification('modules_order/order_canceled', $order);
+			}		
+			f_event_EventManager::dispatchEvent(self::ORDER_STATUS_MODIFIED_EVENT, $this, array('document' => $order));
 		}
-	}
-
-	/**
-	 * @param String $orderStatus
-	 * @example PAYMENT_SUCCESS, PAYMENT_WAITING, PAYMENT_FAILED, PAYMENT_DELAYED, CANCELED, SHIPPED
-	 * @return String
-	 */
-	public function getStatusLabel($orderStatus)
-	{
-		$key = '&modules.order.frontoffice.status.' . ucfirst(strtolower($orderStatus)) . ';';
-		return f_Locale::translate($key);
 	}
 	
 	/**
-	 * @param String $orderStatus
-	 * @example PAYMENT_SUCCESS, PAYMENT_WAITING, PAYMENT_FAILED, PAYMENT_DELAYED, CANCELED, SHIPPED
-	 * @return String
+	 * @param order_persistentdocument_order $order
+	 * @param boolean $sendNotification
 	 */
-	public function getBoStatusLabel($orderStatus)
+	public function processOrder($order, $sendNotification = true)
 	{
-		$key = '&modules.order.frontoffice.status.' . ucfirst(strtolower($orderStatus)) . ';';
-		return f_Locale::translateUI($key);
-	}
-
+		if ($order->getOrderStatus() != self::IN_PROGRESS)
+		{
+			Framework::info(__METHOD__ . ' '. $order->__toString());
+			$order->setOrderStatus(self::IN_PROGRESS);
+			$this->save($order);
+			if ($sendNotification)
+			{
+				order_ModuleService::getInstance()->sendCustomerNotification('modules_order/order_in_progress', $order);
+			}
+			f_event_EventManager::dispatchEvent(self::ORDER_STATUS_MODIFIED_EVENT, $this, array('document' => $order));
+		}
+	}		
+	
 	/**
-	 * @param order_persistentdocument_order $document
-	 * @param Integer $parentNodeId Parent node ID where to save the document (optionnal => can be null !).
-	 * @return void
+	 * @param order_persistentdocument_order $order
+	 * @param boolean $sendNotification
 	 */
-	protected function preSave($document, $parentNodeId)
+	public function completeOrder($order, $sendNotification = true)
 	{
-		if ($document->isPropertyModified('orderStatus') || $document->isNew())
+		if ($order->getOrderStatus() != self::COMPLETE)
 		{
-			$document->hasOrderStatusChanged(true);
-			$document->hasNotificationPending(true);
-			switch ($document->getOrderStatus())
+			Framework::info(__METHOD__ . ' '. $order->__toString());
+			$order->setOrderStatus(self::COMPLETE);
+			if ($sendNotification)
 			{
-				case self::PAYMENT_SUCCESS :
-					if ($document->getPaymentDate() == null)
-					{
-						$document->setPaymentDate(date_Calendar::getInstance()->toString());
-					}
-					break;
-						
-				case self::SHIPPED :
-					if ($document->getShipmentDate() == null)
-					{
-						$document->setShipmentDate(date_Calendar::getInstance()->toString());
-					}
-					break;
+				order_ModuleService::getInstance()->sendCustomerNotification('modules_order/order_complete', $order);
 			}
-		}
-		
-		if ($document->isPropertyModified('orderStatus'))
-		{
-			$status = $document->getOrderStatus();
-			$oldStatus = $document->getOrderStatusOldValue();
-			if ($oldStatus != $status)
-			{
-				if (($status == "PAYMENT_SUCCESS" && $oldStatus != "PAYMENT_DELAYED") || $status == "PAYMENT_DELAYED")
-				{					
-					$this->updateStock($document);
-				}
-			}
+			$this->save($order);
+			f_event_EventManager::dispatchEvent(self::ORDER_STATUS_MODIFIED_EVENT, $this, array('document' => $order));
 		}
 	}
-
+	
 	/**
 	 * @param order_persistentdocument_order $document
 	 * @param Integer $parentNodeId Parent node ID where to save the document (optionnal => can be null !).
@@ -815,6 +576,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		// Log action.
 		$params = array('orderNumber' => $document->getOrderNumber(), 
 						'customerFullName' => $document->getBillingAddress()->getFullName(false));
+		
 		if ($document->isPropertyModified('orderStatus'))
 		{
 			$params['orderStatus'] = $document->getOrderStatusLabel();
@@ -832,15 +594,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 * @return void
 	 */
 	protected function postSave($document, $parentNodeId)
-	{
-		if ($document->hasOrderStatusChanged())
-		{
-			f_event_EventManager::dispatchEvent(self::ORDER_STATUS_MODIFIED_EVENT, $this, 
-				array('document' => $document));
-			$document->hasOrderStatusChanged(false);
-		}
-		$this->sendPendingNotification($document);
-
+	{		
 		// If there is a coupon, add it in the list of coupons used by the customer.
 		$coupon = $this->getUsedCouponByOrder($document);
 		if (!is_null($coupon))
@@ -865,7 +619,12 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function sendMessageFromCustomer($order, $content)
 	{
-		return $this->execSendMessage($order, $content, self::MESSAGE_FROM_USER, $this->getAdminRecipients(), $order->getCustomer()->getUser());
+		$recipients = order_ModuleService::getInstance()->getAdminRecipients();
+		if ($recipients && $order->getCustomer() && $order->getCustomer()->getUser())
+		{
+			return $this->execSendMessage($order, $content, self::MESSAGE_FROM_USER, $recipients, $order->getCustomer()->getUser());
+		}
+		return true;
 	}
 
 	/**
@@ -875,7 +634,12 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function sendMessageToCustomer($order, $content, $sender)
 	{
-		return $this->execSendMessage($order, $content, self::MESSAGE_TO_USER, $this->getMessageRecipients($order), $sender);
+		$recipients = order_ModuleService::getInstance()->getMessageRecipients($order);
+		if ($recipients)
+		{
+			return $this->execSendMessage($order, $content, self::MESSAGE_TO_USER, $recipients, $sender);
+		}
+		return true;
 	}
 
 	/**
@@ -1114,31 +878,36 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$billingAddress = $document->getBillingAddress();
 			$data['properties']['orderNumber'] = $document->getOrderNumber();
 			
-			$data['properties']['orderStatus'] = $document->getOrderStatusLabel();
-			$status = $document->getPaymentStatus();
-			$data['properties']['paymentStatus'] = $this->getBoStatusLabel($status);
-			if ($status == self::PAYMENT_SUCCESS)
+			$data['properties']['orderStatus'] = $this->getStatusLabel($document->getOrderStatus());
+			$obs = order_BillService::getInstance();
+			$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
+			$bills = $obs->getByOrder($document);
+			if (count($bills))
 			{
-				$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
-				$data['properties']['paymentStatus'] .= ' '	. date_DateFormat::format($document->getPaymentDate(), $dateTimeFormat);
+				$bill = f_util_ArrayUtils::lastElement($bills);
+				$data['properties']['paymentStatus'] = $bill->getBoStatusLabel();
+				if ($bill->getTransactionDate())
+				{
+					
+					$data['properties']['paymentStatus'] .= ' '	. date_DateFormat::format($bill->getUITransactionDate(), $dateTimeFormat);
+				}
 			}
-			$status = $document->getShippingStatus();
-			if ($status)
+			
+			$expeditions = order_ExpeditionService::getInstance()->getByOrder($document);
+			if (count($expeditions))
 			{
-				$data['properties']['shippingStatus'] = $this->getBoStatusLabel($status);		
+				$expedition = f_util_ArrayUtils::lastElement($expeditions);
+				$data['properties']['shippingStatus'] = $expedition->getBoStatusLabel();
+				if ($expedition->getShippingDate())
+				{
+					$data['properties']['shippingStatus'] .= ' ' . date_DateFormat::format($expedition->getUIShippingDate(), $dateTimeFormat);
+				}
 			}
 			
 			$data['properties']['customerFullName'] = $billingAddress->getDocumentService()->getFullName($billingAddress);
 			$data['properties']['customerCode'] = $document->getCustomer()->getUser()->getEmail();
 			$data['properties']['totalAmount'] = $document->formatPrice($document->getTotalAmountWithTax());
-			if ($this->generateBillIsActive() && $document->getBill() !== null)
-			{
-				$billBoURL = $document->getBillBoURL();
-				$billLink = array("href" => $billBoURL,
-				 "label" => f_Locale::translateUI("&modules.order.bo.doceditor.property.bill-download;"));
-				$data['properties']['billLink'] = $billLink;
-			}
-				
+
 			// Messages.
 			$data['messages'] = order_MessageService::getInstance()->getInfosByOrder($document);
 				
@@ -1153,14 +922,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * @return boolean
-	 */
-	public function generateBillIsActive()
-	{
-		return Framework::getConfigurationValue("modules/order/genBill") == 'true';
-	}
-
-	/**
 	 * @return void
 	 */
 	public function sendCommentReminders()
@@ -1170,18 +931,25 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$codeName = 'modules_order/comment-reminder';
 		foreach ($this->getOrdersToRemind() as $order)
 		{
-			$user = $order->getCustomer()->getUser();
-			$products = $this->getNotCommentedProducts($order, $user);
-			if (count($products) > 0)
+			$notification = $ns->getNotificationByCodeName($codeName, $order->getWebsiteId());
+			if ($notification)
 			{
-				$products = $this->filterProductsForCommentReminder($products);
-				$notification = $ns->getNotificationByCodeName($codeName, $order->getWebsiteId());
-				$parameters = $this->getNotificationParameters($order);
-				$parameters['reminderProductBlock'] = $this->renderReminderProductBlock($products);
-				$ns->send($notification, $this->getMessageRecipients($order), $parameters, 'order');
+				$recipients = order_ModuleService::getInstance()->getMessageRecipients($order);
+				if ($recipients)
+				{
+					$user = $order->getCustomer()->getUser();
+					$products = $this->getNotCommentedProducts($order, $user);
+					if (count($products) > 0)
+					{
+						$products = $this->filterProductsForCommentReminder($products);	
+						$parameters = $this->getNotificationParameters($order);
+						$parameters['reminderProductBlock'] = $this->renderReminderProductBlock($products);
+						$ns->send($notification, $recipients, $parameters, 'order');
+					}
+					$order->setLastCommentReminder(date_calendar::getInstance()->toString());
+					$order->save();
+				}
 			}
-			$order->setLastCommentReminder(date_calendar::getInstance()->toString());
-			$order->save();
 		}
 	}
 
@@ -1201,7 +969,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			'totalAmount' => catalog_PriceHelper::roundPrice($totalAmount),
 			'totalAmountFormatted' => $shop->formatPrice($totalAmount),
 			'to' => $shop->formatPrice($totalAmount),
-			'toDeliver' => $this->findProjectedTotal($shop, $fromDate, $toDate, Projections::rowCount('projection'), array('PAYMENT_SUCCESS'))
+			'toDeliver' => $this->findProjectedTotal($shop, $fromDate, $toDate, Projections::rowCount('projection'), array('in_progress'))
 		);
 	}
 	
@@ -1224,7 +992,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$query->add(Restrictions::eq('shopId', $shop->getId()));
 		if ($orderStatues === null)
 		{
-			$query->add(Restrictions::notin('orderStatus', array('CANCELED', 'PAYMENT_FAILED', 'PAYMENT_WAITING')));
+			$query->add(Restrictions::ne('orderStatus', 'canceled'));
 		}
 		else 
 		{
@@ -1261,12 +1029,12 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		switch ($ms->getPreferenceValue('order', 'commentReminderReference'))
 		{
 			case 'payment' :
-				$referenceProperty = 'paymentDate';
+				$referenceProperty = 'bill.transactionDate';
 				break;
 					
 			default :
 			case 'shipment' :
-				$referenceProperty = 'shipmentDate';
+				$referenceProperty = 'expedition.shippingDate';
 				break;
 		}
 		$referenceDate = date_Calendar::getInstance();
@@ -1314,7 +1082,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	/**
 	 * @param order_persistentdocument_order $order
 	 */
-	private function updateStock($order)
+	public function updateStock($order)
 	{
 		if (Framework::isInfoEnabled())
 		{
@@ -1327,6 +1095,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$product = DocumentHelper::getDocumentInstance($line->getProductId(), 'modules_catalog/product');
 				if ($product instanceof catalog_StockableDocument) 
 				{
+					Framework::info(__METHOD__ ." decreaseQuantity " . $product->getId() . ' ' . $line->getQuantity());
 					catalog_StockService::getInstance()->decreaseQuantity($product, $line->getQuantity());
 				}
 			}
@@ -1335,5 +1104,59 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				Framework::exception($e);
 			}
 		}
+	}
+	
+	//DEPRECATED
+	
+	/**
+	 * @deprecated use order_BillService::getInstance()->generateBillIsActive()
+	 */
+	public function generateBillIsActive()
+	{
+		return order_BillService::getInstance()->generateBillIsActive();
+	}
+	
+	/**
+	 * @deprecated use order_BillService::getInstance()->genBills();
+	 */
+	public function genBills()
+	{
+		order_BillService::getInstance()->genBills();
+	}
+	
+	/**
+	 * @deprecated use order_BillService::getInstance()->genBill()
+	 */
+	public function genBill($order)
+	{	
+		$billArray = $order->getBillArrayInverse();
+		order_BillService::getInstance()->genBill($billArray[0]);
+	}
+	
+	/**
+	 * @deprecated use order_BillService::getInstance()->createBill()
+	 */
+	public function createBill($order)
+	{
+		$billArray = $order->getBillArrayInverse();
+		order_BillService::getInstance()->createBill($billArray[0]);
+	}
+	
+	/**
+	 * @deprecated 
+	 */
+	public function getStatusLabel($orderStatus)
+	{
+		$key = '&modules.order.frontoffice.status.' . ucfirst($orderStatus) . ';';
+		return f_Locale::translate($key);
+	}
+	
+	/**
+	 * @deprecated 
+	 */
+	public function getBoStatusLabel($orderStatus)
+	{
+		$key = '&modules.order.frontoffice.status.' . ucfirst($orderStatus) . ';';
+		return f_Locale::translateUI($key);
 	}
 }

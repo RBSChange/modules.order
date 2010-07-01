@@ -106,12 +106,6 @@
 				<dt tal:content="php:order.formatPrice(order.getShippingFeesWithTax())" />
 			</tal:block>
 
-			<!-- billing -->
-			<tal:block tal:condition="order/getBillingMode">
-				<dd change:translate="&modules.order.frontoffice.Billing-modeLabel;"></dd>
-				<dt tal:content="order/getBillingMode"></dt>
-			</tal:block>
-
 			<!-- Montants par taxe -->
 			<tal:block tal:repeat="PriceByTax order/getSubTotalTaxInfoArray">
 				<dd change:translate="&modules.order.frontoffice.TvaLabel;; rate PriceByTax/formattedTaxRate"></dd>
@@ -129,4 +123,6 @@
 	<a change:actionlink="" block="order_order" class="link" action="addToCart" cmpref="${order/getId}" change:translate="&modules.order.frontoffice.Add-order-articles-to-cart;">Ajouter les articles de cette commande au panier</a>
 </div>
 <div class="cleaner"></div>
-<tal:block change:block="" name="payment" module="payment" orderid="${order/getId}" connectorid="${order/getBillingModeId}" />
+<tal:block tal:repeat="bill bills">
+	<tal:block change:block="" name="payment" module="payment" billid="${bill/getId}" />
+</tal:block>

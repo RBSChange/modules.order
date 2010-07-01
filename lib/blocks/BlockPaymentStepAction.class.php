@@ -23,8 +23,11 @@ class order_BlockPaymentStepAction extends order_BlockAbstractProcessStepAction
 		}
 		$this->setCurrentStep('Payment');
 		$cartInfo = $this->getCurrentCart();
-		$request->setAttribute('order', $cartInfo->getOrder());
+		$order = $cartInfo->getOrder();
+		$bills = order_BillService::getInstance()->getByOrderForPayment($order);	
+		$request->setAttribute('order', $order);
 		$request->setAttribute('shop', $cartInfo->getShop());
+		$request->setAttribute('bills', $bills);
 		return $this->getInputViewName();
 	}
 }

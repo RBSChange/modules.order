@@ -21,8 +21,6 @@
 				<dt tal:content="php:order.formatPrice(coupon['valueWithTax'])"></dt>
 			</tal:block>
 
-			
-
 			<!-- discount -->
 			<tal:block tal:condition="order/hasDiscount">
 				<dd change:translate="&modules.order.frontoffice.Discount-nameLabel;" />
@@ -40,10 +38,9 @@
 			<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-withtax-abrLabel;" />
 			<dt class="pricetotal" tal:content="php:order.formatPrice(order.getTotalAmountWithTax())" /			
 		</dl>
-		
-
 	</div>
-	
-<div class="cleaner"></div>
-<tal:block change:block="" name="payment" module="payment" orderid="${order/getId}" connectorid="${order/getBillingModeId}" />
+	<div class="cleaner"></div>
+	<tal:block tal:repeat="bill bills">
+		<tal:block change:block="" name="payment" module="payment" billid="${bill/getId}" />
+	</tal:block>
 </div>

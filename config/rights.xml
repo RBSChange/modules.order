@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rights>
-	<actions>
-		<document name="rootfolder" />
-		<document name="order">
-			<action name="CancelOrder" />
-		</document>
-		<document name="orderline" />
-		<document name="message" />
-		<document name="smartfolder" />
-	</actions>
-	<roles>
-		<role name="Admin">
-			<permission name="*" />
-			<permission name="LoadPermissions.*" />
-			<permission name="SavePermissions.*" />
-			<permission name="GetPreferencesDocument" />
-			<permission name="Enabled" />
-			<permission name="List.*" />
-			<permission name="Delete.*" />
-			<permission name="Save.*" />
-			<permission name="Insert.*" />
-			<permission name="Update.*" />
-			<permission name="Load.*" />			
-			<permission name="LoadTags" />
-			<permission name="ReActivate.*" />
-			<permission name="Deactivated.*" />
-			<permission name="CancelOrder.order" />
-			<permission name="EditLocale" />
-		</role>
-	</roles>
+  <actions>
+    <document name="rootfolder"/>
+    <document name="order">
+      <action name="CancelOrder"/>
+    </document>
+    <document name="orderline"/>
+    <document name="message"/>
+    <document name="smartfolder"/>
+    <document name="bill"/>
+    <document name="expeditionline"/>
+    <document name="expedition"/>
+  </actions>
+  <roles>
+    <role name="Admin">
+      <permission name="*"/>
+      <permission name="LoadPermissions.*"/>
+      <permission name="SavePermissions.*"/>
+      <permission name="GetPreferencesDocument"/>
+      <permission name="Enabled"/>
+      <permission name="List.*"/>
+      <permission name="Delete.*"/>
+      <permission name="Save.*"/>
+      <permission name="Insert.*"/>
+      <permission name="Update.*"/>
+      <permission name="Load.*"/>
+      <permission name="LoadTags"/>
+      <permission name="ReActivate.*"/>
+      <permission name="Deactivated.*"/>
+      <permission name="CancelOrder.order"/>
+      <permission name="EditLocale"/>
+    </role>
+  </roles>
 </rights>

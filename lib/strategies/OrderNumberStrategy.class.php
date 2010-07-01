@@ -81,9 +81,10 @@ class order_OrderNumberGenerator
 			{
 				// No strategy defined in the project's config file: use default one.
 				$className = 'order_OrderNumberDefaultStrategy';
-				if (Framework::isDebugEnabled())
+				if (Framework::isInfoEnabled())
 				{
-					Framework::debug("No strategy defined to build order numbers for this projet: using default one (".$className.").");
+					Framework::info("No strategy defined to build order numbers for this projet: using default one (".$className.").");
+					Framework::debug($e->getMessage());
 				}
 			}
 			$this->strategy = new $className;
