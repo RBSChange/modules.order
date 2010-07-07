@@ -56,15 +56,15 @@ class order_OrderlineService extends f_persistentdocument_DocumentService
 		}
 		
 		$product = $cartLine->getProduct();
+		$orderLine->setProductId($product->getId());
 		$orderLine->setLabel($product->getLabel());
 		$orderLine->setOrderLabel($product->getOrderLabel());
 		$orderLine->setOrderLabelAsHtml($product->getOrderLabelAsHtml());
-		
 		$orderLine->setCodeReference($product->getCodeReference());
-		$orderLine->setProductId($cartLine->getProductId());
 		$orderLine->setQuantity($cartLine->getQuantity());
 		$orderLine->setUnitPriceWithTax(catalog_PriceHelper::roundPrice($cartLine->getValueWithTax()));
 		$orderLine->setUnitPriceWithoutTax(catalog_PriceHelper::roundPrice($cartLine->getValueWithoutTax()));
+		
 		// If there is no old price, duplicate the normal price.
 		if (!is_null($cartLine->getOldValueWithTax()))
 		{
@@ -84,8 +84,11 @@ class order_OrderlineService extends f_persistentdocument_DocumentService
 		$orderLine->setTaxRate($cartLine->getTaxRate());		
 		$orderLine->setTaxAmount($cartLine->getTotalTax());
 		
+		$cartLineProperties = $cartLine->getPropertiesArray();
+		$product->getDocumentService()->updateOrderLineProperties($product, $cartLineProperties);
+		
 		// Properties.
-		$orderLine->mergeGlobalProperties($cartLine->getPropertiesArray());
+		$orderLine->mergeGlobalProperties($cartLineProperties);
 		return $orderLine;
 	}
 }

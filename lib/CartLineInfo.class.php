@@ -94,7 +94,9 @@ class order_CartLineInfo
 		{
 			return null;
 		}
-		return DocumentHelper::getDocumentInstance($this->productId, "modules_catalog/product");
+		$product = DocumentHelper::getDocumentInstance($this->productId, "modules_catalog/product");
+		$product->getDocumentService()->updateProductFromCartProperties($product, $this->properties);
+		return $product;
 	}
 
 	/**
@@ -207,7 +209,14 @@ class order_CartLineInfo
 	 */
 	public function getTaxRate()
 	{
-		return catalog_PriceHelper::getTaxRateByCode($this->taxCode);
+		if ($this->taxCode !== null)
+		{
+			return catalog_PriceHelper::getTaxRateByCode($this->taxCode);
+		}
+		else
+		{
+			return catalog_PriceHelper::getTaxRateByValue($this->getValueWithTax(), $this->getValueWithoutTax());
+		}
 	}
 	
 	

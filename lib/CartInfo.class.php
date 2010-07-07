@@ -616,7 +616,7 @@ class order_CartInfo
 		$result = array();
 		foreach ($this->cartLine as $cartLineInfo) 
 		{
-			$rate = $cartLineInfo->getTaxCode();
+			$rate = $cartLineInfo->getFormattedTaxCode();
 			if (isset($result[$rate]))
 			{
 				$result[$rate] += $cartLineInfo->getTotalValueWithTax() - $cartLineInfo->getTotalValueWithoutTax();
@@ -776,8 +776,7 @@ class order_CartInfo
 		$result = array();
 		foreach ($this->getSubTotalTaxByRate() as $rate => $value) 
 		{
-			$result[] = array('formattedTaxRate' => catalog_PriceHelper::formatTaxRate(catalog_PriceHelper::getTaxRateByCode($rate)), 
-			'formattedTaxAmount' => $this->formatValue($value));	
+			$result[] = array('formattedTaxRate' => $rate, 'formattedTaxAmount' => $this->formatValue($value));	
 		}
 		return $result;
 	}
