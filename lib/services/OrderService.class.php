@@ -103,17 +103,35 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$informations['shippingMode'] = $order->getShippingMode();
 
 		$informations['subTotal'] =  $order->formatPrice($order->getLinesAmountWithTax());
-		$cartModificators = $order->getGlobalProperty('__cartModificators');
-		if (count($cartModificators) > 0)
+		$couponId = $order->getCouponId();
+		if (intval($couponId) > 0)
 		{
-			$coupon = f_util_ArrayUtils::firstElement($cartModificators);
-			$informations['couponName'] = $coupon['label'];
-			$informations['couponValue'] = $coupon['formattedValue'];
-			$informations['couponSectionName'] = $coupon['label'];
+			$coupon = $order->getCouponData();
+			try 
+			{
+				$couponDocument = DocumentHelper::getDocumentInstance($couponId, 'modules_customer/coupon');
+				$couponLabel = $couponDocument->getLabel();
+			}
+			catch (Exception $e)
+			{
+				$couponLabel = $coupon['code'];
+				Framework::info("Coupon $couponId not found :" . $e->getMessage());
+			}
+			
+			$informations['couponName'] = $couponLabel;
+			$informations['couponValue'] = $order->formatPrice($coupon['valueWithTax']);
+				
+			$informations['couponSectionName'] = $couponLabel;
 			$informations['couponSectionCode'] = $coupon['code'];
-			$informations['couponSectionDescription'] = $coupon['description'];
-			$informations['couponSectionValue'] = $coupon['formattedValue'];
+			$informations['couponSectionValue'] = $informations['couponValue'];
 		}
+		
+		
+		if ($order->hasDiscount())
+		{
+			$informations['discountTotal'] = $order->formatPrice($order->getDiscountTotalWithTax());
+		}
+		
 		$informations['subTotalWithModificators'] = $order->formatPrice(-1);
 		$informations['shippingMode'] = $order->getShippingMode();
 		$informations['shippingFees'] = $order->formatPrice($order->getShippingFeesWithTax());

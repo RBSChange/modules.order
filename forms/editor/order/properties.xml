@@ -44,6 +44,7 @@
 		<sectionrow labeli18n="modules.order.bo.general.Sub-total" id="subTotal" />
 		<sectionrow labeli18n="modules.order.frontoffice.Coupon-name" id="couponName" />
 		<sectionrow labeli18n="modules.order.frontoffice.Coupon-value" id="couponValue" />
+		<sectionrow labeli18n="modules.order.frontoffice.Discount-name" id="discountTotal" />
 		<sectionrow labeli18n="modules.order.bo.general.Shipping-fees" id="shippingFees" />
 		<sectionrow labeli18n="modules.order.bo.general.Billing-mode" id="billingMode" />
 		<sectionrow labeli18n="modules.order.bo.general.Billing-fees" id="billingFees" />
@@ -52,7 +53,6 @@
 	</section>
 	<section labeli18n="modules.order.bo.general.Coupon" class="couponSection">
 		<sectionrow labeli18n="modules.order.bo.general.Coupon-name" id="couponSectionName" />
-		<sectionrow labeli18n="modules.order.bo.general.Coupon-description" id="couponSectionDescription" />
 		<sectionrow labeli18n="modules.order.bo.general.Coupon-code" id="couponSectionCode" />
 		<sectionrow labeli18n="modules.order.bo.general.Coupon-reduction" id="couponSectionValue" />
 	</section>
@@ -96,9 +96,9 @@
 				"billingMode",
 				"billingFees",
 				"tvaAmounts",
+				"discountTotal",
 				"totalAmount",
 				"couponSectionName",
-				"couponSectionDescription",
 				"couponSectionCode",
 				"couponSectionValue",
 			]</field>
