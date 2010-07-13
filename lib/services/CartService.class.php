@@ -481,6 +481,7 @@ class order_CartService extends BaseService
 				
 				if (!$this->validateCartLine($cartLine, $cart))
 				{
+					$removeCartLineIndex[] = $index;
 					continue;
 				}
 	
@@ -524,6 +525,14 @@ class order_CartService extends BaseService
 			$product = $cartLine->getProduct();
 			if ($product !== null && $product->isPublished())
 			{
+				$compiledProduct = $product->getDocumentService()->getPrimaryCompiledProductForWebsite($product, $cart->getShop()->getWebsite());
+				if ($compiledProduct === null || !$compiledProduct->isPublished())
+				{
+					$replacements = array('articleLabel' => $product->getLabel());
+					$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-price;', $replacements));
+					return false;
+				}
+				
 				if ($product instanceof catalog_StockableDocument)
 				{
 					if (!catalog_StockService::getInstance()->isAvailable($product, $cartLine->getQuantity()))
@@ -532,7 +541,7 @@ class order_CartService extends BaseService
 							'quantity' => $cartLine->getQuantity(), 'unit' => '', 
 							'availableQuantity' => $product->getStockQuantity(), 'availableUnit' => '');
 						$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-quantity;', $replacements));
-						return false;					
+						return true;
 					}
 				}
 				return true;
@@ -541,6 +550,12 @@ class order_CartService extends BaseService
 		catch (Exception $e)
 		{
 			Framework::exception($e);
+		}
+		
+		if ($product !== null)
+		{
+			$replacements = array('articleLabel' => $product->getLabel());
+			$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-price;', $replacements));
 		}
 		return false;
 	}
