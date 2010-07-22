@@ -54,8 +54,7 @@
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
 			body="Votre commande d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt; a été enregistrée sous le numéro &lt;em&gt;{orderId}&lt;/em&gt;."
 			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
-			template="default"
-			senderUsername="no-reply" />
+			template="default" />
 			
 		<notification codename="modules_order/bill_success"
 			label="Paiement accepté"
@@ -64,8 +63,7 @@
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
 			body="Nous avons le plaisir de vous informer que le paiement concernant votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;validé&lt;/strong&gt; par notre banque."
 			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
-			template="default"
-			senderUsername="no-reply" />			
+			template="default" />			
 			
 		<notification codename="modules_order/bill_failed"
 			label="Paiement refusé"
@@ -74,8 +72,7 @@
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
 			body="Nous avons le regret de vous informer que le paiement concernant votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;refusé&lt;/strong&gt; par notre banque."
 			footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
-			template="default"
-			senderUsername="paiement-refuse" />
+			template="default" />
 			
 		<notification codename="modules_order/order_canceled"
 			label="Commande annulée"
@@ -84,8 +81,7 @@
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
 			body="Nous avons le regret de vous informer que votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;annulée&lt;/strong&gt;."
 			footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
-			template="default"
-			senderUsername="no-reply" />
+			template="default" />
 			
 		<notification codename="modules_order/order_complete"
 			label="Commande expédiée"
@@ -94,8 +90,7 @@
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
 			body="Nous avons le plaisir de vous informer que votre commande &lt;em&gt;{orderId}&lt;/em&gt; a été &lt;strong&gt;expédiée&lt;/strong&gt;. Le numéro du colis ({shippingMode}) est : &lt;em&gt;{packageNumber}&lt;/em&gt;."
 			footer="&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
-			template="default"
-			senderUsername="no-reply" />
+			template="default" />
 			
 		<notification codename="modules_order/bill_admin_success"
 			label="Nouvelle commande (administrateur)"
@@ -103,8 +98,7 @@
 			subject="Nouvelle commande : numéro : {orderId}, client : {fullname}, montant : {orderAmount}"
 			header="&lt;strong&gt;Une nouvelle commande est validée et payée.&lt;/strong&gt;"
 			body="&lt;dl&gt;&lt;dt&gt;Numéro de commande&lt;/dt&gt;&lt;dd&gt;{orderId}&lt;/dd&gt;&lt;dt&gt;Montant&lt;/dt&gt;&lt;dd&gt;{orderAmount}&lt;/dd&gt;&lt;dt&gt;Client&lt;/dt&gt;&lt;dd&gt;{fullname}&lt;/dd&gt;&lt;/dl&gt;."
-			template="default"
-			senderUsername="no-reply" />
+			template="default" />
 			
 		<notification codename="modules_order/messageFromCustomer"
 			label="Message envoyé par un client"
@@ -112,8 +106,7 @@
 			subject="Message à propos de la commande numéro : {orderId}, client : {fullname}"
 			header="&lt;strong&gt;Message à propos de la commande numéro {orderId}.&lt;/strong&gt;"
 			body="&lt;p&gt;{content}&lt;/p&gt;"
-			template="default"
-			senderUsername="no-reply" />
+			template="default" />
 			
 		<notification codename="modules_order/messageToCustomer"
 			label="Message envoyé à un client"
@@ -121,8 +114,7 @@
 			subject="Message à propos de votre commande numéro {orderId} sur le site {company-name}"
 			header="&lt;strong&gt;Message à propos de la commande numéro {orderId}.&lt;/strong&gt;"
 			body="&lt;p&gt;{content}&lt;/p&gt;"
-			template="default"
-			senderUsername="no-reply" />
+			template="default" />
 			
 		<!-- 
 			modules_order/comment-reminder

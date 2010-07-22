@@ -24,7 +24,6 @@
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
 			body="Vous avez commandé dernièrement les produits suivants. Vous pouvez publier votre avis les concernant en suivant les liens indiqués : {reminderProductBlock}"
 			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
-			template="default"
-			senderUsername="no-reply" />
+			template="default" />
 	</systemfolder>
 </script>
