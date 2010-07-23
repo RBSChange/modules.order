@@ -2,7 +2,7 @@
 <change xmlns="http://www.rbs.fr/schema/change-component/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-component/1.0 http://www.rbschange.fr/static/schema/change-component/1.0.xsd">
   <name>order</name>
   <type>change-module</type>
-  <version>3.0.3</version>
+  <version>3.0.4</version>
   <description>Gestion du processus de commande et des commandes clients pour l'e-commerce</description>
   <license>os</license>
   <repository>public</repository>
@@ -10,43 +10,43 @@
     <dependency>
       <name>change-lib/framework</name>
       <versions>
-        <version>3.0.3</version>
+        <version>3.0.4</version>
       </versions>
     </dependency>
     <dependency>
       <name>change-module/catalog</name>
       <versions>
-        <version>3.0.3</version>
+        <version>3.0.4</version>
       </versions>
     </dependency>
     <dependency>
       <name>change-module/customer</name>
       <versions>
-        <version>3.0.3</version>
+        <version>3.0.4</version>
       </versions>
     </dependency>
     <dependency>
       <name>change-module/zone</name>
       <versions>
-        <version>3.0.3</version>
+        <version>3.0.4</version>
       </versions>
     </dependency>
     <dependency>
       <name>change-module/website</name>
       <versions>
-        <version>3.0.3</version>
+        <version>3.0.4</version>
       </versions>
     </dependency>
     <dependency>
       <name>change-module/payment</name>
       <versions>
-        <version>3.0.3</version>
+        <version>3.0.4</version>
       </versions>
     </dependency>
     <dependency>
       <name>change-module/preferences</name>
       <versions>
-        <version>3.0.3</version>
+        <version>3.0.4</version>
       </versions>
     </dependency>
   </dependencies>
