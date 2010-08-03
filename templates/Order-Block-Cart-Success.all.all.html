@@ -51,10 +51,10 @@
 	
 					<!-- Visual -->
 					<td>
-						<a change:link="document product" tal:condition="product/getVisualId">
-							<img change:media="document product/getVisualId; format 'modules.catalog.frontoffice/subdetailproduct'" />
+						<a change:link="document product" tal:condition="product/getDefaultVisual">
+							<img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/cartdetailproduct'" />
 						</a>
-						<tal:block tal:condition="not: product/getVisualId">&nbsp;</tal:block>
+						<tal:block tal:condition="not: product/getDefaultVisual">&nbsp;</tal:block>
 					</td>
 	
 					<!-- Désignation / Article -->
