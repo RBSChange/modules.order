@@ -93,19 +93,23 @@
 		<locale lang="fr">de facturation</locale>
 		<locale lang="en">billing</locale>
 	</entity>
-	
 	<entity id="addrtypefilter-shipping">
 		<locale lang="fr">de livraison</locale>
 		<locale lang="en">shipping</locale>
-	</entity>		
-
+	</entity>
 	<entity id="addrpartfilter-country">
 		<locale lang="fr">le pays</locale>
 		<locale lang="en">country</locale>
 	</entity>
-	
 	<entity id="addrpartfilter-zipCode">
 		<locale lang="fr">le code postal</locale>
 		<locale lang="en">zip code</locale>
+	</entity>
+	
+	<entity id="orderscontainingbrandfilter-label">
+		<locale lang="fr">contenant un produit dont la marque fait partie d'une liste donnée</locale>
+	</entity>
+	<entity id="orderscontainingbrandfilter-text">
+		<locale lang="fr">contenant un produit de l'une des marques suivantes : {brand}</locale>
 	</entity>
 </localization>
