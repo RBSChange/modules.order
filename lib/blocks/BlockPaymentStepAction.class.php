@@ -24,6 +24,10 @@ class order_BlockPaymentStepAction extends order_BlockAbstractProcessStepAction
 		$this->setCurrentStep('Payment');
 		$cartInfo = $this->getCurrentCart();
 		$order = $cartInfo->getOrder();
+		if ($order === null)
+		{
+			$this->redirectToFirstStep();
+		}
 		$bills = order_BillService::getInstance()->getByOrderForPayment($order);	
 		$request->setAttribute('order', $order);
 		$request->setAttribute('shop', $cartInfo->getShop());

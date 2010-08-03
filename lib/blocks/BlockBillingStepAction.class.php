@@ -21,9 +21,13 @@ class order_BlockBillingStepAction extends order_BlockAbstractProcessStepAction
 		{
 			$this->redirectToFirstStep();
 		}
-		
+		$cartInfo = $this->getCurrentCart();
+		if ($cartInfo->isEmpty())
+		{
+			$this->redirectToEmptyCart();
+		}
 		$this->setCurrentStep('Billing');
-		$billingStep = $this->generateBillingStepBean($this->getCurrentCart());
+		$billingStep = $this->generateBillingStepBean($cartInfo);
 		$request->setAttribute('billingStep', $billingStep);		
 		return $this->getInputViewName();
 	}
