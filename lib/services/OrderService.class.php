@@ -239,6 +239,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			}
 			else
 			{
+				$orderDocument->setLabel(date_Calendar::now()->toString());
 				$shippingAddress = $orderDocument->getShippingAddress();
 				$billingAddress = $orderDocument->getBillingAddress();
 				$currentOrderLine = $orderDocument->getLineCount();

@@ -40,6 +40,10 @@
 		</dl>
 	</div>
 	<div class="cleaner"></div>
+	<tal:block class="errors" tal:condition="not: bills/0">
+			<h3 change:h="" change:translate="&modules.order.frontoffice.Payment-failed;">Votre paiement a échoué.</h3>
+			<p><strong class="error" change:translate="&modules.order.frontoffice.Payment-failed-text;" /></p>
+	</tal:block>
 	<tal:block tal:repeat="bill bills">
 		<tal:block change:block="" name="payment" module="payment" billid="${bill/getId}" />
 	</tal:block>

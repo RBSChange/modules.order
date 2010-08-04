@@ -21,8 +21,13 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 		{
 			$this->redirectToFirstStep();
 		}
+		
 		$this->setCurrentStep('Shipping');
 		$cartInfo = $this->getCurrentCart();
+		if ($cartInfo->isEmpty())
+		{
+			$this->redirectToEmptyCart();
+		}
 		$shippingStep = $cartInfo->getAddressInfo();
 		if (!$shippingStep instanceof order_ShippingStepBean)
 		{

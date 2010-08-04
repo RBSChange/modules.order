@@ -23,6 +23,10 @@ class order_BlockConfirmStepAction extends order_BlockAbstractProcessStepAction
 		}
 		$this->setCurrentStep('Confirm');
 		$cartInfo = $this->getCurrentCart();
+		if ($cartInfo->isEmpty())
+		{
+			$this->redirectToEmptyCart();
+		}
 		$order = $cartInfo->getOrder();
 		$bill = order_BillService::getInstance()->initializeByOrderForPayment($order);		
 		$request->setAttribute('order', $order);

@@ -1148,4 +1148,13 @@
 		<locale lang="en">return to the previous step</locale>
 		<locale lang="de">Rückkehr zum vorherigen Schritt</locale>
 	</entity>
+	<entity id="payment-failed">
+		<locale lang="fr">paiement echoué</locale>
+		<locale lang="en">payment failed</locale>
+		<locale lang="de">Zahlung nicht</locale>
+	</entity>
+	<entity id="payment-failed-text">
+		<locale lang="fr">Votre paiement a échoué. Il est possible que les informations bancaires que vous avez fournit soient inexactes.</locale>
+		<locale lang="en">Your payment failed. It is likely that your banking details were incorrect.</locale>
+	</entity>
 </localization>

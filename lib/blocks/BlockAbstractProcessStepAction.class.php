@@ -29,7 +29,7 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 	 */
 	function initialize($request, $response)
 	{
-		$request->setAttribute('cart', $this->getCurrentCart());
+		$request->setAttribute('cart', $this->getCurrentCart());	
 	}
 	
 	protected function setCurrentStep($currentStep)
@@ -52,15 +52,15 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 		}
 		$orderProcess->setCurrentStep($nextStep);
 		$url = $orderProcess->getOrderProcessURL();
-		HttpController::getInstance()->redirectToUrl($url);		
+		HttpController::getInstance()->redirectToUrl($url);
 	}
 	
 	protected function redirectToStep($step)
-	{	
+	{
 		$orderProcess = order_OrderProcess::getInstance();
 		$orderProcess->setCurrentStep($step);
 		$url = $orderProcess->getOrderProcessURL();
-		HttpController::getInstance()->redirectToUrl($url);	
+		HttpController::getInstance()->redirectToUrl($url);
 	}
 	
 	protected function redirectToFirstStep()
@@ -69,6 +69,29 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 		$orderProcess->setCurrentStep(null);
 		$url = $orderProcess->getOrderProcessURL();
 		HttpController::getInstance()->redirectToUrl($url);
+	}
+	
+	/**
+	 * Redirect to proper page when there's nothing to buy
+	 */
+	protected function redirectToEmptyCart()
+	{
+		try
+		{
+			$emptyCartPage = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart-empty', website_WebsiteModuleService::getInstance()->getCurrentWebsite());
+			$url = LinkHelper::getUrl($emptyCartPage);
+			HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
+		}
+		catch ( TagException $e )
+		{
+			if (Framework::isWarnEnabled())
+			{
+				Framework::warn($e->getMessage());
+			}
+		}
+		$shop = catalog_ShopService::getInstance()->getCurrentShop();
+		$url = LinkHelper::getDocumentUrl($emptyCartPage);
+		HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 	}
 	
 	protected function checkCurrentCustomer()
