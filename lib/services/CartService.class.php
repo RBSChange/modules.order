@@ -29,36 +29,27 @@ class order_CartService extends BaseService
 	}
 	
 	/**
-	 * @var order_CartInfo
-	 */
-	private $cartInfo;
-	
-	
-	/**
 	 * @return order_CartInfo
 	 */
 	public function getDocumentInstanceFromSession()
 	{	
-		if ($this->cartInfo === null)
+		$cart = null;
+		$user = Controller::getInstance()->getContext()->getUser();
+		if ($user->hasAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE))
 		{
-			$user = Controller::getInstance()->getContext()->getUser();
-			if ($user->hasAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE))
+			if (Framework::isDebugEnabled())
 			{
-				if (Framework::isDebugEnabled())
-				{
-					Framework::debug(__METHOD__ ." (FROM SESSION)");
-				}
-				$this->cartInfo = $user->getAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE);
-				
-				$this->checkCartValidity();
+				Framework::debug(__METHOD__ ." (FROM SESSION)");
 			}
-			
-			if (!$this->cartInfo instanceof order_CartInfo)
-			{
-				$this->cartInfo = $this->initNewCart();
-			}
+			$cart = $user->getAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE);
+			$this->checkCartValidity($cart);
 		}
-		return $this->cartInfo;
+		
+		if (!($cart instanceof order_CartInfo))
+		{
+			$cart = $this->initNewCart();
+		}
+		return $cart;
 	}
 	
 	/**
@@ -84,11 +75,11 @@ class order_CartService extends BaseService
 	/**
 	 * Verification du cart en fonction de l'état de la commande
 	 */
-	protected function checkCartValidity()
+	protected function checkCartValidity($cart)
 	{
-		if ($this->cartInfo instanceof order_CartInfo && !$this->cartInfo->isEmpty())
+		if ($cart instanceof order_CartInfo && !$cart->isEmpty())
 		{
-			$order = $this->cartInfo->getOrder();
+			$order = $cart->getOrder();
 			if ($order !== null && order_BillService::getInstance()->hasValidBill($order))
 			{
 				if (Framework::isInfoEnabled())
@@ -102,16 +93,16 @@ class order_CartService extends BaseService
 		}
 	}
 	
-	protected function resetCartOrder()
+	protected function resetCartOrder($cart)
 	{
-		$order = $this->cartInfo->getOrder();
+		$order = $cart->getOrder();
 		if ($order !== null && order_BillService::getInstance()->hasValidBill($order))
 		{
 			if (Framework::isInfoEnabled())
 			{
 				Framework::info(__METHOD__);
 			}
-			$this->cartInfo->setOrderId(null);
+			$cart->setOrderId(null);
 		}
 	}
 	
@@ -120,7 +111,6 @@ class order_CartService extends BaseService
 	 */
 	public function saveToSession($cart)
 	{
-		$this->cartInfo = $cart;
 		if (Framework::isDebugEnabled())
 		{
 			Framework::debug(__METHOD__);
@@ -191,7 +181,7 @@ class order_CartService extends BaseService
 				$cartLine->setQuantity($quantity);
 				$cartLine->mergePropertiesArray($properties);								
 				$cart->addCartLine($cartLine);
-				$this->resetCartOrder();
+				$this->resetCartOrder($cart);
 				// Log action.
 				$params = array('product' => $product->getLabel());
 				UserActionLoggerService::getInstance()->addCurrentUserDocumentEntry('add-product-to-cart', null, $params, 'customer');
