@@ -5,7 +5,7 @@
 	</tal:block>
 
 	<tal:block tal:condition="not:forEdition">
-		<p><strong change:translate="modules.order.bo.blocks.dashboardgeneralstatistics.Statistics-for-shop" /> 
+		<p><strong change:translate="modules.order.bo.blocks.dashboardgeneralstatistics.Statistics-for-shop"></strong> 
 		<select onchange="var widget = Dashboard.getWidgetByNode(this); widget.parameters['orderParam[shopId]'] = this.options[this.selectedIndex].value; widget.refresh();">
 			<tal:block tal:repeat="shop shops">
 				<option tal:condition="php: shopId == shop.getId()" selected="selected" value="${shop/getId}">${shop/getLabel}</option>

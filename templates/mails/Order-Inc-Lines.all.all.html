@@ -3,14 +3,14 @@
 		<th>
 			<abbr change:i18nattr="title &modules.order.frontoffice.Reference;" change:translate="&modules.order.frontoffice.Reference-abbr;">Ref.</abbr>
 		</th>
-	    <th change:translate="&modules.order.frontoffice.Designation;" />
+	    <th change:translate="modules.order.frontoffice.Designation" />
 		<th tal:condition="shop/getDisplayPriceWithoutTax">
 			<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-without-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.unitprice-without-tax-abr;; currency shop/getCurrency">PU HT€</abbr>
 		</th>
 		<th tal:condition="shop/getDisplayPriceWithTax">
 			<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-with-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.unitprice-with-tax-abr;; currency shop/getCurrency">PU TTC€</abbr>
 		</th>
-	    <th change:translate="&modules.order.frontoffice.Quantity;" />
+	    <th change:translate="modules.order.frontoffice.Quantity" />
 		<th tal:condition="shop/getDisplayPriceWithoutTax">
 			<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-without-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.totalprice-without-tax-abr;; currency shop/getCurrency">PT HT€</abbr>
 		</th>
@@ -23,125 +23,75 @@
 		<tal:block tal:define="global product cartLine/getProduct" />
 		<tal:block tal:define="global cartLineIndex repeat/cartLine/index" />
 		<!-- Article -->
-		<td>
-			<span tal:replace="line/getCodeReference" />
-		</td>
+		<td>${line/getCodeReference}</td>
 		<!-- Désignation -->
 		<td>
-			<a tal:condition="product" change:link="document product" tal:content="line/getLabel"></a>
-			<a tal:condition="not: product" tal:content="line/getLabel"></a>
+			<a tal:condition="product" change:link="document product">${line/getLabel}</a>
+			<a tal:condition="not: product">${line/getLabel}</a>
 		</td>
 		<!-- PU HT -->
-		<td tal:condition="shop/getDisplayPriceWithoutTax"
-			tal:content="php:order.formatPrice(line.getUnitPriceWithoutTax())">
-		</td>
+		<td tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getUnitPriceWithoutTax())}</td>
 		<!-- PU TTC -->
-		<td tal:condition="shop/getDisplayPriceWithTax"
-			tal:content="php:order.formatPrice(line.getUnitPriceWithTax())">
-		</td>
+		<td tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getUnitPriceWithTax())}</td>
 		<!-- Quantity -->
-		<td>
-			<span tal:replace="line/getQuantity"/>
-		</td>
+		<td>${line/getQuantity}</td>
 		<!-- PT HT -->
-		<td tal:condition="shop/getDisplayPriceWithoutTax"
-			tal:content="php:order.formatPrice(line.getAmountWithoutTax())">
-		</td>
+		<td tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getAmountWithoutTax())}</td>
 		<!-- PT TTC -->
-		<td tal:condition="shop/getDisplayPriceWithTax"
-			tal:content="php:order.formatPrice(line.getAmountWithTax())">
-		</td>
+		<td tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getAmountWithTax())}</td>
 	</tr>
 </table><br />
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr align="left">
 	<td style="padding-left: 18px; padding-bottom: 10px;">
-		<span style="font-weight: bold;"  change:translate="&modules.order.bo.general.Total-to-payLabel;"/> 
-		<span tal:replace="orderAmount" />
-		<br />
-		<span style="font-weight: bold;" change:translate="&modules.order.frontoffice.Shipping-modeLabel;" /> 
-		<span tal:replace="shippingMode" />
-		<br />
-		<span style="font-weight: bold;" change:translate="&modules.order.frontoffice.Shipping-feesLabel;" /> 
-		<span tal:replace="shippingFeesWithTax" />
+		<span style="font-weight: bold;" change:translate="modules.order.bo.general.Total-to-payLabel"></span> 
+		${orderAmount}<br />
+		<span style="font-weight: bold;" change:translate="modules.order.frontoffice.Shipping-modeLabel"></span>
+		${shippingMode}<br />
+		<span style="font-weight: bold;" change:translate="modules.order.frontoffice.Shipping-feesLabel"></span>
+		${shippingFeesWithTax}
 	</td>
   </tr>
   <tr align="left">
 	<td style="padding-left: 18px; font-weight: bold; width: 50%;">
-		<span change:translate="&modules.order.frontoffice.Billing-addressLabel;" />
+		<span change:translate="modules.order.frontoffice.Billing-addressLabel"></span>
 	</td>
 	<td style="padding-left: 18px; font-weight: bold; width: 50%;">
-		<span change:translate="&modules.order.frontoffice.Shipping-addressLabel;" />
+		<span change:translate="modules.order.frontoffice.Shipping-addressLabel"></span>
 	</td>
   </tr>
   <tr align="left">
 	<td style="padding-left: 30px; width: 50%;" tal:define="address order/getBillingAddress">
-		<span tal:replace="address/getTitle/getLabel" /> <span tal:replace="address/getFirstname" /> <span tal:replace="address/getLastname" />
-		<br />
-		<span tal:replace="address/getAddressLine1" />
-		<br />
-		<tal:block tal:condition="address/getAddressLine2">
-			<span tal:replace="address/getAddressline2" />
-			<br />
-		</tal:block>
-		<tal:block tal:condition="address/getAddressLine3">
-			<span tal:replace="address/getAddressline3" />
-			<br />
-		</tal:block>
-		<span tal:replace="address/getZipcode" /> <span tal:replace="address/getCity" />
-		<br />
-		<tal:block tal:condition="address/getProvince">
-			<span tal:replace="address/getProvince" />
-			<br />
-		</tal:block>
-		<span tal:replace="address/getCountry/getLabel" />
-		<br />
-		<tal:block tal:condition="address/getEmail">
-			<span tal:replace="address/getEmail" />
-			<br />
-		</tal:block>
+		${address/getTitle/getLabelAsHtml} ${address/getFirstnameAsHtml} ${address/getLastnameAsHtml}<br />
+		${address/getAddressLine1AsHtml}<br />
+		<tal:block tal:condition="address/getAddressLine2">${address/getAddressline2AsHtml}<br /></tal:block>
+		<tal:block tal:condition="address/getAddressLine3">${address/getAddressline3AsHtml}<br /></tal:block>
+		${address/getZipcodeAsHtml} ${address/getCityAsHtml}<br />
+		<tal:block tal:condition="address/getProvince">${address/getProvinceAsHtml}<br /></tal:block>
+		${address/getCountry/getLabelAsHtml}<br />
+		<tal:block tal:condition="address/getEmail">${address/getEmailAsHtml}<br /></tal:block>
 		<tal:block tal:condition="address/getPhone">
-			<span change:translate="&modules.order.frontoffice.PhoneLabel;" /> <span tal:replace="address/getPhone" />
-			<br />
+			<span change:translate="modules.order.frontoffice.PhoneLabel"></span> ${address/getPhoneAsHtml}<br />
 		</tal:block>
 		<tal:block tal:condition="address/getFax">
-			<span change:translate="&modules.order.frontoffice.FaxLabel;" /> <span tal:replace="address/getFax" />
-			<br />
+			<span change:translate="modules.order.frontoffice.FaxLabel"></span> ${address/getFaxAsHtml}<br />
 		</tal:block>
 	</td>
 	<td style="padding-left: 30px; width: 50%;" tal:define="address order/getShippingAddress">
-		<span tal:replace="address/getTitle/getLabel" /> <span tal:replace="address/getFirstname" /> <span tal:replace="address/getLastname" />
-		<br />
-		<span tal:replace="address/getAddressLine1" />
-		<br />
-		<tal:block tal:condition="address/getAddressLine2">
-			<span tal:replace="address/getAddressline2" />
-			<br />
-		</tal:block>
-		<tal:block tal:condition="address/getAddressLine3">
-			<span tal:replace="address/getAddressline3" />
-			<br />
-		</tal:block>
-		<span tal:replace="address/getZipcode" /> <span tal:replace="address/getCity" />
-		<br />
-		<tal:block tal:condition="address/getProvince">
-			<span tal:replace="address/getProvince" />
-			<br />
-		</tal:block>
-		<span tal:replace="address/getCountry/getLabel" />
-		<br />
-		<tal:block tal:condition="address/getEmail">
-			<span tal:replace="address/getEmail" />
-			<br />
-		</tal:block>
+		${address/getTitle/getLabelAsHtml} ${address/getFirstnameAsHtml} ${address/getLastnameAsHtml}<br />
+		${address/getAddressLine1AsHtml}<br />
+		<tal:block tal:condition="address/getAddressLine2">${address/getAddressline2AsHtml}<br /></tal:block>
+		<tal:block tal:condition="address/getAddressLine3">${address/getAddressline3AsHtml}<br /></tal:block>
+		${address/getZipcodeAsHtml} ${address/getCityAsHtml}<br />
+		<tal:block tal:condition="address/getProvince">${address/getProvinceAsHtml}<br /></tal:block>
+		${address/getCountry/getLabelAsHtml}<br />
+		<tal:block tal:condition="address/getEmail">${address/getEmailAsHtml}<br /></tal:block>
 		<tal:block tal:condition="address/getPhone">
-			<span change:translate="&modules.order.frontoffice.PhoneLabel;" /> <span tal:replace="address/getPhone" />
-			<br />
+			<span change:translate="modules.order.frontoffice.PhoneLabel"></span> ${address/getPhoneAsHtml}<br />
 		</tal:block>
 		<tal:block tal:condition="address/getFax">
-			<span change:translate="&modules.order.frontoffice.FaxLabel;" /> <span tal:replace="address/getFax" />
-			<br />
+			<span change:translate="modules.order.frontoffice.FaxLabel"></span> ${address/getFaxAsHtml}<br />
 		</tal:block>
 	</td>
   </tr>

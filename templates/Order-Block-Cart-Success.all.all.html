@@ -1,22 +1,20 @@
-<h2 class="title" change:translate="&modules.order.frontoffice.My-cart;" />
+<h2 change:h="" change:translate="modules.order.frontoffice.My-cart"></h2>
 
 <ul class="mini-navigation">
-	<li class="print"><a class="link" tal:attributes="href printLink" onclick="accessiblePrint(this); return false;">
-	<span change:translate="&modules.catalog.frontoffice.Print;" tal:omit-tag="" /></a></li>
+	<li class="print">
+		<a class="link" tal:attributes="href printLink" onclick="accessiblePrint(this); return false;" change:translate="modules.catalog.frontoffice.Print"></a></li>
 	<li>
-		<a change:link="tag contextual_website_website_modules_catalog_favorite-product-list; catalogParam[addCartToList] cart/getCatalogId"
-			change:translate="&modules.order.frontoffice.Add-cart-to-list;" />
+		<a change:link="tag ctx_catalog_favorite-product-list; catalogParam[addCartToList] cart/getCatalogId" change:translate="modules.order.frontoffice.Add-cart-to-list"></a>
 	</li>
 	<li>
-		<a change:link="module order; action ContinueShopping; cmpref cart/getShopId"
-			change:translate="&modules.order.frontoffice.Continue-shopping;" />
+		<a change:link="module order; action ContinueShopping; cmpref cart/getShopId" change:translate="modules.order.frontoffice.Continue-shopping"></a>
 	</li>
 </ul>
 <div id="cart-errors">
-	<h3 change:h="" class="error" tal:condition="errorMessages" change:translate="&modules.order.frontoffice.Cart-can-not-order;" />
+	<h3 change:h="" class="error" tal:condition="errorMessages" change:translate="modules.order.frontoffice.Cart-can-not-order"></h3>
 	<ul class="normal">
-		<li tal:condition="warningMessages" class="error" tal:repeat="message warningMessages" tal:content="message" />
-		<li tal:condition="errorMessages" class="error" tal:repeat="message errorMessages" tal:content="message" />
+		<li tal:condition="warningMessages" class="error" tal:repeat="message warningMessages">${message}</li>
+		<li tal:condition="errorMessages" class="error" tal:repeat="message errorMessages">${message}</li>
 	</ul>
 </div>
 
@@ -29,26 +27,24 @@
 		<thead>
 			<tr>
 				<th class="first">&nbsp;</th>
-				<th change:translate="&modules.order.frontoffice.Designation;" />
-				<th change:translate="&modules.order.frontoffice.Availability;" />
+				<th change:translate="modules.order.frontoffice.Designation" />
+				<th change:translate="modules.order.frontoffice.Availability" />
 				<th tal:condition="shop/getDisplayPriceWithTax">
 					<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-with-tax; currency shop/getCurrency"
-						change:translate="&modules.order.frontoffice.unitprice-with-tax-abr;; currency shop/getCurrency" />
+						change:translate="&modules.order.frontoffice.unitprice-with-tax-abr;; currency shop/getCurrency"></abbr>
 				</th>
-				<th change:translate="&modules.order.frontoffice.Quantity;" />
-				<th tal:condition="shop/getDisplayPriceWithTax" change:translate="&modules.order.frontoffice.Tva-column;"></th>
+				<th change:translate="modules.order.frontoffice.Quantity" />
+				<th tal:condition="shop/getDisplayPriceWithTax" change:translate="modules.order.frontoffice.Tva-column"></th>
 				<th tal:condition="shop/getDisplayPriceWithTax">
 					<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-with-tax; currency shop/getCurrency"
-						change:translate="&modules.order.frontoffice.totalprice-with-tax-abr;; currency shop/getCurrency" />
+						change:translate="&modules.order.frontoffice.totalprice-with-tax-abr;; currency shop/getCurrency"></abbr>
 				</th>
 				<th class="last">&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tal:block tal:repeat="cartLine cart/getCartLineArray">
-				<tr class="row-${repeat/cartLine/odd}"
-					tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
-	
+				<tr class="row-${repeat/cartLine/odd}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
 					<!-- Visual -->
 					<td>
 						<a change:link="document product" tal:condition="product/getDefaultVisual">
@@ -65,20 +61,18 @@
 	
 					<!-- Disponibilite -->
 					<td tal:content="product/getAvailability" />
-					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax"
-						tal:content="php:shop.formatPrice(cartLine.getValueWithTax())" />
+					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:shop.formatPrice(cartLine.getValueWithTax())}</td>
 	
 					<!-- Quantity -->
 					<td tal:define="name string:orderParam[lines][${cartLineIndex}][quantity]">
-						<label class="hidden" tal:attributes="for name" change:translate="&modules.order.frontoffice.QuantityLabel" /> 
-						<input class="textfield" tal:condition="not: readonly" type="text"
-							size="3" tal:attributes="name name; value cartLine/getQuantity" />
-						<tal:block tal:condition="readonly" tal:replace="cartLine/getQuantity" />
+						<label class="hidden" tal:attributes="for name" change:translate="modules.order.frontoffice.QuantityLabel"></label> 
+						<input class="textfield" tal:condition="not: readonly" type="text" size="3" tal:attributes="name name; value cartLine/getQuantity" />
+						<tal:block tal:condition="readonly">${cartLine/getQuantity}</tal:block>
 					</td>
 	
 					<!-- TVA -->
-					<td class="priceht" tal:condition="shop/getDisplayPriceWithTax" tal:content="cartLine/getFormattedTaxCode" />
-					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax" tal:content="php:shop.formatPrice(cartLine.getTotalValueWithTax())" />
+					<td class="priceht" tal:condition="shop/getDisplayPriceWithTax">${cartLine/getFormattedTaxCode}</td>
+					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:shop.formatPrice(cartLine.getTotalValueWithTax())}</td>
 	
 					<!-- Remove link -->
 					<td class="sale">
@@ -97,42 +91,41 @@
 
 <div class="column-two">
 <div class="payment-information-block">
-<dl>
-	<tal:block tal:condition="shop/getDisplayPriceWithoutTax">
-		<dd change:translate="&modules.order.frontoffice.Sub-total-withouttax-abrLabel;; currency shop/getCurrency" />
-		<dt tal:content="cart/getFormattedSubTotalWithoutTax" />
-	</tal:block>
-
-	<tal:block tal:condition="shop/getDisplayPriceWithTax">
-		<dd change:translate="&modules.order.frontoffice.Sub-total-withtax-abrLabel;; currency shop/getCurrency" />
-		<dt tal:content="cart/getFormattedSubTotalWithTax" />
-	</tal:block>
-
-	<!-- Montants par taxe -->
-	<tal:block tal:repeat="PriceByTax cart/getFormattedSubTotalTaxByRate">
-		<dd change:translate="&modules.order.frontoffice.TvaLabel;; rate PriceByTax/formattedTaxRate" />
-		<dt tal:content="PriceByTax/formattedTaxAmount" />
-	</tal:block>
-<tal:block tal:condition="cart/hasDiscount">
-				<dd change:translate="&modules.order.frontoffice.Discount-nameLabel;" />
-				<dt tal:content="cart/getFormattedDiscountTotalWithTax" />
-			</tal:block>
-	<tal:block tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
-		<!-- shipping -->
-		<dd change:translate="&modules.order.frontoffice.Shipping-modeLabel;" />
-		<dt tal:content="cart/getShippingLabel" />
-		<dd change:translate="&modules.order.frontoffice.Shipping-feesLabel;" />
-		<dt tal:content="cart/getFormatedShippingPriceWithTax" />
+	<dl>
+		<tal:block tal:condition="shop/getDisplayPriceWithoutTax">
+			<dd change:translate="&modules.order.frontoffice.Sub-total-withouttax-abrLabel;; currency shop/getCurrency"></dd>
+			<dt>${cart/getFormattedSubTotalWithoutTax}</dt>
+		</tal:block>
 	
-		<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-withtax-abrLabel;" />
-		<dt class="pricetotal" tal:content="cart/getFormattedTotalAmount" />
-	</tal:block>
-	<tal:block tal:condition="php: !configuration.getShowTotalWithFees() || !cart.getShippingModeId()">
-		<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-withtax-withoutfees-abrLabel;" />
-		<dt class="pricetotal" tal:content="cart/getFormattedSubTotalWithTax" />
-	</tal:block>
+		<tal:block tal:condition="shop/getDisplayPriceWithTax">
+			<dd change:translate="&modules.order.frontoffice.Sub-total-withtax-abrLabel;; currency shop/getCurrency"></dd>
+			<dt>${cart/getFormattedSubTotalWithTax}</dt>
+		</tal:block>
 	
-</dl>
+		<!-- Montants par taxe -->
+		<tal:block tal:repeat="PriceByTax cart/getFormattedSubTotalTaxByRate">
+			<dd change:translate="&modules.order.frontoffice.TvaLabel;; rate PriceByTax/formattedTaxRate"></dd>
+			<dt>${PriceByTax/formattedTaxAmount}</dt>
+		</tal:block>
+		<tal:block tal:condition="cart/hasDiscount">
+			<dd change:translate="modules.order.frontoffice.Discount-nameLabel" />
+			<dt>${cart/getFormattedDiscountTotalWithTax}</dt>
+		</tal:block>
+		<tal:block tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
+			<!-- shipping -->
+			<dd change:translate="modules.order.frontoffice.Shipping-modeLabel" />
+			<dt>${cart/getShippingLabel}</dt>
+			<dd change:translate="modules.order.frontoffice.Shipping-feesLabel" />
+			<dt>${cart/getFormatedShippingPriceWithTax}</dt>
+		
+			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withtax-abrLabel" />
+			<dt class="pricetotal">${cart/getFormattedTotalAmount}</dt>
+		</tal:block>
+		<tal:block tal:condition="php: !configuration.getShowTotalWithFees() || !cart.getShippingModeId()">
+			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withtax-withoutfees-abrLabel" />
+			<dt class="pricetotal">${cart/getFormattedSubTotalWithTax}</dt>
+		</tal:block>
+	</dl>
 </div>
 
 <p class="help" tal:condition="orderProcess/open" change:translate="&modules.order.frontoffice.Cart-help-updatecart;" />
@@ -140,54 +133,50 @@
 	<ul class="mini-navigation">
 		<li>
 			<a change:link="tag contextual_website_website_modules_catalog_favorite-product-list; catalogParam[addCartToList] 'true'"
-				change:translate="&modules.order.frontoffice.Add-cart-to-list;" />
+				change:translate="modules.order.frontoffice.Add-cart-to-list"></a>
 		</li>
 		<li>
-			<a change:link="module order; action ContinueShopping; cmpref cart/getShopId"
-				change:translate="&modules.order.frontoffice.Continue-shopping;" />
+			<a change:link="module order; action ContinueShopping; cmpref cart/getShopId" change:translate="modules.order.frontoffice.Continue-shopping"></a>
 		</li>
-
 	</ul>
 </div>
 </div>
 
 <div class="column-one">
 	<div class="productcart-information-block">
-		<h3 class="title" change:translate="&modules.order.frontoffice.Cart-help-title;" />
-		<h4 class="title" change:translate="&modules.order.frontoffice.Cart-help-removeline-titleLabel;" />
-		<p change:translate="&modules.order.frontoffice.Cart-help-removeline;" />
-		<h4 class="title" change:translate="&modules.order.frontoffice.Cart-help-updatequantity-titleLabel;" />
-		<p change:translate="&modules.order.frontoffice.Cart-help-updatequantity;" />
-		<h4 class="title" change:translate="&modules.order.frontoffice.Cart-help-addproduct-titleLabel;" />
-		<p change:translate="&modules.order.frontoffice.Cart-help-addproduct;" />
-		<h4 class="title" change:translate="&modules.order.frontoffice.Cart-help-updatecart-titleLabel;" />
-		<p change:translate="&modules.order.frontoffice.Cart-help-updatecart;" />
+		<h3 change:h="" change:translate="modules.order.frontoffice.Cart-help-title"></h3>
+		<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-removeline-titleLabel"></h4>
+		<p change:translate="modules.order.frontoffice.Cart-help-removeline"></p>
+		<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-updatequantity-titleLabel"></h4>
+		<p change:translate="modules.order.frontoffice.Cart-help-updatequantity"></p>
+		<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-addproduct-titleLabel"></h4>
+		<p change:translate="modules.order.frontoffice.Cart-help-addproduct"></p>
+		<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-updatecart-titleLabel"></h4>
+		<p change:translate="modules.order.frontoffice.Cart-help-updatecart"></p>
 	</div>
 </div>
 
 <div class="cleaner"></div>
 
-
 <br />
-<h3 change:h="" change:translate="&modules.order.frontoffice.orderProcess.Do-order;" />
+<h3 change:h="" change:translate="modules.order.frontoffice.orderProcess.Do-order"></h3>
 <p class="error" tal:condition="not: orderProcess/open">
-	<tal:block tal:condition="orderProcess/message" tal:content="orderProcess/message" />
+	<tal:block tal:condition="orderProcess/message">${orderProcess/message}</tal:block>
 	<tal:block tal:condition="not: orderProcess/message" change:translate="&modules.order.frontoffice.orderProcess.closed-default-message;" />
 </p>
 <tal:block tal:condition="orderProcess/open">
 	<tal:block tal:condition="not: errorMessages">
-		<ul change:errors="" class="normal" />
+		<ul change:errors="" class="normal"></ul>
 	
 		<p> 
-			<tal:block change:translate="&modules.order.frontoffice.orderProcess.Pre-read-general-sales-conditions;" /> <a change:link="tag contextual_website_website_modules_order_cgv" change:translate="&modules.order.frontoffice.orderProcess.read-general-sales-conditions;" />
-			<tal:block change:translate="&modules.order.frontoffice.orderProcess.post-read-general-sales-conditions;" />
+			<tal:block change:translate="modules.order.frontoffice.orderProcess.Pre-read-general-sales-conditions" />
+			<a change:link="tag ctx_order_cgv" change:translate="modules.order.frontoffice.orderProcess.read-general-sales-conditions"></a>
+			<tal:block change:translate="modules.order.frontoffice.orderProcess.post-read-general-sales-conditions" />
 		</p>
 	
 		<form change:form="">
 			<input required="true" change:checkboxinput="" class="nocmx" name="cgv" value="true" label="&modules.order.frontoffice.OrderProcess.Agree-with-general-sales-conditions;" />
-			<p class="buttons">
-				<input change:submit="name Order"  class="button" label="&modules.order.frontoffice.Order-button;" />
-			</p>
+			<p class="buttons"><input change:submit="name Order"  class="button" label="&modules.order.frontoffice.Order-button;" /></p>
 		</form>
 	</tal:block>
 </tal:block>

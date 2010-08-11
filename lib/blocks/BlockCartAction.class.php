@@ -1,10 +1,7 @@
 <?php
 class order_BlockCartAction extends website_BlockAction
 {
-	
 	/**
-	 * @see website_BlockAction::execute()
-	 *
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @return String
@@ -79,7 +76,8 @@ class order_BlockCartAction extends website_BlockAction
 			if (isset($_SERVER['HTTP_REFERER']))
 			{
 				$href = $_SERVER['HTTP_REFERER'];
-				if ($index = strpos($href, '?'))
+				$index = strpos($href, '?');
+				if ($index > 0)
 				{
 					$href = substr($href, 0, $index);
 				}
@@ -88,10 +86,13 @@ class order_BlockCartAction extends website_BlockAction
 		}
 	
 		return website_BlockView::SUCCESS;
-		
 	}
 	
-
+	/**
+	 * @param f_mvc_Request $request
+	 * @param f_mvc_Response $response
+	 * @return String
+	 */
 	function executeOrder($request, $response)
 	{
 		$cgv = $request->getParameter("cgv");

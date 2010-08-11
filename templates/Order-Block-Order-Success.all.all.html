@@ -1,17 +1,17 @@
-<h2 class="title" change:translate="&modules.order.frontoffice.Order-number-title; orderNumber order/getOrderNumber" />
+<h2 change:h="" change:translate="&modules.order.frontoffice.Order-number-title; orderNumber order/getOrderNumber"></h2>
 
 <ul class="mini-navigation">
-	<li class="print"><a class="link" tal:attributes="href printLink" onclick="accessiblePrint(this); return false;" change:translate="&modules.catalog.frontoffice.Print;" /></li>
-	<li><a change:link="tag contextual_website_website_modules_order_order-list" change:translate="&modules.order.frontoffice.Order-back-to-list;" /></li>
-	<li><a change:link="tag contextual_website_website_modules_order_order-messages; orderParam[cmpref] order/getId" change:translate="&modules.customer.frontoffice.Send-message-for-this-order;" /></li>
-	<li><a change:link="tag contextual_website_website_modules_order_order-messages; orderParam[cmpref] order/getId" change:translate="&modules.customer.frontoffice.Message-history-for-this-order;" /></li>
+	<li class="print"><a class="link" tal:attributes="href printLink" onclick="accessiblePrint(this); return false;" change:translate="modules.catalog.frontoffice.Print"></a></li>
+	<li><a change:link="tag contextual_website_website_modules_order_order-list" change:translate="modules.order.frontoffice.Order-back-to-list"></a></li>
+	<li><a change:link="tag contextual_website_website_modules_order_order-messages; orderParam[cmpref] order/getId" change:translate="modules.customer.frontoffice.Send-message-for-this-order"></a></li>
+	<li><a change:link="tag contextual_website_website_modules_order_order-messages; orderParam[cmpref] order/getId" change:translate="modules.customer.frontoffice.Message-history-for-this-order"></a></li>
 </ul>
 
 <table border="0" class="normal" change:i18nattr="summary &modules.order.frontoffice.Address;">
 <thead>
 		<tr>
-			<th change:translate="&modules.order.frontoffice.ShippingAddress;">Adresse de livraison</th>
-			<th change:translate="&modules.order.frontoffice.BillingAddress;">Adresse de Facturation</th>
+			<th change:translate="modules.order.frontoffice.ShippingAddress"></th>
+			<th change:translate="modules.order.frontoffice.BillingAddress"></th>
 		</tr>
 </thead>
 <tbody>
@@ -50,17 +50,17 @@
 		<tr>
 		    <th change:translate="&modules.order.frontoffice.Designation;" />
 			<th tal:condition="shop/getDisplayPriceWithoutTax">
-				<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-without-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.unitprice-without-tax-abr;; currency shop/getCurrency" />
+				<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-without-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.unitprice-without-tax-abr;; currency shop/getCurrency"></abbr>
 			</th>
 			<th tal:condition="shop/getDisplayPriceWithTax">
-				<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-with-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.unitprice-with-tax-abr;; currency shop/getCurrency" />
+				<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-with-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.unitprice-with-tax-abr;; currency shop/getCurrency"></abbr>
 			</th>
 		    <th change:translate="&modules.order.frontoffice.Quantity;" />
 			<th tal:condition="shop/getDisplayPriceWithoutTax">
-				<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-without-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.totalprice-without-tax-abr;; currency shop/getCurrency" />
+				<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-without-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.totalprice-without-tax-abr;; currency shop/getCurrency"></abbr>
 			</th>
 		   	<th class="last" tal:condition="shop/getDisplayPriceWithTax">
-				<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-with-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.totalprice-with-tax-abr;; currency shop/getCurrency" />
+				<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-with-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.totalprice-with-tax-abr;; currency shop/getCurrency"></abbr>
 			</th>
 		</tr>
 	</thead>
@@ -77,50 +77,50 @@
 		<dl>
 			<tal:block tal:condition="shop/getDisplayPriceWithoutTax">
 				<dd change:translate="&modules.order.frontoffice.Sub-total-withouttax-abrLabel;; currency shop/getCurrency" />
-				<dt tal:content="php:order.formatPrice(order.getLinesAmountWithoutTax())" />
+				<dt>${php:order.formatPrice(order.getLinesAmountWithoutTax())}</dt>
 			</tal:block>
 			<tal:block tal:condition="shop/getDisplayPriceWithTax">
 				<dd change:translate="&modules.order.frontoffice.Sub-total-withtax-abrLabel;; currency shop/getCurrency" />
-				<dt tal:content="php:order.formatPrice(order.getLinesAmountWithTax())" />
+				<dt>${php:order.formatPrice(order.getLinesAmountWithTax())}</dt>
 			</tal:block>
 			
 			<!-- coupon -->
 			<tal:block tal:condition="order/getCouponId" tal:define="coupon order/getCouponData">
-				<dd change:translate="&modules.order.frontoffice.Coupon-codeLabel;"></dd>
-				<dt tal:content="coupon/code"></dt>
-				<dd change:translate="&modules.order.frontoffice.Coupon-valueLabel;"></dd>
-				<dt tal:content="php:order.formatPrice(coupon['valueWithTax'])"></dt>
+				<dd change:translate="modules.order.frontoffice.Coupon-codeLabel"></dd>
+				<dt>${coupon/code}</dt>
+				<dd change:translate="modules.order.frontoffice.Coupon-valueLabel"></dd>
+				<dt>${php:order.formatPrice(coupon['valueWithTax'])}</dt>
 			</tal:block>
 			
 			<!-- discount -->
 			<tal:block tal:condition="order/hasDiscount">
-				<dd change:translate="&modules.order.frontoffice.Discount-nameLabel;" />
-				<dt tal:content="php:order.formatPrice(order.getDiscountTotalWithTax())" />
+				<dd change:translate="modules.order.frontoffice.Discount-nameLabel" />
+				<dt>${php:order.formatPrice(order.getDiscountTotalWithTax())}</dt>
 			</tal:block>
 			
 			<!-- shipping -->
 			<tal:block tal:condition="order/getShippingFeesWithTax">
-				<dd change:translate="&modules.order.frontoffice.Shipping-modeLabel;"></dd>
-				<dt tal:content="order/getShippingMode"></dt>
-				<dd change:translate="&modules.order.frontoffice.Shipping-feesLabel;"></dd>
-				<dt tal:content="php:order.formatPrice(order.getShippingFeesWithTax())" />
+				<dd change:translate="modules.order.frontoffice.Shipping-modeLabel"></dd>
+				<dt>${order/getShippingMode}</dt>
+				<dd change:translate="modules.order.frontoffice.Shipping-feesLabel"></dd>
+				<dt>${php:order.formatPrice(order.getShippingFeesWithTax())}</dt>
 			</tal:block>
 
 			<!-- Montants par taxe -->
 			<tal:block tal:repeat="PriceByTax order/getSubTotalTaxInfoArray">
 				<dd change:translate="&modules.order.frontoffice.TvaLabel;; rate PriceByTax/formattedTaxRate"></dd>
-				<dt tal:content="php:order.formatPrice(PriceByTax['taxAmount'])" />
+				<dt>${php:order.formatPrice(PriceByTax['taxAmount'])}</dt>
 			</tal:block>
-			<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-withouttax-abrLabel;" />
-			<dt class="pricetotal" tal:content="php:order.formatPrice(order.getTotalAmountWithoutTax())" />
-			<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-TVA-abrLabel;" />
-			<dt class="pricetotal" tal:content="php:order.formatPrice(order.getTotalTax())" />				
-			<dd class="pricetotal" change:translate="&modules.order.frontoffice.Total-withtax-abrLabel;" />
-			<dt class="pricetotal" tal:content="php:order.formatPrice(order.getTotalAmountWithTax())" />
+			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withouttax-abrLabel" />
+			<dt class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithoutTax())}</dt>
+			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-TVA-abrLabel" />
+			<dt class="pricetotal">${php:order.formatPrice(order.getTotalTax())}</dt>				
+			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withtax-abrLabel" />
+			<dt class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithTax())}</dt>
 			
 		</dl>
 	</div>
-	<a change:actionlink="" block="order_order" class="link" action="addToCart" cmpref="${order/getId}" change:translate="&modules.order.frontoffice.Add-order-articles-to-cart;">Ajouter les articles de cette commande au panier</a>
+	<a change:actionlink="" block="order_order" class="link" action="addToCart" cmpref="${order/getId}" change:translate="modules.order.frontoffice.Add-order-articles-to-cart"></a>
 </div>
 <div class="cleaner"></div>
 <tal:block tal:repeat="bill bills">

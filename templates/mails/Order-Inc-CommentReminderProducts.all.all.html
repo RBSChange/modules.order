@@ -1,5 +1,5 @@
 <ul class="products-to-remind">
 	<li tal:repeat="product products">
-		<a change:link="document product; anchor 'catalog_comments_comment-form'" tal:content="product/getLabel" />
+		<a change:link="document product; anchor 'catalog_comments_comment-form'">${product/getLabelAsHtml}</a>
 	</li>
 </ul>

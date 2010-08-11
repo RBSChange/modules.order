@@ -25,13 +25,10 @@ class order_GenerateBillAction extends f_action_BaseJSONAction
 	}
 	
 	/**
-	 * @see f_action_BaseAction::isSecure()
-	 *
 	 * @return boolean
 	 */
 	public function isSecure()
 	{
 		return true;
 	}
-
 }

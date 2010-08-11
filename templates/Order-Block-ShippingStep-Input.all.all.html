@@ -1,10 +1,10 @@
 <div class="orderprocess shipping">
 	<tal:block change:include="module 'order'; template 'Order-Inc-Process-NavigationTop'; type 'html';process cart/getOrderProcess" />	
 	<form change:form="beanName shippingStep">
-		<ul change:errors="" />
+		<ul change:errors=""></ul>
 			
-		<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Delivery-address-legend" />
-		<p change:translate="modules.order.document.shippingstepbean.Delivery-address-text"/>
+		<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Delivery-address-legend"></h3>
+		<p change:translate="modules.order.document.shippingstepbean.Delivery-address-text"></p>
 		<ol>
 			<li><input change:field="name shippingAddress.Title"/></li>
 			<li><input change:field="name shippingAddress.FirstName" size="30"/></li>
@@ -12,7 +12,7 @@
 			<li><input change:field="name shippingAddress.Addressline1" size="30"/></li>
 			<li><input change:field="name shippingAddress.Addressline2" size="30"/></li>
 			<li><input change:field="name shippingAddress.Addressline3" size="30"/></li>
-			<li><input change:field="name shippingAddress.Zipcode"  size="30"/></li>
+			<li><input change:field="name shippingAddress.Zipcode" size="30"/></li>
 			<li><input change:field="name shippingAddress.City" size="30"/></li>
 			<li><input change:field="name shippingAddress.Province" size="30"/></li>
 			<li><input change:selectinput="name shippingAddress.CountryId" listId="modules_customer/shippingcountry" labeled="true" required="true"/></li>
@@ -22,9 +22,9 @@
 			<li><input change:field="name shippingAddress.Fax" size="30"/></li>
 		</ol>
 		<div tal:condition="cart/getCustomer/getAddressCount">
-			<span change:translate="modules.order.document.shippingstepbean.Registered-address-text" /> :
+			<span change:translate="modules.order.document.shippingstepbean.Registered-address-textLabel"></span>
 			<select name="orderParam[registeredShippingAddress]">
-				<option value="0" change:translate="modules.order.document.shippingstepbean.Registered-address-choose">[Séléctionner]</option>
+				<option value="0" change:translate="modules.order.document.shippingstepbean.Registered-address-choose"></option>
 				<option tal:repeat="addr cart/getCustomer/getAddressArray" value="${addr/getId}">${addr/getLabel}</option>
 			</select>
 			<input class="button" change:submit="name UseRegisteredShippingAddress" change:i18nattr="label &amp;modules.order.document.shippingstepbean.Registered-address-select;" />
@@ -32,30 +32,30 @@
 		
 		<br />
 		
-		<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Billing-address-legend" />
-		<p change:translate="modules.order.document.shippingstepbean.Billing-address-text"/>
-				<br />
+		<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Billing-address-legend"></h3>
+		<p change:translate="modules.order.document.shippingstepbean.Billing-address-text"></p>
+		<br />
 		
 		<input change:field="name useSameAddressForBilling" />	
 		<div id="order_billingAddressContainer">
 			<ol>
 				<li><input change:field="name billingAddress.Title"/></li>
-				<li><input change:field="name billingAddress.FirstName"  size="30"/></li>
-				<li><input change:field="name billingAddress.LastName"  size="30"/></li>
+				<li><input change:field="name billingAddress.FirstName" size="30"/></li>
+				<li><input change:field="name billingAddress.LastName" size="30"/></li>
 				<li><input change:field="name billingAddress.Addressline1" size="30"/></li>
 				<li><input change:field="name billingAddress.Addressline2" size="30"/></li>
 				<li><input change:field="name billingAddress.Addressline3" size="30"/></li>
-				<li><input change:field="name billingAddress.Zipcode"  size="30"/></li>
-				<li><input change:field="name billingAddress.City"  size="30"/></li>
-				<li><input change:field="name billingAddress.Province"  size="30"/></li>
+				<li><input change:field="name billingAddress.Zipcode" size="30"/></li>
+				<li><input change:field="name billingAddress.City" size="30"/></li>
+				<li><input change:field="name billingAddress.Province" size="30"/></li>
 				<li><input change:selectinput="name billingAddress.CountryId" listId="modules_customer/billingcountry" labeled="true" required="true"/></li>
-				<li><input change:field="name billingAddress.Company"  size="30"/></li>
-				<li><input change:field="name billingAddress.Email"  size="30"/></li>
+				<li><input change:field="name billingAddress.Company" size="30"/></li>
+				<li><input change:field="name billingAddress.Email" size="30"/></li>
 				<li><input change:field="name billingAddress.Phone" size="30"/></li>
-				<li><input change:field="name billingAddress.Fax"  size="30"/></li>
+				<li><input change:field="name billingAddress.Fax" size="30"/></li>
 			</ol>
 			<div tal:condition="cart/getCustomer/getAddressCount">
-				<span change:translate="modules.order.document.shippingstepbean.Registered-address-text" /> :
+				<span change:translate="modules.order.document.shippingstepbean.Registered-address-textLabel"></span>
 				<select name="orderParam[registeredBillingAddress]">
 					<option value="0" change:translate="modules.order.document.shippingstepbean.Registered-address-choose">[Séléctionner]</option>
 					<option tal:repeat="addr cart/getCustomer/getAddressArray" value="${addr/getId}">${addr/getLabel}</option>
@@ -75,35 +75,32 @@
 					jQuery('#order_billingAddressContainer').hide();
 				}			
 			});
-
 		//]]></script>	
-		<div class="cleaner" />
+		<div class="cleaner"></div>
 		<br />
-		<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Choose-delivery-legend" 
-			tal:define="global shippingModes cart/getShippingModes"	/>
+		<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Choose-delivery-legend" tal:define="global shippingModes cart/getShippingModes"></h3>
 		<tal:block tal:condition="shippingModes/0">
-		<p change:translate="modules.order.document.shippingstepbean.Choose-delivery-text" />
-		<br />
-		<ol>
-			<li tal:repeat="modeFilter cart/getShippingModes">
-				<span tal:define="mode modeFilter/getMode">
-				<label class="nocmx" for="mode_${modeFilter/getId}">
-				<input tal:condition="php:shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" checked="checked" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
-				<input tal:condition="php:!shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
-<tal:block tal:replace="mode/getLabel" /><tal:block tal:condition="modeFilter/getValueWithTax"> (<tal:block tal:replace="modeFilter/getFormattedValueWithTax" />)</tal:block></label>
-												<img style="display:inline;float:left" change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
-					
-				</span>
-					<p tal:condition="mode/getDescription">	
-						<tal:block tal:content="mode/getDescription" />
-					</p>
-			</li>
-		</ol>
+			<p change:translate="modules.order.document.shippingstepbean.Choose-delivery-text"></p>
+			<br />
+			<ol>
+				<li tal:repeat="modeFilter cart/getShippingModes">
+					<span tal:define="mode modeFilter/getMode">
+						<label class="nocmx" for="mode_${modeFilter/getId}">
+							<input tal:condition="php:shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" checked="checked" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
+							<input tal:condition="php:!shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
+							<tal:block>${mode/getLabelAsHtml}</tal:block>
+							<tal:block tal:condition="modeFilter/getValueWithTax"> (${modeFilter/getFormattedValueWithTax})</tal:block>
+						</label>
+						<img style="display:inline;float:left" change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
+					</span>
+					<p tal:condition="mode/getDescription">${mode/getDescriptionAsHtml}</p>
+				</li>
+			</ol>
 		</tal:block>
 		<tal:block tal:condition="not: shippingModes/0">
-			<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode" />
+			<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode"></p>
 		</tal:block>
-		<div class="cleaner" />
+		<div class="cleaner"></div>
 		<p class="buttons">
 			<input class="button" change:submit="name Select" label="&modules.order.document.shippingstepbean.Select;" />
 		</p>

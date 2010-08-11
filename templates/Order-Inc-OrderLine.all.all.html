@@ -6,26 +6,18 @@
 	<tal:block tal:condition="not:ignoreComments">
 		<tal:block tal:condition="line/showCommentLink">
 			<br/>
-			<a tal:condition="product" change:link="document product; anchor 'catalog_comments_comment-form'" change:translate="&modules.catalog.frontoffice.Comment-this-product;" />
+			<a tal:condition="product" change:link="document product; anchor 'catalog_comments_comment-form'" change:translate="modules.catalog.frontoffice.Comment-this-product"></a>
 		</tal:block>
 	</tal:block>
 </td>
 
 <!-- PU HT/TCC -->
-<td class="priceht" tal:condition="shop/getDisplayPriceWithoutTax"
-	tal:content="php:order.formatPrice(line.getUnitPriceWithoutTax())">
-</td>
-<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax"
-	tal:content="php:order.formatPrice(line.getUnitPriceWithTax())">
-</td>
+<td class="priceht" tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getUnitPriceWithoutTax())}</td>
+<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getUnitPriceWithTax())}</td>
 
 <!-- Quantity -->
-<td tal:content="line/getQuantity" /> 
+<td>${line/getQuantity}</td> 
 
 <!-- PT HT/TTC -->
-<td class="priceht" tal:condition="shop/getDisplayPriceWithoutTax"
-	tal:content="php:order.formatPrice(line.getAmountWithoutTax())">
-</td>
-<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax"
-	tal:content="php:order.formatPrice(line.getAmountWithTax())">
-</td>
+<td class="priceht" tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getAmountWithoutTax())}</td>
+<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getAmountWithTax())}</td>

@@ -15,6 +15,7 @@ class order_CommentRemiderListener
 			catch (ControllerException $e)
 			{
 				Controller::newInstance("controller_ChangeController");
+				$e; // Avoid warning in Eclipse.
 			}
 			Framework::debug(__METHOD__ . ' : comment reminder enabled');
 			order_OrderService::getInstance()->sendCommentReminders();

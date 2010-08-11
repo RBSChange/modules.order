@@ -1,11 +1,11 @@
 <div class="ecom-block">
-	<h3 class="title">
-		<strong i18n:translate="&modules.order.frontoffice.My-cartlabel;" />
-		<small i18n:translate="&modules.order.frontoffice.Empty;" />
+	<h3 change:h="">
+		<strong change:translate="modules.order.frontoffice.My-cartlabel"></strong>
+		<small change:translate="modules.order.frontoffice.Empty"></small>
 	</h3>
 	<div class="content">
 		<div tal:condition="setLinks" class="cartsummary-link">
-			<a class="link"change:link="tag ctx_order_cart" change:translate="&modules.order.frontoffice.My-cart;" />
+			<a class="link"change:link="tag ctx_order_cart" change:translate="modules.order.frontoffice.My-cart"></a>
 		</div>
 	</div>
 </div>

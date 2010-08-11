@@ -22,7 +22,6 @@ class order_RemoveCartLineAction extends f_action_BaseAction
 		return View::NONE;
 	}
 
-
 	/**
 	 * @return boolean
 	 */
@@ -30,5 +29,4 @@ class order_RemoveCartLineAction extends f_action_BaseAction
 	{
 		return false;
 	}
-
 }

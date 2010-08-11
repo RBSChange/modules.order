@@ -72,7 +72,7 @@ class order_ModuleService extends ModuleBaseService
 		$pref = $this->getPreferencesDocument();
 		
 		// No preferences set: order process is open.
-		if (is_null($pref))
+		if ($pref === null)
 		{
 			return true;
 		}
@@ -98,26 +98,26 @@ class order_ModuleService extends ModuleBaseService
 		
 		$now = date_Calendar::now();
 		$beginDate = $pref->getOrderProcessClosedBeginDate();
-		if (! is_null($beginDate))
+		if ($beginDate !== null)
 		{
 			$beginDate = date_Calendar::getInstance($beginDate);
 		}
 		$endDate = $pref->getOrderProcessClosedEndDate();
-		if (! is_null($endDate))
+		if ($endDate !== null)
 		{
 			$endDate = date_Calendar::getInstance($endDate);
 		}
 		
 		// Check dates.
-		if (! is_null($beginDate) && ! is_null($endDate))
+		if ($beginDate !== null && $endDate !== null)
 		{
 			return ! $now->isBetween($beginDate, $endDate, true);
 		}
-		else if (! is_null($beginDate))
+		else if ($beginDate !== null)
 		{
 			return $now->isBefore($beginDate);
 		}
-		else if (! is_null($endDate))
+		else if ($endDate !== null)
 		{
 			return $now->isAfter($endDate);
 		}
@@ -130,9 +130,8 @@ class order_ModuleService extends ModuleBaseService
 	 */
 	public function getProcessClosedMessage()
 	{
-		$message = null;
 		$pref = $this->getPreferencesDocument();
-		if (!is_null($pref))
+		if ($pref !== null)
 		{
 			// Choose the message, depending on the closing type (planned or temporarily).
 			if ($pref->getOrderProcessClosed())
@@ -141,9 +140,9 @@ class order_ModuleService extends ModuleBaseService
 			}
 			$lang = RequestContext::getInstance()->getLang();
 			$message = $pref->getOrderProcessClosedDateMessage();
-			$message = str_replace(array('{beginDate}', '{endDate}'), array(date_DateFormat::format(date_Calendar::getInstance($pref->getOrderProcessClosedBeginDate()), date_DateFormat::getDateFormatForLang($lang)), date_DateFormat::format(date_Calendar::getInstance($pref->getOrderProcessClosedEndDate()), date_DateFormat::getDateFormatForLang($lang))), $message);
+			return str_replace(array('{beginDate}', '{endDate}'), array(date_DateFormat::format(date_Calendar::getInstance($pref->getOrderProcessClosedBeginDate()), date_DateFormat::getDateFormatForLang($lang)), date_DateFormat::format(date_Calendar::getInstance($pref->getOrderProcessClosedEndDate()), date_DateFormat::getDateFormatForLang($lang))), $message);
 		}
-		return $message;
+		return null;
 	}
 	
 	/**

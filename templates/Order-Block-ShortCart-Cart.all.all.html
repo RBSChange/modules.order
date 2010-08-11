@@ -1,20 +1,24 @@
 <div class="ecom-block">
-	<h3 class="title"><strong change:translate="&modules.order.frontoffice.My-cart;" /></h3>
+	<h3 class="title"><strong change:translate="modules.order.frontoffice.My-cart"></strong></h3>
 	<div class="content">
 		<ul class="cartsummary">
 			<li>
-				<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart"><tal:block tal:replace="cart/getCartLineCount" /> <tal:block tal:condition="php: cart->getCartLineCount() == 1" i18n:translate="&modules.order.frontoffice.item;" /> <tal:block tal:condition="php: cart->getCartLineCount() gt 1" i18n:translate="&modules.order.frontoffice.items;" /></a>
+				<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">
+					<tal:block tal:replace="cart/getCartLineCount" />
+					<tal:block tal:condition="php: cart->getCartLineCount() == 1" change:translate="modules.order.frontoffice.item" />
+					<tal:block tal:condition="php: cart->getCartLineCount() gt 1" change:translate="modules.order.frontoffice.items" />
+				</a>
 				<span> | </span>
 			</li>
 			<li tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
-				<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart" tal:content="cart/getFormattedTotalAmount" />
+				<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart" tal:content="cart/getFormattedTotalAmount"></a>
 				<tal:block change:translate="modules.order.frontoffice.with-fees" />
 			</li>
 			<li tal:condition="php: !configuration.getShowTotalWithFees() || !cart.getShippingModeId()">
-				<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart" tal:content="cart/getFormattedSubTotalWithTax" />
+				<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart" tal:content="cart/getFormattedSubTotalWithTax"></a>
 				<tal:block change:translate="modules.order.frontoffice.without-fees" />
 			</li>
 		</ul>
-		<a tal:condition="setLinks" class="link"change:link="tag ctx_order_cart" change:translate="&modules.order.frontoffice.My-cart;" />
+		<a tal:condition="setLinks" class="link"change:link="tag ctx_order_cart" change:translate="&modules.order.frontoffice.My-cart;"></a>
 	</div>
 </div>

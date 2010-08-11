@@ -89,7 +89,6 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 				Framework::warn($e->getMessage());
 			}
 		}
-		$shop = catalog_ShopService::getInstance()->getCurrentShop();
 		$url = LinkHelper::getDocumentUrl($emptyCartPage);
 		HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 	}

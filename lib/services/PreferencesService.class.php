@@ -44,7 +44,7 @@ class order_PreferencesService extends f_persistentdocument_DocumentService
 	 * @param Integer $parentNodeId Parent node ID where to save the document (optionnal => can be null !).
 	 * @return void
 	 */
-	protected function preSave($document, $parentNodeId = null)
+	protected function preSave($document, $parentNodeId)
 	{
 		$document->setLabel('&modules.order.bo.general.Module-name;');
 	}

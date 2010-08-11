@@ -3,8 +3,8 @@
 		<tal:block tal:repeat="step process/getSteps">
 			<li tal:define="liClass php: repeat.step.end ? 'last' : '' ; itemClass php: step['current'] ? 'current' : ''" class="${liClass}">
 				<dl>
-					<dd class="${itemClass}" tal:content="step/step"></dd>
-					<dt class="${itemClass}" tal:content="step/label"></dt>
+					<dd class="${itemClass}">${step/step}</dd>
+					<dt class="${itemClass}">${step/label}</dt>
 				</dl>
 			</li>
 		</tal:block>
