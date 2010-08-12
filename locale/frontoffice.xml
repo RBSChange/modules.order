@@ -116,9 +116,9 @@
 		<locale lang="de">Preis je Einheit enthalten alle Steuern</locale>
 	</entity>
 	<entity id="unitprice-with-tax-abr">
-		<locale lang="fr">PU TTC {currency}</locale>
-		<locale lang="en">PU TTC {currency}</locale>
-		<locale lang="de">PU TTC {currency}</locale>
+		<locale lang="fr">PU TTC</locale>
+		<locale lang="en">PU TTC</locale>
+		<locale lang="de">PU TTC</locale>
 	</entity>
 	<entity id="unitprice-without-tax">
 		<locale lang="fr">prix unitaire hors taxes</locale>
@@ -126,9 +126,9 @@
 		<locale lang="de">Einheitspreis ohne Steuern</locale>
 	</entity>
 	<entity id="unitprice-without-tax-abr">
-		<locale lang="fr">PU HT {currency}</locale>
-		<locale lang="en">PU HT {currency}</locale>
-		<locale lang="de">PU-HT {currency}</locale>
+		<locale lang="fr">PU HT</locale>
+		<locale lang="en">PU HT</locale>
+		<locale lang="de">PU-HT</locale>
 	</entity>
 	<entity id="availability">
 		<locale lang="fr">disponibilité</locale>
@@ -141,9 +141,9 @@
 		<locale lang="de">Gesamtpreis inklusive aller Steuern</locale>
 	</entity>
 	<entity id="totalprice-with-tax-abr">
-		<locale lang="fr">PT TTC {currency}</locale>
-		<locale lang="en">PT TTC {currency}</locale>
-		<locale lang="de">PT inc {currency}</locale>
+		<locale lang="fr">PT TTC</locale>
+		<locale lang="en">PT TTC</locale>
+		<locale lang="de">PT inc</locale>
 	</entity>
 	<entity id="totalprice-without-tax">
 		<locale lang="fr">prix total hors taxes</locale>
@@ -151,9 +151,9 @@
 		<locale lang="de">Total Preis ohne Steuern</locale>
 	</entity>
 	<entity id="totalprice-without-tax-abr">
-		<locale lang="fr">PT HT {currency}</locale>
-		<locale lang="en">PT HT {currency}</locale>
-		<locale lang="de">PT HT {currency}</locale>
+		<locale lang="fr">PT HT</locale>
+		<locale lang="en">PT HT</locale>
+		<locale lang="de">PT HT</locale>
 	</entity>
 	<entity id="quantity">
 		<locale lang="fr">quantité</locale>
@@ -431,9 +431,9 @@
 		<locale lang="de">Die Lieferung Methode, die Sie ausgewählt ist nicht mehr verfügbar und wurde aus Ihrem Warenkorb entfernt.</locale>
 	</entity>
 	<entity id="sub-total-withouttax-abr">
-		<locale lang="fr">Sous-total HT {currency}</locale>
-		<locale lang="en">subtotal HT {currency}</locale>
-		<locale lang="de">Teilsumme HT {currency}</locale>
+		<locale lang="fr">Sous-total HT</locale>
+		<locale lang="en">subtotal HT</locale>
+		<locale lang="de">Teilsumme HT</locale>
 	</entity>
 	<entity id="Address">
 		<locale lang="fr">Adresses</locale>
@@ -456,9 +456,9 @@
 		<locale lang="de">Adressdaten ändern</locale>
 	</entity>
 	<entity id="sub-total-withtax-abr">
-		<locale lang="fr">Sous-total TTC {currency}</locale>
-		<locale lang="en">subtotal TTC {currency}</locale>
-		<locale lang="de">subtotal TTC {currency}</locale>
+		<locale lang="fr">Sous-total TTC</locale>
+		<locale lang="en">subtotal TTC</locale>
+		<locale lang="de">subtotal TTC</locale>
 	</entity>
 	<entity id="preparation-fees">
 		<locale lang="fr">frais de préparation</locale>
@@ -1034,14 +1034,14 @@
 		<locale lang="de">Reduzierung</locale>
 	</entity>
 	<entity id="sub-total-with-modificators-withouttax-abr">
-		<locale lang="fr">Sous-total réduit HT {currency}</locale>
-		<locale lang="en">Subtotal reduced HT {currency}</locale>
-		<locale lang="de">Teilsumme reduziert HT {currency}</locale>
+		<locale lang="fr">Sous-total réduit HT</locale>
+		<locale lang="en">Subtotal reduced HT</locale>
+		<locale lang="de">Teilsumme reduziert HT</locale>
 	</entity>
 	<entity id="sub-total-with-modificators-withtax-abr">
-		<locale lang="fr">Sous-total réduit TTC {currency}</locale>
-		<locale lang="en">Subtotal reduced VAT {currency}</locale>
-		<locale lang="de">Teilsumme ermäßigten MwSt {currency}</locale>
+		<locale lang="fr">Sous-total réduit TTC</locale>
+		<locale lang="en">Subtotal reduced VAT</locale>
+		<locale lang="de">Teilsumme ermäßigten MwSt</locale>
 	</entity>
 	<entity id="cart-fusion">
 		<locale lang="fr">votre panier a été fusionné avec votre précédent panier</locale>

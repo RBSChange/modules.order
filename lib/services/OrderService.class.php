@@ -637,7 +637,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		{
 			return $this->execSendMessage($order, $content, self::MESSAGE_FROM_USER, $recipients, $order->getCustomer()->getUser());
 		}
-		return true;
+		return false;
 	}
 
 	/**
@@ -652,7 +652,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		{
 			return $this->execSendMessage($order, $content, self::MESSAGE_TO_USER, $recipients, $sender);
 		}
-		return true;
+		return false;
 	}
 
 	/**

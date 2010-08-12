@@ -30,14 +30,12 @@
 				<th change:translate="modules.order.frontoffice.Designation" />
 				<th change:translate="modules.order.frontoffice.Availability" />
 				<th tal:condition="shop/getDisplayPriceWithTax">
-					<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-with-tax; currency shop/getCurrency"
-						change:translate="&modules.order.frontoffice.unitprice-with-tax-abr;; currency shop/getCurrency"></abbr>
+					<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-with-tax;" change:translate="modules.order.frontoffice.unitprice-with-tax-abr"></abbr>
 				</th>
 				<th change:translate="modules.order.frontoffice.Quantity" />
 				<th tal:condition="shop/getDisplayPriceWithTax" change:translate="modules.order.frontoffice.Tva-column"></th>
 				<th tal:condition="shop/getDisplayPriceWithTax">
-					<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-with-tax; currency shop/getCurrency"
-						change:translate="&modules.order.frontoffice.totalprice-with-tax-abr;; currency shop/getCurrency"></abbr>
+					<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-with-tax;" change:translate="modules.order.frontoffice.totalprice-with-tax-abr"></abbr>
 				</th>
 				<th class="last">&nbsp;</th>
 			</tr>
@@ -93,12 +91,12 @@
 <div class="payment-information-block">
 	<dl>
 		<tal:block tal:condition="shop/getDisplayPriceWithoutTax">
-			<dd change:translate="&modules.order.frontoffice.Sub-total-withouttax-abrLabel;; currency shop/getCurrency"></dd>
+			<dd change:translate="modules.order.frontoffice.Sub-total-withouttax-abrLabel"></dd>
 			<dt>${cart/getFormattedSubTotalWithoutTax}</dt>
 		</tal:block>
 	
 		<tal:block tal:condition="shop/getDisplayPriceWithTax">
-			<dd change:translate="&modules.order.frontoffice.Sub-total-withtax-abrLabel;; currency shop/getCurrency"></dd>
+			<dd change:translate="modules.order.frontoffice.Sub-total-withtax-abrLabel"></dd>
 			<dt>${cart/getFormattedSubTotalWithTax}</dt>
 		</tal:block>
 	
