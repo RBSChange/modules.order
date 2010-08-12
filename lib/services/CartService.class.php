@@ -74,6 +74,7 @@ class order_CartService extends BaseService
 	
 	/**
 	 * Verification du cart en fonction de l'état de la commande
+	 * @param order_CartInfo $cart
 	 */
 	protected function checkCartValidity($cart)
 	{
@@ -93,6 +94,9 @@ class order_CartService extends BaseService
 		}
 	}
 	
+	/**
+	 * @param order_CartInfo $cart
+	 */
 	protected function resetCartOrder($cart)
 	{
 		$order = $cart->getOrder();
@@ -357,9 +361,8 @@ class order_CartService extends BaseService
 	
 		$this->refreshCoupon($cart);
 		Framework::bench('refreshCoupon');	
-		
-		
-		//TODO Cancel process ?
+				
+		// Cancel order process.
 		order_OrderProcess::getInstance()->setCurrentStep(null);
 
 		$this->saveToSession($cart);
@@ -550,7 +553,6 @@ class order_CartService extends BaseService
 		return false;
 	}
 	
-	
 	/**
 	 * @return Integer
 	 */
@@ -644,7 +646,6 @@ class order_CartService extends BaseService
 		$cartLines = $cart->getCartLineArray();
 		foreach ($cartLines as $cartLine)
 		{
-			// Simple case : juste get the quantity.
 			if ($cartLine->isBasicLine())
 			{
 				$productId = $cartLine->getProductId();
@@ -653,11 +654,6 @@ class order_CartService extends BaseService
 					$quantities[$productId] = 0;
 				}
 				$quantities[$productId] += $cartLine->getQuantity();
-			}
-			// Cart rule case : get the quantities in the sublines and multiply them by the cart rule quantity.
-			else
-			{
-				//TODO Composite Line
 			}
 		}
 

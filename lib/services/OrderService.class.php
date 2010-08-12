@@ -50,8 +50,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		return $this->pp->createQuery('modules_order/order');
 	}
-		
-
 
 	/**
 	 * @param order_persistentdocument_order $order
@@ -126,7 +124,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$informations['couponSectionValue'] = $informations['couponValue'];
 		}
 		
-		
 		if ($order->hasDiscount())
 		{
 			$informations['discountTotal'] = $order->formatPrice($order->getDiscountTotalWithTax());
@@ -160,7 +157,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		return $result;
 	}
 
-
 	/**
 	 * @param order_persistentdocument_orderline $line
 	 * @param String $type
@@ -190,7 +186,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 
 		return $lineInfo;
 	}
-
 
 	/**
 	 * @param order_persistentdocument_order $order
@@ -271,7 +266,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$orderDocument->setShopId($shop->getId());
 			$orderDocument->setWebsiteId($shop->getWebsite()->getId());
 	
-			//Adresse de livraison
+			// Adresse de livraison.
 			$cartInfo->getAddressInfo()->exportShippingAddress($shippingAddress);
 			$shippingAddress->setPublicationstatus('FILED');
 			$shippingAddress->save();
@@ -283,7 +278,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$orderDocument->setShippingFeesWithTax(catalog_PriceHelper::roundPrice($cartInfo->getShippingPriceWithTax()));
 			$orderDocument->setShippingFeesWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getShippingPriceWithoutTax()));
 			
-			//Adresse de facturation
+			// Adresse de facturation.
 			if ($cartInfo->getAddressInfo()->useSameAddressForBilling)
 			{
 				$cartInfo->getAddressInfo()->exportShippingAddress($billingAddress);
@@ -296,7 +291,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$billingAddress->save();
 			$cartInfo->setBillingAddressId($billingAddress->getId());
 			
-			//Adresse par defaut
+			// Adresse par defaut.
 			if ($customer->getDefaultAddress() === null)
 			{
 				$defaultAddress = customer_AddressService::getNewDocumentInstance();
@@ -317,7 +312,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$orderLine->save();
 			}
 	
-			// Sauvegarde du coupon
+			// Sauvegarde du coupon.
 			if ($cartInfo->hasCoupon())
 			{
 				$coupon = $cartInfo->getCoupon();
@@ -332,7 +327,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$orderDocument->setCouponData(null);
 			}
 			
-			//Sauvegarde des réductions
+			// Sauvegarde des réductions.
 			$discountArray = $cartInfo->getDiscountArray();
 			$discountDataArray = array();
 			foreach ($discountArray as $discount) 
@@ -397,7 +392,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$shippingFeesWithoutTax = $shop->formatPrice($order->getShippingFeesWithoutTax());
 		
 		$template = TemplateLoader::getInstance()->setPackageName('modules_order')->setMimeContentType(K::HTML)
-		->setDirectory('templates/mails')->load('Order-Inc-Lines');
+			->setDirectory('templates/mails')->load('Order-Inc-Lines');
 		
 		$template->setAttribute('order', $order);
 		$template->setAttribute('shop', $shop);
@@ -593,8 +588,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	protected function postUpdate($document, $parentNodeId)
 	{
 		// Log action.
-		$params = array('orderNumber' => $document->getOrderNumber(), 
-						'customerFullName' => $document->getBillingAddress()->getFullName(false));
+		$params = array('orderNumber' => $document->getOrderNumber(), 'customerFullName' => $document->getBillingAddress()->getFullName(false));
 		
 		if ($document->isPropertyModified('orderStatus'))
 		{
@@ -722,7 +716,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function getFirstOrderDateByCustomer($customer)
 	{
-		if (is_null($customer))
+		if ($customer === null)
 		{
 			return null;
 		}
@@ -730,7 +724,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$query = $this->getOrderDatesByCustomerQuery($customer, 1);
 		$query->addOrder(Order::asc('document_creationdate'));
 		$row = $query->findUnique();
-		if (!is_null($row))
+		if ($row !== null)
 		{
 			return $row['creationdate'];
 		}
@@ -746,7 +740,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function getLastOrderDateByCustomer($customer)
 	{
-		if (is_null($customer))
+		if ($customer === null)
 		{
 			return null;
 		}
@@ -754,7 +748,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$query = $this->getOrderDatesByCustomerQuery($customer, 1);
 		$query->addOrder(Order::desc('document_creationdate'));
 		$row = $query->findUnique();
-		if (!is_null($row))
+		if ($row !== null)
 		{
 			return $row['creationdate'];
 		}
@@ -770,7 +764,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function getOrderDatesByCustomer($customer)
 	{
-		if (is_null($customer))
+		if ($customer === null)
 		{
 			return array();
 		}
@@ -812,23 +806,23 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	public function hasOrderedDuringTheInterval($beginOrderInterval, $endOrderInterval, $customer)
 	{
 		// No interval defined : OK.
-		if (is_null($endOrderInterval) && is_null($beginOrderInterval))
+		if ($endOrderInterval === null && $beginOrderInterval === null)
 		{
 			return true;
 		}
 		// Only one point of the interval defined.
-		else if (is_null($endOrderInterval))
+		else if ($endOrderInterval === null)
 		{
 			$lastOrderDate = $this->getLastOrderDateByCustomer($customer);
-			return (!is_null($lastOrderDate) && $beginOrderInterval < $lastOrderDate);
+			return ($lastOrderDate !== null && $beginOrderInterval < $lastOrderDate);
 		}
-		else if (is_null($beginOrderInterval))
+		else if ($beginOrderInterval === null)
 		{
 			$firstOrderDate = $this->getFirstOrderDateByCustomer($customer);
-			return (!is_null($firstOrderDate) && $endOrderInterval > $firstOrderDate);
+			return ($firstOrderDate !== null && $endOrderInterval > $firstOrderDate);
 		}
 		// An interval is defined.
-		else if (!is_null($beginOrderInterval) && !is_null($endOrderInterval))
+		else if ($beginOrderInterval !== null && $endOrderInterval !== null)
 		{
 			$orderDates = $this->getOrderDatesByCustomer($customer);
 			foreach ($orderDates as $date)
@@ -1092,8 +1086,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	private function renderReminderProductBlock($products)
 	{
 		$template = TemplateLoader::getInstance()->setPackageName('modules_order')
-		->setMimeContentType(K::HTML)->setDirectory('templates/mails')
-		->load('Order-Inc-CommentReminderProducts');
+			->setMimeContentType(K::HTML)->setDirectory('templates/mails')->load('Order-Inc-CommentReminderProducts');
 		$template->setAttribute('products', $products);
 		return $template->execute();
 	}
@@ -1114,7 +1107,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$product = DocumentHelper::getDocumentInstance($line->getProductId(), 'modules_catalog/product');
 				if ($product instanceof catalog_StockableDocument) 
 				{
-					Framework::info(__METHOD__ ." decreaseQuantity " . $product->getId() . ' ' . $line->getQuantity());
+					Framework::info(__METHOD__ . " decreaseQuantity " . $product->getId() . ' ' . $line->getQuantity());
 					catalog_StockService::getInstance()->decreaseQuantity($product, $line->getQuantity());
 				}
 			}
