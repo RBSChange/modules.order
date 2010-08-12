@@ -86,7 +86,13 @@ class order_CartService extends BaseService
 				if (Framework::isInfoEnabled())
 				{
 					Framework::info(__METHOD__ . ' RESET CART');
-				}						
+				}
+				
+				// The order process is ended, so clear lastAbandonedOrderDate.
+				$customer = $cart->getCustomer();
+				$customer->setLastAbandonedOrderDate(null);
+				$customer->save();
+				
 				$cart = $this->initNewCart();
 				$cart->setOrderId($order->getId());
 				$this->saveToSession($cart);

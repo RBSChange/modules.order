@@ -28,11 +28,16 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 		{
 			$this->redirectToEmptyCart();
 		}
+		
+		// The order process is started, so init lastAbandonedOrderDate.
+		$customer = $cartInfo->getCustomer();
+		$customer->setLastAbandonedOrderDate(date_Calendar::getInstance()->toString());
+		$customer->save();
+		
 		$shippingStep = $cartInfo->getAddressInfo();
 		if (!$shippingStep instanceof order_ShippingStepBean)
 		{
 			$shippingStep = new order_ShippingStepBean();
-			$customer = $cartInfo->getCustomer();
 			if ($customer->getDefaultAddress())
 			{
 				$shippingStep->importShippingAddress($customer->getDefaultAddress());
