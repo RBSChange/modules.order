@@ -63,4 +63,8 @@
 		<locale lang="en">Use this address</locale>
 		<locale lang="de">Verwenden Sie diese Adresse</locale>
 	</entity>
+	
+	<entity id="fixed-shipping-mode">
+		<locale lang="fr">Mode de livraison predefini</locale>
+	</entity>
 </localization>

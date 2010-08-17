@@ -461,4 +461,36 @@ class order_CartLineInfo
 	{
 		return true;
 	}
+	
+	/**
+	 * @return integer
+	 */
+	public function getShippingModeId()
+	{
+		if (isset($this->properties['shippingModeId']))
+		{
+			return $this->properties['shippingModeId'];
+		}
+		return null;
+	}
+	
+	/**
+	 * @return shipping_persistentdocument_mode
+	 */	
+	public function getShippingMode()
+	{
+		$shippingModeId = $this->getShippingModeId();
+		if (intval($shippingModeId) > 0)
+		{
+			try 
+			{
+				return DocumentHelper::getDocumentInstance($shippingModeId, 'modules_shipping/mode');
+			}
+			catch (Exception $e)
+			{
+				Framework::warn($e->getMessage());
+			}
+		}
+		return null;
+	}
 }

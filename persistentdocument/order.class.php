@@ -251,6 +251,8 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		}
 	}
 	
+	
+	
 	/**
 	 * @return array<id => integer, code => string, valueWithTax => double, valueWithoutTax => double>
 	 */
@@ -302,6 +304,28 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		}
 		return $value;
 	}
+	
+	
+	/**
+	 * @return array
+	 */
+	public function getShippingDataArray()
+	{
+		$result = $this->getGlobalProperty('__shipping');
+		if (!is_array($result))
+		{
+			$result = array();
+		}
+		return $result;
+	}
+	
+	/**
+	 * @param array $shippingArray
+	 */
+	public function setShippingDataArray($shippingArray)
+	{
+		$this->setGlobalProperty('__shipping', $shippingArray);
+	}	
 	
 	/**
 	 * @param shipping_persistentdocument_mode $shippingMode
@@ -420,6 +444,33 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			->find();
 	}
 	
+	/**
+	 * @return string
+	 */
+	public function getShippingMode()
+	{
+		$result = array();
+		if (intval($this->getShippingModeId()) > 0)
+		{
+			$sm = DocumentHelper::getDocumentInstance($this->getShippingModeId(), 'modules_shipping/mode');
+			$result[] = $sm->getLabel();
+		} 
+		
+		$shippingDataArray = $this->getShippingDataArray();
+		if (is_array($shippingDataArray))
+		{
+			foreach (array_keys($shippingDataArray) as $shippingModeId) 
+			{
+				if ($shippingModeId > 0)
+				{
+					$sm = DocumentHelper::getDocumentInstance($shippingModeId);
+					$result[] = $sm->getLabel();
+				}
+			}
+		} 
+		return implode(', ', $result);
+	}
+	
 	//DEPRECTAED FUNCTIONS
 	
 	/**
@@ -477,7 +528,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	private function getShippingModeDocument()
 	{
-		if ($this->getShippingModeId())
+		if (intval($this->getShippingModeId()) > 0)
 		{
 			return DocumentHelper::getDocumentInstance($this->getShippingModeId(), 'modules_shipping/mode');
 		}
@@ -502,16 +553,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		}
 		return $this->currentExpedition ? $this->currentExpedition : null;
 	}	
-	
-	/**
-	 * @deprecated 
-	 */
-	public function getShippingMode()
-	{
-		$sD = $this->getShippingModeDocument();
-		return $sD ? $sD->getLabel() : null;
-	}
-	
+		
 	/**
 	 * @deprecated 
 	 */

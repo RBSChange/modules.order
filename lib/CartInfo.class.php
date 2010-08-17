@@ -166,7 +166,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param order_CartLine $cartLine
+	 * @param order_CartLineInfo $cartLine
 	 */
 	public function addCartLine($cartLine)
 	{
@@ -264,19 +264,144 @@ class order_CartInfo
 	}	
 	
 	
-	//Shipping mode PaymentMode
+	//Shipping mode
 	
 	/**
-	 * @var Integer
+	 * @var array[]
 	 */
-	private $billingModeId = null;
+	private $shippingArray;
+	
+	
+	/**
+	 * 
+	 * @param array $shippingArray
+	 */
+	public function setShippingArray($shippingArray)
+	{
+		$this->shippingArray = $shippingArray;
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getShippingArray()
+	{
+		if (!is_array($this->shippingArray))
+		{
+			Framework::info(__METHOD__ . ' OLD CartInfo assume no required shipping mode!');
+			$this->shippingArray = array(0 => array('lines' => array()));
+			for ($i = 0; $i < count($this->cartLine); $i++)
+			{
+				$this->shippingArray[0]['lines'][] = $i;
+			}
+		}
+		return $this->shippingArray;
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	function canSelectShippingModeId()
+	{
+		$shippingArray = $this->getShippingArray();
+		return isset($shippingArray[0]) && count($shippingArray[0]['lines']) > 0;
+	}
+	
+	/**
+	 * @param shipping_persistentdocument_mode $shippingMode
+	 * @return order_CartLineInfo[]
+	 */
+	function getCartLineArrayByShippingMode($shippingMode)
+	{
+		$shippingModeId = $shippingMode === null ? 0 : $shippingMode->getId();
+		$result = array();
+		$shippingArray = $this->getShippingArray();
+		if (isset($shippingArray[$shippingModeId]))
+		{
+			foreach ($shippingArray[$shippingModeId]['lines'] as $index) 
+			{
+				$result[] = $this->getCartLine($index);
+			}	
+		}
+		return $result;
+	}
+	
+	/**
+	 * @return integer[]
+	 */
+	function getRequiredShippingModeIds()
+	{
+		$result = array();
+		$shippingArray = $this->getShippingArray();
+		foreach (array_keys($shippingArray) as $shippingModeId) 
+		{
+			if ($shippingModeId != 0)
+			{
+				$result[] = $shippingModeId;
+			}
+		}
+		return $result;
+	}	
+	
+	/**
+	 * @param integer $shippingModeId;
+	 * @param catalog_persistentdocument_shippingfilter $filter
+	 */	
+	function setRequiredShippingFilter($shippingModeId, $filter)
+	{
+		if ($filter === null)
+		{
+			if (isset($this->shippingArray[$shippingModeId]['filter']))
+			{
+				unset($this->shippingArray[$shippingModeId]['filter']);
+			}
+		}
+		else
+		{
+			$this->shippingArray[$shippingModeId]['filter'] = 
+				array('id' => $filter->getId(), 
+				'modeId' => $filter->getMode()->getId(),
+				'shippingvalueWithTax' => $filter->getValueWithTax(),
+				'shippingvalueWithoutTax' => $filter->getValueWithoutTax(),
+				'shippingTaxCode' => $filter->getTaxCode());
+		}	
+	}
+
+	/**
+	 * @return boolean
+	 */
+	function hasPredefinedShippingMode()
+	{
+		return count($this->getRequiredShippingModeIds()) > 0;
+	}
+	
+	/**
+	 * @param catalog_persistentdocument_shippingfilter $filter
+	 */
+	function setCurrentTestFilter($filter)
+	{
+		$this->currentTestFilter = $filter;
+	}
+	
+	/**
+	 * @return catalog_persistentdocument_shippingfilter
+	 */
+	function getCurrentTestFilter()
+	{
+		return $this->currentTestFilter;
+	}	
 	
 	/**
 	 * @return Integer
 	 */
 	public function getShippingModeId()
 	{
-		return $this->addressInfo ? $this->addressInfo->shippingModeId : null;
+		$shippingArray = $this->getShippingArray();
+		if (isset($shippingArray[0]) && isset($shippingArray[0]['filter']))
+		{
+			return $shippingArray[0]['filter']['modeId'];
+		}
+		return null;
 	}
 	
 	/**
@@ -293,7 +418,8 @@ class order_CartInfo
 	 */
 	public function getShippingLabel()
 	{
-		return $this->getShippingModeId() ? $this->getShippingMode()->getLabel() : null;
+		$mode = $this->getShippingMode();	
+		return $mode ? $mode->getLabel() : null;
 	}
 	
 	/**
@@ -301,8 +427,81 @@ class order_CartInfo
 	 */
 	function getShippingTaxCode()
 	{
-		return $this->addressInfo ? $this->addressInfo->shippingTaxCode : '0';
+		$taxCode = null;
+		foreach ($this->getShippingArray() as $datas) 
+		{
+			if (isset($datas['filter']))
+			{
+				$modeTaxCode = $datas['filter']['shippingTaxCode'];
+				if ($taxCode === null)
+				{
+					$taxCode = $modeTaxCode;
+				}
+				else if ($taxCode != $modeTaxCode)
+				{
+					$taxCode = '0';
+				}
+			}
+		}
+		return $taxCode;
 	}
+	
+	/**
+	 * @return string
+	 */
+	function getShippingTaxRate()
+	{
+		$withTaxe = 0;
+		$withouTaxe = 0;
+		foreach ($this->getShippingArray() as $datas) 
+		{
+			if (isset($datas['filter']))
+			{
+				$withTaxe += $datas['filter']['shippingvalueWithTax'];
+				$withouTaxe += $datas['filter']['shippingvalueWithoutTax'];
+			}
+		}
+		return catalog_PriceHelper::getTaxRateByValue($withTaxe, $withouTaxe);
+	}	
+	
+	/**
+	 * @return double
+	 */
+	function getShippingPriceWithTax()
+	{
+		$result = 0;
+		foreach ($this->getShippingArray() as $datas) 
+		{
+			if (isset($datas['filter']))
+			{
+				$result += $datas['filter']['shippingvalueWithTax'];
+			}
+		}
+		return $result;
+	}
+	
+	/**
+	 * @return double
+	 */
+	function getShippingPriceWithoutTax()
+	{
+		$result = 0;
+		foreach ($this->getShippingArray() as $datas) 
+		{
+			if (isset($datas['filter']))
+			{
+				$result += $datas['filter']['shippingvalueWithoutTax'];
+			}
+		}
+		return $result;
+	}
+	
+	//Payment Mode
+
+	/**
+	 * @var Integer
+	 */
+	private $billingModeId = null;
 	
 	/**
 	 * @return Integer
@@ -592,21 +791,7 @@ class order_CartInfo
 		return count($this->getDiscountArray()) > 0;
 	}
 	
-	/**
-	 * @return double
-	 */
-	function getShippingPriceWithTax()
-	{
-		return $this->addressInfo ? $this->addressInfo->shippingvalueWithTax : 0;
-	}
-	
-	/**
-	 * @return double
-	 */
-	function getShippingPriceWithoutTax()
-	{
-		return $this->addressInfo ? $this->addressInfo->shippingValueWithoutTax : 0;
-	}
+
 	
 	/**
 	 * @return array<rate => value>
@@ -1049,8 +1234,32 @@ class order_CartInfo
 	 */
 	public function getShippingModes()
 	{
-		return catalog_ShippingfilterService::getInstance()->getCurrentShippingModes($this);
+		if ($this->canSelectShippingModeId())
+		{
+			return catalog_ShippingfilterService::getInstance()->getCurrentShippingModes($this);
+		}
+		return array();
 	}
+	
+	/**
+	 * @return catalog_persistentdocument_shippingfilter[];
+	 */
+	public function getRequiredShippingModes()
+	{
+		$result = array();
+		if ($this->hasPredefinedShippingMode())
+		{
+			foreach ($this->shippingArray as $shippingModeId => $value) 
+			{
+				if ($shippingModeId != 0 && isset($value['filter']))
+				{
+					$result[] = DocumentHelper::getDocumentInstance($value['filter']['id']);
+				}
+			}
+		}
+		return $result;
+	}
+	
 	
 	/**
 	 * @return catalog_persistentdocument_paymentfilter[]

@@ -28,12 +28,12 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 		{
 			$this->redirectToEmptyCart();
 		}
-		
+
 		// The order process is started, so init lastAbandonedOrderDate.
 		$customer = $cartInfo->getCustomer();
 		$customer->setLastAbandonedOrderDate(date_Calendar::getInstance()->toString());
 		$customer->save();
-		
+
 		$shippingStep = $cartInfo->getAddressInfo();
 		if (!$shippingStep instanceof order_ShippingStepBean)
 		{
@@ -106,11 +106,11 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 	 */
 	function validateSelectInput($request, $shippingStep)
 	{
+		Framework::info(__METHOD__);
 		$cartInfo = $this->getCurrentCart();
 		$validationRules = $this->getSelectInputValidationRules($request, $shippingStep);
 		$ok = $this->processValidationRules($validationRules, $request, $shippingStep);
 		$cartInfo->setAddressInfo($shippingStep);
-		
 		if ($shippingStep->shippingFilterId)
 		{
 			$shippingFilter = DocumentHelper::getDocumentInstance($shippingStep->shippingFilterId);
@@ -119,15 +119,13 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 				$shippingStep->shippingFilterId = null;
 			}
 		}
-		
 		$cartInfo->save();
 		
-		if (!$shippingStep->shippingFilterId)
+		if ($cartInfo->canSelectShippingModeId() && !$shippingStep->shippingFilterId)
 		{
 			$ok = false;
 			$errMsg = f_Locale::translate('&modules.order.document.shippingstepbean.ShippingMode-Error;');
 			$this->addError($errMsg);
-			//$this->addErrorForProperty('shippingFilterId', $errMsg);		
 		}
 		return $ok;
 	}
@@ -141,16 +139,25 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 	 */
 	function executeSelect($request, $response, order_ShippingStepBean $shippingStep)
 	{
+		Framework::info('kkkkkkkkkkk');
 		$cartInfo = $this->getCurrentCart();
-		$shippingFilter = DocumentHelper::getDocumentInstance($shippingStep->shippingFilterId);
-		$shippingStep->shippingModeId = $shippingFilter->getMode()->getId();
-		$shippingStep->shippingTaxCode = $shippingFilter->getTaxCode();
-		$shippingStep->shippingValueWithoutTax = $shippingFilter->getValueWithoutTax();
-		$shippingStep->shippingvalueWithTax = $shippingFilter->getValueWithTax();
+		
+		if ($cartInfo->canSelectShippingModeId())
+		{
+			Framework::info('gggggggggggg');
+			$shippingFilter = DocumentHelper::getDocumentInstance($shippingStep->shippingFilterId);
+			$cartInfo->setRequiredShippingFilter(0, $shippingFilter);
+		}
+		else
+		{
+			Framework::info('eeeeeeeeeeeee');
+			$cartInfo->setRequiredShippingFilter(0, null);
+		}
+		Framework::info('iiiiiiiiiiiiii');
 		
 		$cartInfo->setAddressInfo($shippingStep);
 		$cartInfo->save();
-		
+		Framework::info('jjjjjjjjjjjjjjjjjjjjj');
 		$this->redirectToNextStep();
 		return $this->getInputViewName();	
 	}

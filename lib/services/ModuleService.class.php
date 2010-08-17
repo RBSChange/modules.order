@@ -503,15 +503,10 @@ class order_ModuleService extends ModuleBaseService
 				if ($result[0]['rowcount'] == 0)
 				{
 					$expedition = order_ExpeditionService::getInstance()->createForOrder($order);
-					if ($expedition)
-					{
-						$expedition->save();
-						Framework::info(__METHOD__ . ' Expedition (' . $expedition->getId() . ') generated for order ' . $order->getOrderNumber());
-					}
-					else
+					if ($expedition === null)
 					{
 						Framework::info(__METHOD__ . ' all expedition shipped for order ' . $order->getOrderNumber());
-						order_OrderService::getInstance()->completeOrder($order);
+						order_OrderService::getInstance()->completeOrder($order);					
 					}
 				}
 			}

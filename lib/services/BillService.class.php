@@ -460,12 +460,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 		}
 		
 		//Generate the default expedition
-		$expedition = order_ExpeditionService::getInstance()->createForOrder($bill->getOrder());
-		if ($expedition)
-		{
-			$expedition->setBill($bill);
-			$expedition->save();
-		}
+		order_ExpeditionService::getInstance()->createForOrder($bill->getOrder(), $bill);
 		return $this->buildBoRow($bill);
 	}
 	

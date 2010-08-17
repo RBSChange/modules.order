@@ -1157,4 +1157,9 @@
 		<locale lang="fr">Votre paiement a échoué. Il est possible que les informations bancaires que vous avez fournit soient inexactes.</locale>
 		<locale lang="en">Your payment failed. It is likely that your banking details were incorrect.</locale>
 	</entity>
+	
+	<entity id="shipping-number">
+		<locale lang="fr">Expedition N°</locale>
+		<locale lang="en">Shipping N°</locale>
+	</entity>	
 </localization>

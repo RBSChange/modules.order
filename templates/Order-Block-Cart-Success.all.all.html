@@ -64,10 +64,10 @@
 					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:shop.formatPrice(cartLine.getValueWithTax())}</td>
 	
 					<!-- Quantity -->
-					<td tal:define="name string:orderParam[lines][${cartLineIndex}][quantity]">
+					<td tal:define="name string:orderParam[lines][${cartLineIndex}][quantity]; update product/updateCartQuantity">
 						<label class="hidden" tal:attributes="for name" change:translate="modules.order.frontoffice.QuantityLabel"></label> 
-						<input class="textfield" tal:condition="not: readonly" type="text" size="3" tal:attributes="name name; value cartLine/getQuantity" />
-						<tal:block tal:condition="readonly">${cartLine/getQuantity}</tal:block>
+						<input class="textfield" tal:condition="update" type="text" size="3" tal:attributes="name name; value cartLine/getQuantity" />
+						<tal:block tal:condition="not: update">${cartLine/getQuantity}</tal:block>
 					</td>
 	
 					<!-- TVA -->

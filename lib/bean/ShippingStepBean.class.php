@@ -146,26 +146,6 @@ class order_ShippingStepBean
 	public $shippingFilterId;	
 	
 	/**
-	 * @var Integer
-	 */
-	public $shippingModeId;
-	
-	/**
-	 * @var String
-	 */
-	public $shippingTaxCode;
-	
-	/**
-	 * @var String
-	 */
-	public $shippingValueWithoutTax;
-	
-	/**
-	 * @var String
-	 */
-	public $shippingvalueWithTax;
-	
-	/**
 	 * @var order_AddressBean
 	 */
 	public $shippingAddress;

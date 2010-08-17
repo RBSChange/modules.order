@@ -126,3 +126,7 @@
 <tal:block tal:repeat="bill bills">
 	<tal:block change:block="" name="payment" module="payment" billid="${bill/getId}" />
 </tal:block>
+<div class="cleaner"></div>
+<tal:block tal:repeat="expedition expeditions">
+	<tal:block change:block="" name="expedition" module="order" expeditionid="${expedition/getId}" />
+</tal:block>

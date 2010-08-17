@@ -272,11 +272,14 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$shippingAddress->save();
 			$cartInfo->setShippingAddressId($shippingAddress->getId());
 			
-			$orderDocument->setShippingModeDocument($cartInfo->getShippingMode());
+			$shippingModeId = intval($cartInfo->getShippingModeId()) > 0 ? intval($cartInfo->getShippingModeId()) : -1;
+			$orderDocument->setShippingModeId($shippingModeId);
 			$orderDocument->setShippingModeTaxCode($cartInfo->getShippingTaxCode());
-			$orderDocument->setShippingModeTaxRate(catalog_PriceHelper::getTaxRateByCode($cartInfo->getShippingTaxCode()));
+			
+			$orderDocument->setShippingModeTaxRate($cartInfo->getShippingTaxRate());
 			$orderDocument->setShippingFeesWithTax(catalog_PriceHelper::roundPrice($cartInfo->getShippingPriceWithTax()));
 			$orderDocument->setShippingFeesWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getShippingPriceWithoutTax()));
+			$orderDocument->setShippingDataArray($cartInfo->getShippingArray());
 			
 			// Adresse de facturation.
 			if ($cartInfo->getAddressInfo()->useSameAddressForBilling)

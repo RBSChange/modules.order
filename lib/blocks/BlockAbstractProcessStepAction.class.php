@@ -46,9 +46,9 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 			$currentStep = $orderProcess->getCurrentStep();
 		}
 		$nextStep = $orderProcess->getNextStepForStep($currentStep);
-		if (Framework::isDebugEnabled())
+		if (Framework::isInfoEnabled())
 		{
-			Framework::debug(__METHOD__ . " from : $currentStep, to : $nextStep");
+			Framework::info(__METHOD__ . " from : $currentStep, to : $nextStep");
 		}
 		$orderProcess->setCurrentStep($nextStep);
 		$url = $orderProcess->getOrderProcessURL();

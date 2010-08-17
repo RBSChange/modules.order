@@ -76,31 +76,58 @@
 				}			
 			});
 		//]]></script>	
-		<div class="cleaner"></div>
+		<div class="cleaner" />
 		<br />
-		<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Choose-delivery-legend" tal:define="global shippingModes cart/getShippingModes"></h3>
-		<tal:block tal:condition="shippingModes/0">
-			<p change:translate="modules.order.document.shippingstepbean.Choose-delivery-text"></p>
+		<tal:block tal:condition="cart/hasPredefinedShippingMode"
+			tal:define="shippingModes cart/getRequiredShippingModes">
+			<h3 change:h="" change:translate="modules.order.document.shippingstepbean.fixed-shipping-mode">Mode de livraison predefini</h3>
+			<ol>
+				<li tal:repeat="modeFilter shippingModes">
+					<span tal:define="mode modeFilter/getMode">
+					<label class="nocmx">
+						<tal:block tal:replace="mode/getLabel" />
+						<tal:block tal:condition="modeFilter/getValueWithTax"> (<tal:block tal:replace="modeFilter/getFormattedValueWithTax" />)</tal:block>
+					</label>
+					<img style="display:inline;float:left" change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
+					</span>
+						<p tal:condition="mode/getDescription">	
+							<tal:block tal:content="mode/getDescription" />
+						</p>
+					<ul tal:define="cartLines php:cart.getCartLineArrayByShippingMode(modeFilter.getMode())">
+						<li tal:repeat="cartLine cartLines">${cartLine/getProduct/getLabelAsHtml}</li>
+					</ul>  
+				</li>
+			</ol>			
+			<div class="cleaner" />
+		</tal:block>
+		
+		<tal:block tal:condition="cart/canSelectShippingModeId" tal:define="shippingModes cart/getShippingModes" > 
+			<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Choose-delivery-legend" />
+		
+			<tal:block tal:condition="shippingModes/0">
+			<p change:translate="modules.order.document.shippingstepbean.Choose-delivery-text" />
 			<br />
 			<ol>
-				<li tal:repeat="modeFilter cart/getShippingModes">
+				<li tal:repeat="modeFilter shippingModes">
 					<span tal:define="mode modeFilter/getMode">
-						<label class="nocmx" for="mode_${modeFilter/getId}">
-							<input tal:condition="php:shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" checked="checked" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
-							<input tal:condition="php:!shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
-							<tal:block>${mode/getLabelAsHtml}</tal:block>
-							<tal:block tal:condition="modeFilter/getValueWithTax"> (${modeFilter/getFormattedValueWithTax})</tal:block>
-						</label>
-						<img style="display:inline;float:left" change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
+					<label class="nocmx" for="mode_${modeFilter/getId}">
+					<input tal:condition="php:shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" checked="checked" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
+					<input tal:condition="php:!shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
+	<tal:block tal:replace="mode/getLabel" /><tal:block tal:condition="modeFilter/getValueWithTax"> (<tal:block tal:replace="modeFilter/getFormattedValueWithTax" />)</tal:block></label>
+													<img style="display:inline;float:left" change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
+						
 					</span>
-					<p tal:condition="mode/getDescription">${mode/getDescriptionAsHtml}</p>
+						<p tal:condition="mode/getDescription">	
+							<tal:block tal:content="mode/getDescription" />
+						</p>
 				</li>
 			</ol>
+			</tal:block>
+			<tal:block tal:condition="not: shippingModes/0">
+				<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode" />
+			</tal:block>
+			<div class="cleaner" />
 		</tal:block>
-		<tal:block tal:condition="not: shippingModes/0">
-			<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode"></p>
-		</tal:block>
-		<div class="cleaner"></div>
 		<p class="buttons">
 			<input class="button" change:submit="name Select" label="&modules.order.document.shippingstepbean.Select;" />
 		</p>

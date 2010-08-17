@@ -69,6 +69,69 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
+	 * @param order_persistentdocument_order $order
+	 * @return order_persistentdocument_expedition[]
+	 */
+	public function getByOrderForDisplay($order)
+	{
+		$query = $this->createQuery()
+				->add(Restrictions::published())
+				->add(Restrictions::eq('order', $order))
+				->add(Restrictions::ne('status', self::CANCELED))
+				->addOrder(Order::asc('document_label'));
+		return $query->find();
+	}
+
+	/**
+	 * @param order_persistentdocument_expedition $expedition
+	 * @return order_persistentdocument_expeditionline[]
+	 */
+	public function getLinesForDisplay($expedition)
+	{
+		$lines = array();
+		if ($expedition->getUseOrderlines())
+		{
+			foreach ($expedition->getOrder()->getLineArray() as $line) 
+			{
+				$expLine = order_ExpeditionlineService::getInstance()->getNewDocumentInstance();
+				$expLine->setLabel($line->getLabel());
+				$expLine->setQuantity($line->getQuantity());
+				$expLine->setOrderlineid($line->getId());
+				$lines[] = $expLine;	
+			}
+		}
+		else
+		{
+			$lines = $expedition->getLineArray();
+		}
+		
+		$shippmentMode = $expedition->getShippingMode();
+		if ($shippmentMode)
+		{
+			$sms = $shippmentMode->getDocumentService();
+			foreach ($lines as $line) 
+			{
+				$sms->completeExpeditionLineForDisplay($line, $shippmentMode, $expedition);		
+			}
+		}
+		
+		return $lines;
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @param integer $shippingModeId
+	 * @return order_persistentdocument_expedition[]
+	 */
+	private function getByOrderAndShippingMode($order, $shippingModeId)
+	{
+		$query = $this->createQuery()->add(Restrictions::eq('order', $order))
+				->add(Restrictions::eq('shippingModeId', $shippingModeId))
+				->addOrder(Order::asc('document_label'));
+		return $query->find();
+	}
+	
+	/**
 	 * @param order_persistentdocument_expedition $expedition
 	 * @return Array<String=>String>
 	 */
@@ -84,17 +147,145 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param order_persistentdocument_order $order
+	 * @param order_persistentdocument_bill $bill
 	 * @return order_persistentdocument_expedition
 	 */
-	public function createForOrder($order)
+	public function createForOrder($order, $bill = null)
 	{
-		$previousExpeditions = $this->getByOrder($order);
+		$shippingModes = $order->getShippingDataArray();
+		if (!is_array($shippingModes) || (count($shippingModes) == 1 && isset($shippingModes[0])))
+		{
+			$expedition = $this->generateDefaultExpedition($order, $bill);
+			if ($expedition !== null)
+			{
+				$expedition->save();
+				if ($expedition->getStatus() == self::PREPARE)
+				{
+					return $expedition;
+				}
+			}
+			return null;
+		}
+		
+		$result = null;
+		foreach ($shippingModes as $shippingModeId => $datas) 
+		{
+			if ($shippingModeId == 0)
+			{
+				$shippingMode = DocumentHelper::getDocumentInstance($order->getShippingModeId(), 'modules_shipping/mode'); 
+			}
+			else
+			{
+				$shippingMode = DocumentHelper::getDocumentInstance($shippingModeId, 'modules_shipping/mode'); 
+			}
+			
+			$expedition = $this->generateForShippingMode($order, $shippingMode, $datas['lines']);
+			if ($expedition !== null)
+			{
+				$expedition->save();
+				if ($expedition->getStatus() == self::PREPARE)
+				{
+					$result = $expedition;
+				}
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return integer
+	 */
+	private function getLastExpeditionNumber($order)
+	{
+		$result = $this->createQuery()->setProjection(Projections::rowCount('count'))
+			->add(Restrictions::eq('order', $order))->find();
+		if (is_array($result) && count($result) == 1)
+		{
+			return $result[0]['count'];
+		}
+		return 0;
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @param shipping_persistentdocument_mode $shippingMode
+	 * @param array index
+	 * @return order_persistentdocument_expedition
+	 */
+	private function generateForShippingMode($order, $shippingMode, $linesIndex)
+	{
+		$lines = array();
+		foreach ($linesIndex as $index) 
+		{
+			$line = $order->getLine($index);
+			$lines[$line->getId()] = $line->getQuantity();
+		}
+		
+		$preparedLines = array();
+		$previousExpeditions = $this->getByOrderAndShippingMode($order, $shippingMode->getId());	
+		foreach ($previousExpeditions as $expedition) 
+		{
+			$this->getOrderLineIds($expedition, $preparedLines);
+		}
+		
+		foreach ($preparedLines as $id => $qtt) 
+		{
+			if (isset($lines[$id]))
+			{
+				$lines[$id] -= $qtt;
+				if ($lines[$id] <= 0)
+				{
+					unset($lines[$id]);
+				}
+			}
+			else
+			{
+				Framework::warn(__METHOD__ . " order line $id not found");
+			}
+		}
+		
+		if (count($lines) > 0)
+		{
+			$expedition = $this->getNewDocumentInstance();
+			$expedition->setOrder($order);
+			$expedition->setStatus(self::PREPARE);
+			$expedition->setAddress($order->getShippingAddress());
+			$expedition->setLabel(strval($this->getLastExpeditionNumber($order) + 1));
+			Framework::info('Add Expedition ' . $expedition->getLabel() . ' for order '. $order->getId() . ' => ' . $order->getOrderNumber());
+			$expedition->setUseOrderlines(false);
+			foreach ($lines as $id => $qtt) 
+			{
+				$line = DocumentHelper::getDocumentInstance($id);
+				Framework::info('Add Line ' . $line->getLabel() . ' '. $id . ' => ' . $qtt);
+				$expLine = order_ExpeditionlineService::getInstance()->getNewDocumentInstance();
+				$expLine->setLabel($line->getLabel());
+				$expLine->setQuantity($qtt);
+				$expLine->setOrderlineid($id);
+				$expedition->addLine($expLine);
+			}	
+			
+			$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);		
+			return $expedition;
+		}
+		return null;
+	}	
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @param order_persistentdocument_bill $bill
+	 * @return order_persistentdocument_expedition
+	 */
+	private function generateDefaultExpedition($order, $bill)
+	{
+		$previousExpeditions = $this->getByOrderAndShippingMode($order, $order->getShippingModeId());	
+		
 		$expedition = $this->getNewDocumentInstance();
-		$expedition->setLabel(strval(count($previousExpeditions) + 1));
 		$expedition->setOrder($order);
 		$expedition->setStatus(self::PREPARE);
 		$expedition->setAddress($order->getShippingAddress());
 		$expedition->setShippingModeId($order->getShippingModeId());
+		$expedition->setBill($bill);
 		
 		$shippingMode = $expedition->getShippingMode();
 		$expedition->setTransporteur($shippingMode->getCodeReference());
@@ -103,19 +294,18 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		$expedition->setAmount($order->getShippingFeesWithTax());
 		$expedition->setTax($order->getShippingFeesWithTax() - $order->getShippingFeesWithoutTax());
 		$expedition->setTaxCode($order->getShippingModeTaxCode());
-		if (count($previousExpeditions) == 0)
-		{
-			$expedition->setUseOrderlines(true);	
-			return $expedition;
-		}
+		
 		$previouslines = array();
 		foreach ($previousExpeditions as $previousExpedition) 
 		{
 			$this->getOrderLineIds($previousExpedition, $previouslines);
 		}
+		
 		if (count($previouslines) == 0)
 		{
 			$expedition->setUseOrderlines(true);	
+			$expedition->setLabel(strval($this->getLastExpeditionNumber($order) + 1));
+			$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);
 			return $expedition;			
 		}
 		
@@ -140,10 +330,13 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		
 		if ($expedition->getLineCount() > 0)
 		{
+			$expedition->setLabel(strval($this->getLastExpeditionNumber($order) + 1));
+			$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);	
 			return $expedition;
 		}
 		return null;
 	}
+
 	
 	/**
 	 * @param order_persistentdocument_expedition $expedition

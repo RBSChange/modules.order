@@ -364,6 +364,9 @@ class order_CartService extends BaseService
 		
 		$this->refreshDiscount($cart);
 		Framework::bench('refreshDiscount');
+		
+		$this->refreshShipping($cart);
+		Framework::bench('refreshShipping');
 	
 		$this->refreshCoupon($cart);
 		Framework::bench('refreshCoupon');	
@@ -391,6 +394,48 @@ class order_CartService extends BaseService
 			$cartLine->importPrice($price);			
 		}
 	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	public function refreshShipping($cart)
+	{	
+		$result = array();
+		$updateRequiredFilter = false;
+		$updateSelectFilter = false;
+		foreach ($cart->getCartLineArray() as $index => $cartLine)
+		{
+			if ($cartLine->getShippingModeId())
+			{
+				$result[$cartLine->getShippingModeId()]['lines'][] = $index;
+				$updateRequiredFilter = true;
+			}
+			else
+			{
+				$result[0]['lines'][] = $index;
+				$updateSelectFilter = true;
+			}		
+		}
+		$cart->setShippingArray($result);
+		if ($updateRequiredFilter)
+		{
+			catalog_ShippingfilterService::getInstance()->setRequiredShippingModes($cart);	
+		}
+		
+		if ($updateSelectFilter)
+		{
+			if ($cart->getAddressInfo() && $cart->getAddressInfo()->shippingFilterId)
+			{
+				$shippingFilter = DocumentHelper::getDocumentInstance($cart->getAddressInfo()->shippingFilterId);
+				$cart->setRequiredShippingFilter(0, $shippingFilter);
+			}
+			else
+			{
+				$cart->setRequiredShippingFilter(0, null);
+			}
+		}
+		Framework::info(__METHOD__ . ' ' . var_export($cart->getShippingArray(), true));
+	}	
 
 	/**
 	 * @param order_CartInfo $cart

@@ -31,20 +31,10 @@ class order_CartInfoScriptElement extends import_ScriptObjectElement
     				$shippingBean->importBillingAddress($addr);
     				$shippingBean->useSameAddressForBilling = true;
     				break;
-    			case 'shippingMode-refid':
-    				$shippingMode = $this->script->getElementById($value)->getPersistentDocument();
-    				$shippingBean = $cart->getAddressInfo();
-    				$shippingBean->shippingModeId = $shippingMode->getId();
-    				break;
-    			case 'shippingTaxeCode':
-    				$cart->getAddressInfo()->shippingTaxCode = $value;
-    				break;    				
-    			case 'shippingTaxeCode':
-    				$cart->getAddressInfo()->shippingTaxCode = $value;
-    				break;  
-    			case 'shippingvalueWithTax':
-    				$cart->getAddressInfo()->shippingvalueWithTax = $value;
-    				$cart->getAddressInfo()->shippingValueWithoutTax = catalog_PriceHelper::removeTax($value, $cart->getAddressInfo()->shippingTaxCode);
+    			case 'shippingFilter-refid':
+    				$shippingFilter = $this->script->getElementById($value)->getPersistentDocument();
+    				$cart->getAddressInfo()->shippingFilterId = $shippingFilter->getId();
+    				$cart->setRequiredShippingFilter(0, $shippingFilter);
     				break;
     			case 'coupon-refid':
     				$this->coupon = $this->script->getElementById($value)->getPersistentDocument();

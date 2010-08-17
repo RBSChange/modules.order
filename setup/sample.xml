@@ -25,6 +25,9 @@
 	
 	<mode id="shipping" byLabel="Colissimo"  />
 	
+	<shippingfilter id="shippingfilter" byLabel="Collisimo 10€" shop-refid="shop" mode-refid="shipping" 
+		taxCode="1" valueWithTax="10" valueWithoutTax="8.04"/>
+	
 	<chequeconnector id="payment" byLabel="Paiement par chèque" />
 
 	<product id="product1" byCodeReference="L1" />
@@ -40,8 +43,7 @@
 	<website id="website" byTag="default_modules_website_default-website" />
 
 	<cart id="cart3" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment"
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment"
 		creationdate="2010-04-15 08:16:12">
 		<cartline product-refid="product4" quantity="1" />
 	</cart>	
@@ -52,8 +54,7 @@
 	</order>
 	
 	<cart id="cart4" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment"
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment"
 		creationdate="2010-04-15 10:25:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product5" quantity="7" />
@@ -65,8 +66,7 @@
 	</order>
 	
 	<cart id="cart5" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="20" billingMode-refid="payment"
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment"
 		creationdate="2010-04-15 11:03:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product2" quantity="1" />
@@ -78,8 +78,7 @@
 	</order>
 	
 	<cart id="cart6" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment"
 		creationdate="2010-05-10 11:03:40">
 		<cartline product-refid="product4" quantity="3" />
 		<cartline product-refid="product5" quantity="1" />
@@ -91,8 +90,7 @@
 	</order>
 	
 	<cart id="cart7" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment"
 		creationdate="2010-05-10 15:03:40">
 		<cartline product-refid="product4" quantity="3" />
 		<cartline product-refid="product5" quantity="2" />
@@ -104,8 +102,7 @@
 	</order>
 	
 	<cart id="cart8" shop-refid="shop" customer-refid="customer2" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment"
 		creationdate="2010-05-10 16:15:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product5" quantity="1" />
@@ -118,8 +115,7 @@
 	</order>
 	
 	<cart id="cart9" shop-refid="shop" customer-refid="customer2" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		address-refid="address" shippingFilter-refid="shippingfilter"  billingMode-refid="payment"
 		creationdate="2010-05-10 16:18:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product5" quantity="3" />
@@ -132,8 +128,7 @@
 	</order>
 	
 	<cart id="cart10" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment"
 		creationdate="2010-05-10 17:00:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product5" quantity="3" />
@@ -147,8 +142,7 @@
 	</order>
 	
 	<cart id="cart11" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment"
 		creationdate="2010-05-10 17:05:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product5" quantity="3" />
@@ -164,8 +158,7 @@
 	</order>
 	
 	<cart id="cart12" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment"
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment"
 		creationdate="2010-05-10 17:08:40">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product2" quantity="4" />
@@ -179,8 +172,7 @@
 	</order>
 	
 	<cart id="cart13" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product6" quantity="1" />
 	</cart>	
@@ -189,8 +181,7 @@
 	</order>
 	
 	<cart id="cart14" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product7" quantity="1" />
 	</cart>	
@@ -199,8 +190,7 @@
 	</order>
 	
 	<cart id="cart15" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product7" quantity="1" />
 	</cart>	
@@ -209,8 +199,7 @@
 	</order>
 	
 	<cart id="cart16" shop-refid="shop" customer-refid="customer1" 
-		address-refid="address" shippingMode-refid="shipping"
-		shippingTaxeCode="1" shippingvalueWithTax="10" billingMode-refid="payment">
+		address-refid="address" shippingFilter-refid="shippingfilter" billingMode-refid="payment">
 		<cartline product-refid="product4" quantity="1" />
 		<cartline product-refid="product7" quantity="1" />
 	</cart>	

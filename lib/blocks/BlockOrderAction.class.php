@@ -24,10 +24,30 @@ class order_BlockOrderAction extends website_TaggerBlockAction
 		{
 			throw new Exception('Invalid logged customer account');
 		}
+		
+		if ($order->getOrderStatus() == order_OrderService::IN_PROGRESS)
+		{
+			$tm = f_persistentdocument_TransactionManager::getInstance();
+			try
+			{
+				$tm->beginTransaction();
+				order_ModuleService::getInstance()->checkOrderProcessing($order);
+				$tm->commit();
+			}
+			catch (Exception $e)
+			{
+				$tm->rollBack($e);
+			}
+		}
+		
 		$request->setAttribute('order', $order);
 		$request->setAttribute('shop', $order->getShop());
 		$bills = order_BillService::getInstance()->getByOrder($order);	
 		$request->setAttribute('bills', $bills);
+		
+		$expeditions = order_ExpeditionService::getInstance()->getByOrderForDisplay($order);
+		
+		$request->setAttribute('expeditions', $expeditions);
 		return website_BlockView::SUCCESS;
 	}
 	
