@@ -43,17 +43,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			$formProperties[$key] = $value;
 		}
 	}
-	
-	/**
-	 * @return String
-	 * @deprecated 
-	 */
-	public function getOrderStatusLabel()
-	{
-		$key = '&modules.order.frontoffice.status.' . ucfirst($this->getOrderStatus()) . ';';
-		return f_Locale::translate($key);
-	}
-	
+
 	/**
 	 * @return String
 	 */
@@ -219,16 +209,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	public function getWebsite()
 	{
 		return DocumentHelper::getDocumentInstance($this->getWebsiteId(), 'modules_website/website');
-	}
-	
-	/**
-	 * Get the readable order date.
-	 * @return String
-	 * @deprecated use getCreationdate or getUICreationdate
-	 */
-	public function getOrderDate()
-	{
-		return $this->getCreationdate();
 	}
 	
 	/**
@@ -402,7 +382,9 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		return $result;
 	}
 
-	
+	/**
+	 * @return double
+	 */
 	public function getTotalTax()
 	{
 		return $this->getTotalAmountWithTax()-$this->getTotalAmountWithoutTax();
@@ -434,7 +416,10 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		$expeditions = order_ExpeditionService::getInstance()->getBoList($this);
 		return JsonService::getInstance()->encode($expeditions);
 	}
-		
+	
+	/**
+	 * @return order_persistentdocument_bill[]
+	 */
 	public function getBillsWithArchive()
 	{
 		return order_BillService::getInstance()->createQuery()
@@ -472,6 +457,26 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	//DEPRECTAED FUNCTIONS
+
+	/**
+	 * @return String
+	 * @deprecated 
+	 */
+	public function getOrderStatusLabel()
+	{
+		$key = '&modules.order.frontoffice.status.' . ucfirst($this->getOrderStatus()) . ';';
+		return f_Locale::translate($key);
+	}
+		
+	/**
+	 * Get the readable order date.
+	 * @return String
+	 * @deprecated use getCreationdate or getUICreationdate
+	 */
+	public function getOrderDate()
+	{
+		return $this->getCreationdate();
+	}
 	
 	/**
 	 * @deprecated 
@@ -492,8 +497,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		}
 		return $this->currentBill;
 	}
-	
-	
+		
 	/**
 	 * @deprecated 
 	 * @return payment_persistentdocument_connector
@@ -561,8 +565,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	{
 		$sD = $this->getShippingModeDocument();
 		return $sD ? $sD->getCodeReference() : null;
-	}
-	
+	}	
 
 	/**
 	 * @deprecated 

@@ -2,11 +2,11 @@
 
 <ul class="mini-navigation">
 	<li>
-		<a change:link="tag ctx_order_order-list; orderParam[cmpref] order/getId" change:translate="modules.customer.frontoffice.Back-to-order"></a>
+		<a change:link="tag ctx_order_order; orderParam[cmpref] order/getId" change:translate="modules.customer.frontoffice.Back-to-order"></a>
 	</li>
 </ul>
 
-<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Write-messages-for-order; orderId order/getId" /> <span change:datetime="order/getOrderDate"></span></h3>
+<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Write-messages-for-order; orderId order/getOrderNumber" /> <tal:block change:datetime="order/getOrderDate" /></h3>
 
 <div class="messages-form">
 	<ul change:messages=""></ul>
@@ -28,16 +28,16 @@
 	</form>
 </div>
 <br />
-<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Messages-for-order; orderId order/getId" /> <span change:datetime="order/getOrderDate"></span></h3>
+<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Messages-for-order; orderId order/getOrderNumber" /> <tal:block change:datetime="order/getOrderDate" /></h3>
 
 <ul tal:condition="messages" class="messagecustomer">
 	<tal:block tal:repeat="message messages">
 		<li class="fromcustomer" tal:condition="message/isSentByCustomer">
-			<p><strong><tal:block change:translate="&modules.customer.frontoffice.Message-sent-by-customer; companyName companyName" /> <span change:datetime="message/getMessageDate"></span></strong></p>
+			<p><strong><tal:block change:translate="modules.customer.frontoffice.Message-sent-by-customer; companyName companyName" /> <tal:block change:datetime="message/getCreationdate" /></strong></p>
 			<blockquote>${message/getContentAsHtml}</blockquote>
 		</li>
 		<li class="tocustomer" tal:condition="not: message/isSentByCustomer">
-			<p><strong><tal:block change:translate="&modules.customer.frontoffice.Message-sent-by-company; companyName companyName" /> <span change:datetime="message/getMessageDate"></span></strong></p>
+			<p><strong><tal:block change:translate="modules.customer.frontoffice.Message-sent-by-company; companyName companyName" /> <tal:block change:datetime="message/getCreationdate" /></strong></p>
 			<blockquote>${message/getContentAsHtml}</blockquote>
 		</li>	
 	</tal:block>
