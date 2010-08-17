@@ -1162,4 +1162,16 @@
 		<locale lang="fr">Expedition N°</locale>
 		<locale lang="en">Shipping N°</locale>
 	</entity>	
+	<entity id="transport-name">
+		<locale lang="fr">Transporteur</locale>
+	</entity>
+	<entity id="tracking-number">
+		<locale lang="fr">Numéro de suivi</locale>
+	</entity>
+	<entity id="product-download">
+		<locale lang="fr">Télécharger</locale>
+	</entity>
+	<entity id="product-download-count">
+		<locale lang="fr">Téléchargement(s)</locale>
+	</entity>	
 </localization>

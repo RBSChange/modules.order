@@ -434,7 +434,6 @@ class order_CartService extends BaseService
 				$cart->setRequiredShippingFilter(0, null);
 			}
 		}
-		Framework::info(__METHOD__ . ' ' . var_export($cart->getShippingArray(), true));
 	}	
 
 	/**
