@@ -1,21 +1,21 @@
 <table width="100%" border="1" cellspacing="0" cellpadding="0">
 	<tr>
 		<th>
-			<abbr change:i18nattr="title &modules.order.frontoffice.Reference;" change:translate="&modules.order.frontoffice.Reference-abbr;">Ref.</abbr>
+			<abbr change:i18nattr="title &modules.order.frontoffice.Reference;" change:translate="modules.order.frontoffice.Reference-abbr">Ref.</abbr>
 		</th>
 	    <th change:translate="modules.order.frontoffice.Designation" />
 		<th tal:condition="shop/getDisplayPriceWithoutTax">
-			<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-without-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.unitprice-without-tax-abr;; currency shop/getCurrency">PU HT€</abbr>
+			<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-without-tax;" change:translate="modules.order.frontoffice.unitprice-without-tax-abr">PU HT€</abbr>
 		</th>
 		<th tal:condition="shop/getDisplayPriceWithTax">
-			<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-with-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.unitprice-with-tax-abr;; currency shop/getCurrency">PU TTC€</abbr>
+			<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-with-tax;" change:translate="modules.order.frontoffice.unitprice-with-tax-abr">PU TTC€</abbr>
 		</th>
 	    <th change:translate="modules.order.frontoffice.Quantity" />
 		<th tal:condition="shop/getDisplayPriceWithoutTax">
-			<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-without-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.totalprice-without-tax-abr;; currency shop/getCurrency">PT HT€</abbr>
+			<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-without-tax;" change:translate="modules.order.frontoffice.totalprice-without-tax-abr">PT HT€</abbr>
 		</th>
 	   	<th tal:condition="shop/getDisplayPriceWithTax">
-			<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-with-tax; currency shop/getCurrency" change:translate="&modules.order.frontoffice.totalprice-with-tax-abr;; currency shop/getCurrency">PT TTC€</abbr>
+			<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-with-tax;" change:translate="modules.order.frontoffice.totalprice-with-tax-abr">PT TTC€</abbr>
 		</th>
 	</tr>
 

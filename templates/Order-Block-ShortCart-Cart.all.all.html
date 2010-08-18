@@ -11,11 +11,13 @@
 				<span> | </span>
 			</li>
 			<li tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
-				<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart" tal:content="cart/getFormattedTotalAmount"></a>
+				<a tal:condition="cart/getShop/getDisplayPriceWithoutTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedTotalWithoutTax} <tal:block change:translate="modules.catalog.frontoffice.ht"/></a>
+				<a tal:condition="cart/getShop/getDisplayPriceWithTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedTotalWithTax} <tal:block change:translate="modules.catalog.frontoffice.ttc"/></a>
 				<tal:block change:translate="modules.order.frontoffice.with-fees" />
 			</li>
 			<li tal:condition="php: !configuration.getShowTotalWithFees() || !cart.getShippingModeId()">
-				<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart" tal:content="cart/getFormattedSubTotalWithTax"></a>
+				<a tal:condition="cart/getShop/getDisplayPriceWithoutTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedSubTotalWithoutTax} <tal:block change:translate="modules.catalog.frontoffice.ht"/></a>
+				<a tal:condition="cart/getShop/getDisplayPriceWithTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedSubTotalWithTax} <tal:block change:translate="modules.catalog.frontoffice.ttc"/></a>
 				<tal:block change:translate="modules.order.frontoffice.without-fees" />
 			</li>
 		</ul>

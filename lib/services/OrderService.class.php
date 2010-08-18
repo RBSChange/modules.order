@@ -389,8 +389,20 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function getNotificationParameters($order)
 	{
-		$shop = $order->getShop();	
-		$orderAmount = $shop->formatPrice($order->getTotalAmountWithTax());
+		$shop = $order->getShop();
+		
+		$orderAmountWithTax = $shop->formatPrice($order->getTotalAmountWithTax());
+		$orderAmountWithoutTax = $shop->formatPrice($order->getTotalAmountWithoutTax());
+		
+		if ($shop->getDisplayPriceWithTax() || !$shop->getDisplayPriceWithoutTax())
+		{
+			$orderAmount = $orderAmountWithTax." ".f_locale::translate("&modules.catalog.frontoffice.ttc;");	
+		}
+		elseif ($shop->getDisplayPriceWithoutTax())
+		{
+			$orderAmount = $orderAmountWithoutTax." ".f_locale::translate("&modules.catalog.frontoffice.ht;");
+		}
+		
 		$shippingFeesWithTax = $shop->formatPrice($order->getShippingFeesWithTax());
 		$shippingFeesWithoutTax = $shop->formatPrice($order->getShippingFeesWithoutTax());
 		
@@ -400,6 +412,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$template->setAttribute('order', $order);
 		$template->setAttribute('shop', $shop);
 		$template->setAttribute('orderAmount', $orderAmount);
+		$template->setAttribute('orderAmountWithTax', $orderAmountWithTax);
+		$template->setAttribute('orderAmountWithoutTax', $orderAmountWithoutTax);
 		$template->setAttribute('shippingMode', $order->getShippingMode());
 		$template->setAttribute('shippingFeesWithTax', $shippingFeesWithTax);
 		$template->setAttribute('shippingFeesWithoutTax', $shippingFeesWithoutTax);
@@ -407,7 +421,9 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$user = $order->getCustomer()->getUser();
 		return array(
 			'orderId' => $order->getOrderNumber(), 
-			'orderAmount' => $orderAmount, 
+			'orderAmount' => $orderAmount,
+		    'orderAmountWithTax' => $orderAmountWithTax, 
+		    'orderAmountWithoutTax' => $orderAmountWithoutTax,
 			'title' => (!is_null($user->getTitle())) ? $user->getTitle()->getLabel() : '', 
 			'fullname' => $user->getFullname(), 
 			'orderDetail' => $template->execute(), 
