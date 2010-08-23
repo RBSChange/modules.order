@@ -121,7 +121,7 @@
 		</tal:block>
 		<tal:block tal:condition="php: !configuration.getShowTotalWithFees() || !cart.getShippingModeId()">
 			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withtax-withoutfees-abrLabel" />
-			<dt class="pricetotal">${cart/getFormattedSubTotalWithTax}</dt>
+			<dt class="pricetotal">${cart/getFormattedTotalExcludingFeesWithTax}</dt>
 		</tal:block>
 	</dl>
 </div>

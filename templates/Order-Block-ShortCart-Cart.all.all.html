@@ -16,8 +16,8 @@
 				<tal:block change:translate="modules.order.frontoffice.with-fees" />
 			</li>
 			<li tal:condition="php: !configuration.getShowTotalWithFees() || !cart.getShippingModeId()">
-				<a tal:condition="cart/getShop/getDisplayPriceWithoutTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedSubTotalWithoutTax} <tal:block change:translate="modules.catalog.frontoffice.ht"/></a>
-				<a tal:condition="cart/getShop/getDisplayPriceWithTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedSubTotalWithTax} <tal:block change:translate="modules.catalog.frontoffice.ttc"/></a>
+				<a tal:condition="cart/getShop/getDisplayPriceWithoutTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedTotalExcludingFeesWithoutTax} <tal:block change:translate="modules.catalog.frontoffice.ht"/></a>
+				<a tal:condition="cart/getShop/getDisplayPriceWithTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedTotalExcludingFeesWithTax} <tal:block change:translate="modules.catalog.frontoffice.ttc"/></a>
 				<tal:block change:translate="modules.order.frontoffice.without-fees" />
 			</li>
 		</ul>

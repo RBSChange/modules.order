@@ -875,7 +875,7 @@ class order_CartInfo
 	/**
 	 * @return double
 	 */
-	public function getTotalWithoutTax()
+	public function getTotalExcludingFeesWithoutTax()
 	{
 		$total = $this->getSubTotalWithoutTax();
 		if ($this->hasDiscount())
@@ -886,13 +886,13 @@ class order_CartInfo
 		{	
 			$total -= $this->getCoupon()->getValueWithoutTax();
 		}
-		return $total + $this->getShippingPriceWithoutTax();
+		return $total;
 	}
 	
 	/**
 	 * @return double
 	 */
-	public function getTotalWithTax()
+	public function getTotalExcludingFeesWithTax()
 	{
 		$total = $this->getSubTotalWithTax();
 		if ($this->hasDiscount())
@@ -903,7 +903,23 @@ class order_CartInfo
 		{	
 			$total -= $this->getCoupon()->getValueWithTax();
 		}
-		return $total + $this->getShippingPriceWithTax();
+		return $total;
+	}	
+	
+	/**
+	 * @return double
+	 */
+	public function getTotalWithoutTax()
+	{
+		return $this->getTotalExcludingFeesWithoutTax() + $this->getShippingPriceWithoutTax();
+	}
+	
+	/**
+	 * @return double
+	 */
+	public function getTotalWithTax()
+	{
+		return $this->getTotalExcludingFeesWithTax() +  + $this->getShippingPriceWithTax();
 	}	
 	
 	/**
@@ -981,15 +997,22 @@ class order_CartInfo
 	{
 		return $this->formatValue($this->getShippingPriceWithoutTax());
 	}
+
+	/**
+	 * @return String
+	 */
+	public function getFormattedTotalExcludingFeesWithoutTax()
+	{
+		return $this->formatValue($this->getTotalExcludingFeesWithoutTax());
+	}	
 	
 	/**
 	 * @return String
-	 * @deprecated
 	 */
-	public function getFormattedTotalAmount()
+	public function getFormattedTotalExcludingFeesWithTax()
 	{
-		return $this->formatValue($this->getTotalAmount());
-	}
+		return $this->formatValue($this->getTotalExcludingFeesWithTax());
+	}	
 
 	/**
 	 * @return String
@@ -998,7 +1021,6 @@ class order_CartInfo
 	{
 		return $this->formatValue($this->getTotalWithoutTax());
 	}	
-	
 	
 	/**
 	 * @return String
@@ -1281,5 +1303,15 @@ class order_CartInfo
 	public function refresh()
 	{
 		return order_CartService::getInstance()->refresh($this);
-	}	
+	}
+	
+	// Deprecated
+		
+	/**
+	 * @deprecated
+	 */
+	public function getFormattedTotalAmount()
+	{
+		return $this->formatValue($this->getTotalAmount());
+	}
 }
