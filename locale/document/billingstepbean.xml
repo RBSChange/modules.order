@@ -40,4 +40,9 @@
 		<locale lang="en">Payment methods available</locale>
 		<locale lang="de">Zahlungsmethoden zur Verfügung</locale>
 	</entity>
+	<entity id="no-valid-mop">
+		<locale lang="fr">Pas de modes de paiement disponibles pour votre commande.</locale>
+		<locale lang="en">No valid payment methods available.</locale>
+		<locale lang="de">Kein Zahlungsmethoden zur Verfügung.</locale>
+	</entity>
 </localization>

@@ -57,18 +57,21 @@
 		<br />
 	
 		<h3 change:h="" change:translate="modules.order.document.billingstepbean.Mops-legend"></h3>
-		<ol id="paymentselector" style="clear: both">
-			<li tal:repeat="connectorFilter cart/getPaymentConnectors">
-				<input tal:condition="php:billingStep.selected(connectorFilter.getId(), repeat.connectorFilter.start)" checked="checked" id="mode_${connectorFilter/getId}" 
-					type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
-				<input tal:condition="php:!billingStep.selected(connectorFilter.getId(), repeat.connectorFilter.start)" id="mode_${connectorFilter/getId}" 
-					type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
-				<label class="nocmx" for="mode_${connectorFilter/getId}">${connectorFilter/getConnector/getSelectionAsHtml}</label>
-			</li>
-		</ol>			
-		<p class="buttons">
-			<input class="button" change:submit="name Select" label="&modules.order.document.billingstepbean.Select;" />				
-		</p>
+		<p class="error" tal:condition="not: cart/getPaymentConnectors/0" change:translate="&modules.order.document.billingstepbean.No-valid-mop;"></p>
+		<tal:block tal:condition="cart/getPaymentConnectors/0">
+			<ol id="paymentselector" style="clear: both">
+				<li tal:repeat="connectorFilter cart/getPaymentConnectors">
+					<input tal:condition="php:billingStep.selected(connectorFilter.getId(), repeat.connectorFilter.start)" checked="checked" id="mode_${connectorFilter/getId}" 
+						type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
+					<input tal:condition="php:!billingStep.selected(connectorFilter.getId(), repeat.connectorFilter.start)" id="mode_${connectorFilter/getId}" 
+						type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
+					<label class="nocmx" for="mode_${connectorFilter/getId}">${connectorFilter/getConnector/getSelectionAsHtml}</label>
+				</li>
+			</ol>			
+			<p class="buttons">
+				<input class="button" change:submit="name Select" label="&modules.order.document.billingstepbean.Select;" />				
+			</p>
+		</tal:block>
 	</form>
 	<a class="link" change:actionlink="" block="order_shippingStep" change:translate="modules.order.frontoffice.Back-to-previous-step"></a>
 </div>
