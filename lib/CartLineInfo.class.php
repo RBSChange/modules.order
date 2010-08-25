@@ -219,7 +219,9 @@ class order_CartLineInfo
 		}
 	}
 	
-	
+	/**
+	 * @return string
+	 */
 	public function getFormattedTaxCode()
 	{
 		return catalog_PriceHelper::formatTaxRate($this->getTaxRate());
@@ -439,7 +441,6 @@ class order_CartLineInfo
 	
 	/**
 	 * @param Boolean $aBoolean
-	 * 
 	 */
 	function setABoolean($aBoolean)
 	{
@@ -452,14 +453,6 @@ class order_CartLineInfo
 	function getABoolean()
 	{
 		return $this->aBoolean;
-	}
-	
-	/**
-	 * @return Boolean
-	 */
-	public function isBasicLine()
-	{
-		return true;
 	}
 	
 	/**
@@ -492,5 +485,15 @@ class order_CartLineInfo
 			}
 		}
 		return null;
+	}
+	
+	// DEPRECATED
+	
+	/**
+	 * @deprecated with no replacement
+	 */
+	public function isBasicLine()
+	{
+		return true;
 	}
 }

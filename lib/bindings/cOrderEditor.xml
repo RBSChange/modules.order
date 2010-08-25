@@ -235,6 +235,7 @@
 		</content>
 	</binding>
 	
+	<!-- Bills and shipping. -->
 	<binding id="cBillgenerator" extends="form.cField#cHiddenField">
 		<content>
 			<children />
@@ -365,6 +366,13 @@
 				<body><![CDATA[
 					this.setCellValue(rowNode.childNodes[2], 'status', rowNode.mDataRow);
 					this.setCellArchiveValue(rowNode.childNodes[3], rowNode.mDataRow);
+					
+					var module = this.parentNode;
+					while (module && module.tagName != "wmodule")
+					{
+						module = module.parentNode;
+					}
+					module.refreshMainViewDeck();
 				]]></body>
 			</method>
 			
@@ -466,8 +474,7 @@
 					}
 				]]></body>
 			</method>	
-		</implementation>	
-		
+		</implementation>
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
 				<xul:columns>	
@@ -534,6 +541,13 @@
 				<body><![CDATA[
 					this.setCellValue(rowNode.childNodes[1], 'status', rowNode.mDataRow);
 					this.setCellValue(rowNode.childNodes[3], 'traking', rowNode.mDataRow);
+					
+					var module = this.parentNode;
+					while (module && module.tagName != "wmodule")
+					{
+						module = module.parentNode;
+					}
+					module.refreshMainViewDeck();
 				]]></body>
 			</method>
 			
@@ -558,8 +572,7 @@
 					}
 				]]></body>
 			</method>		
-		</implementation>	
-		
+		</implementation>
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
 				<xul:columns>	
@@ -593,7 +606,6 @@
 	
 	<binding id="validateBillDialog" extends="core.wDialog#wDialog">
 		<implementation>
-				
 			<constructor><![CDATA[
 				wCore.debug('validateBillDialog.constructor');	
 			]]></constructor>
@@ -632,7 +644,6 @@
 					document.getAnonymousElementByAttribute(this, 'anonid', 'ok').disabled = disabled;
 				]]></body>
 			</method>
-
 
 			<method name="onCancel">
 				<body><![CDATA[
@@ -683,8 +694,7 @@
 						}
 					}
 				]]></body>
-			</method>			
-			
+			</method>
 		</implementation>
 		<xbl:content>
 			<xul:vbox flex="1">
@@ -724,18 +734,16 @@
 					</xul:rows>
 				</xul:grid>
 				<xul:hbox pack="center" style="height: 32px">
-						<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="&amp;modules.order.bo.general.Validate;" />
-						<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="&amp;modules.order.bo.general.Cancel;" />
-						<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="&amp;modules.uixul.bo.dialog.Close;" />
+					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="&amp;modules.order.bo.general.Validate;" />
+					<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="&amp;modules.order.bo.general.Cancel;" />
+					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="&amp;modules.uixul.bo.dialog.Close;" />
 				</xul:hbox>
 			</xul:vbox>
 		</xbl:content>
 	</binding>
 	
-	
 	<binding id="shipExpeditionDialog" extends="core.wDialog#wDialog">
 		<implementation>
-				
 			<constructor><![CDATA[
 				wCore.debug('shipExpeditionDialog.constructor');	
 			]]></constructor>
@@ -768,7 +776,6 @@
 					document.getAnonymousElementByAttribute(this, 'anonid', 'ok').disabled = disabled;
 				]]></body>
 			</method>
-
 
 			<method name="onCancel">
 				<body><![CDATA[
@@ -855,9 +862,9 @@
 					</xul:rows>
 				</xul:grid>
 				<xul:hbox pack="center" style="height: 32px">
-						<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="&amp;modules.order.bo.general.Validate;" />
-						<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="&amp;modules.order.bo.general.Cancel;" />
-						<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="&amp;modules.uixul.bo.dialog.Close;" />
+					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="&amp;modules.order.bo.general.Validate;" />
+					<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="&amp;modules.order.bo.general.Cancel;" />
+					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="&amp;modules.uixul.bo.dialog.Close;" />
 				</xul:hbox>
 			</xul:vbox>
 		</xbl:content>

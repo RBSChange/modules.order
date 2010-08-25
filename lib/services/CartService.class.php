@@ -696,15 +696,12 @@ class order_CartService extends BaseService
 		$cartLines = $cart->getCartLineArray();
 		foreach ($cartLines as $cartLine)
 		{
-			if ($cartLine->isBasicLine())
+			$productId = $cartLine->getProductId();
+			if (!isset($quantities[$productId]))
 			{
-				$productId = $cartLine->getProductId();
-				if (!isset($quantities[$productId]))
-				{
-					$quantities[$productId] = 0;
-				}
-				$quantities[$productId] += $cartLine->getQuantity();
+				$quantities[$productId] = 0;
 			}
+			$quantities[$productId] += $cartLine->getQuantity();
 		}
 
 		return $quantities;

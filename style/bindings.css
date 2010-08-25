@@ -7,11 +7,8 @@ cdocumenteditor#edt_order_order cfieldsgroup.customer{
 cdocumenteditor#edt_order_order row[linetype="grid-header"]{
 	-moz-binding: url(binding:modules.order.cOrderEditor#headRow);
 }
-cdocumenteditor#edt_order_order row[linetype="cart-line"],row[linetype="sub-cart-line"]{
+cdocumenteditor#edt_order_order row[linetype="cart-line"]{
 	-moz-binding: url(binding:modules.order.cOrderEditor#lineRow);
-}
-cdocumenteditor#edt_order_order row[linetype="discount-cart-line"]{
-	-moz-binding: url(binding:modules.order.cOrderEditor#discountLineRow);
 }
 cdocumenteditor#edt_order_order cmessagespanel{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cMessagesPanel);

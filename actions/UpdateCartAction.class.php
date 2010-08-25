@@ -11,9 +11,8 @@ class order_UpdateCartAction extends f_action_BaseAction
 		$cartService = order_CartService::getInstance();
 		$cart = $cartService->getDocumentInstanceFromSession();
 
-		if (!is_null($cart))
+		if ($cart !== null)
 		{
-			
 			// -- Lines management.
 			if (array_key_exists('lines', $moduleParams))
 			{
@@ -21,7 +20,7 @@ class order_UpdateCartAction extends f_action_BaseAction
 				{
 					// If there is no line for this index skip it.
 					$cartLineInfo = $cart->getCartLine($index);
-					if (is_null($cartLineInfo))
+					if ($cartLineInfo === null)
 					{
 						continue;
 					}
@@ -36,15 +35,10 @@ class order_UpdateCartAction extends f_action_BaseAction
 					$quantity = intval($quantity);
 					
 					$productId = array_key_exists('productId', $cartLine) ? $cartLine['productId'] : null;
-					
-					// Basic lines.
-					if ($cartLineInfo->isBasicLine())
-					{
-						if (!is_null($quantity) && !is_null($productId))
-						{	
-							$product = DocumentHelper::getDocumentInstance($productId);
-							$cartService->updateLine($cart, $index, $product, $quantity);
-						}
+					if ($productId !== null)
+					{	
+						$product = DocumentHelper::getDocumentInstance($productId);
+						$cartService->updateLine($cart, $index, $product, $quantity);
 					}
 				}
 			}			

@@ -4,15 +4,6 @@ row[linetype="grid-header"]{
 row[linetype="cart-line"]:nth-child(even){
 	background: whitesmoke;
 }
-row[linetype="discount-cart-line"]{
-	background: #aca;
-}
-row[linetype="sub-cart-line"]:nth-child(even){
-	background: #ded;
-}
-row[linetype="sub-cart-line"]:nth-child(odd){
-	background: #efe;
-}
 section[messageType="fromCustomer"] groupbox{
 	border: 1px solid #6a6!important;
 	-moz-border-radius: 5px!important;
