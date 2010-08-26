@@ -1,26 +1,25 @@
 <?php
-class order_HasProductAttributeFilter extends f_persistentdocument_DocumentFilterImpl
+class order_HasProductAttributeFilter extends order_LinesCartFilterBase
 {
-	private $attributesDef;
-	
 	public function __construct()
 	{
-		$parameters = array();
+		parent::__construct();
+		
 		$info = new BeanPropertyInfoImpl('qtt', 'String');
 		$info->setLabelKey('Quantité de produit');
 		$info->setListId('modules_order/qttfilter');
 		$parameter = new f_persistentdocument_DocumentFilterValueParameter($info);
-		$parameters['qtt'] = $parameter;
+		$this->setParameter('qtt', $parameter);
 		
-		$attributeFolder = catalog_AttributefolderService::getInstance()->getAttributeFolder();
-		$this->attributesDef = ($attributeFolder) ? $attributeFolder->getAttributes() : array();	
 		$parameter = f_persistentdocument_DocumentFilterRestrictionParameter::getNewInstance();
-		foreach ($this->attributesDef as $attributeDef) 
+		$attributeFolder = catalog_AttributefolderService::getInstance()->getAttributeFolder();
+		$attributesDef = ($attributeFolder) ? $attributeFolder->getAttributes() : array();
+		foreach ($attributesDef as $attributeDef)
 		{
 			$name = $attributeDef['code'];
 			$type = $attributeDef['type'] == 'text' ? 'String' : 'Double';
 			$beanprop = new BeanPropertyInfoImpl($name, $type);
-			$beanprop->setLabelKey($attributeDef['label']);	
+			$beanprop->setLabelKey($attributeDef['label']);
 			$parameter->addAllowedProperty($name, $beanprop);
 			if ($type == 'Double')
 			{
@@ -31,8 +30,7 @@ class order_HasProductAttributeFilter extends f_persistentdocument_DocumentFilte
 				$parameter->setAllowedRestrictions($name, array('eq', 'ne'));
 			}
 		}
-		$parameters['attribute'] = $parameter;		
-		$this->setParameters($parameters);
+		$this->setParameter('attribute', $parameter);
 	}
 	
 	/**
@@ -42,25 +40,28 @@ class order_HasProductAttributeFilter extends f_persistentdocument_DocumentFilte
 	{
 		return 'order/cart';
 	}
-
+	
 	/**
 	 * @param order_CartInfo $value
 	 */
 	public function checkValue($value)
 	{
-		if ($value instanceof order_CartInfo) 
+		if ($value instanceof order_CartInfo)
 		{
-			$lines = $value->getCartLineArray();
-			if (count($lines) == 0) {return false;}
+			$lines = $this->getLines($value);
+			if (count($lines) == 0)
+			{
+				return false;
+			}
 			
 			$qtt = $this->getProductQtt();
 			$param = $this->getParameter('attribute');
 			$restriction = $param->getRestriction();
 			$val = $param->getParameter()->getValue();
 			$count = 0;
-			foreach ($lines as $cartLine) 
+			foreach ($lines as $line)
 			{
-				$testVal = $this->getTestVal($param, $cartLine);
+				$testVal = $this->getTestVal($param, $line);
 				if ($this->evalRestriction($testVal, $restriction, $val))
 				{
 					$count++;
@@ -73,7 +74,7 @@ class order_HasProductAttributeFilter extends f_persistentdocument_DocumentFilte
 				{
 					return true;
 				}
-				elseif ($qtt === 'ALL' && $count == count($lines))
+				else if ($qtt === 'ALL' && $count == count($lines))
 				{
 					return true;
 				}
@@ -96,13 +97,13 @@ class order_HasProductAttributeFilter extends f_persistentdocument_DocumentFilte
 	
 	/**
 	 * @param f_persistentdocument_DocumentFilterRestrictionParameter $paremeter
-	 * @param order_CartLineInfo $cartLine
+	 * @param order_CartLineInfo $line
 	 * @return mixed
 	 */
-	private function getTestVal($paremeter, $cartLine)
+	private function getTestVal($paremeter, $line)
 	{
 		$attributeName = $paremeter->getPropertyName();
-		$product = $cartLine->getProduct();
+		$product = $line->getProduct();
 		if ($product)
 		{
 			$attrs = $product->getAttributes();

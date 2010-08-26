@@ -91,28 +91,4 @@ class order_AddressCartFilter extends f_persistentdocument_DocumentFilterImpl
 		}
 		return null;
 	}
-	
-	/**
-	 * @param f_persistentdocument_DocumentFilterRestrictionParameter $paremeter
-	 * @param order_CartInfo $value
-	 * @return mixed
-	 */
-	private function getTestVal($paremeter, $value)
-	{
-		$somme = 0;
-		$attributeName = $paremeter->getPropertyName();
-		foreach ($value->getCartLineArray() as $cartLine) 
-		{
-			$product = $cartLine->getProduct();
-			if ($product)
-			{
-				$attrs = $product->getAttributes();
-				if (isset($attrs[$attributeName]))
-				{
-					$somme += doubleval($attrs[$attributeName]) * $cartLine->getQuantity();
-				}
-			}
-		}
-		return $somme;
-	}
 }

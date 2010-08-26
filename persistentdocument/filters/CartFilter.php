@@ -1,24 +1,40 @@
 <?php
-class order_CartFilter extends f_persistentdocument_DocumentFilterImpl
+class order_CartFilter extends order_LinesCartFilterBase
 {
 	public function __construct()
 	{
-		$parameters = array();
-		$beanprop = new BeanPropertyInfoImpl('totalAmountWithTax', 'Double');
-		$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-totalAmountWithTax;');
-		$beanprop2 = new BeanPropertyInfoImpl('totalAmountWithoutTax', 'Double');
-		$beanprop2->setLabelKey('&modules.order.bo.documentfilters.Cart-totalAmountWithoutTax;');
-		$beanprop3 = new BeanPropertyInfoImpl('lineCount', 'Integer');
-		$beanprop3->setLabelKey('&modules.order.bo.documentfilters.Cart-lineCount;');
-		$beanprop4 = new BeanPropertyInfoImpl('productCount', 'Integer');
-		$beanprop4->setLabelKey('&modules.order.bo.documentfilters.Cart-productCount;');
+		parent::__construct();
+		
 		$parameter = f_persistentdocument_DocumentFilterRestrictionParameter::getNewInstance();
-		$parameter->addAllowedProperty('totalAmountWithTax', $beanprop);
-		$parameter->addAllowedProperty('totalAmountWithoutTax', $beanprop2);
-		$parameter->addAllowedProperty('lineCount', $beanprop3);
-		$parameter->addAllowedProperty('productCount', $beanprop4);
-		$parameters['cart'] = $parameter;
-		$this->setParameters($parameters);
+		
+		if ($this->getDocumentModelName() == 'order/cart')
+		{
+			$beanprop = new BeanPropertyInfoImpl('totalAmountWithTax', 'Double');
+			$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-totalAmountWithTax;');
+			$parameter->addAllowedProperty('totalAmountWithTax', $beanprop);
+			
+			$beanprop = new BeanPropertyInfoImpl('totalAmountWithoutTax', 'Double');
+			$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-totalAmountWithoutTax;');
+			$parameter->addAllowedProperty('totalAmountWithoutTax', $beanprop);
+			
+			$beanprop = new BeanPropertyInfoImpl('linesAmountWithTax', 'Double');
+			$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-linesAmountWithTax;');
+			$parameter->addAllowedProperty('linesAmountWithTax', $beanprop);
+			
+			$beanprop = new BeanPropertyInfoImpl('linesAmountWithoutTax', 'Double');
+			$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-linesAmountWithoutTax;');
+			$parameter->addAllowedProperty('linesAmountWithoutTax', $beanprop);
+		}
+		
+		$beanprop = new BeanPropertyInfoImpl('lineCount', 'Integer');
+		$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-lineCount;');
+		$parameter->addAllowedProperty('lineCount', $beanprop);
+		
+		$beanprop = new BeanPropertyInfoImpl('productCount', 'Integer');
+		$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-productCount;');
+		$parameter->addAllowedProperty('productCount', $beanprop);
+
+		$this->setParameter('cart', $parameter);
 	}
 	
 	/**
@@ -58,11 +74,15 @@ class order_CartFilter extends f_persistentdocument_DocumentFilterImpl
 				return $value->getTotalWithTax();
 			case 'totalAmountWithoutTax':
 				return $value->getTotalWithoutTax();
+			case 'linesAmountWithTax':
+				return $value->getSubTotalWithTax();
+			case 'linesAmountWithoutTax':
+				return $value->getSubTotalWithoutTax();
 			case 'lineCount':
-				return $value->getCartLineCount();
+				return count($this->getLines($value));
 			case 'productCount':
 				$count = 0;
-				foreach ($value->getCartLineArray() as $cartLineInfo)
+				foreach ($this->getLines($value) as $cartLineInfo)
 				{
 					$count += $cartLineInfo->getQuantity();
 				}

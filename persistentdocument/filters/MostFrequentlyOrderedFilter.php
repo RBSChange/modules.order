@@ -17,11 +17,20 @@ class order_MostFrequentlyOrderedFilter extends f_persistentdocument_DocumentFil
 		return 'modules_catalog/product';
 	}
 	
+	/**
+	 * @param array $b
+	 * @param array $a
+	 * @return integer
+	 */
 	public function sortProducts($b, $a)
 	{
 		return $a['count'] > $b['count'] ? 1 : ($a['count'] === $b['count'] ? 0 : -1);
 	}
 	
+	/**
+	 * @param array $a
+	 * @return integer
+	 */
 	public function extractId($a)
 	{
 		return $a['productId'];

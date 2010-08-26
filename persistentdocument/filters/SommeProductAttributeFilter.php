@@ -1,25 +1,26 @@
 <?php
-class order_SommeProductAttributeFilter extends f_persistentdocument_DocumentFilterImpl
+class order_SommeProductAttributeFilter extends order_LinesCartFilterBase
 {
 	public function __construct()
 	{
-		$parameters = array();
-		$attributeFolder = catalog_AttributefolderService::getInstance()->getAttributeFolder();
-		$attributesDef = ($attributeFolder) ? $attributeFolder->getAttributes() : array();
+		parent::__construct();
 		
 		$parameter = f_persistentdocument_DocumentFilterRestrictionParameter::getNewInstance();
-		foreach ($attributesDef as $attributeDef) 
+		$attributeFolder = catalog_AttributefolderService::getInstance()->getAttributeFolder();
+		$attributesDef = ($attributeFolder) ? $attributeFolder->getAttributes() : array();
+		foreach ($attributesDef as $attributeDef)
 		{
-			if ($attributeDef['type'] == 'text') {continue;}
+			if ($attributeDef['type'] == 'text')
+			{
+				continue;
+			}
 			$name = $attributeDef['code'];
-			$type = $attributeDef['type'] == 'text' ? 'String' : 'Double';
-			$beanprop = new BeanPropertyInfoImpl($name, $type);
-			$beanprop->setLabelKey($attributeDef['label']);	
+			$beanprop = new BeanPropertyInfoImpl($name, 'Double');
+			$beanprop->setLabelKey($attributeDef['label']);
 			$parameter->addAllowedProperty($name, $beanprop);
 			$parameter->setAllowedRestrictions($name, array('ge', 'gt', 'le', 'lt'));
 		}
-		$parameters['attribute'] = $parameter;		
-		$this->setParameters($parameters);
+		$this->setParameter('attribute', $parameter);
 	}
 	
 	/**
@@ -29,13 +30,13 @@ class order_SommeProductAttributeFilter extends f_persistentdocument_DocumentFil
 	{
 		return 'order/cart';
 	}
-
+	
 	/**
 	 * @param order_CartInfo $value
 	 */
 	public function checkValue($value)
 	{
-		if ($value instanceof order_CartInfo) 
+		if ($value instanceof order_CartInfo)
 		{
 			$param = $this->getParameter('attribute');
 			$testVal = $this->getTestVal($param, $value);
@@ -46,17 +47,16 @@ class order_SommeProductAttributeFilter extends f_persistentdocument_DocumentFil
 		return false;
 	}
 	
-	
 	/**
 	 * @param f_persistentdocument_DocumentFilterRestrictionParameter $paremeter
 	 * @param order_CartInfo $value
 	 * @return mixed
 	 */
-	private function getTestVal($paremeter, $value)
+	protected function getTestVal($paremeter, $value)
 	{
 		$somme = 0;
 		$attributeName = $paremeter->getPropertyName();
-		foreach ($value->getCartLineArray() as $cartLine) 
+		foreach ($this->getLines($value) as $cartLine)
 		{
 			$product = $cartLine->getProduct();
 			if ($product)
