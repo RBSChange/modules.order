@@ -139,25 +139,20 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 	 */
 	function executeSelect($request, $response, order_ShippingStepBean $shippingStep)
 	{
-		Framework::info('kkkkkkkkkkk');
 		$cartInfo = $this->getCurrentCart();
 		
 		if ($cartInfo->canSelectShippingModeId())
 		{
-			Framework::info('gggggggggggg');
 			$shippingFilter = DocumentHelper::getDocumentInstance($shippingStep->shippingFilterId);
 			$cartInfo->setRequiredShippingFilter(0, $shippingFilter);
 		}
 		else
 		{
-			Framework::info('eeeeeeeeeeeee');
 			$cartInfo->setRequiredShippingFilter(0, null);
 		}
-		Framework::info('iiiiiiiiiiiiii');
 		
 		$cartInfo->setAddressInfo($shippingStep);
 		$cartInfo->save();
-		Framework::info('jjjjjjjjjjjjjjjjjjjjj');
 		$this->redirectToNextStep();
 		return $this->getInputViewName();	
 	}

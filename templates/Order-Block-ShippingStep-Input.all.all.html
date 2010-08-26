@@ -80,25 +80,28 @@
 		<br />
 		<tal:block tal:condition="cart/hasPredefinedShippingMode"
 			tal:define="shippingModes cart/getRequiredShippingModes">
-			<h3 change:h="" change:translate="modules.order.document.shippingstepbean.fixed-shipping-mode">Mode de livraison predefini</h3>
-			<ol>
-				<li tal:repeat="modeFilter shippingModes">
-					<span tal:define="mode modeFilter/getMode">
-					<label class="nocmx">
-						<tal:block tal:replace="mode/getLabel" />
-						<tal:block tal:condition="modeFilter/getValueWithTax"> (<tal:block tal:replace="modeFilter/getFormattedValueWithTax" />)</tal:block>
-					</label>
-					<img style="display:inline;float:left" change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
-					</span>
-						<p tal:condition="mode/getDescription">	
-							<tal:block tal:content="mode/getDescription" />
-						</p>
-					<ul tal:define="cartLines php:cart.getCartLineArrayByShippingMode(modeFilter.getMode())">
-						<li tal:repeat="cartLine cartLines">${cartLine/getProduct/getLabelAsHtml}</li>
-					</ul>  
-				</li>
-			</ol>			
-			<div class="cleaner" />
+				<h3 change:h="" change:translate="modules.order.document.shippingstepbean.fixed-shipping-mode">Mode de livraison predefini</h3>
+				<ol>
+					<li tal:repeat="modeFilter shippingModes">
+						<span tal:define="mode modeFilter/getMode">
+						<label class="nocmx">
+							<tal:block tal:replace="mode/getLabel" />
+							<tal:block tal:condition="modeFilter/getValueWithTax"> (<tal:block tal:replace="modeFilter/getFormattedValueWithTax" />)</tal:block>
+						</label>
+						<img style="display:inline;float:left" change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
+						</span>
+							<p tal:condition="mode/getDescription">	
+								<tal:block tal:content="mode/getDescription" />
+							</p>
+						<ul tal:define="cartLines php:cart.getCartLineArrayByShippingMode(modeFilter.getMode())">
+							<li tal:repeat="cartLine cartLines">${cartLine/getProduct/getLabelAsHtml}</li>
+						</ul>  
+					</li>
+				</ol>			
+				<div class="cleaner" />
+			<tal:block tal:condition="not: shippingModes/0">
+				<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode" class="error" />
+			</tal:block>				
 		</tal:block>
 		
 		<tal:block tal:condition="cart/canSelectShippingModeId" tal:define="shippingModes cart/getShippingModes" > 
@@ -124,11 +127,11 @@
 			</ol>
 			</tal:block>
 			<tal:block tal:condition="not: shippingModes/0">
-				<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode" />
+				<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode" class="error" />
 			</tal:block>
 			<div class="cleaner" />
 		</tal:block>
-		<p class="buttons">
+		<p class="buttons" tal:condition="cart/canBeShipped">
 			<input class="button" change:submit="name Select" label="&modules.order.document.shippingstepbean.Select;" />
 		</p>
 	</form>

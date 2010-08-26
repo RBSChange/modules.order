@@ -65,7 +65,9 @@
 					<td tal:define="name string:orderParam[lines][${cartLineIndex}][quantity]; update product/updateCartQuantity">
 						<label class="hidden" tal:attributes="for name" change:translate="modules.order.frontoffice.QuantityLabel"></label> 
 						<input class="textfield" tal:condition="update" type="text" size="3" tal:attributes="name name; value cartLine/getQuantity" />
-						<tal:block tal:condition="not: update">${cartLine/getQuantity}</tal:block>
+						<tal:block tal:condition="not: update">
+							<input  class="textfield" type="hidden" tal:attributes="name name; value  cartLine/getQuantity"/> ${cartLine/getQuantity}
+						</tal:block>
 					</td>
 	
 					<!-- TVA -->

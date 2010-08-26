@@ -333,7 +333,7 @@ class order_CartInfo
 	{
 		$result = array();
 		$shippingArray = $this->getShippingArray();
-		foreach (array_keys($shippingArray) as $shippingModeId) 
+		foreach ($shippingArray as $shippingModeId => $value) 
 		{
 			if ($shippingModeId != 0)
 			{
@@ -1271,7 +1271,7 @@ class order_CartInfo
 		$result = array();
 		if ($this->hasPredefinedShippingMode())
 		{
-			foreach ($this->shippingArray as $shippingModeId => $value) 
+			foreach ($this->getShippingArray() as $shippingModeId => $value) 
 			{
 				if ($shippingModeId != 0 && isset($value['filter']))
 				{
@@ -1303,6 +1303,19 @@ class order_CartInfo
 	public function refresh()
 	{
 		return order_CartService::getInstance()->refresh($this);
+	}
+	
+	function canBeShipped()
+	{
+		if ($this->hasPredefinedShippingMode() && count($this->getRequiredShippingModes()) == 0)
+		{
+			return false;
+		}
+		if ($this->canSelectShippingModeId() && count($this->getShippingModes()) == 0)
+		{
+			return false;
+		}
+		return true;
 	}
 	
 	// Deprecated

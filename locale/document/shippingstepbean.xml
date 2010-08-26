@@ -46,7 +46,8 @@
 		<locale lang="de">Unter der unten stehenden Liste, wählen Sie bitte die Lieferzeit für Ihre Bestellung.</locale>
 	</entity>
 	<entity id="No-shipping-mode">
-		<locale lang="fr">Il n'y as pas de mode de livraison disponnible pour les informations saisie.</locale>
+		<locale lang="fr">Il n'y a pas de modes de livraison disponibles pour les informations saisie.</locale>
+		<locale lang="en">There are no shipping modes available for your order.</locale>
 	</entity>	
 	<entity id="registered-address-text">
 		<locale lang="fr">Utiliser une adresse prédéfinie de votre compte</locale>
