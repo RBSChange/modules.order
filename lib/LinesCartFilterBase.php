@@ -5,7 +5,8 @@ abstract class order_LinesCartFilterBase extends f_persistentdocument_DocumentFi
 	{
 		if ($this->getDocumentModelName() == 'order/cartshipping')
 		{
-			$info = new BeanPropertyInfoImpl('mode', BeanPropertyType::DOCUMENT, 'shipping_persistentdocument_mode');
+			$info = new BeanPropertyInfoImpl('mode', BeanPropertyType::STRING);
+			$info->setListId('modules_catalog/shippingmodeoptions');
 			$parameter = new f_persistentdocument_DocumentFilterValueParameter($info);
 			$this->setParameter('mode', $parameter);
 		}
@@ -19,12 +20,20 @@ abstract class order_LinesCartFilterBase extends f_persistentdocument_DocumentFi
 	{
 		if ($this->getDocumentModelName() == 'order/cartshipping')
 		{
-			$lines = array();
-			foreach ($this->getParameter('mode')->getValueForQuery() as $mode)
+			$mode = $this->getParameter('mode')->getValueForQuery();
+			if ($mode == 'free')
 			{
-				$lines = array_merge($lines, $value->getCartLineArrayByShippingMode($mode));
+				return $value->getCartLineArrayByShippingMode(null);
 			}
-			return $lines;
+			else if ($mode == 'current')
+			{
+				return $value->getCartLineArrayByShippingMode($value->getCurrentTestFilter());
+			}
+			else if (is_numeric($mode))
+			{
+				return $value->getCartLineArrayByShippingMode(DocumentHelper::getDocumentInstance($mode, 'modules_shipping/mode'));
+			}
+			return array();
 		}
 		else 
 		{

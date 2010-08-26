@@ -332,8 +332,8 @@ class order_CartInfo
 	function getRequiredShippingModeIds()
 	{
 		$result = array();
-		$shippingArray = $this->getShippingArray();
-		foreach ($shippingArray as $shippingModeId => $value) 
+		$shippingModeIds = array_keys($this->getShippingArray());
+		foreach ($shippingModeIds as $shippingModeId) 
 		{
 			if ($shippingModeId != 0)
 			{

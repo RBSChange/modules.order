@@ -1,7 +1,7 @@
-<h3 change:h=""><span change:translate="modules.order.frontoffice.Shipping-number" /> ${expedition/getLabelAsHtml} (${expedition/getStatusLabel})</h3>
+<h3 change:h=""><span change:translate="modules.order.frontoffice.Shipping-number"></span> ${expedition/getLabelAsHtml} (${expedition/getStatusLabel})</h3>
 <ol tal:define="shippingMode expedition/getShippingMode">
-	<li><span change:translate="modules.order.frontoffice.Transport-nameLabel" /> ${shippingMode/getLabelAsHtml}</li>
-	<li><span change:translate="modules.order.frontoffice.Tracking-numberLabel" /> ${expedition/getTrackingNumber}</li>
+	<li><span change:translate="modules.order.frontoffice.Transport-nameLabel"></span> ${shippingMode/getLabelAsHtml}</li>
+	<li><span change:translate="modules.order.frontoffice.Tracking-numberLabel"></span> ${expedition/getTrackingNumber}</li>
 	<li tal:repeat="line expeditionlines">
 		<span>${line/getProduct/getLabel} - ${line/getProduct/getCodeReference} </span>
 		<span>${line/getQuantity} / ${line/getOrderProductQuantity} </span>

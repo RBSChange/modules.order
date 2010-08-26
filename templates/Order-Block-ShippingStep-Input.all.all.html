@@ -76,7 +76,7 @@
 				}			
 			});
 		//]]></script>	
-		<div class="cleaner" />
+		<div class="cleaner"></div>
 		<br />
 		<tal:block tal:condition="cart/hasPredefinedShippingMode"
 			tal:define="shippingModes cart/getRequiredShippingModes">
@@ -98,17 +98,17 @@
 						</ul>  
 					</li>
 				</ol>			
-				<div class="cleaner" />
+				<div class="cleaner"></div>
 			<tal:block tal:condition="not: shippingModes/0">
-				<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode" class="error" />
+				<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode" class="error"></p>
 			</tal:block>				
 		</tal:block>
 		
 		<tal:block tal:condition="cart/canSelectShippingModeId" tal:define="shippingModes cart/getShippingModes" > 
-			<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Choose-delivery-legend" />
+			<h3 change:h="" change:translate="modules.order.document.shippingstepbean.Choose-delivery-legend"></h3>
 		
 			<tal:block tal:condition="shippingModes/0">
-			<p change:translate="modules.order.document.shippingstepbean.Choose-delivery-text" />
+			<p change:translate="modules.order.document.shippingstepbean.Choose-delivery-text"></p>
 			<br />
 			<ol>
 				<li tal:repeat="modeFilter shippingModes">
@@ -129,7 +129,7 @@
 			<tal:block tal:condition="not: shippingModes/0">
 				<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode" class="error" />
 			</tal:block>
-			<div class="cleaner" />
+			<div class="cleaner"></div>
 		</tal:block>
 		<p class="buttons" tal:condition="cart/canBeShipped">
 			<input class="button" change:submit="name Select" label="&modules.order.document.shippingstepbean.Select;" />
