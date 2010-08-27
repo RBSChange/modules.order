@@ -57,7 +57,7 @@
 		<locale lang="fr">propriétés de l'adresse</locale>
 	</entity>
 	<entity id="AddressCartFilter-text">
-		<locale lang="fr">dont l'addresse {addrtype} à {addrpart} de la zone {zone}</locale>
+		<locale lang="fr">dont l'addresse {addrtype} a {addrpart} de la zone {zone}</locale>
 	</entity>	
 	
 	<entity id="addrtypefilter-billing">
