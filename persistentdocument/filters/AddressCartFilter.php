@@ -42,7 +42,6 @@ class order_AddressCartFilter extends f_persistentdocument_DocumentFilterImpl
 		if ($value instanceof order_CartInfo) 
 		{
 			$code = $this->getCartAddress($value);
-			Framework::fatal($code);
 			if ($code !== null)
 			{
 				$param = $this->getParameter('zone');

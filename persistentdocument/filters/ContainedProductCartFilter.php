@@ -35,7 +35,13 @@ class order_ContainedProductCartFilter extends order_LinesCartFilterBase
 			$productIds = DocumentHelper::getIdArrayFromDocumentArray($this->getParameter('product')->getValueForQuery());
 			foreach ($this->getLines($value) as $line)
 			{
-				if (in_array($line->getProductId(), $productIds))
+				$productId = $line->getProductId();
+				$product = $line->getProduct();
+				if ($product instanceof catalog_persistentdocument_productdeclination)
+				{
+					$productId = $product->getRelatedDeclinedProduct()->getId();
+				}
+				if (in_array($productId, $productIds))
 				{
 					$quantity += $line->getQuantity();
 				}
