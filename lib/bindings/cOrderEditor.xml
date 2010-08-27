@@ -70,17 +70,17 @@
 		</resources>
 		<content>
 			<xul:vbox>
-				<xul:label xbl:inherits="value=productLabel" />
+				<xul:label class="allow-text-selection" xbl:inherits="xbl:text=productLabel" />
 			</xul:vbox>
-			<xul:label xbl:inherits="value=codeReference" />
+			<xul:label class="allow-text-selection" xbl:inherits="xbl:text=codeReference" />
 			<xul:vbox>
-				<xul:label xbl:inherits="value=unitPriceWithoutTax" />
-				<xul:label xbl:inherits="value=unitPriceWithTax" />
+				<xul:label class="allow-text-selection" xbl:inherits="xbl:text=unitPriceWithoutTax" />
+				<xul:label class="allow-text-selection" xbl:inherits="xbl:text=unitPriceWithTax" />
 			</xul:vbox>
-			<xul:label xbl:inherits="value=quantity" />
+			<xul:label class="allow-text-selection" xbl:inherits="xbl:text=quantity" />
 			<xul:vbox>
-				<xul:label xbl:inherits="value=totalPriceWithoutTax" />
-				<xul:label xbl:inherits="value=totalPriceWithTax" />
+				<xul:label class="allow-text-selection" xbl:inherits="xbl:text=totalPriceWithoutTax" />
+				<xul:label class="allow-text-selection" xbl:inherits="xbl:text=totalPriceWithTax" />
 			</xul:vbox>
 		</content>
 	</binding>	
@@ -221,12 +221,12 @@
 					<xul:rows>
 						<xul:row>
 							<xul:label value="&amp;modules.order.document.message.Creationdate;" />
-							<xul:label xbl:inherits="value=date" />
+							<xul:label class="allow-text-selection" xbl:inherits="xbl:text=date" />
 						</xul:row>
 						<xul:row>
 							<xul:label value="&amp;modules.order.document.message.Content;" />
 							<xul:hbox flex="1">
-								<html:div flex="1" anonid="content"><xbl:children /></html:div>
+								<html:div flex="1" anonid="content" class="allow-text-selection"><xbl:children /></html:div>
 							</xul:hbox>
 						</xul:row>
 					</xul:rows>
