@@ -29,30 +29,46 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 			$this->redirectToEmptyCart();
 		}
 
-		// The order process is started, so init lastAbandonedOrderDate.
-		$customer = $cartInfo->getCustomer();
-		$customer->setLastAbandonedOrderDate(date_Calendar::getInstance()->toString());
-		$customer->save();
-
-		$shippingStep = $cartInfo->getAddressInfo();
-		if (!$shippingStep instanceof order_ShippingStepBean)
+		$tm = f_persistentdocument_TransactionManager::getInstance();
+		try 
 		{
-			$shippingStep = new order_ShippingStepBean();
-			if ($customer->getDefaultAddress())
+			$tm->beginTransaction();
+			// The order process is started, so init lastAbandonedOrderDate.
+			$customer = $cartInfo->getCustomer();
+			$lastAbandonedOrderDate = date_Calendar::getInstance()->toString();
+			$customer->setLastAbandonedOrderDate($lastAbandonedOrderDate);
+	
+			$shippingStep = $cartInfo->getAddressInfo();
+			if (!$shippingStep instanceof order_ShippingStepBean)
 			{
-				$shippingStep->importShippingAddress($customer->getDefaultAddress());
+				$shippingStep = new order_ShippingStepBean();
+				if ($customer->getDefaultAddress())
+				{
+					$shippingStep->importShippingAddress($customer->getDefaultAddress());
+				}
+				else
+				{
+					$user = $customer->getUser();
+					$shippingStep->shippingAddress->Email = $user->getEmail();
+					$shippingStep->shippingAddress->FirstName = $user->getFirstname();
+					$shippingStep->shippingAddress->LastName = $user->getLastname();
+					$shippingStep->shippingAddress->Title = $user->getTitle();
+				}
+				$shippingStep->billingAddress->Email = $customer->getUser()->getEmail();
+				$cartInfo->setAddressInfo($shippingStep);			
+				$cartInfo->save();
 			}
-			else
+			
+			if ($customer->isModified())
 			{
-				$user = $customer->getUser();
-				$shippingStep->shippingAddress->Email = $user->getEmail();
-				$shippingStep->shippingAddress->FirstName = $user->getFirstname();
-				$shippingStep->shippingAddress->LastName = $user->getLastname();
-				$shippingStep->shippingAddress->Title = $user->getTitle();
+				$customer->save();
 			}
-			$shippingStep->billingAddress->Email = $customer->getUser()->getEmail();
-			$cartInfo->setAddressInfo($shippingStep);
-			$cartInfo->save();
+						
+			$tm->commit();
+		} 
+		catch (Exception $e)
+		{
+			$tm->rollBack($e);
 		}
 		$request->setAttribute('shippingStep', $shippingStep);		
 		return $this->getInputViewName();
