@@ -1290,10 +1290,18 @@ class order_CartInfo
 	{
 		return catalog_PaymentfilterService::getInstance()->getCurrentPaymentConnectors($this);
 	}
+	
+	/**
+	 * @return order_CartService
+	 */
+	public function getCartService()
+	{
+		return order_CartService::getInstance();
+	}
 
 	public function save()
 	{
-		order_CartService::getInstance()->saveToSession($this);
+		$this->getCartService()->saveToSession($this);
 	}	
 	
 	/**
@@ -1302,7 +1310,7 @@ class order_CartInfo
 	 */
 	public function refresh()
 	{
-		return order_CartService::getInstance()->refresh($this);
+		return $this->getCartService()->refresh($this);
 	}
 	
 	function canBeShipped()
