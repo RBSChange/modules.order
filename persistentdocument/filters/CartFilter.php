@@ -16,15 +16,15 @@ class order_CartFilter extends order_LinesCartFilterBase
 			$beanprop = new BeanPropertyInfoImpl('totalAmountWithoutTax', 'Double');
 			$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-totalAmountWithoutTax;');
 			$parameter->addAllowedProperty('totalAmountWithoutTax', $beanprop);
-			
-			$beanprop = new BeanPropertyInfoImpl('linesAmountWithTax', 'Double');
-			$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-linesAmountWithTax;');
-			$parameter->addAllowedProperty('linesAmountWithTax', $beanprop);
-			
-			$beanprop = new BeanPropertyInfoImpl('linesAmountWithoutTax', 'Double');
-			$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-linesAmountWithoutTax;');
-			$parameter->addAllowedProperty('linesAmountWithoutTax', $beanprop);
 		}
+		
+		$beanprop = new BeanPropertyInfoImpl('linesAmountWithTax', 'Double');
+		$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-linesAmountWithTax;');
+		$parameter->addAllowedProperty('linesAmountWithTax', $beanprop);
+		
+		$beanprop = new BeanPropertyInfoImpl('linesAmountWithoutTax', 'Double');
+		$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-linesAmountWithoutTax;');
+		$parameter->addAllowedProperty('linesAmountWithoutTax', $beanprop);
 		
 		$beanprop = new BeanPropertyInfoImpl('lineCount', 'Integer');
 		$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-lineCount;');
@@ -75,9 +75,19 @@ class order_CartFilter extends order_LinesCartFilterBase
 			case 'totalAmountWithoutTax':
 				return $value->getTotalWithoutTax();
 			case 'linesAmountWithTax':
-				return $value->getSubTotalWithTax();
+				$count = 0.0;
+				foreach ($this->getLines($value) as $cartLineInfo) 
+				{
+					$count += $cartLineInfo->getTotalValueWithTax();
+				}
+				return $count;
 			case 'linesAmountWithoutTax':
-				return $value->getSubTotalWithoutTax();
+				$count = 0.0;
+				foreach ($this->getLines($value) as $cartLineInfo) 
+				{
+					$count += $cartLineInfo->getTotalValueWithoutTax();
+				}
+				return $count;
 			case 'lineCount':
 				return count($this->getLines($value));
 			case 'productCount':
