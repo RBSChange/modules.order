@@ -250,7 +250,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	{
 		
 		$bill->setOrder($order);
-		$bill->setLabel($order->getLabel());
+		$bill->setLabel($order->getOrderNumber());
 		$bill->setAddress($order->getBillingAddress());
 		$bill->setConnectorId($order->getBillingModeId());
 		$bill->setAmount($order->getTotalAmountWithTax());
