@@ -440,22 +440,6 @@ class order_CartLineInfo
 	}
 	
 	/**
-	 * @param Boolean $aBoolean
-	 */
-	function setABoolean($aBoolean)
-	{
-		$this->aBoolean = $aBoolean;
-	}
-	
-	/**
-	 * @return Boolean
-	 */
-	function getABoolean()
-	{
-		return $this->aBoolean;
-	}
-	
-	/**
 	 * @return integer
 	 */
 	public function getShippingModeId()
