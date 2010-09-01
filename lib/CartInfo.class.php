@@ -985,7 +985,7 @@ class order_CartInfo
 	/**
 	 * String
 	 */
-	function getFormatedShippingPriceWithTax()
+	function getFormattedShippingPriceWithTax()
 	{
 		return $this->formatValue($this->getShippingPriceWithTax());
 	}	
@@ -993,11 +993,11 @@ class order_CartInfo
 	/**
 	 * String
 	 */
-	function getFormatedShippingPriceWithoutTax()
+	function getFormattedShippingPriceWithoutTax()
 	{
 		return $this->formatValue($this->getShippingPriceWithoutTax());
 	}
-
+	
 	/**
 	 * @return String
 	 */
@@ -1334,5 +1334,21 @@ class order_CartInfo
 	public function getFormattedTotalAmount()
 	{
 		return $this->formatValue($this->getTotalAmount());
+	}
+	
+	/**
+	 * @deprecated use getFormattedShippingPriceWithTax
+	 */
+	function getFormatedShippingPriceWithTax()
+	{
+		return $this->getFormattedShippingPriceWithTax();
+	}	
+	
+	/**
+	 * @depreacated use getFormattedShippingPriceWithoutTax
+	 */
+	function getFormatedShippingPriceWithoutTax()
+	{
+		return $this->getFormattedShippingPriceWithoutTax();
 	}
 }
