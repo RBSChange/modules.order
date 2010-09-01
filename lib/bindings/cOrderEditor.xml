@@ -630,7 +630,7 @@
 			
 			<method name="onInitialize">
 				<body><![CDATA[
-					this.resizeTo(500, 200);
+					this.autoResize(500, 200);
 					document.getAnonymousElementByAttribute(this, 'anonid', 'amount')
 						.setAttribute('value', this.parameters.rowData.amount);
 					document.getAnonymousElementByAttribute(this, 'anonid', 'number')
@@ -762,7 +762,7 @@
 			
 			<method name="onInitialize">
 				<body><![CDATA[
-					this.resizeTo(500, 200);
+					this.autoResize(500, 200);
 					document.getAnonymousElementByAttribute(this, 'anonid', 'transporteur')
 						.setAttribute('value', this.parameters.rowData.transporteur);
 					document.getAnonymousElementByAttribute(this, 'anonid', 'number')
