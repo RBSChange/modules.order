@@ -16,9 +16,9 @@ class order_UserLoginListener
 			// there is a current catalog (because a cart is always related to a catalog).
 			if ($customer !== null && $shop !== null)
 			{
+				$cart = $customer->getCart();
 				$cartService = order_CartService::getInstance();
 				$sessionCart = $cartService->getDocumentInstanceFromSession();
-				
 				if ($sessionCart->getMergeWithUserCart())
 				{
 					if (Framework::isInfoEnabled())
@@ -27,8 +27,7 @@ class order_UserLoginListener
 					}
 					$sessionCart->setCustomer($customer);
 					$sessionCart->setShop($shop);
-					$sessionCart->setMergeWithUserCart(false);		
-					$cart = $customer->getCart();
+					$sessionCart->setMergeWithUserCart(false);
 			
 					if ($cart !== null && !$cart->isEmpty())
 					{

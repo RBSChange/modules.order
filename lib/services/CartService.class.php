@@ -48,6 +48,7 @@ class order_CartService extends BaseService
 		if (!($cart instanceof order_CartInfo))
 		{
 			$cart = $this->initNewCart();
+			$this->saveToSession($cart);
 		}
 		return $cart;
 	}
