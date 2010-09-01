@@ -47,13 +47,12 @@ class order_UpdateCartAction extends f_action_BaseAction
 			$cartService->refresh($cart);
 		}
 
-		$pageId = $request->getParameter(K::PAGE_REF_ACCESSOR, null);
+		$pageId = $request->getParameter('pageref', null);
 		$url = null;
 		if (is_numeric($pageId))
 		{
-			$url = LinkHelper::getUrl(DocumentHelper::getDocumentInstance($pageId));
-		}
-		
+			$url = LinkHelper::getUrl(DocumentHelper::getDocumentInstance($pageId, 'modules_website/page'));
+		}		
 		$context->getController()->redirectToUrl(str_replace('&amp;', '&', $url));
 		
 		return View::NONE;		

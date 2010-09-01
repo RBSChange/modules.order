@@ -17,7 +17,13 @@ class order_RemoveCartLineAction extends f_action_BaseAction
 			$cartService->refresh($cart);
 		}
 
-		HttpController::getInstance()->redirectToUrl($_SERVER['HTTP_REFERER']);
+		$pageId = $request->getParameter('pageref', null);
+		$url = null;
+		if (is_numeric($pageId))
+		{
+			$url = LinkHelper::getUrl(DocumentHelper::getDocumentInstance($pageId, 'modules_website/page'));
+		}		
+		$context->getController()->redirectToUrl(str_replace('&amp;', '&', $url));
 
 		return View::NONE;
 	}
