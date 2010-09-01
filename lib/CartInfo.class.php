@@ -919,7 +919,7 @@ class order_CartInfo
 	 */
 	public function getTotalWithTax()
 	{
-		return $this->getTotalExcludingFeesWithTax() +  + $this->getShippingPriceWithTax();
+		return $this->getTotalExcludingFeesWithTax() + $this->getShippingPriceWithTax();
 	}	
 	
 	/**
