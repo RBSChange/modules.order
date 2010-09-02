@@ -53,6 +53,11 @@ class order_CartLineInfo
 	 * @var double
 	 */	
 	private $ecoTax = 0;
+	
+	/**
+	 * @var string
+	 */
+	private $key = null;
 
 	/**
 	 * @return Integer
@@ -61,6 +66,7 @@ class order_CartLineInfo
 	{
 		return $this->productId;
 	}
+	
 
 	/**
 	 * @param Integer $productId
@@ -68,6 +74,7 @@ class order_CartLineInfo
 	public function setProductId($productId)
 	{
 		$this->productId = $productId;
+		$this->key = null;
 	}
 	
 	/**
@@ -97,6 +104,18 @@ class order_CartLineInfo
 		$product = DocumentHelper::getDocumentInstance($this->productId, "modules_catalog/product");
 		$product->getDocumentService()->updateProductFromCartProperties($product, $this->properties);
 		return $product;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getKey()
+	{
+		if ($this->key === null)
+		{
+			$this->key = $this->getProduct()->getCartLineKey();
+		}
+		return $this->key;
 	}
 
 	/**
@@ -469,15 +488,5 @@ class order_CartLineInfo
 			}
 		}
 		return null;
-	}
-	
-	// DEPRECATED
-	
-	/**
-	 * @deprecated with no replacement
-	 */
-	public function isBasicLine()
-	{
-		return true;
 	}
 }

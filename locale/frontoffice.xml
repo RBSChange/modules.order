@@ -1174,4 +1174,8 @@
 	<entity id="product-download-count">
 		<locale lang="fr">Téléchargement(s)</locale>
 	</entity>	
+	
+	<entity id="cart-validation-error-max-lines">
+		<locale lang="fr">Le nombre maximum de ligne du panier est atteint</locale>
+	</entity>
 </localization>

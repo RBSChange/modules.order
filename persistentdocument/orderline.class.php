@@ -68,10 +68,25 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 		return $this->getOrderlineProperty($propertyName, $this->getGlobalProperties());
 	}
 	
-	
+	/**
+	 * @param array $properties
+	 */
 	public function setGlobalPropertyArray($properties)
 	{
 		$this->setGlobalProperties(serialize($properties));
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getGlobalPropertyArray()
+	{
+		$serialized = $this->getGlobalProperties();
+		if (f_util_StringUtils::isEmpty($serialized))
+		{
+			return array();
+		}
+		return unserialize($serialized);
 	}
 	
 	/**

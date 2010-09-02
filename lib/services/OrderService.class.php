@@ -371,15 +371,15 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	public function appendOrderToCart($order)
 	{
 		$cartService = order_CartService::getInstance();
+		$cartInfo = $cartService->getDocumentInstanceFromSession();
 		foreach ($order->getLineArray() as $line)
 		{
 			$product = $line->getProduct();
 			if (!is_null($product))
 			{
-				$cartService->addProduct($product, $line->getQuantity());
+				$cartService->addProductToCart($cartInfo, $product, $line->getQuantity(), $line->getGlobalPropertyArray());
 			}
 		}
-		$cartInfo = $cartService->getDocumentInstanceFromSession();
 		$cartInfo->refresh();
 	}
 	

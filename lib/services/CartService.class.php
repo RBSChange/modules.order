@@ -89,14 +89,27 @@ class order_CartService extends BaseService
 					Framework::info(__METHOD__ . ' RESET CART');
 				}
 				
-				// The order process is ended, so clear lastAbandonedOrderDate.
-				$customer = $cart->getCustomer();
-				$customer->setLastAbandonedOrderDate(null);
-				$customer->save();
-				
-				$cart = $this->initNewCart();
-				$cart->setOrderId($order->getId());
-				$this->saveToSession($cart);
+				try 
+				{
+					$this->getTransactionManager()->beginTransaction();
+					
+					// The order process is ended, so clear lastAbandonedOrderDate.
+					$customer = $cart->getCustomer();
+					$customer->setLastAbandonedOrderDate(null);
+					$cart = $this->initNewCart();
+					$cart->setOrderId($order->getId());
+					$this->saveToSession($cart);
+					
+					if ($customer->isModified())
+					{
+						$customer->save();
+					}
+					$this->getTransactionManager()->commit();
+				}
+				catch (Exception $e)
+				{
+					$this->getTransactionManager()->rollBack($e);
+				}
 			}
 		}
 	}
@@ -160,72 +173,71 @@ class order_CartService extends BaseService
 		}
 	}
 	
+
+	
+	
 	/**
-	 * This method is meant to be called one or several time,
-	 * then the cart needs to be refreshed by calling refhresh($cart)
-	 * method.
-	 *
+	 * @param order_CartInfo $cart
 	 * @param catalog_persistentdocument_product $product
 	 * @param Double $quantity
 	 * @param Array<String, Mixed> $properties
-	 * @return order_CartInfo The related cart
+	 * @return boolean;
 	 */
-	public function addProduct($product, $quantity, $properties = array())
+	public function addProductToCart($cart, $product, $quantity = 1, $properties = array())
 	{
-		$cart = $this->getDocumentInstanceFromSession();
-		if (!$product instanceof catalog_persistentdocument_product) 
+		if (!($cart instanceof order_CartInfo) || !($product instanceof catalog_persistentdocument_product) || $quantity <= 0)
 		{
-			throw new Exception('Invalid product');
-		}
-		else
-		{
-			$product = $product->getDocumentService()->getProductToAddToCart($product, $cart->getShop(), $quantity, $properties);
+			Framework::warn(__METHOD__ . ' Invalid arguments');
+			return false;
 		}
 		
-		if ($product->isPublished() && ($quantity > 0))
+		try 
 		{
-			$this->validateCartLineCount($cart); 
-			if ($this->validateProduct($cart, $product, $quantity))
+			 $this->validateCartLineCount($cart);
+		}
+		catch (Exception $e)
+		{
+			$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-max-lines;'));
+			return false;
+		}
+		
+		$product = $product->getDocumentService()->getProductToAddToCart($product, $cart->getShop(), $quantity, $properties);
+		$product->getDocumentService()->updateProductFromCartProperties($product, $properties);
+		
+		if ($this->validateProduct($cart, $product, $quantity))
+		{
+			$key = $product->getCartLineKey();
+			Framework::info(__METHOD__ . ' Check Key:' . $key);
+			$cartLine = $this->getCartLineByKey($cart, $key);
+			if ($cartLine === null)
 			{
+				Framework::info(__METHOD__ . ' Key not found:');
 				$cartLine = new order_CartLineInfo();
 				$cartLine->setProduct($product);
 				$cartLine->setQuantity($quantity);
 				$cartLine->mergePropertiesArray($properties);								
 				$cart->addCartLine($cartLine);
-				$this->resetCartOrder($cart);
-				// Log action.
-				$params = array('product' => $product->getLabel());
-				UserActionLoggerService::getInstance()->addCurrentUserDocumentEntry('add-product-to-cart', null, $params, 'customer');
 			}
-			// If the article has no price the line is not added and a warning message is displayed.
 			else
 			{
-				$replacements = array('articleLabel' => $product->getLabel());
-				$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-price;', $replacements));
+				$cartLine->addToQuantity($quantity);
 			}
+			$this->resetCartOrder($cart);
+			// Log action.
+			$params = array('product' => $product->getLabel());
+			UserActionLoggerService::getInstance()->addCurrentUserDocumentEntry('add-product-to-cart', null, $params, 'customer');
 		}
-		return $cart;
-	}
-	
-	/**
-	 * @param order_CartInfo $cart
-	 * @param marketing_persistentdocument_coupon $coupon
-	 */
-	public function setCoupon($cart, $coupon)
-	{
-		if ($coupon === null)
-		{
-			$cart->setCoupon(null);
-		}
+		// If the article has no price the line is not added and a warning message is displayed.
 		else
 		{
-			$couponinfo = new order_CouponInfo();
-			$couponinfo->setId($coupon->getId());
-			$cart->setCoupon($couponinfo);
-			$this->refreshCoupon($cart);
+			$replacements = array('articleLabel' => $product->getLabel());
+			$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-price;', $replacements));
+			return false;
 		}
-		return $cart->getCoupon();
-	}
+		
+		return true;
+	}	
+	
 	
 	/**
 	 * @param order_CartInfo $cart
@@ -252,7 +264,45 @@ class order_CartService extends BaseService
 		}
 		return false;
 	}
-			
+	
+	/**
+	 * 
+	 * @param order_CartInfo $cart
+	 * @param string $key
+	 * @return order_CartLineInfo
+	 */
+	private function getCartLineByKey($cart, $key)
+	{
+		foreach ($cart->getCartLineArray() as $cartLine) 
+		{
+			if ($cartLine->getKey() == $key)
+			{
+				return $cartLine;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 * @param marketing_persistentdocument_coupon $coupon
+	 */
+	public function setCoupon($cart, $coupon)
+	{
+		if ($coupon === null)
+		{
+			$cart->setCoupon(null);
+		}
+		else
+		{
+			$couponinfo = new order_CouponInfo();
+			$couponinfo->setId($coupon->getId());
+			$cart->setCoupon($couponinfo);
+			$this->refreshCoupon($cart);
+		}
+		return $cart->getCoupon();
+	}
+	
 	/**
 	 * @param order_CartLineInfo $cartLine
 	 * @param Double $weight
@@ -508,7 +558,8 @@ class order_CartService extends BaseService
 	protected function validateCart($cart)
 	{
 		// Clear error messages (error message are re-generated by this method each times it is called.
-		$cart->clearErrorMessages();		
+		$cart->clearErrorMessages();	
+			
 		// If there are lines, clean them.
 		$cartLines = $cart->getCartLineArray();
 		$removeCartLineIndex = array();
@@ -619,58 +670,15 @@ class order_CartService extends BaseService
 	 */
 	protected function getEquivalentCartLine($cart, $cartLine)
 	{
-		$cartLines = $cart->getCartLineArray();
 		$result = array();
-		if (count($cartLines) > 0)
+		foreach ($cart->getCartLineArray() as $index => $otherCartLine)
 		{
-			foreach ($cartLines as $index => $otherCartLine)
+			if (($cartLine !== $otherCartLine) && $cartLine->getKey() == $otherCartLine->getKey())
 			{
-				if ($this->isEquivalentCartLine($cartLine, $otherCartLine))
-				{
-					$result[$index] = $otherCartLine;
-				}
+				$result[$index] = $otherCartLine;
 			}
 		}
 		return $result;
-	}
-	
-	/**
-	 * @param order_CartLineInfo $cartLine1
-	 * @param order_CartLineInfo $cartLine2
-	 * @return Boolean
-	 */
-	protected function isEquivalentCartLine($cartLine1, $cartLine2)
-	{
-		if ($cartLine1 === $cartLine2)
-		{
-			return true;
-		}
-		else if ($cartLine1->getProductId() != $cartLine2->getProductId())
-		{
-			return false;
-		}
-		else
-		{
-			return $this->hasEquivalentKeyProperties($cartLine1, $cartLine2);
-		}
-	}
-	
-	/**
-	 * @param order_CartLineInfo $cartLine1
-	 * @param order_CartLineInfo $cartLine2
-	 * @return Boolean
-	 */
-	protected function hasEquivalentKeyProperties($cartLine1, $cartLine2)
-	{
-		$keyPropertiesArray = $this->getLineKeyProperties();
-		foreach ($keyPropertiesArray as $property)
-		{
-			if ($cartLine1->getProperties($property) != $cartLine2->getProperties($property))
-			{
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	/**
@@ -715,51 +723,7 @@ class order_CartService extends BaseService
 	{
 		return self::CART_SESSION_NAMESPACE . 'order_cart' . $catalogId;
 	}
-			
-	/**
-	 * @var Array<String>
-	 */
-	private $lineKeyProperties = null;
-	
-	/**
-	 * If no properties set, look for them in the configuration file at the following place : modules/order/line-key-properties
-	 *
-	 * @return Array<String>
-	 */
-	public function getLineKeyProperties()
-	{
-		if ($this->lineKeyProperties === null)
-		{
-			$this->lineKeyProperties = array();
-			try
-			{
-				if (Framework::hasConfiguration('modules/order/line-key-properties'))
-				{
-					$keys = explode(',', Framework::getConfiguration('modules/order/line-key-properties'));
-					foreach ($keys as $key) 
-					{
-						if ($key !== '') { $this->lineKeyProperties[] = $key;}
-					}
-				}
-			}
-			catch (Exception $e)
-			{
-				Framework::exception($e);
 				
-			}
-		}
-		return $this->lineKeyProperties;
-	}
-	
-	/**
-	 * @param Array<String> $lineKeyProperties
-	 * @return void
-	 */
-	public function setLineKeyProperties($lineKeyProperties)
-	{
-		$this->lineKeyProperties = $lineKeyProperties;
-	}
-	
 	/**
 	 * @param customer_persistentdocument_address $address
 	 * @param order_CartInfo $cart
@@ -793,5 +757,27 @@ class order_CartService extends BaseService
 	public function canOrder($cart)
 	{
 		return (!is_null($cart) && !$cart->isEmpty() && count($cart->getErrorMessageArray()) === 0);
+	}
+	
+	
+	//DEPRECATED
+	
+	/**
+	 * @deprecated use addProductToCart
+	 * 
+	 * @param catalog_persistentdocument_product $product
+	 * @param Double $quantity
+	 * @param Array<String, Mixed> $properties
+	 * @return order_CartInfo The related cart
+	 * @throws order_Exception
+	 */
+	public function addProduct($product, $quantity, $properties = array())
+	{
+		$cart = $this->getDocumentInstanceFromSession();
+		if (!$this->addProductToCart($cart, $product, $quantity, $properties))
+		{
+			throw new order_Exception('Unable-to-add-product-to-cart');
+		}
+		return $cart;
 	}
 }
