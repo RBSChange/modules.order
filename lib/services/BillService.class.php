@@ -202,6 +202,10 @@ class order_BillService extends f_persistentdocument_DocumentService
 			{
 				$bill = $this->getNewDocumentInstance();
 			}
+			else 
+			{
+				throw new Exception("Order has already a bill");
+			}
 			
 			$this->fillBillByOrder($bill, $order);
 			$connector = $bill->getPaymentConnector();
@@ -265,7 +269,6 @@ class order_BillService extends f_persistentdocument_DocumentService
 	{
 		$result = $this->createQuery()
 			->add(Restrictions::eq('order', $order))
-			->add(Restrictions::in('status', array(self::WAITING, self::SUCCESS)))
 			->setProjection(Projections::rowCount('rowCount'))->findColumn('rowCount');
 		return $result[0] > 0;
 	}
