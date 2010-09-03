@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <localization>
-  <entity id="document-name">
-    <locale lang="fr">expedition</locale>
-    <locale lang="en">expedition</locale>
-  </entity>
-  <entity id="label">
-    <locale lang="fr">numéro</locale>
-  </entity>
-  <entity id="label-help">
-    <locale lang="fr">numéro d'expedition</locale>
-  </entity>
-  <entity id="transporteur">
-    <locale lang="fr">transporteur</locale>
-  </entity>
-  <entity id="transporteur-help">
-    <locale lang="fr">nom du transporetur</locale>
-  </entity>
-  <entity id="trackingNumber">
-    <locale lang="fr">Numero colis</locale>
-  </entity>
-  <entity id="trackingNumber-help">
-    <locale lang="fr">Numero colis du transporteur</locale>
-  </entity>
-  <entity id="trackingText">
-    <locale lang="fr">Etat de la livraison</locale>
-  </entity>
-  <entity id="trackingText-help">
-    <locale lang="fr">Etat de la livraison</locale>
-  </entity>
+	<entity id="document-name">
+		<locale lang="fr">expédition</locale>
+		<locale lang="en">expedition</locale>
+	</entity>
+	<entity id="label">
+		<locale lang="fr">numéro</locale>
+	</entity>
+	<entity id="label-help">
+		<locale lang="fr">numéro d'expédition</locale>
+	</entity>
+	<entity id="transporteur">
+		<locale lang="fr">transporteur</locale>
+	</entity>
+	<entity id="transporteur-help">
+		<locale lang="fr">nom du transporetur</locale>
+	</entity>
+	<entity id="trackingNumber">
+		<locale lang="fr">Numero colis</locale>
+	</entity>
+	<entity id="trackingNumber-help">
+		<locale lang="fr">Numero colis du transporteur</locale>
+	</entity>
+	<entity id="trackingText">
+		<locale lang="fr">Etat de la livraison</locale>
+	</entity>
+	<entity id="trackingText-help">
+		<locale lang="fr">Etat de la livraison</locale>
+	</entity>
+	<entity id="shippingDate">
+		<locale lang="fr">Date d'expédition</locale>
+	</entity>
 </localization>

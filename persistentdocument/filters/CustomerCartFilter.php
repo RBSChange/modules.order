@@ -20,11 +20,16 @@ class order_CustomerCartFilter extends f_persistentdocument_DocumentFilterImpl
 	 * @param order_CartInfo $value
 	 */
 	public function checkValue($value)
-	{
+	{	
 		if ($value instanceof order_CartInfo) 
 		{
 			$param = $this->getParameter('customer');
-			$customerId = strval($value->getCustomer()->getId());
+			$customer = $value->getCustomer();
+			if ($customer instanceof customer_persistentdocument_customer)
+			{
+				return false;
+			}
+			$customerId = strval($customer->getId());
 			return in_array($customerId, explode(',', $param->getValue()));
 		}
 		return false;

@@ -52,4 +52,4 @@
 	<entity id="log-purge-bill">
 		<locale lang="fr">Purge de facture</locale>
 	</entity>
-</localization>
+<entity id="purge-bill"><locale lang="fr">purge.bill {orderNumber} {billId} {billLabel} {documentlabel}</locale></entity><entity id="log-purge-bill"><locale lang="fr">log-purge-bill</locale></entity></localization>

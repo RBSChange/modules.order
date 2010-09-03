@@ -19,7 +19,7 @@
 		<locale lang="en">messages sent by customer</locale>
 	</entity>
 	<entity id="property.to-customer-message-count">
-		<locale lang="fr">messages envoyés au le client</locale>
+		<locale lang="fr">messages envoyés au client</locale>
 		<locale lang="en">messages sent to customer</locale>
 	</entity>
 	

@@ -88,7 +88,7 @@ class order_AddressBean
 	 */
 	public function import($persistentAddress)
 	{
-		$this->Title = $persistentAddress->getTitle();
+		$this->Title = $persistentAddress->getTitleid();
 		$this->FirstName = $persistentAddress->getFirstname();
 		$this->LastName = $persistentAddress->getLastname();
 		$this->Addressline1 = $persistentAddress->getAddressLine1();
@@ -97,7 +97,7 @@ class order_AddressBean
 		$this->Zipcode = $persistentAddress->getZipCode();
 		$this->City = $persistentAddress->getCity();
 		$this->Province = $persistentAddress->getProvince();
-		$this->CountryId = $persistentAddress->getCountry() ? $persistentAddress->getCountry()->getId() : null;
+		$this->CountryId = $persistentAddress->getCountryid();
 		
 		$this->Company = $persistentAddress->getCompany();
 		$this->Email = $persistentAddress->getEmail();
@@ -110,7 +110,7 @@ class order_AddressBean
 	 */
 	public function export($persistentAddress)
 	{
-		$persistentAddress->setTitle($this->Title ? $this->Title : $persistentAddress->getTitle());
+		$persistentAddress->setTitleid($this->Title);
 		$persistentAddress->setFirstname($this->FirstName);
 		$persistentAddress->setLastname($this->LastName);
 		$persistentAddress->setAddressLine1($this->Addressline1);
@@ -119,7 +119,7 @@ class order_AddressBean
 		$persistentAddress->setZipCode($this->Zipcode);
 		$persistentAddress->setCity($this->City);
 		$persistentAddress->setProvince($this->Province);
-		$persistentAddress->setCountry($this->CountryId ? DocumentHelper::getDocumentInstance($this->CountryId) :  $persistentAddress->getCountry());
+		$persistentAddress->setCountryid($this->CountryId);
 		
 		$persistentAddress->setCompany($this->Company);
 		$persistentAddress->setEmail($this->Email);

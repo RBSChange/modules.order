@@ -36,12 +36,12 @@
 	</entity>
 
 	<entity id="Order-Identify-Step">
-		<locale lang="fr">commande - Identification</locale>
+		<locale lang="fr">Etape 1 : Identification/création d'un compte client</locale>
 		<locale lang="en">order - Identify</locale>
 	</entity>
 	
 	<entity id="Order-Shipping-Step">
-		<locale lang="fr">commande - Adresse de livraison</locale>
+		<locale lang="fr">Etape 2 : Choix des adresses et du mode de livraison </locale>
 		<locale lang="en">order - Shipping</locale>
 	</entity>
 	

@@ -60,4 +60,12 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 		$key = '&modules.order.frontoffice.status.expedition.' . ucfirst($this->getStatus()) . ';';
 		return f_Locale::translateUI($key);
 	}
+	
+	/* (non-PHPdoc)
+	 * @see build/franck/modules/order/persistentdocument/order_persistentdocument_expeditionbase::getStatus()
+	 */
+	public function getTrackingURL()
+	{
+		return str_replace('{NumeroColis}', $this->getTrackingNumber(), parent::getTrackingURL());
+	}	
 }

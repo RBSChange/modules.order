@@ -194,6 +194,7 @@ class order_CartService extends BaseService
 		try 
 		{
 			 $this->validateCartLineCount($cart);
+			 $this->resetCartOrder($cart);
 		}
 		catch (Exception $e)
 		{
@@ -222,7 +223,7 @@ class order_CartService extends BaseService
 			{
 				$cartLine->addToQuantity($quantity);
 			}
-			$this->resetCartOrder($cart);
+			
 			// Log action.
 			$params = array('product' => $product->getLabel());
 			UserActionLoggerService::getInstance()->addCurrentUserDocumentEntry('add-product-to-cart', null, $params, 'customer');

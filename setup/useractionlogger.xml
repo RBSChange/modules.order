@@ -9,4 +9,5 @@
   <actiondef modulename="order" actionname="move.smartfolder" label="modules.order.bo.useractionlogger.move-smartfolder"/>
   <actiondef modulename="order" actionname="cancelorder.order" label="modules.order.bo.useractionlogger.cancelorder-order"/>
   <actiondef modulename="order" actionname="purge.bill" label="modules.order.bo.useractionlogger.purge-bill"/>
+  <actiondef modulename="order" actionname="purge.bill" label="modules.order.bo.useractionlogger.purge-bill"/>
 </script>
