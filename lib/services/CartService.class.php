@@ -77,7 +77,7 @@ class order_CartService extends BaseService
 	 * Verification du cart en fonction de l'état de la commande
 	 * @param order_CartInfo $cart
 	 */
-	protected function checkCartValidity($cart)
+	protected function checkCartValidity(&$cart)
 	{
 		if ($cart instanceof order_CartInfo && !$cart->isEmpty())
 		{
