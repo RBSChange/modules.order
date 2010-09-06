@@ -491,7 +491,8 @@ class order_ModuleService extends ModuleBaseService
 	 */	
 	public function checkOrderProcessing($order)
 	{
-		if ($order->getOrderStatus() == order_OrderService::IN_PROGRESS)
+		$orderStatus = $order->getOrderStatus();
+		if ($orderStatus == order_OrderService::IN_PROGRESS)
 		{
 			if (order_BillService::getInstance()->hasPublishedBill($order))
 			{
@@ -511,21 +512,39 @@ class order_ModuleService extends ModuleBaseService
 				}
 			}
 		}
-		else if (f_util_StringUtils::isEmpty($order->getOrderStatus()))
+		else if ($orderStatus != order_OrderService::CANCELED && $orderStatus != order_OrderService::COMPLETE)
 		{
+			
 			//Payment interompu en cours de processus
-			if (date_Calendar::getInstance()->sub(date_Calendar::MINUTE, 10)->isAfter(date_Calendar::getInstance($order->getCreationdate())))
+			$orderDate = $order->getCreationdate();
+			$limitDate = date_Calendar::getInstance()->sub(date_Calendar::MINUTE, 60)->toString();
+						
+			if ($orderDate < $limitDate)
 			{
 				$cancel = true;
-				$bill = new order_persistentdocument_bill();
+				if (users_BackenduserService::getInstance()->getCurrentBackEndUser() === null)
+				{
+					$rootUsers = users_BackenduserService::getInstance()->getRootUsers();
+					users_BackenduserService::getInstance()->authenticateBackEndUser($rootUsers[0]);
+				}
+						
 				foreach ($order->getBillArrayInverse() as $bill) 
 				{
-					if ($bill->getPublicationstatus() == 'DRAFT')
+					if ($bill->getPublicationstatus() == 'DRAFT' && $bill->getCreationdate() > $limitDate)
 					{
 						$cancel = false;
 						break;
 					}
+					else
+					{
+
+						
+						UserActionLoggerService::getInstance()->getInstance()
+							->addCurrentUserDocumentEntry('purge.bill', $order, array('orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
+						$bill->delete();
+					}
 				}
+				
 				if ($cancel)
 				{
 					$order->getDocumentService()->cancelOrder($order);
