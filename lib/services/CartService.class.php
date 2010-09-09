@@ -91,7 +91,6 @@ class order_CartService extends BaseService
 	public function clearCartIfNeeded(&$cart)
 	{
 		$order = $cart->getOrder();
-		var_dump($order);
 		if ($order !== null && order_BillService::getInstance()->hasPublishedBill($order))
 		{
 			$this->clearCart($cart);
