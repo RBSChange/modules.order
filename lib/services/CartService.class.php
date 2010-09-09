@@ -42,7 +42,6 @@ class order_CartService extends BaseService
 				Framework::debug(__METHOD__ ." (FROM SESSION)");
 			}
 			$cart = $user->getAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE);
-			$this->checkCartValidity($cart);
 		}
 		
 		if (!($cart instanceof order_CartInfo))
@@ -51,6 +50,52 @@ class order_CartService extends BaseService
 			$this->saveToSession($cart);
 		}
 		return $cart;
+	}
+	
+	/**
+	 * 
+	 * @param order_CartInfo $cart
+	 */
+	protected function clearCart(&$cart)
+	{
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__ . ' CLEAR CART');
+		}
+		
+		try 
+		{
+			$this->getTransactionManager()->beginTransaction();
+			
+			// The order process is ended, so clear lastAbandonedOrderDate.
+			$customer = $cart->getCustomer();
+			$customer->setLastAbandonedOrderDate(null);
+			$cart = $this->initNewCart();
+			$this->saveToSession($cart);
+			
+			if ($customer->isModified())
+			{
+				$customer->save();
+			}
+			$this->getTransactionManager()->commit();
+		}
+		catch (Exception $e)
+		{
+			$this->getTransactionManager()->rollBack($e);
+		}
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	public function clearCartIfNeeded(&$cart)
+	{
+		$order = $cart->getOrder();
+		var_dump($order);
+		if ($order !== null && order_BillService::getInstance()->hasPublishedBill($order))
+		{
+			$this->clearCart($cart);
+		}
 	}
 	
 	/**
@@ -82,7 +127,7 @@ class order_CartService extends BaseService
 		if ($cart instanceof order_CartInfo && !$cart->isEmpty())
 		{
 			$order = $cart->getOrder();
-			if ($order !== null && order_BillService::getInstance()->hasValidBill($order))
+			if ($order !== null && order_BillService::getInstance()->hasValidBill($order) && $cart->isModified())
 			{
 				if (Framework::isInfoEnabled())
 				{
@@ -97,7 +142,6 @@ class order_CartService extends BaseService
 					$customer = $cart->getCustomer();
 					$customer->setLastAbandonedOrderDate(null);
 					$cart = $this->initNewCart();
-					$cart->setOrderId($order->getId());
 					$this->saveToSession($cart);
 					
 					if ($customer->isModified())
@@ -117,17 +161,14 @@ class order_CartService extends BaseService
 	/**
 	 * @param order_CartInfo $cart
 	 */
-	protected function resetCartOrder($cart)
-	{
-		$order = $cart->getOrder();
-		if ($order !== null && order_BillService::getInstance()->hasValidBill($order))
+	public function resetCartOrder(&$cart)
+	{	
+		$this->clearCartIfNeeded($cart);
+		if (Framework::isInfoEnabled())
 		{
-			if (Framework::isInfoEnabled())
-			{
-				Framework::info(__METHOD__);
-			}
-			$cart->setOrderId(null);
+			Framework::info(__METHOD__);
 		}
+		$cart->setOrderId(null);
 	}
 	
 	/**
@@ -135,6 +176,10 @@ class order_CartService extends BaseService
 	 */
 	public function saveToSession($cart)
 	{
+		if ($cart->isModified())
+		{
+			$cart->setOrderId(null);
+		}
 		if (Framework::isDebugEnabled())
 		{
 			Framework::debug(__METHOD__);

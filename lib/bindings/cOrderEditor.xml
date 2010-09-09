@@ -486,11 +486,11 @@
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
-						<xul:label name="label" value="Numéro" />
-						<xul:label name="amount" value="Montant" />
-						<xul:label name="status" value="Etat" />
-						<xul:label name="archive" value="Archive" />						
-						<xul:label name="actionrow" value="Actions" />
+						<xul:label name="label" value="&amp;modules.order.document.bill.Label;" />
+						<xul:label name="amount" value="&amp;modules.order.document.bill.Amount;" />
+						<xul:label name="status" value="&amp;modules.order.document.bill.Status;" />
+						<xul:label name="archive" value="&amp;modules.order.document.bill.Archive;" />						
+						<xul:label name="actionrow" value="&amp;modules.order.bo.doceditor.Actions;" />
 					</xul:row>
 				</xul:rows>
 			</xul:grid>
@@ -584,11 +584,11 @@
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
-						<xul:label name="label" value="Numéro" />
-						<xul:label name="status" value="Etat" />
-						<xul:label name="transporteur" value="Transporteur" />	
-						<xul:label name="traking" value="traking" />				
-						<xul:label name="actionrow" value="Actions" />
+						<xul:label name="label" value="&amp;modules.order.document.expedition.Label;" />
+						<xul:label name="status" value="&amp;modules.order.document.expedition.TrackingText;" />
+						<xul:label name="transporteur" value="&amp;modules.order.document.expedition.Transporteur;" />	
+						<xul:label name="trackingnumber" value="&amp;modules.order.document.expedition.TrackingNumber;" />				
+						<xul:label name="actionrow" value="&amp;modules.order.bo.doceditor.Actions;" />
 					</xul:row>
 				</xul:rows>
 			</xul:grid>

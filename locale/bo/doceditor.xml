@@ -4,12 +4,12 @@
 		<locale lang="fr">messagerie</locale>
 		<locale lang="en">messages</locale>
 	</entity>
-	
+
 	<entity id="section.messages">
 		<locale lang="fr">messagerie relative à cette commande</locale>
 		<locale lang="en">messages related to this order</locale>
 	</entity>
-	
+
 	<entity id="property.total-count">
 		<locale lang="fr">total des messages</locale>
 		<locale lang="en">total count</locale>
@@ -22,7 +22,7 @@
 		<locale lang="fr">messages envoyés au client</locale>
 		<locale lang="en">messages sent to customer</locale>
 	</entity>
-	
+
 	<entity id="property.reference">
 		<locale lang="fr">référence</locale>
 		<locale lang="en">reference</locale>
@@ -51,21 +51,21 @@
 		<locale lang="fr">montant total</locale>
 		<locale lang="en">total amount</locale>
 	</entity>
-	
+
 	<entity id="property.bill">
 		<locale lang="fr">facture</locale>
 		<locale lang="en">bill</locale>
 	</entity>
-	
+
 	<entity id="property.bill-download">
 		<locale lang="fr">télécharger</locale>
 		<locale lang="en">download</locale>
 	</entity>
-	
+
 	<entity id="panel.messages.title">
 		<locale lang="fr">envoyer un nouveau message pour cette commande</locale>
 		<locale lang="en">send new mail for this order</locale>
-	</entity>	
+	</entity>
 	<entity id="panel.messages.send">
 		<locale lang="fr">envoyer</locale>
 		<locale lang="en">send</locale>
@@ -78,7 +78,7 @@
 		<locale lang="fr">le message a bien été envoyé.</locale>
 		<locale lang="en">message successfully sent.</locale>
 	</entity>
-	
+
 	<entity id="panel.properties.view-customer">
 		<locale lang="fr">voir le client</locale>
 		<locale lang="en">view customer</locale>
@@ -88,12 +88,12 @@
 		<locale lang="fr">voir la commande</locale>
 		<locale lang="en">view order</locale>
 	</entity>
-		
+
 	<entity id="panel.carts.tva-amounts">
 		<locale lang="fr">montant TVA</locale>
 		<locale lang="en">VAT amount</locale>
 	</entity>
-	
+
 	<entity id="cancelation-in-progress">
 		<locale lang="fr">annulation de cette commande en cours.</locale>
 	</entity>
@@ -104,20 +104,24 @@
 	<entity id="links">
 		<locale lang="fr">Documents associés</locale>
 	</entity>
-	
+
 	<entity id="customer">
 		<locale lang="fr">client</locale>
 	</entity>
-	
+
 	<entity id="order">
 		<locale lang="fr">commande</locale>
 	</entity>
-	
+
 	<entity id="bills">
 		<locale lang="fr">factures</locale>
 	</entity>
-	
+
 	<entity id="expeditions">
 		<locale lang="fr">expeditions</locale>
+	</entity>
+	<entity id="actions">
+		<locale lang="fr">Actions</locale>
+		<locale lang="en">Actions</locale>
 	</entity>
 </localization>

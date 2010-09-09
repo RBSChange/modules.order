@@ -17,16 +17,16 @@
 		<locale lang="fr">nom du transporetur</locale>
 	</entity>
 	<entity id="trackingNumber">
-		<locale lang="fr">Numero colis</locale>
+		<locale lang="fr">Numéro colis</locale>
 	</entity>
 	<entity id="trackingNumber-help">
-		<locale lang="fr">Numero colis du transporteur</locale>
+		<locale lang="fr">Numéro colis du transporteur</locale>
 	</entity>
 	<entity id="trackingText">
-		<locale lang="fr">Etat de la livraison</locale>
+		<locale lang="fr">État de la livraison</locale>
 	</entity>
 	<entity id="trackingText-help">
-		<locale lang="fr">Etat de la livraison</locale>
+		<locale lang="fr">État de la livraison</locale>
 	</entity>
 	<entity id="shippingDate">
 		<locale lang="fr">Date d'expédition</locale>

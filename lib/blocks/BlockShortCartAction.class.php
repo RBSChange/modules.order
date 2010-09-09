@@ -18,7 +18,9 @@ class order_BlockShortCartAction extends website_BlockAction
 		$ms = order_ModuleService::getInstance();
 		
 		// Get the current cart from session.
-		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
+		$cs = order_CartService::getInstance();
+		$cart = $cs->getDocumentInstanceFromSession();
+		$cs->clearCartIfNeeded($cart);
 		$request->setAttribute('cart', $cart);
 		
 		// Check if order process is started or not.

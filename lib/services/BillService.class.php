@@ -202,10 +202,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			{
 				$bill = $this->getNewDocumentInstance();
 			}
-			else 
-			{
-				throw new Exception("Order has already a bill");
-			}
+			
 			
 			$this->fillBillByOrder($bill, $order);
 			$connector = $bill->getPaymentConnector();
@@ -353,6 +350,13 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$order = $bill->getOrder();
 		$order->getDocumentService()->updateStock($order);
 		$order->getDocumentService()->processOrder($order);
+		$customer = $order->getCustomer();
+		$customer->setCart(null);
+		$customer->setLastAbandonedOrderDate(null);
+		if ($customer->isModified())
+		{
+			$this->pp->updateDocument($customer);
+		}
 		order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_success', $order, $bill);
 		order_ModuleService::getInstance()->sendAdminNotification('modules_order/bill_admin_success', $order, $bill);
 	}

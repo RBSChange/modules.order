@@ -5,13 +5,23 @@
  */
 class order_CartInfo
 {
-	
+	private $isModified = false;
 	//SHOP INFORMATION
 	
 	/**
 	 * @var Integer
 	 */
 	private $shopId = null;
+	
+	public function isModified()
+	{
+		return $this->isModified;
+	}
+	
+	private function setModified($value)
+	{
+		$this->isModified = $value;
+	}
 	
 	/**
 	 * @return Integer
@@ -87,6 +97,7 @@ class order_CartInfo
 	 */
 	public function setOrderId($orderId)
 	{
+		$this->setModified(false);
 		return $this->orderId = $orderId;
 	}
 	
@@ -119,6 +130,7 @@ class order_CartInfo
 	 */
 	public function setCartLineArray($cartLine)
 	{
+		$this->isModified = true;
 		$this->cartLine = $cartLine;
 	}
 
@@ -162,6 +174,7 @@ class order_CartInfo
 	 */
 	public function setCartLine($key, $value)
 	{
+		$this->isModified = true;
 		$this->cartLine[$key] = $value;
 	}
 
@@ -170,6 +183,7 @@ class order_CartInfo
 	 */
 	public function addCartLine($cartLine)
 	{
+		$this->isModified = true;
 		$this->cartLine[] = $cartLine;
 	}
 
@@ -178,6 +192,7 @@ class order_CartInfo
 	 */
 	public function removeCartLine($key)
 	{
+		$this->isModified = true;
 		unset($this->cartLine[$key]);
 		$this->cartLine = array_values($this->cartLine);
 	}
@@ -191,6 +206,7 @@ class order_CartInfo
 		foreach ($keys as $key)
 		{
 			unset($this->cartLine[$key]);
+			$this->isModified = true;
 		}
 		$this->cartLine = array_values($this->cartLine);
 	}
@@ -226,6 +242,7 @@ class order_CartInfo
 	 */
 	public function setShippingAddressId($shippingAddressId)
 	{
+		$this->isModified = true;
 		$this->shippingAddressId = $shippingAddressId;
 	}
 	
@@ -244,6 +261,7 @@ class order_CartInfo
 	 */
 	public function setBillingAddressId($billingAddressId)
 	{
+		$this->isModified = true;
 		$this->billingAddressId = $billingAddressId;
 	}	
 	
@@ -260,6 +278,7 @@ class order_CartInfo
 	 */
 	public function setAddressInfo($addressInfo)
 	{
+		$this->isModified = true;
 		$this->addressInfo = $addressInfo;
 	}	
 	
@@ -278,6 +297,7 @@ class order_CartInfo
 	 */
 	public function setShippingArray($shippingArray)
 	{
+		$this->isModified = true;
 		$this->shippingArray = $shippingArray;
 	}
 	
@@ -349,6 +369,7 @@ class order_CartInfo
 	 */	
 	function setRequiredShippingFilter($shippingModeId, $filter)
 	{
+		
 		if ($filter === null)
 		{
 			if (isset($this->shippingArray[$shippingModeId]['filter']))
@@ -516,6 +537,7 @@ class order_CartInfo
 	 */
 	public function setBillingModeId($billingModeId)
 	{
+		$this->isModified = true;
 		$this->billingModeId = $billingModeId;
 	}
 	
@@ -532,6 +554,7 @@ class order_CartInfo
 	 */
 	public function setBillingMode($billingMode)
 	{
+		$this->isModified = true;
 		if ($billingMode !== null)
 		{
 			$this->billingModeId = $billingMode->getId();
@@ -694,6 +717,7 @@ class order_CartInfo
 	 */
 	public function setCoupon($coupon)
 	{
+		$this->isModified = true;
 		$this->coupon = $coupon;
 	}
 	
@@ -719,11 +743,13 @@ class order_CartInfo
 	 */
 	public function setDiscountArray($discountArray)
 	{
+		$this->isModified = true;
 		$this->discountArray = $discountArray;
 	}
 	
 	public function clearDiscountArray()
 	{
+		$this->isModified = true;
 		$this->discountArray = array();
 	}	
 
@@ -732,6 +758,7 @@ class order_CartInfo
 	 */
 	public function addDiscount($discount)
 	{
+		$this->isModified = true;
 		if (!is_array($this->discountArray)) {$this->discountArray = array();}
 		$this->discountArray[] = $discount;
 	}
@@ -744,7 +771,7 @@ class order_CartInfo
 		$result = array();
 		foreach ($this->getDiscountArray() as $currentDiscount) 
 		{
-			if ($currentDiscount === $discount) {continue;}
+			if ($currentDiscount === $discount) {$this->isModified = true; continue;}
 			$result[] = $currentDiscount;
 		}
 		$this->setDiscountArray($result);
@@ -1205,6 +1232,7 @@ class order_CartInfo
 	 */
 	public function setPropertiesArray($properties)
 	{
+		$this->isModified = true;
 		$this->properties = $properties;
 	}
 
@@ -1232,6 +1260,7 @@ class order_CartInfo
 	 */
 	public function setProperties($key, $value)
 	{
+		$this->isModified = true;
 		$this->properties[$key] = $value;
 	}
 
