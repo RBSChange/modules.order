@@ -377,7 +377,9 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$product = $line->getProduct();
 			if (!is_null($product))
 			{
-				$cartService->addProductToCart($cartInfo, $product, $line->getQuantity(), $line->getGlobalPropertyArray());
+				$properties = $line->getGlobalPropertyArray();
+				$product->getDocumentService()->updateProductFromCartProperties($product, $properties);
+				$cartService->addProductToCart($cartInfo, $product, $line->getQuantity(), $properties);
 			}
 		}
 		$cartInfo->refresh();
