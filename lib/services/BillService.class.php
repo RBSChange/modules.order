@@ -339,6 +339,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 		{
 			$order->getDocumentService()->processOrder($order);
 			order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_' . $bill->getStatus(), $order, $bill);
+			order_ModuleService::getInstance()->sendAdminNotification('modules_order/bill_admin_' . $bill->getStatus(), $order, $bill);
 		}
 	}
 	

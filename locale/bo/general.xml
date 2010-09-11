@@ -36,28 +36,28 @@
 	</entity>
 
 	<entity id="Order-Identify-Step">
-		<locale lang="fr">Etape 1 : Identification/création d'un compte client</locale>
-		<locale lang="en">order - Identify</locale>
+		<locale lang="fr">Étape 1 : Identification/création d'un compte client</locale>
+		<locale lang="en">Step 1: customer login</locale>
 	</entity>
 	
 	<entity id="Order-Shipping-Step">
-		<locale lang="fr">Etape 2 : Choix des adresses et du mode de livraison </locale>
-		<locale lang="en">order - Shipping</locale>
+		<locale lang="fr">Étape 2 : Choix des adresses et du mode de livraison </locale>
+		<locale lang="en">Step 2: addresses and delivery</locale>
 	</entity>
 	
 	<entity id="Order-Billing-Step">
-		<locale lang="fr">commande - Moyen de paiement</locale>
-		<locale lang="en">order - Billing</locale>
+		<locale lang="fr">Étape 3 :  Choix du mode de paiement</locale>
+		<locale lang="en">Step 3: Means of payment</locale>
 	</entity>
 	
 	<entity id="Order-Confirm-Step">
-		<locale lang="fr">commande - Confirmation</locale>
-		<locale lang="en">order - Confirm</locale>
+		<locale lang="fr">Étape 4 : Récapitulatif avant paiement</locale>
+		<locale lang="en">Step 4: Order summary</locale>
 	</entity>
 	
 	<entity id="Order-Payment-Step">
-		<locale lang="fr">commande - Paiement</locale>
-		<locale lang="en">order - Payment</locale>
+		<locale lang="fr">Étape 5 : Résultat du paiement</locale>
+		<locale lang="en">Step 5: Payment result</locale>
 	</entity>
 	
 	<entity id="tags.cart">
