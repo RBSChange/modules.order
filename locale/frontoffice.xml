@@ -784,6 +784,10 @@
 		<locale lang="en">shipped</locale>
 		<locale lang="de">Schiffe</locale>
 	</entity>
+	<entity id="status.unknown">
+		<locale lang="fr">indéterminé</locale>
+		<locale lang="en">unknown</locale>
+	</entity>
 	<entity id="status.in_progress">
 		<locale lang="fr">en cours</locale>
 		<locale lang="de">in progress</locale>

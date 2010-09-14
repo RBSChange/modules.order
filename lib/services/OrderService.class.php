@@ -616,7 +616,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		
 		if ($document->isPropertyModified('orderStatus'))
 		{
-			$params['orderStatus'] = $document->getOrderStatusLabel();
+			$params['orderStatus'] = $document->getBoOrderStatusLabel();
 			UserActionLoggerService::getInstance()->addCurrentUserDocumentEntry('update-order-status', $document, $params, 'order');
 		}
 		else
