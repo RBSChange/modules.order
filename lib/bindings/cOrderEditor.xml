@@ -904,17 +904,20 @@
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
 				<xul:columns>	
-					<xul:column flex="3" />
-					<xul:column flex="1" />
+					<xul:column flex="2" />
+					<xul:column flex="2" />
+					<xul:column />
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
 						<xul:label name="label" value="&amp;modules.order.frontoffice.Designation;" />
+						<xul:label name="codeReference" value="&amp;modules.order.frontoffice.CodeReference;" />
 						<xul:label name="quantity" value="&amp;modules.order.frontoffice.Quantity;" />
 					</xul:row>
 				</xul:rows>
 			</xul:grid>
 			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />
 			</xul:row>				

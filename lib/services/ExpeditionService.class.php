@@ -721,7 +721,11 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		$resume['lines'] = array();
 		foreach ($document->getLineArray() as $line)
 		{
-			$resume['lines'][] = array('label' => $line->getLabel(), 'quantity' => $line->getQuantity());
+			$resume['lines'][] = array(
+				'label' => $line->getLabel(),
+				'quantity' => $line->getQuantity(),
+				'codeReference' => $line->getCodeReference()
+			);
 		}
 		
 		return $resume;
