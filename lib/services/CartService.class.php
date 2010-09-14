@@ -281,7 +281,7 @@ class order_CartService extends BaseService
 		// If the article has no price the line is not added and a warning message is displayed.
 		else
 		{
-			$replacements = array('articleLabel' => $product->getLabel());
+			$replacements = array('articleLabel' => $product->getLabelAsHtml());
 			$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-price;', $replacements));
 			return false;
 		}
@@ -304,7 +304,7 @@ class order_CartService extends BaseService
 			{
 				if (!catalog_StockService::getInstance()->isAvailable($product, $quantity))
 				{
-					$replacements = array('articleLabel' => $product->getLabel(), 
+					$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
 						'quantity' => $quantity, 'unit' => '', 
 						'availableQuantity' => $product->getStockQuantity(), 'availableUnit' => '');
 					$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-quantity;', $replacements));
@@ -674,7 +674,7 @@ class order_CartService extends BaseService
 				$compiledProduct = $product->getDocumentService()->getPrimaryCompiledProductForWebsite($product, $cart->getShop()->getWebsite());
 				if ($compiledProduct === null || !$compiledProduct->isPublished())
 				{
-					$replacements = array('articleLabel' => $product->getLabel());
+					$replacements = array('articleLabel' => $product->getLabelAsHtml());
 					$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-price;', $replacements));
 					return false;
 				}
@@ -683,7 +683,7 @@ class order_CartService extends BaseService
 				{
 					if (!catalog_StockService::getInstance()->isAvailable($product, $cartLine->getQuantity()))
 					{
-						$replacements = array('articleLabel' => $product->getLabel(), 
+						$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
 							'quantity' => $cartLine->getQuantity(), 'unit' => '', 
 							'availableQuantity' => $product->getStockQuantity(), 'availableUnit' => '');
 						$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-quantity;', $replacements));
@@ -700,7 +700,7 @@ class order_CartService extends BaseService
 		
 		if ($product !== null)
 		{
-			$replacements = array('articleLabel' => $product->getLabel());
+			$replacements = array('articleLabel' => $product->getLabelAsHtml());
 			$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-price;', $replacements));
 		}
 		return false;
