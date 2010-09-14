@@ -349,8 +349,11 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			{
 				$orderDocument->setCreationdate($cartInfo->getProperties('creationdate'));
 			}
-			
-			$folder = $this->getFolderOfDay($orderDocument->getCreationdate());
+			else
+			{
+				$orderDocument->setCreationDate(date_Calendar::getInstance()->toString());
+			}
+			$folder = $this->getFolderOfDay($orderDocument->getUICreationdate());
 			$orderDocument->save($folder->getId());
 			$cartInfo->setOrderId($orderDocument->getId());
 			$this->tm->commit();			
