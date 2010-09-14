@@ -714,11 +714,18 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 * @param array $allowedSections
 	 * @return array
 	 */
-//	public function getResume($document, $forModuleName, $allowedSections = null)
-//	{
-//		$resume = parent::getResume($document, $forModuleName, $allowedSections);
-//		return $resume;
-//	}
+	public function getResume($document, $forModuleName, $allowedSections = null)
+	{
+		$resume = parent::getResume($document, $forModuleName, $allowedSections);
+		
+		$resume['lines'] = array();
+		foreach ($document->getLineArray() as $line)
+		{
+			$resume['lines'][] = array('label' => $line->getLabel(), 'quantity' => $line->getQuantity());
+		}
+		
+		return $resume;
+	}
 
 	/**
 	 * @param order_persistentdocument_expedition $document

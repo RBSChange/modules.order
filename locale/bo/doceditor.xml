@@ -9,6 +9,9 @@
 		<locale lang="fr">messagerie relative à cette commande</locale>
 		<locale lang="en">messages related to this order</locale>
 	</entity>
+	<entity id="section.lines">
+		<locale lang="fr">lignes concernées</locale>
+	</entity>
 
 	<entity id="property.total-count">
 		<locale lang="fr">total des messages</locale>
