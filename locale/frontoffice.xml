@@ -1178,4 +1178,7 @@
 	<entity id="cart-validation-error-max-lines">
 		<locale lang="fr">Le nombre maximum de ligne du panier est atteint</locale>
 	</entity>
+	<entity id="cart-validation-quantity-fixed-for-product">
+		<locale lang="fr">Vous avez déjà ajouté ce produit dans votre panier.</locale>
+	</entity>
 </localization>

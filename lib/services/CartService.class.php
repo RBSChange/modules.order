@@ -234,6 +234,12 @@ class order_CartService extends BaseService
 			Framework::warn(__METHOD__ . ' Invalid arguments');
 			return false;
 		}
+		// Check if the product we're trying to add to the cart is not already there with a quantity than can't be changed.
+		if (!$product->updateCartQuantity() && $cart->hasCartLine($product->getCartLineKey()))
+		{
+			$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-quantity-fixed-for-product;'));
+			return false;
+		}
 		
 		try 
 		{
