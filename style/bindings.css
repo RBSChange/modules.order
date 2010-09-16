@@ -28,6 +28,12 @@ gridlist.billsJSON{
 gridlist.expeditionsJSON{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionsSoratbleGrid);
 }
+cdocumenteditor#edt_order_expedition cresumesection[sectionname="lines"]{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionLinesResumeSection);
+}
+cdocumenteditor#edt_order_expedition cresumesection[sectionname="lines"] linesgrid{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionLinesGrid);
+}
 wdialog[template="ValidateBill"]{
 	-moz-binding: url(binding:modules.order.cOrderEditor#validateBillDialog);
 }

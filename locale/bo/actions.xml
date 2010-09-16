@@ -36,26 +36,6 @@
 		<locale lang="fr">L'annulation d'une commande entraîne l'envoi d'une notification d'annulation de commande au client. Souhaitez-vous réellement annuler la commande n° {order} de {customer} passée le {date} ?</locale>
 		<locale lang="en">Do you really want to cancel the order {order} of {customer} created on {date}? Customer will receive a notification.</locale>
 	</entity>
-	<entity id="Create-Cartrule">
-		<locale lang="fr">créer une règle de panier</locale>
-		<locale lang="en">create cart rule</locale>
-	</entity>
-	<entity id="Create-Cartrulecondition">
-		<locale lang="fr">ajouter une condition</locale>
-		<locale lang="en">add condition</locale>
-	</entity>
-	<entity id="Create-Cartruleresult">
-		<locale lang="fr">ajouter des produits à prix réduit</locale>
-		<locale lang="en">add low-priced products</locale>
-	</entity>
-	<entity id="set-cart-rules-conditions-order">
-		<locale lang="fr">définir l'ordre des conditions</locale>
-		<locale lang="en">sort conditions</locale>
-	</entity>
-	<entity id="set-cart-rules-result-order">
-		<locale lang="fr">définir l'ordre des produits à prix réduit</locale>
-		<locale lang="en">sort low-priced conditions</locale>
-	</entity>
 	<entity id="Create-Billingmode">
 		<locale lang="fr">Create billingmode</locale>
 		<locale lang="en">Create billingmode</locale>

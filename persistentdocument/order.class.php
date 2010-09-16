@@ -22,7 +22,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			if ($treeType === 'wlist')
 			{
 				$nodeAttributes['date'] = date_DateFormat::format($this->getUICreationdate());
-				$nodeAttributes['orderStatusLabel'] = $this->getOrderStatusLabel();
+				$nodeAttributes['orderStatusLabel'] = $this->getBoOrderStatusLabel();
 				$nodeAttributes['formattedTotalAmountWithTax'] = $this->formatPrice($this->getTotalAmountWithTax());
 				$user = $this->getCustomer()->getUser();
 				$nodeAttributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
@@ -49,8 +49,19 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function getBoOrderStatusLabel()
 	{
-		$key = '&modules.order.frontoffice.status.' . ucfirst($this->getOrderStatus()) . ';';
+		$status = (!$this->getOrderStatus()) ? 'Unknown' : ucfirst($this->getOrderStatus());
+		$key = '&modules.order.frontoffice.status.' . $status . ';';
 		return f_Locale::translateUI($key);
+	}
+
+	/**
+	 * @return String
+	 */
+	public function getFoOrderStatusLabel()
+	{
+		$status = (!$this->getOrderStatus()) ? 'Unknown' : ucfirst($this->getOrderStatus());
+		$key = '&modules.order.frontoffice.status.' . $status . ';';
+		return f_Locale::translate($key);
 	}
 		
 	/**
@@ -460,12 +471,11 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 
 	/**
 	 * @return String
-	 * @deprecated 
+	 * @deprecated use getBoOrderStatusLabel or getFoOrderStatusLabel
 	 */
 	public function getOrderStatusLabel()
 	{
-		$key = '&modules.order.frontoffice.status.' . ucfirst($this->getOrderStatus()) . ';';
-		return f_Locale::translate($key);
+		return $this->getFoOrderStatusLabel();
 	}
 		
 	/**

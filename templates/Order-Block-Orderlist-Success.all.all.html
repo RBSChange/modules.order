@@ -17,7 +17,7 @@
 			<td><tal:block change:datetime="order/getCreationdate" /></td>
 			<td>${order/getBillingMode}</td>
 			<td class="pricettc">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
-			<td>${order/getOrderStatusLabel}</td>
+			<td>${order/getFoOrderStatusLabel}</td>
 			<td tal:define="bills order/getBillsWithArchive">
 				<tal:block tal:repeat="bill bills">
 					<a change:download="document bill/getArchive" change:translate="modules.order.frontoffice.Orderlist-bill"></a>
