@@ -151,31 +151,53 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param unknown_type $key
+	 * @param integer $index
 	 * @return Boolean
 	 */
-	public function hasCartLine($key)
+	public function hasCartLine($index)
 	{
-		return isset($this->cartLine[$key]);
+		return isset($this->cartLine[$index]);
 	}
 
 	/**
-	 * @param Integer $key
+	 * @param integer $index
 	 * @return order_CartLineInfo
 	 */
-	public function getCartLine($key)
+	public function getCartLine($index)
 	{
-		return $this->cartLine[$key];
+		return $this->cartLine[$index];
+	}
+	
+	/**
+	 * @param order_CartLineInfo $cartLine
+	 * @return integer
+	 */
+	public function getCartLineIndex($cartLine)
+	{
+		$count = count($this->cartLine);
+		for ($i = 0; $i < $count; $i++) 
+		{
+			if ($this->cartLine[$i] === $cartLine)
+			{
+				return $i;
+			}
+		}
+		return -1;
 	}
 
 	/**
-	 * @param unknown_type $key
-	 * @param order_CartLineInfo $value
+	 * @param integer $index
+	 * @param order_CartLineInfo $cartLine
 	 */
-	public function setCartLine($key, $value)
+	public function setCartLine($index, $cartLine)
 	{
+		if ($index < 0 || $index >= count($this->cartLine))
+		{
+			$this->addCartLine($cartLine);
+			return;
+		}
 		$this->isModified = true;
-		$this->cartLine[$key] = $value;
+		$this->cartLine[$index] = $cartLine;
 	}
 
 	/**
@@ -188,29 +210,68 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param Integer $key
+	 * @param order_CartLineInfo $cartLine
+	 * @param integer $index
 	 */
-	public function removeCartLine($key)
+	public function addCartLineAt($cartLine, $index = 0)
+	{
+		$count = count($this->cartLine);
+		if ($index < 0 || $index >= $count)
+		{
+			$this->addCartLine($cartLine);
+			return;
+		}
+		$this->isModified = true;
+		$cartLines = array();
+		for ($i = 0; $i < $count; $i++) 
+		{
+			if ($i == $index)
+			{
+				$cartLines[] = $cartLine;
+			}
+			$cartLines[] = $this->cartLine[$i];
+		}
+		$this->cartLine = $cartLines;
+	}
+	
+	/**
+	 * @param integer $index
+	 */
+	public function removeCartLine($index)
 	{
 		$this->isModified = true;
-		unset($this->cartLine[$key]);
+		unset($this->cartLine[$index]);
 		$this->cartLine = array_values($this->cartLine);
+	}
+	
+	/**
+	 * @param order_CartLineInfo $cartLine
+	 */
+	public function removeCartLineObj($cartLine)
+	{
+		$count = count($this->cartLine);
+		for ($i = 0; $i < $count; $i++) 
+		{
+			if ($this->cartLine[$i] === $cartLine)
+			{
+				$this->removeCartLine($i);
+				return;
+			}
+		}
 	}
 
 	/**
-	 * @param Array<Integer> $key
-	 * @return void
+	 * @param integer[] $indexes
 	 */
-	public function removeCartLines($keys)
+	public function removeCartLines($indexes)
 	{
-		foreach ($keys as $key)
+		foreach ($indexes as $index)
 		{
-			unset($this->cartLine[$key]);
+			unset($this->cartLine[$index]);
 			$this->isModified = true;
 		}
 		$this->cartLine = array_values($this->cartLine);
 	}
-
 	
 	//ADDRESS MANIPULATION
 	
@@ -909,10 +970,6 @@ class order_CartInfo
 		{
 			$total -= $this->getDiscountTotalWithoutTax();
 		}
-		if ($this->hasCoupon()) 
-		{	
-			$total -= $this->getCoupon()->getValueWithoutTax();
-		}
 		return $total;
 	}
 	
@@ -925,10 +982,6 @@ class order_CartInfo
 		if ($this->hasDiscount())
 		{
 			$total -= $this->getDiscountTotalWithTax();
-		}
-		if ($this->hasCoupon()) 
-		{	
-			$total -= $this->getCoupon()->getValueWithTax();
 		}
 		return $total;
 	}	

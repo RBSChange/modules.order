@@ -115,18 +115,16 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$couponLabel = $coupon['code'];
 				Framework::info("Coupon $couponId not found :" . $e->getMessage());
 			}
-			
+		
 			$informations['couponName'] = $couponLabel;
-			$informations['couponValue'] = $order->formatPrice($coupon['valueWithTax']);
-				
 			$informations['couponSectionName'] = $couponLabel;
 			$informations['couponSectionCode'] = $coupon['code'];
-			$informations['couponSectionValue'] = $informations['couponValue'];
 		}
 		
 		if ($order->hasDiscount())
 		{
 			$informations['discountTotal'] = $order->formatPrice($order->getDiscountTotalWithTax());
+			$result['discountDataArray'] = $order->getDiscountDataArray();
 		}
 		
 		$informations['subTotalWithModificators'] = $order->formatPrice(-1);
@@ -320,9 +318,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			{
 				$coupon = $cartInfo->getCoupon();
 				$couponData = array('id' => $coupon->getId(), 
-									'code' => $coupon->getLabel(),
-									'valueWithTax' => $coupon->getValueWithTax(),
-									'valueWithoutTax' => $coupon->getValueWithoutTax());			
+									'code' => $coupon->getLabel());			
 				$orderDocument->setCouponData($couponData);
 			}
 			else

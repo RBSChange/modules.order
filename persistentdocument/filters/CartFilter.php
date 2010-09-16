@@ -16,6 +16,13 @@ class order_CartFilter extends order_LinesCartFilterBase
 			$beanprop = new BeanPropertyInfoImpl('totalAmountWithoutTax', 'Double');
 			$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-totalAmountWithoutTax;');
 			$parameter->addAllowedProperty('totalAmountWithoutTax', $beanprop);
+			
+			if (ModuleService::getInstance()->isInstalled('marketing'))
+			{
+				$beanprop = new BeanPropertyInfoImpl('coupon', 'modules_marketing/coupon');
+				$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-Coupon;');
+				$parameter->addAllowedProperty('coupon', $beanprop);
+			}
 		}
 		
 		$beanprop = new BeanPropertyInfoImpl('linesAmountWithTax', 'Double');
@@ -70,6 +77,9 @@ class order_CartFilter extends order_LinesCartFilterBase
 	{
 		switch ($paremeter->getPropertyName())
 		{
+			case 'coupon':
+				$coupon = $value->getCoupon();
+				return ($coupon) ? array($coupon->getId()) : array();
 			case 'totalAmountWithTax':
 				return $value->getTotalWithTax();
 			case 'totalAmountWithoutTax':

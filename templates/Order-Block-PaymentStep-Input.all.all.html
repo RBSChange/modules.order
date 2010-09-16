@@ -22,8 +22,14 @@
 
 			<!-- discount -->
 			<tal:block tal:condition="order/hasDiscount">
-				<dd change:translate="modules.order.frontoffice.Discount-nameLabel" />
-				<dt>${php:order.formatPrice(order.getDiscountTotalWithTax())}</dt>
+				<tal:block tal:repeat="discount order/getDiscountDataArray">	
+					<dd tal:condition="discount/label">${discount/label}</dd>
+					<dt tal:condition="discount/label" class="discount">-${php:order.formatPrice(discount['valueWithTax'])}</dt>
+				</tal:block>
+				<!-- 			
+					<dd change:translate="&modules.order.frontoffice.Discount-nameLabel;" />
+					<dt>${php:order.formatPrice(order.getDiscountTotalWithTax())}</dt>
+				 -->
 			</tal:block>
 			
 			<!-- shipping -->

@@ -54,7 +54,6 @@ class order_BlockBillingStepAction extends order_BlockAbstractProcessStepAction
 		if ($cartInfo->hasCoupon())
 		{
 			$billingStep->coupon = $cartInfo->getCoupon()->getLabel();
-			$billingStep->couponValue = $cartInfo->getCoupon()->getValueWithTax();
 		}
 		return $billingStep;
 	}
@@ -85,7 +84,7 @@ class order_BlockBillingStepAction extends order_BlockAbstractProcessStepAction
 		$cart = $this->getCurrentCart();
 		if ($cart->hasCoupon())
 		{
-			$cart->setCoupon(null);
+			$cart->getCartService()->setCoupon($cart, null);
 			$cart->save();
 			$this->redirectToStep('Billing');
 		}
@@ -134,9 +133,9 @@ class order_BlockBillingStepAction extends order_BlockAbstractProcessStepAction
 		{		
 			$ocs = marketing_CouponService::getInstance();
 			$coupon = $ocs->getByCode($couponCode);
-			if ($ocs->validateForCart($coupon, $cartInfo))
-			{
-				$currentCoupon = order_CartService::getInstance()->setCoupon($cartInfo, $coupon);		
+			$currentCoupon = order_CartService::getInstance()->setCoupon($cartInfo, $coupon);
+			if ($currentCoupon !== null)
+			{		
 				$save = true;
 			}
 			else
@@ -149,12 +148,10 @@ class order_BlockBillingStepAction extends order_BlockAbstractProcessStepAction
 		if ($currentCoupon)
 		{
 			$billingStep->coupon = $currentCoupon->getLabel();
-			$billingStep->couponValue = $currentCoupon->getValueWithTax();;
 		}
 		else
 		{
-			$billingStep->coupon = null;
-			$billingStep->couponValue = null;				
+			$billingStep->coupon = null;			
 		}
 		return $save;
 	}	

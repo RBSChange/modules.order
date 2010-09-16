@@ -22,13 +22,13 @@
 					<dt>${billingStep/coupon}
 						(<a class="link" change:actionlink="" block="order_billingStep" action="RemoveCoupon"><tal:block change:translate="modules.order.document.billingstepbean.RemoveCoupon" /> </a>)
 					</dt>
-					<dd change:translate="modules.order.frontoffice.Coupon-valueLabel"></dd>
-					<dt>${php:shop.formatPrice(billingStep.couponValue)}</dt>
 				</tal:block>
 				
 				<tal:block tal:condition="cart/hasDiscount">
-					<dd change:translate="modules.order.frontoffice.Discount-nameLabel"></dd>
-					<dt>${cart/getFormattedDiscountTotalWithTax}</dt>
+					<tal:block tal:repeat="discount cart/getDiscountArray">	
+						<dd tal:condition="discount/getLabel">${discount/getLabel}</dd>
+						<dt tal:condition="discount/getLabel" class="discount">-${php:shop.formatPrice(discount.getValueWithTax())}</dt>
+					</tal:block>
 				</tal:block>
 				
 				<tal:block tal:condition="cart/getShippingMode">

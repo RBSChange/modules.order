@@ -42,7 +42,37 @@
 		</thead>
 		<tbody>
 			<tal:block tal:repeat="cartLine cart/getCartLineArray">
-				<tr class="row-${repeat/cartLine/odd}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
+			
+				<tr tal:condition="cartLine/getDiscountId" class="row-${repeat/cartLine/odd}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
+					<!-- Visual -->
+					<td>
+						<a change:link="document product" tal:condition="product/getDefaultVisual">
+							<img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/cartdetailproduct'" />
+						</a>
+						<tal:block tal:condition="not: product/getDefaultVisual">&nbsp;</tal:block>
+					</td>
+	
+					<!-- Désignation / Article -->
+					<td>${cartLine/getDiscountDetail}<br /> 
+						${product/getOrderLabelAsHtml}
+					</td>
+	
+					<!-- Disponibilite -->
+					<td tal:content="product/getAvailability" />
+					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:shop.formatPrice(cartLine.getValueWithTax())}</td>
+	
+					<!-- Quantity -->
+					<td> ${cartLine/getQuantity} </td>
+	
+					<!-- TVA -->
+					<td class="priceht" tal:condition="shop/getDisplayPriceWithTax">${cartLine/getFormattedTaxCode}</td>
+					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:shop.formatPrice(cartLine.getTotalValueWithTax())}</td>
+	
+					<!-- Remove link -->
+					<td class="sale">&#160;</td>
+				</tr>
+				
+				<tr tal:condition="not: cartLine/getDiscountId" class="row-${repeat/cartLine/odd}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
 					<!-- Visual -->
 					<td>
 						<a change:link="document product" tal:condition="product/getDefaultVisual">
@@ -107,10 +137,14 @@
 			<dd change:translate="&modules.order.frontoffice.TvaLabel;; rate PriceByTax/formattedTaxRate"></dd>
 			<dt>${PriceByTax/formattedTaxAmount}</dt>
 		</tal:block>
+		
 		<tal:block tal:condition="cart/hasDiscount">
-			<dd change:translate="modules.order.frontoffice.Discount-nameLabel" />
-			<dt>${cart/getFormattedDiscountTotalWithTax}</dt>
+			<tal:block tal:repeat="discount cart/getDiscountArray">	
+				<dd tal:condition="discount/getLabel">${discount/getLabel}</dd>
+				<dt tal:condition="discount/getLabel" class="discount">-${php:shop.formatPrice(discount.getValueWithTax())}</dt>
+			</tal:block>
 		</tal:block>
+		
 		<tal:block tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
 			<!-- shipping -->
 			<dd change:translate="modules.order.frontoffice.Shipping-modeLabel" />

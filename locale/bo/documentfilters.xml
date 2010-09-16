@@ -105,6 +105,10 @@
 	<entity id="cart-totalAmountWithoutTax">
 		<locale lang="fr">montant total HT</locale>
 	</entity>
+	<entity id="cart-coupon">
+		<locale lang="fr">coupon</locale>
+	</entity>
+	
 	<entity id="cart-linesAmountWithoutTax">
 		<locale lang="fr">montant total des lignes HT</locale>
 	</entity>

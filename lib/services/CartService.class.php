@@ -342,7 +342,11 @@ class order_CartService extends BaseService
 	{
 		if ($coupon === null)
 		{
-			$cart->setCoupon(null);
+			if ($cart->hasCoupon())
+			{
+				$cart->setCoupon(null);
+				$this->refreshDiscount($cart);
+			}
 		}
 		else
 		{
@@ -350,6 +354,7 @@ class order_CartService extends BaseService
 			$couponinfo->setId($coupon->getId());
 			$cart->setCoupon($couponinfo);
 			$this->refreshCoupon($cart);
+			$this->refreshDiscount($cart);
 		}
 		return $cart->getCoupon();
 	}
@@ -464,14 +469,14 @@ class order_CartService extends BaseService
 		$this->refreshCartPrice($cart);
 		Framework::bench('refreshCartPrice');
 		
-		$this->refreshDiscount($cart);
-		Framework::bench('refreshDiscount');
+		$this->refreshCoupon($cart);
+		Framework::bench('refreshCoupon');			
 		
 		$this->refreshShipping($cart);
 		Framework::bench('refreshShipping');
 	
-		$this->refreshCoupon($cart);
-		Framework::bench('refreshCoupon');	
+		$this->refreshDiscount($cart);
+		Framework::bench('refreshDiscount');
 				
 		// Cancel order process.
 		order_OrderProcess::getInstance()->setCurrentStep(null);
@@ -543,34 +548,10 @@ class order_CartService extends BaseService
 	 */
 	protected function refreshDiscount($cart)
 	{
-		$result = array();
 		if (ModuleService::getInstance()->isInstalled('marketing'))
 		{
-			$discountArray = marketing_DiscountService::getInstance()->getDiscountArrayForCart($cart);
-			if (count($discountArray) > 0)
-			{
-				$subTotalWithoutTax = $cart->getSubTotalWithoutTax();
-				$subTotalWithTax = $cart->getSubTotalWithTax();
-				foreach ($discountArray as $discountDoc) 
-				{
-					$discount = new order_DiscountInfo();
-					$discount->setId($discountDoc->getId());
-					$value = $discountDoc->getValue();
-					if ($discountDoc->getIsRate())
-					{
-						$discount->setValueWithoutTax($subTotalWithoutTax * $value);
-						$discount->setValueWithTax($subTotalWithTax * $value);
-					}
-					else
-					{
-						$discount->setValueWithTax($value);
-						$discount->setValueWithoutTax(($subTotalWithoutTax / $subTotalWithTax) * $value);
-					}				
-					$result[] = $discount;
-				}
-			}
+			marketing_DiscountService::getInstance()->refreshDiscountArrayForCart($cart);	
 		}
-		$cart->setDiscountArray($result);
 	}
 	
 	/**
@@ -582,16 +563,14 @@ class order_CartService extends BaseService
 		{
 			$coupon = $cart->getCoupon();
 			$document = DocumentHelper::getDocumentInstance($coupon->getId(), 'modules_marketing/coupon');
-			$coupon->setLabel($document->getCode());
-			if ($document->getIsRate())
+			$ocs = marketing_CouponService::getInstance();
+			if ($ocs->validateForCart($document, $cart))
 			{
-				$coupon->setValueWithoutTax($cart->getSubTotalWithoutTax() * $document->getValue());
-				$coupon->setValueWithTax($cart->getSubTotalWithTax() * $document->getValue());
+				$coupon->setLabel($document->getCode());
 			}
 			else
 			{
-				$coupon->setValueWithTax($document->getValue());
-				$coupon->setValueWithoutTax(($cart->getSubTotalWithoutTax() / $cart->getSubTotalWithTax()) * $document->getValue());
+				$cart->setCoupon(null);						
 			}
 		}
 	}

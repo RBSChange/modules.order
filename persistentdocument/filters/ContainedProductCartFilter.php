@@ -4,12 +4,14 @@ class order_ContainedProductCartFilter extends order_LinesCartFilterBase
 	public function __construct()
 	{
 		parent::__construct();
-		
 		$info = new BeanPropertyInfoImpl('product', BeanPropertyType::DOCUMENT, 'catalog_persistentdocument_product');
 		$info->setLabelKey('&modules.order.bo.documentfilters.parameter.cart-product;');
 		$parameter = new f_persistentdocument_DocumentFilterValueParameter($info);
+		$parameter->setCustomPropertyAttribute('product', 'dialog', 'productselector');	
+		$allow = DocumentHelper::expandAllowAttribute('[modules_catalog_product],!modules_catalog_declinedproduct');
+		$parameter->setCustomPropertyAttribute('product', 'allow', $allow);
 		$this->setParameter('product', $parameter);
-		
+
 		$info = new BeanPropertyInfoImpl('quantity', BeanPropertyType::INTEGER);
 		$info->setLabelKey('&modules.order.bo.documentfilters.parameter.cart-cumulative-quantity;');
 		$parameter = f_persistentdocument_DocumentFilterRestrictionParameter::getNewInstance($info);
