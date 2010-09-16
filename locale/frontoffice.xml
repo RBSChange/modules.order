@@ -250,45 +250,10 @@
 		<locale lang="en">This article {articleLabel} is not available for quantity: {quantity} {unit}. The amount currently available is {availableQuantity} {availableUnit}.</locale>
 		<locale lang="de">Die Artikel {articleLabel} ist nicht für Quantität: {quantity} {unit}. Die Höhe ist derzeit {availableQuantity} {availableUnit}.</locale>
 	</entity>
-	<entity id="cart-validation-error-cart-rule-not-valid">
-		<locale lang="fr">L'offre {cartRuleLabel} n'est plus disponible la ligne la concernant a donc été supprimée.</locale>
-		<locale lang="en">Offer {cartRuleLabel} is no longer available on the line has been deleted.</locale>
-		<locale lang="de">Angebot {cartRuleLabel} ist nicht mehr verfügbar auf der Linie wurde gelöscht.</locale>
-	</entity>
 	<entity id="cart-validation-error-custom-discount-line-not-valid">
 		<locale lang="fr">La ligne {cartLineLabel} n'est plus disponible, elle a donc été supprimée.</locale>
 		<locale lang="en">The line {cartLineLabel} no longer available, it has been deleted.</locale>
 		<locale lang="de">Die Zeile {cartLineLabel} nicht mehr verfügbar ist, wurde gestrichen.</locale>
-	</entity>
-	<entity id="cart-validation-error-cart-rule-missing-product-count">
-		<locale lang="fr">L'offre {label} nécessite de commander au moins {minProductCount} articles (hors offres spéciales). Pour passer commande il vous faudra ajouter {missingProductCount} articles à votre panier ou retirer cette offre.</locale>
-		<locale lang="en">Offer {label} command requires at least {minProductCount} items (excluding special offers). To order you will {missingProductCount} (add items to your cart or withdraw this offer.</locale>
-		<locale lang="de">Angebot {label} -Befehl benötigt mindestens {minProductCount} Artikel (ausgenommen spezielle Angebote). Um zu bestellen Sie {missingProductCount}(fügen Sie Artikel zu Ihrem Warenkorb oder widerrufen dieses Angebot.</locale>
-	</entity>
-	<entity id="cart-validation-error-cart-rule-exceeding-product-count">
-		<locale lang="fr">L'offre {label} nécessite de commander au plus {maxProductCount} articles (hors offres spéciales). Pour passer commande il vous faudra retirer {exceedingProductCount} articles de votre panier ou retirer cette offre.</locale>
-		<locale lang="en">Offer {label} command requires at most {maxProductCount} items (excluding special offers). To order you must remove {exceedingProductCount} items in your cart or withdraw this offer.</locale>
-		<locale lang="de">Angebot {label} Befehl erfordert in den meisten {maxProductCount} Artikel (ausgenommen spezielle Angebote). Um zu bestellen, müssen Sie entfernen {exceedingProductCount} Artikel in Ihrem Warenkorb oder widerrufen dieses Angebot.</locale>
-	</entity>
-	<entity id="cart-validation-error-cart-rule-missing-cart-amount">
-		<locale lang="fr">L'offre {label} nécessite de commander pour au moins {minCartAmount} (hors offres spéciales). Pour passer commande il vous faudra ajouter des articles à votre panier pour un montant de {missingCartAmount} ou retirer cette offre.</locale>
-		<locale lang="en">Offer {label} command requires at least {minCartAmount} (excluding special offers). To order you need to add items to your cart for {missingCartAmount} amount or withdraw this offer.</locale>
-		<locale lang="de">Angebot {label}-Befehl benötigt mindestens {minCartAmount} (ausgenommen spezielle Angebote). Um zu bestellen, müssen Sie Artikel zu Ihrem Warenkorb für {missingCartAmount} add oder das Angebot zurückzuziehen.</locale>
-	</entity>
-	<entity id="cart-validation-error-cart-rule-exceeding-cart-amount">
-		<locale lang="fr">L'offre {label} nécessite de commander pour au plus {maxCartAmount} (hors offres spéciales). Pour passer commande il vous faudra retirer des articles de votre panier pour un montant de {exceedingCartAmount} ou retirer cette offre.</locale>
-		<locale lang="en">The offer requires {label} order for up to {maxCartAmount} (excluding special offers). To order you need to remove items from your basket for {exceedingCartAmount} amount or withdraw this offer.</locale>
-		<locale lang="de">Das Angebot erfordert {label} um bis zu {maxCartAmount} (ausgenommen spezielle Angebote). Um zu bestellen, müssen Sie Artikel aus dem Warenkorb für entfernen {exceedingCartAmount} oder das Angebot zurückzuziehen.</locale>
-	</entity>
-	<entity id="cart-validation-error-cart-rule-missing-cart-weight">
-		<locale lang="fr">L'offre {label} se limite aux colis de plus de {minCartWeight}. Le poids actuel de votre panier est de {currentCartWeight}.</locale>
-		<locale lang="en">Offer {label} is limited to parcels of more than {minCartWeight}. The current weight of your basket is {currentCartWeight}.</locale>
-		<locale lang="de">Angebot {label} ist, Pakete zu der begrenzten mehr als {minCartWeight}. Das aktuelle Gewicht Ihres Warenkorb ist {currentCartWeight}.</locale>
-	</entity>
-	<entity id="cart-validation-error-cart-rule-exceeding-cart-weight">
-		<locale lang="fr">L'offre {label} se limite aux colis de moins de {maxCartWeight}. Le poids actuel de votre panier est de {currentCartWeight}.</locale>
-		<locale lang="en">Offer {label} is limited to parcels under {maxCartWeight}. The current weight of your basket is {currentCartWeight}.</locale>
-		<locale lang="de">Angebot {label} wird auf Parzellen, die mit {maxCartWeight} begrenzt. Das aktuelle Gewicht Ihres Warenkorb ist {currentCartWeight}.</locale>
 	</entity>
 	<entity id="cart-validation-error-unavailable-coupon-modificator">
 		<locale lang="fr">le coupon de code "{code}" est invalide.</locale>
@@ -981,16 +946,6 @@
 		<locale lang="fr">vous devez accepter les conditions générales de vente.</locale>
 		<locale lang="en">you must agree with the general sales conditions.</locale>
 		<locale lang="de">Sie müssen akzeptieren, die allgemeinen Verkaufsbedingungen.</locale>
-	</entity>
-	<entity id="error-adding-cart-rule">
-		<locale lang="fr">Une erreur s'est produite lors de l'ajout à votre panier de l'offre n°{cartRuleId}.</locale>
-		<locale lang="en">An error occurred when adding to your shopping cart to offer number {cartRuleId}.</locale>
-		<locale lang="de">Ein Fehler ist aufgetreten beim Hinzufügen zu Ihrem Warenkorb zu bieten n°{cartRuleId}.</locale>
-	</entity>
-	<entity id="simple-cart-rule-strategy-add-to-cart-message">
-		<locale lang="fr">l'offre {cartRule} a bien été ajoutée à votre panier. Ceci n'a pas modifié les produits initialement présents dans votre panier.</locale>
-		<locale lang="en">Offer {cartRule} has been added to your basket. This did not change the products initially present in your basket.</locale>
-		<locale lang="de">Angebot {cartRule} wurde zu Ihrem Warenkorb hinzugefügt. Dies änderte sich zunächst die Produkte, die in Ihren Einkaufskorb.</locale>
 	</entity>
 	<entity id="coupon-form-help">
 		<locale lang="fr">si vous disposez d'un coupon de réduction vous pouvez l'utiliser en saisissant son code.</locale>

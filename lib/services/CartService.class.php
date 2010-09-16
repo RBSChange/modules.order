@@ -8,8 +8,6 @@ class order_CartService extends BaseService
 	const CART_SESSION_NAMESPACE = 'order_cart';
 	const CARTLINE_NUMBER_LIMIT = 100;
 	
-	const REFERENCE_WEIGHT_UNIT = 'g';
-	
 	/**
 	 * Singleton
 	 * @var order_CartService
@@ -217,9 +215,6 @@ class order_CartService extends BaseService
 		}
 	}
 	
-
-	
-	
 	/**
 	 * @param order_CartInfo $cart
 	 * @param catalog_persistentdocument_product $product
@@ -234,6 +229,7 @@ class order_CartService extends BaseService
 			Framework::warn(__METHOD__ . ' Invalid arguments');
 			return false;
 		}
+		
 		// Check if the product we're trying to add to the cart is not already there with a quantity than can't be changed.
 		if (!$product->updateCartQuantity() && $cart->hasCartLine($product->getCartLineKey()))
 		{
@@ -353,57 +349,7 @@ class order_CartService extends BaseService
 		}
 		return $cart->getCoupon();
 	}
-	
-	/**
-	 * @param order_CartLineInfo $cartLine
-	 * @param Double $weight
-	 * @param String $referenceUnit
-	 */
-	public function setWeightProperties($cartLine, $weight, $unit)
-	{
-		$quantity = $cartLine->getQuantity();
-		if (!is_null($weight) && !is_null($unit))
-		{
-			$cartLine->setProperties('_weight', $weight);
-			$cartLine->setProperties('_weightUnit', $unit);
-			$cartLine->setProperties('_formattedWeight', catalog_QuantityHelper::formatWeight($weight, $unit));
-			$cartLine->setProperties('_totalWeight', $quantity * $weight);
-			$cartLine->setProperties('_formattedTotalWeight', catalog_QuantityHelper::formatWeight($quantity * $weight, $unit));
-			$convertedWeight = catalog_QuantityHelper::convertWeight($weight, $unit, self::REFERENCE_WEIGHT_UNIT);
-			if (!is_null($convertedWeight))
-			{
-				$cartLine->setProperties('_referenceWeight', $quantity * $convertedWeight);
-			}
-			else
-			{
-				$cartLine->setProperties('_referenceWeight', null);
-			}
-		}
-		else
-		{
-			$cartLine->setProperties('_weight', null);
-			$cartLine->setProperties('_weightUnit', null);
-			$cartLine->setProperties('_formattedWeight', null);
-			$cartLine->setProperties('_totalWeight', null);
-			$cartLine->setProperties('_formattedTotalWeight', null);
-			$cartLine->setProperties('_referenceWeight', null);
-		}
-	}	
-	
-	/**
-	 * @param order_CartInfo $cart
-	 */
-	protected function refreshTotalWeights($cart)
-	{
-		//TODO retrouve les informations dans le produit ?
-		/*
-		foreach ($cart->getCartLineArray() as $cartLine)
-		{
-			$this->setWeightProperties($cartLine, null, null);
-		}
-		*/
-	}
-	
+		
 	/**
 	 * This method is meant to be called one or several time,
 	 * then the cart needs to be refreshed by calling the refresh($cart)
@@ -599,7 +545,7 @@ class order_CartService extends BaseService
 	/**
 	 * Merge equivalent lines (same product/article), with adding quantities.
 	 * Remove lines with quantities set to 0.
-	 * Check products, cartrules and articles publication.
+	 * Check products, publication and stocks.
 	 * Check if the qiantities are valid.
 	 *
 	 * @param order_CartInfo $cart
@@ -645,9 +591,6 @@ class order_CartService extends BaseService
 		}
 		
 		$cart->removeCartLines($removeCartLineIndex);
-
-		// Refresh total weights.
-		$this->refreshTotalWeights($cart);
 		
 		if (count($cart->getWarningMessageArray()) > 0 || count($cart->getErrorMessageArray()) > 0)
 		{
@@ -809,8 +752,7 @@ class order_CartService extends BaseService
 	{
 		return (!is_null($cart) && !$cart->isEmpty() && count($cart->getErrorMessageArray()) === 0);
 	}
-	
-	
+		
 	//DEPRECATED
 	
 	/**
