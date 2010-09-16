@@ -1,0 +1,12 @@
+<table width="100%" border="1" cellspacing="0" cellpadding="0">
+	<tr>
+		<th change:translate="modules.order.frontoffice.Designation" />
+		<th change:translate="modules.order.frontoffice.CodeReference" />
+		<th change:translate="modules.order.frontoffice.Quantity" />
+	</tr>
+	<tr tal:repeat="line expedition/getLinesForDisplay" align="center">
+		<td>${line/getLabelAsHtml}</td>
+		<td>${line/getCodeReferenceAsHtml}</td>
+		<td>${line/getQuantity}</td>
+	</tr>
+</table>

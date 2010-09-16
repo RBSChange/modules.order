@@ -534,6 +534,15 @@
 					getController().openModalDialog(this, 'ShipExpedition', {callBack: callBack, rowData: rowData});
 				]]></body>
 			</method>
+			
+			<method name="execute_tracking">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
+				<body><![CDATA[
+					if (this.disabled) {return;}
+					wToolkit.openurl(rowData.trackingurl);
+				]]></body>
+			</method>
 					
 			<method name="onShipped">
 				<parameter name="rowNode" />
@@ -570,6 +579,19 @@
 							cell.removeAttribute('action');								
 						}
 					}
+					else if (name === 'trackingnumber')
+					{
+						if (dataRow.trackingurl)
+						{
+							cell.setAttribute('class', 'text-link');
+							cell.setAttribute('action', 'tracking');
+						}
+						else
+						{
+							cell.removeAttribute('class');
+							cell.removeAttribute('action');								
+						}
+					}
 				]]></body>
 			</method>		
 		</implementation>
@@ -586,8 +608,8 @@
 					<xul:row class="head" anonid="head-row">
 						<xul:label name="label" value="&amp;modules.order.document.expedition.Label;" />
 						<xul:label name="status" value="&amp;modules.order.document.expedition.TrackingText;" />
-						<xul:label name="transporteur" value="&amp;modules.order.document.expedition.Transporteur;" />	
-						<xul:label name="trackingnumber" value="&amp;modules.order.document.expedition.TrackingNumber;" />				
+						<xul:label name="transporteur" value="&amp;modules.order.document.expedition.Transporteur;" />
+						<xul:label name="trackingnumber" value="&amp;modules.order.document.expedition.TrackingNumber;" />
 						<xul:label name="actionrow" value="&amp;modules.order.bo.doceditor.Actions;" />
 					</xul:row>
 				</xul:rows>

@@ -53,6 +53,16 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		$key = '&modules.order.frontoffice.status.' . $status . ';';
 		return f_Locale::translateUI($key);
 	}
+
+	/**
+	 * @return String
+	 */
+	public function getFoOrderStatusLabel()
+	{
+		$status = (!$this->getOrderStatus()) ? 'Unknown' : ucfirst($this->getOrderStatus());
+		$key = '&modules.order.frontoffice.status.' . $status . ';';
+		return f_Locale::translate($key);
+	}
 		
 	/**
 	 * @param double $value
@@ -461,11 +471,11 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 
 	/**
 	 * @return String
-	 * @deprecated 
+	 * @deprecated use getBoOrderStatusLabel or getFoOrderStatusLabel
 	 */
 	public function getOrderStatusLabel()
 	{
-		$this->getBoOrderStatusLabel();
+		return $this->getFoOrderStatusLabel();
 	}
 		
 	/**

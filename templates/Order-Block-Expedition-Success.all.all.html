@@ -3,8 +3,8 @@
 	<li><span change:translate="modules.order.frontoffice.Transport-nameLabel"></span> ${shippingMode/getLabelAsHtml}</li>
 	<li><span change:translate="modules.order.frontoffice.Tracking-numberLabel"></span> <a class="link" href="${expedition/getTrackingURL}">${expedition/getTrackingNumber}</a></li>
 	<li tal:repeat="line expeditionlines">
-		<span>${line/getProduct/getLabel} - ${line/getProduct/getCodeReference} </span>
-		<span>${line/getQuantity} / ${line/getOrderProductQuantity} </span>
+		<span>${line/getProduct/getLabelAsHtml} - ${line/getProduct/getCodeReferenceAsHtml}</span>
+		<span>${line/getQuantity} / ${line/getOrderProductQuantity}</span>
 		<tal:block tal:condition="line/getURL">
 			<a class="link download" href="${line/getURL}" change:translate="modules.order.frontoffice.Product-download">Télécharger</a> ${line/getURLClick} <span change:translate="modules.order.frontoffice.Product-download-count">Téléchargement(s)</span>
 		</tal:block>

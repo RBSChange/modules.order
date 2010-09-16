@@ -23,6 +23,14 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 //	}
 
 	/**
+	 * @return order_persistentdocument_expeditionline[]
+	 */
+	public function getLinesForDisplay()
+	{
+		return $this->getDocumentService()->getLinesForDisplay($this);
+	}
+	
+	/**
 	 * @return shipping_persistentdocument_mode
 	 */
 	public function getShippingMode()
@@ -42,7 +50,6 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 		return null;
 	}
 	
-	
 	/**
 	 * @return String
 	 */
@@ -61,8 +68,8 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 		return f_Locale::translateUI($key);
 	}
 	
-	/* (non-PHPdoc)
-	 * @see build/franck/modules/order/persistentdocument/order_persistentdocument_expeditionbase::getStatus()
+	/**
+	 * @return string
 	 */
 	public function getTrackingURL()
 	{

@@ -123,11 +123,6 @@
 			header="&lt;strong&gt;Message à propos de la commande numéro {orderId}.&lt;/strong&gt;"
 			body="&lt;p&gt;{content}&lt;/p&gt;"
 			template="default" />
-			
-		<!-- 
-			modules_order/comment-reminder
-		
-		 -->
 	</systemfolder>
 		
 	<rootfolder module="order">

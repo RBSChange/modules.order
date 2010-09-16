@@ -39,6 +39,14 @@ class order_persistentdocument_expeditionline extends order_persistentdocument_e
 	}
 	
 	/**
+	 * @return string
+	 */	
+	public function getCodeReferenceAsHtml()
+	{
+		return $this->getOrderLine()->getCodeReferenceAsHtml();	
+	}
+	
+	/**
 	 * @return catalog_persistentdocument_product or null
 	 */	
 	public function getProduct()

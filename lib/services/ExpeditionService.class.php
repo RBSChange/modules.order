@@ -5,7 +5,6 @@
  */
 class order_ExpeditionService extends f_persistentdocument_DocumentService
 {
-	
 	const PREPARE = "prepare";
 	const SHIPPED = "shipped";	
 	const CANCELED = "canceled";	
@@ -142,7 +141,16 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		{
 			$trackingNumber = '<a href="' . $trackingUrl . '">' . $trackingNumber . '</a>';
 		}
-		return array('packageNumber' => $trackingNumber, 'trackingNumber' => $expedition->getTrackingNumber());
+		
+		$template = TemplateLoader::getInstance()->setPackageName('modules_order')->setMimeContentType(K::HTML)
+			->setDirectory('templates/mails')->load('Order-Inc-ExpeditionLines');
+		$template->setAttribute('expedition', $expedition);
+		
+		return array(
+			'packageNumber' => $trackingNumber,
+			'trackingNumber' => $expedition->getTrackingNumber(),
+			'expeditionDetail' => $template->execute()
+		);
 	}
 	
 	/**
@@ -336,7 +344,6 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		}
 		return null;
 	}
-
 	
 	/**
 	 * @param order_persistentdocument_expedition $expedition
@@ -367,8 +374,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		}
 		return $array;
 	}
-	
-	
+		
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @return array
@@ -389,6 +395,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	private function buildBoRow($expedition)
 	{
+		$trackingNumber = $expedition->getTrackingNumber();
 		$result = array(
 			'id' => $expedition->getId(),
 			'lang' => $expedition->getLang(),
@@ -396,7 +403,8 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			'st' => $expedition->getStatus(),
 			'status' => $expedition->getBoStatusLabel(),
 			'label' => $expedition->getLabel(),
-			'traking' => $expedition->getTrackingNumber(),
+			'trackingnumber' => $trackingNumber,
+			'trackingurl' => ($trackingNumber) ? $expedition->getTrackingURL() : null,
 			'transporteur' => $expedition->getTransporteur()
 		);		
 		return $result;
@@ -718,8 +726,14 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	{
 		$resume = parent::getResume($document, $forModuleName, $allowedSections);
 		
+		$trackingNumber = $document->getTrackingNumber();
+		$resume['properties']['tracking'] = array(
+			'label' => ($trackingNumber) ? $trackingNumber : '-', 
+			'href' => ($trackingNumber) ? $document->getTrackingURL() : null
+		);
+		
 		$resume['lines'] = array();
-		foreach ($document->getLineArray() as $line)
+		foreach ($this->getLinesForDisplay($document) as $line)
 		{
 			$resume['lines'][] = array(
 				'label' => $line->getLabel(),

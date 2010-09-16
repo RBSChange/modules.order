@@ -4,6 +4,7 @@
 		<property name="label" labeli18n="modules.uixul.bo.doceditor.property.Label" />
 		<property name="author" labeli18n="modules.uixul.bo.doceditor.property.Author" />
 		<property name="creationdate" labeli18n="modules.uixul.bo.doceditor.property.Creationdate" />
+		<property name="tracking" class="link" labeli18n="modules.uixul.bo.doceditor.property.Tracking" />
 	</section>
 	<section name="lines" labeli18n="modules.order.bo.doceditor.section.Lines" image="{IconsBase}/small/list-classic.png" />
 	<section name="publication" linkedtab="publication" labeli18n="modules.uixul.bo.doceditor.section.Status" image="{IconsBase}/small/status.png">
