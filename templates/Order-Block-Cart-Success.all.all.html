@@ -138,13 +138,12 @@
 			<dt>${PriceByTax/formattedTaxAmount}</dt>
 		</tal:block>
 		
-		<tal:block tal:condition="cart/hasDiscount">
-			<tal:block tal:repeat="discount cart/getDiscountArray">	
-				<dd tal:condition="discount/getLabel">${discount/getLabel}</dd>
-				<dt tal:condition="discount/getLabel" class="discount">-${php:shop.formatPrice(discount.getValueWithTax())}</dt>
-			</tal:block>
+		<!-- discount -->
+		<tal:block tal:repeat="discount cart/getDiscountDataArrayForDisplay">	
+				<dd>${discount/label}</dd>
+				<dt class="discount">${discount/valueWithTax}</dt>
 		</tal:block>
-		
+			
 		<tal:block tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
 			<!-- shipping -->
 			<dd change:translate="modules.order.frontoffice.Shipping-modeLabel" />

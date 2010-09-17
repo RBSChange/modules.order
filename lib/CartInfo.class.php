@@ -800,6 +800,24 @@ class order_CartInfo
 	}
 	
 	/**
+	 * @return array<'label' => string, valueWithTax => string>
+	 */
+	public function getDiscountDataArrayForDisplay()
+	{
+		$result = array();
+		foreach ($this->getDiscountArray() as $discount) 
+		{
+			if (f_util_StringUtils::isNotEmpty($discount->getLabel()) && $discount->getValueWithTax() > 0)
+			{
+				$result[] = array('label' => $discount->getLabel(),  
+					'valueWithTax' => '-' . $this->formatValue($discount->getValueWithTax()));
+			}
+		}
+		return $result;
+	}
+	
+	
+	/**
 	 * @param order_DiscountInfo[] $discountArray
 	 */
 	public function setDiscountArray($discountArray)

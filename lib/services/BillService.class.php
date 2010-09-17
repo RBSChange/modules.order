@@ -151,16 +151,22 @@ class order_BillService extends f_persistentdocument_DocumentService
 		foreach ($order->getTotalTaxInfoArray() as $subTotal)
 		{
 			$taxes[] = array("rate" => $subTotal['formattedTaxRate'],
-				"amount" => $shop->formatPrice($subTotal['taxAmount']));
+				"amount" => $order->formatPrice($subTotal['taxAmount']));
 		}
 		$data['taxes'] = $taxes;		
 		// Discounts
 		$discounts = array();
-		$cartModificators = $order->getGlobalProperty('__cartModificators');
+		$cartModificators = $order->getDiscountDataArray();
 		if (count($cartModificators) > 0)
 		{
-			$coupon = f_util_ArrayUtils::firstElement($cartModificators);
-			$discounts[] = array("name" => $coupon["label"], "value" => $coupon['formattedValue']);
+			foreach ($cartModificators as $discount) 
+			{
+				if ($discount["valueWithTax"] > 0)
+				{
+					$discounts[] = array("name" => $discount["label"], 
+						"value" => $order->formatPrice($discount["valueWithTax"]));
+				}
+			}			
 		}
 		$data["discounts"] = $discounts;
 		$lang = RequestContext::getInstance()->getLang();

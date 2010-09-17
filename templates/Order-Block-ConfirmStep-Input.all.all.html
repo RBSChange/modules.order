@@ -93,21 +93,19 @@
 			<tal:block tal:condition="order/getCouponId" tal:define="coupon order/getCouponData">
 				<dd change:translate="modules.order.frontoffice.Coupon-codeLabel"></dd>
 				<dt>${coupon/code}</dt>
-				<dd change:translate="modules.order.frontoffice.Coupon-valueLabel"></dd>
-				<dt>${php:order.formatPrice(coupon['valueWithTax'])}</dt>
 			</tal:block>
 			
 			<!-- discount -->
-			<tal:block tal:condition="order/hasDiscount">
-				<tal:block tal:repeat="discount order/getDiscountDataArray">	
-					<dd tal:condition="discount/label">${discount/label}</dd>
-					<dt tal:condition="discount/label" class="discount">-${php:order.formatPrice(discount['valueWithTax'])}</dt>
-				</tal:block>
-				<!-- 			
-					<dd change:translate="&modules.order.frontoffice.Discount-nameLabel;" />
-					<dt>${php:order.formatPrice(order.getDiscountTotalWithTax())}</dt>
-				 -->
+			<tal:block tal:repeat="discount order/getDiscountDataArrayForDisplay">	
+				<dd>${discount/label}</dd>
+				<dt class="discount">${discount/valueWithTax}</dt>
 			</tal:block>
+			<!-- 
+			<tal:block tal:condition="order/hasDiscount">		
+				<dd change:translate="&modules.order.frontoffice.Discount-nameLabel;" />
+				<dt>-${php:order.formatPrice(order.getDiscountTotalWithTax())}</dt>
+			</tal:block>
+			 -->
 		
 			<!-- shipping -->
 			<tal:block tal:condition="order/getShippingFeesWithTax">
@@ -118,11 +116,11 @@
 			</tal:block>
 
 			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withouttax-abrLabel" />
-			<dt class="pricetotal">${cart/getFormattedTotalWithoutTax}</dt>
+			<dt class="pricetotal">${order/getFormattedTotalWithoutTax}</dt>
 			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-TVA-abrLabel" />
-			<dt class="pricetotal">${cart/getFormattedTotalTax}</dt>				
+			<dt class="pricetotal">${order/getFormattedTotalTax}</dt>				
 			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withtax-abrLabel" />
-			<dt class="pricetotal">${cart/getFormattedTotalWithTax}</dt>	
+			<dt class="pricetotal">${order/getFormattedTotalWithTax}</dt>	
 		</dl>
 	</div>
 </div>

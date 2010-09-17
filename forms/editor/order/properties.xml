@@ -43,7 +43,6 @@
 	<section labeli18n="modules.order.bo.general.Amount">
 		<sectionrow labeli18n="modules.order.bo.general.Sub-total" id="subTotal" />
 		<sectionrow labeli18n="modules.order.frontoffice.Coupon-name" id="couponName" />
-		<sectionrow labeli18n="modules.order.frontoffice.Coupon-value" id="couponValue" />
 		<sectionrow labeli18n="modules.order.frontoffice.Discount-name" id="discountTotal" />
 		<sectionrow labeli18n="modules.order.bo.general.Shipping-fees" id="shippingFees" />
 		<sectionrow labeli18n="modules.order.bo.general.Billing-mode" id="billingMode" />
@@ -54,7 +53,6 @@
 	<section labeli18n="modules.order.bo.general.Coupon" class="couponSection">
 		<sectionrow labeli18n="modules.order.bo.general.Coupon-name" id="couponSectionName" />
 		<sectionrow labeli18n="modules.order.bo.general.Coupon-code" id="couponSectionCode" />
-		<sectionrow labeli18n="modules.order.bo.general.Coupon-reduction" id="couponSectionValue" />
 	</section>
 	<xul>
 		<javascript>
@@ -91,7 +89,6 @@
 				"shippingMode",
 				"subTotal",
 				"couponName",
-				"couponValue",
 				"shippingFees",
 				"billingMode",
 				"billingFees",
@@ -99,8 +96,7 @@
 				"discountTotal",
 				"totalAmount",
 				"couponSectionName",
-				"couponSectionCode",
-				"couponSectionValue",
+				"couponSectionCode"
 			]</field>
 			
 			<field name="mCancelOrderButton">null</field>

@@ -232,13 +232,11 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		{
 			$this->setGlobalProperty('__coupon', $couponData);
 			$this->setCouponId($couponData['id']);
-			$this->setCouponValueWithTax($couponData['valueWithTax']);
 		}
 		else
 		{
 			$this->setGlobalProperty('__coupon', null);
 			$this->setCouponId(null);
-			$this->setCouponValueWithTax(null);
 		}
 	}
 	
@@ -261,6 +259,23 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		if (!is_array($result))
 		{
 			$result = array();
+		}
+		return $result;
+	}
+	
+	/**
+	 * @return array<'label' => string, valueWithTax => string>
+	 */
+	public function getDiscountDataArrayForDisplay()
+	{
+		$result = array();
+		foreach ($this->getDiscountDataArray() as $discount) 
+		{
+			if (f_util_StringUtils::isNotEmpty($discount['label']) && $discount['valueWithTax'] > 0)
+			{
+				$result[] = array('label' => $discount['label'],  
+					'valueWithTax' => '-' . $this->formatPrice($discount['valueWithTax']));
+			}
 		}
 		return $result;
 	}
@@ -399,6 +414,30 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	public function getTotalTax()
 	{
 		return $this->getTotalAmountWithTax()-$this->getTotalAmountWithoutTax();
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getFormattedTotalTax()
+	{
+		return $this->formatPrice($this->getTotalTax());
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getFormattedTotalWithoutTax()
+	{
+		return $this->formatPrice($this->getTotalAmountWithoutTax());
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getFormattedTotalWithTax()
+	{
+		return $this->formatPrice($this->getTotalAmountWithTax());
 	}
 	
 	/**

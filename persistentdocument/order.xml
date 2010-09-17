@@ -26,8 +26,9 @@
 		<add name="billingAddress" type="modules_customer/address" />
 
 		<add name="couponId" type="Integer" />
+		<!--
 		<add name="couponValueWithTax" type="Double" />
-						
+		-->			
 		<add name="globalProperties" type="Lob" />
 				
 		<add name="lastCommentReminder" type="DateTime" />

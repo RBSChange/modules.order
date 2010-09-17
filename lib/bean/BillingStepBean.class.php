@@ -8,12 +8,7 @@ class order_BillingStepBean
 	 * @var String
 	 */
 	public $coupon;
-	
-	/**
-	 * @var Double
-	 */	
-	public $couponValue;
-	
+		
 	/**
 	 * @var Integer
 	 * @required
