@@ -526,15 +526,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 		}
 		$order = $document->getOrder();
 		
-		$cmd = "openActionUri('customer,openDocument,modules_customer_customer,". $order->getCustomer()->getId() ."')";
-		$data['links']['customer'] = array('moduleaction' => "", 'jsaction' => $cmd, 
-			"actionlabel" => f_Locale::translateUI('&modules.order.bo.doceditor.panel.properties.View-customer;'), 
-			"label" => $order->getCustomer()->getLabel());
-		
-		$cmd = "openActionUri('order,openDocument,modules_order_order,". $order->getId() ."')";
-		$data['links']['order'] = array('moduleaction' => "", 'jsaction' => $cmd, 
-			"actionlabel" => f_Locale::translateUI('&modules.order.bo.doceditor.panel.properties.View-order;'), 
-			"label" => $order->getOrderNumber());
+		$data['links']['customer'] = $order->getCustomer()->getLabel();
+		$data['links']['order'] = $order->getOrderNumber();
 		return $data;
 	}
 

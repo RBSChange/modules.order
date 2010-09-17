@@ -10,9 +10,9 @@
     <property name="transactionId" labeli18n="modules.order.document.bill.TransactionId"/>  
   </section>
   
-  <section name="links" labeli18n="modules.order.bo.doceditor.Links">
-  	 <property name="customer" class="action" type="openFolder" labeli18n="modules.order.bo.doceditor.Customer"/>
-  	 <property name="order" class="action" type="openFolder" labeli18n="modules.order.bo.doceditor.Order"/>
+  <section name="links" labeli18n="modules.order.bo.doceditor.Links" image="{IconsBase}/small/document.png">
+  	 <property name="customer" labeli18n="modules.order.bo.doceditor.Customer"/>
+  	 <property name="order" labeli18n="modules.order.bo.doceditor.Order"/>
   </section>
   
   <section name="publication" linkedtab="publication" labeli18n="modules.uixul.bo.doceditor.section.Status" image="{IconsBase}/small/status.png">
