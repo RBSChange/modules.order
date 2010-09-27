@@ -509,8 +509,7 @@ class order_CartService extends BaseService
 		{
 			$coupon = $cart->getCoupon();
 			$document = DocumentHelper::getDocumentInstance($coupon->getId(), 'modules_marketing/coupon');
-			$ocs = marketing_CouponService::getInstance();
-			if ($ocs->validateForCart($document, $cart))
+			if ($document->getDocumentService()->validateForCart($document, $cart))
 			{
 				$coupon->setLabel($document->getCode());
 			}

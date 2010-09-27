@@ -37,10 +37,7 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 		return $this->getInputViewName();
 	}
 	
-	
 	/**
-	 * @see website_BlockAction::execute()
-	 *
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @return String
@@ -97,7 +94,10 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 		return $this->execute($request, $response);
 	}
 	
-	
+	/**
+	 * @param users_persistentdocument_websitefrontenduser $user
+	 * @param order_IdentifyStepBean $identifyStep
+	 */
 	private function authentifyUser($user, $identifyStep)
 	{
 		$cartInfo = $this->getCurrentCart();
@@ -131,10 +131,7 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 		return array();
 	}
 	
-	
 	/**
-	 * @see website_BlockAction::execute()
-	 *
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @param order_IdentifyStepBean $identifyStep
@@ -147,6 +144,10 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 		return $this->getCreateAccountInputViewName();
 	}
 	
+	/**
+	 * @param string $login
+	 * @return boolean
+	 */
 	private function checkValidNewUserAccount($login)
 	{
 		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
@@ -160,7 +161,9 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 		return true;
 	}
 	
-	
+	/**
+	 * @return string
+	 */
 	function getCreateAccountInputViewName()
 	{
 		return 'New';
@@ -209,8 +212,6 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 	}
 	
 	/**
-	 * @see website_BlockAction::execute()
-	 *
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @param order_IdentifyStepBean $identifyStep
