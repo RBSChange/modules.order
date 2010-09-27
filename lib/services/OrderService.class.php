@@ -630,18 +630,17 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{		
 		// If there is a coupon, add it in the list of coupons used by the customer.
 		$coupon = $this->getUsedCouponByOrder($document);
-		if (!is_null($coupon))
+		if ($coupon !== null)
 		{
 			$customer = $document->getCustomer();
 			if ($document->getOrderStatus() == self::CANCELED)
 			{
-				$customer->removeUsedCoupon($coupon);
+				$customer->getDocumentService()->removeUsedCoupon($customer, $coupon);
 			}
 			else
 			{
-				$customer->addUsedCoupon($coupon);
+				$customer->getDocumentService()->addUsedCoupon($customer, $coupon);
 			}
-			$customer->save();
 		}
 	}
 
