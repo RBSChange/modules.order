@@ -482,12 +482,14 @@
 					<xul:column flex="1" />
 					<xul:column flex="1" />
 					<xul:column flex="1" />
+					<xul:column flex="1" />
 					<xul:column />
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
 						<xul:label name="label" value="&amp;modules.order.document.bill.Label;" />
 						<xul:label name="amount" value="&amp;modules.order.document.bill.Amount;" />
+						<xul:label name="trsid" value="&amp;modules.order.document.bill.TransactionId;" />					
 						<xul:label name="status" value="&amp;modules.order.document.bill.Status;" />
 						<xul:label name="archive" value="&amp;modules.order.document.bill.Archive;" />						
 						<xul:label name="actionrow" value="&amp;modules.order.bo.doceditor.Actions;" />
@@ -495,6 +497,7 @@
 				</xul:rows>
 			</xul:grid>
 			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />
@@ -657,6 +660,8 @@
 						.setAttribute('value', this.parameters.rowData.amount);
 					document.getAnonymousElementByAttribute(this, 'anonid', 'number')
 						.setAttribute('value', this.parameters.rowData.label);
+					document.getAnonymousElementByAttribute(this, 'anonid', 'transactionid')
+						.setAttribute('value', this.parameters.rowData.trsid);
 				]]></body>
 			</method>
 

@@ -269,9 +269,10 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 * @return boolean
 	 */
 	public function hasValidBill($order)
-	{
+	{		
 		$result = $this->createQuery()
 			->add(Restrictions::eq('order', $order))
+			->add(Restrictions::ne('publicationstatus', 'FILED'))
 			->setProjection(Projections::rowCount('rowCount'))->findColumn('rowCount');
 		return $result[0] > 0;
 	}
@@ -298,7 +299,6 @@ class order_BillService extends f_persistentdocument_DocumentService
 		try 
 		{
 			$this->tm->beginTransaction();
-
 			$bill->setStatus($newStatus);
 			switch ($newStatus) 
 			{
@@ -326,7 +326,15 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$order = $bill->getOrder();	
 		order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_failed', $order, $bill);
 		$order->getDocumentService()->cancelOrder($order, false);
-		$this->delete($bill);
+		if ($bill->getTransactionId())
+		{
+			$bill->setPublicationstatus('FILED');
+			$this->save($bill);
+		}
+		else
+		{
+			$this->delete($bill);
+		}
 	}
 	
 	/**
@@ -426,6 +434,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			'lang' => $bill->getLang(),
 			'type' => str_replace('/', '_', $bill->getDocumentModelName()),
 			'st' => $bill->getStatus(),
+			'trsid' => $bill->getTransactionId(),
 			'status' => $bill->getBoStatusLabel(),
 			'label' => $bill->getLabel(),
 			'archive' => $bill->getArchiveBoURL(),
@@ -491,7 +500,10 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$bill->setStatus(self::FAILED);
 			
 			$backendUser = users_UserService::getInstance()->getCurrentBackEndUser();
-			$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ?  $backendUser->getId() : 'UNKNOWN'));
+			if (f_util_StringUtils::isEmpty($bill->getTransactionId()))
+			{
+				$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ?  $backendUser->getId() : 'UNKNOWN'));
+			}
 			$bill->setTransactionText('Cancel by :' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
 			$this->save($bill);
 			$order = $bill->getOrder();
