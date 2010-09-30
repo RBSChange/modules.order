@@ -63,14 +63,14 @@
 				<input class="button" change:submit="name UseRegisteredShippingAddress" change:i18nattr="label &amp;modules.order.document.shippingstepbean.Registered-address-select;" />
 			</div>
 		</div>
-		<script type="text/javascript">//<![CDATA[
+		<script type="text/javascript" tal:define="blockId configuration/getBlockId">//<![CDATA[
 			jQuery(document).ready(function()
 			{
-				jQuery('#order_shippingStep_useSameAddressForBilling_false').bind('click change', function()
+				jQuery('#order_shippingStep${blockId}_useSameAddressForBilling_false').bind('click change', function()
 						{jQuery('#order_billingAddressContainer').show();});
-				jQuery('#order_shippingStep_useSameAddressForBilling_true').bind('click change', function()
+				jQuery('#order_shippingStep${blockId}_useSameAddressForBilling_true').bind('click change', function()
 						{jQuery('#order_billingAddressContainer').hide();});
-				if (jQuery('#order_shippingStep_useSameAddressForBilling_true').attr('checked'))
+				if (jQuery('#order_shippingStep${blockId}_useSameAddressForBilling_true').attr('checked'))
 				{
 					jQuery('#order_billingAddressContainer').hide();
 				}			
