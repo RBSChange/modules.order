@@ -5,10 +5,11 @@ class order_OrderFilter extends f_persistentdocument_DocumentFilterImpl
 	{
 		$fieldParameter = f_persistentdocument_DocumentFilterRestrictionParameter::getNewInstance();
 		$fieldParameter->setAllowedPropertyNames(array(
-			'modules_order/order.orderStatus',
 			'modules_order/order.creationdate',
+			'modules_order/order.currencyCode',
 			'modules_order/order.totalAmountWithTax',
-			'modules_order/order.totalAmountWithoutTax'
+			'modules_order/order.totalAmountWithoutTax',
+			'modules_order/order.orderStatus'
 		));
 		$this->setParameters(array('field' => $fieldParameter));
 	}
