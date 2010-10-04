@@ -11,7 +11,12 @@ class order_BackgroundOrderCheck extends task_SimpleSystemTask
 		$script = 'modules/order/lib/task/orderCheckChunk.php';
 		foreach ($documentsArray as $chunk)
 		{
-			f_util_System::execHTTPScript($script, $chunk);
+			$result = f_util_System::execHTTPScript($script, $chunk);
+			// Log fatal errors...
+			if ($result != '1')
+			{
+				Framework::error(__METHOD__ . ' ' . $script . ' an error occured: "' . $result . '"');
+			}
 		}
 		
 		$this->plannedTask->reSchedule(date_Calendar::getInstance()->add(date_Calendar::MINUTE, +30));
