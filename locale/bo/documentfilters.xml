@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <localization>
 	<entity id="query-on-cart">
-		<locale lang="fr">Ensemble des conditions nécessaires</locale>
+		<locale lang="fr">panier satisfaisant l'ensemble des critères suivants</locale>
+	</entity>
+	<entity id="or-query-on-cart">
+		<locale lang="fr">panier satisfaisant un des critères suivants</locale>
 	</entity>
 	<entity id="query-on-order">
-		<locale lang="fr">les commandes cumulant les conditions suivantes</locale>
+		<locale lang="fr">commandes satisfaisant l'ensemble des critères suivants</locale>
+	</entity>
+	<entity id="or-query-on-order">
+		<locale lang="fr">commandes satisfaisant un des critères suivants</locale>
 	</entity>
 		
 	<entity id="Qttfilter-one">
