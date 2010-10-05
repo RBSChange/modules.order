@@ -1,45 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <localization>
-  <entity id="shortcart.title">
-    <locale lang="fr">panier en cours (encart)</locale>
-    <locale lang="en">current cart (summary)</locale>
-  </entity>
-  <entity id="shortcart.showtotalwithfees">
-    <locale lang="fr">inclure les frais</locale>
-    <locale lang="en">include fees</locale>
-  </entity>
-  <entity id="shortcart.showtotalwithfees-help">
-    <locale lang="fr">inclure ou non les frais de port au total indiqué.</locale>
-  </entity>
-  <entity id="cart.title">
-    <locale lang="fr">panier en cours (détaillé)</locale>
-    <locale lang="en">current cart (detailed)</locale>
-  </entity>
-  <entity id="cart.showtotalwithfees">
-    <locale lang="fr">inclure les frais</locale>
-    <locale lang="en">include fees</locale>
-  </entity>
-  <entity id="cart.showtotalwithfees-help">
-    <locale lang="fr">inclure ou non les frais de port au total indiqué.</locale>
-  </entity>
-  <entity id="order-list">
-    <locale lang="fr">mes commandes</locale>
-    <locale lang="en">my orders</locale>
-  </entity>
-  <entity id="order">
-    <locale lang="fr">détail d'une commande</locale>
-    <locale lang="en">order detail</locale>
-  </entity>
-  <entity id="messages">
-    <locale lang="fr">messagerie</locale>
-    <locale lang="en">messages</locale>
-  </entity>
-  <entity id="identifystep.alwaysaskforpassword">
-    <locale lang="fr">toujours demander le mot de passe à la première étape</locale>
-    <locale lang="en">always ask for password</locale>
-  </entity>
-  <entity id="expedition.title">
-    <locale lang="fr">expedition</locale>
-    <locale lang="en">expedition</locale>
-  </entity>
+	<entity id="shortcart.title">
+		<locale lang="fr">panier en cours (encart)</locale>
+		<locale lang="en">current cart (summary)</locale>
+	</entity>
+	<entity id="shortcart.showtotalwithfees">
+		<locale lang="fr">inclure les frais</locale>
+		<locale lang="en">include fees</locale>
+	</entity>
+	<entity id="shortcart.showtotalwithfees-help">
+		<locale lang="fr">inclure ou non les frais de port au total indiqué.</locale>
+	</entity>
+	<entity id="cart.title">
+		<locale lang="fr">panier en cours (détaillé)</locale>
+		<locale lang="en">current cart (detailed)</locale>
+	</entity>
+	<entity id="cart.showtotalwithfees">
+		<locale lang="fr">inclure les frais</locale>
+		<locale lang="en">include fees</locale>
+	</entity>
+	<entity id="cart.showtotalwithfees-help">
+		<locale lang="fr">inclure ou non les frais de port au total indiqué.</locale>
+	</entity>
+	<entity id="cart.usecartemptypage">
+		<locale lang="fr">utiliser la page "panier vide"</locale>
+	</entity>
+	<entity id="cart.usecartemptypage-help">
+		<locale lang="fr">Rediriger ou non vers la page taguée "Panier vide" si le panier est vide.</locale>
+	</entity>
+	<entity id="order-list">
+		<locale lang="fr">mes commandes</locale>
+		<locale lang="en">my orders</locale>
+	</entity>
+	<entity id="order">
+		<locale lang="fr">détail d'une commande</locale>
+		<locale lang="en">order detail</locale>
+	</entity>
+	<entity id="messages">
+		<locale lang="fr">messagerie</locale>
+		<locale lang="en">messages</locale>
+	</entity>
+	<entity id="identifystep.alwaysaskforpassword">
+		<locale lang="fr">toujours demander le mot de passe à la première étape</locale>
+		<locale lang="en">always ask for password</locale>
+	</entity>
+	<entity id="expedition.title">
+		<locale lang="fr">expedition</locale>
+		<locale lang="en">expedition</locale>
+	</entity>
 </localization>

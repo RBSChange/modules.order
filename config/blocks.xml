@@ -6,6 +6,7 @@
 	<block type="modules_order_Cart" icon="cart" label="&amp;modules.order.bo.blocks.cart.Title;">
 		<parameters>
 			<parameter name="showTotalWithFees" type="Boolean" default-value="true" />
+			<parameter name="useCartEmptyPage" type="Boolean" default-value="true" />
 		</parameters>
 	</block>
 	<block type="modules_order_ShortCart" icon="cart" afterAll="true" label="&amp;modules.order.bo.blocks.shortcart.Title;">

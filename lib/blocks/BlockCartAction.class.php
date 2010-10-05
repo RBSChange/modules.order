@@ -28,21 +28,21 @@ class order_BlockCartAction extends website_BlockAction
 		// 		return the dummy view.
 		if (($cart->getCartLineCount() == 0))
 		{
-			try
+			if ($this->getConfiguration()->getUseCartEmptyPage())
 			{
-				$emptyCartPage = TagService::getInstance()->getDocumentByContextualTag(
-					'contextual_website_website_modules_order_cart-empty',
-					website_WebsiteModuleService::getInstance()->getCurrentWebsite()
-				);
-				if ($emptyCartPage->getId() != $pageId)
+				try
 				{
-					$url = LinkHelper::getUrl($emptyCartPage);
-					HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
+					$emptyCartPage = TagService::getInstance()->getDocumentByContextualTag(
+						'contextual_website_website_modules_order_cart-empty',
+						website_WebsiteModuleService::getInstance()->getCurrentWebsite()
+					);
+					if ($emptyCartPage->getId() != $pageId)
+					{
+						$url = LinkHelper::getUrl($emptyCartPage);
+						HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
+					}
 				}
-			}
-			catch (TagException $e)
-			{
-				if (Framework::isWarnEnabled())
+				catch (TagException $e)
 				{
 					Framework::warn($e->getMessage());
 				}
