@@ -68,4 +68,16 @@
 	<entity id="fixed-shipping-mode">
 		<locale lang="fr">Mode de livraison predefini</locale>
 	</entity>
+	<entity id="evaluateShipping">
+		<locale lang="fr">évaluer vos frais d'expédition</locale>
+	</entity>
+	<entity id="evaluateShipping-text">
+		<locale lang="fr">Pour évaluer les frais d'expédition de votre panier, merci d'indiquer votre code postal, ville ou pays.</locale>
+	</entity>
+	<entity id="evaluateShipping-button">
+		<locale lang="fr">évaluer</locale>
+	</entity>
+	<entity id="evaluateShipping-results">
+		<locale lang="fr">Frais d'expédition pour votre panier</locale>
+	</entity>
 </localization>

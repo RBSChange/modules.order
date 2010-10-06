@@ -74,6 +74,11 @@ class order_AddressCartFilter extends f_persistentdocument_DocumentFilterImpl
 	private function getCartAddress($value)
 	{
 		$addr = customer_AddressService::getInstance()->getNewDocumentInstance();
+		$addressInfo = $value->getAddressInfo();
+		if ($addressInfo === null)
+		{
+			return null;
+		}
 		if ($this->getParameter('addrtype')->getValue() == 'billing' && !$value->getAddressInfo()->useSameAddressForBilling)
 		{
 			 $value->getAddressInfo()->exportBillingAddress($addr);

@@ -177,17 +177,63 @@
 
 <div class="column-one">
 	<div class="productcart-information-block">
-		<h3 change:h="" change:translate="modules.order.frontoffice.Cart-help-title"></h3>
-		<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-removeline-titleLabel"></h4>
-		<p change:translate="modules.order.frontoffice.Cart-help-removeline"></p>
-		<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-updatequantity-titleLabel"></h4>
-		<p change:translate="modules.order.frontoffice.Cart-help-updatequantity"></p>
-		<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-addproduct-titleLabel"></h4>
-		<p change:translate="modules.order.frontoffice.Cart-help-addproduct"></p>
-		<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-updatecart-titleLabel"></h4>
-		<p change:translate="modules.order.frontoffice.Cart-help-updatecart"></p>
+		<tal:block tal:condition="configuration/getShowEvaluateShipping">
+			<form change:form="beanClass order_ShippingStepBean; beanName addressInfo" id="evaluateshippingform">
+				<ul change:errors=""></ul>
+				
+				<h3 change:h="" change:translate="modules.order.document.shippingstepbean.EvaluateShipping"></h3>
+				<p change:translate="modules.order.document.shippingstepbean.EvaluateShipping-text"></p>
+				<ol>
+					<li><input change:field="name shippingAddress.Zipcode" size="30" required="false"/></li>
+					<li><input change:field="name shippingAddress.City" size="30" required="false"/></li>
+					<li><input change:selectinput="name shippingAddress.CountryId" listId="modules_customer/shippingcountry" labeled="true" required="false"/></li>
+				</ol>
+				<input change:hiddeninput="name evaluateshipping" value="1" />
+				<p class="buttons">
+					<input class="button" change:submit="name Evaluateshipping" label="&modules.order.document.shippingstepbean.EvaluateShipping-button;" />
+				</p>
+			</form>
+			<tal:block tal:condition="evaluateshipping">
+				<tal:block tal:condition="cart/canSelectShippingModeId" tal:define="shippingModes cart/getShippingModes" > 		
+					<tal:block tal:condition="shippingModes/0">
+					<h4 change:h="" change:translate="modules.order.document.shippingstepbean.EvaluateShipping-results"></h4>
+					<ul>
+						<li tal:repeat="modeFilter shippingModes">
+							<tal:block tal:define="mode modeFilter/getMode">
+								${mode/getLabel} - 
+								<strong>
+									<tal:block tal:condition="modeFilter/getValueWithTax"> 
+										<tal:block tal:replace="modeFilter/getFormattedValueWithTax" />
+									</tal:block>
+									<tal:block tal:condition="not: modeFilter/getValueWithTax" change:translate="&amp;modules.order.frontoffice.FreeShipping"> 
+									</tal:block>
+								</strong>
+							</tal:block>
+						</li>
+					</ul>
+					</tal:block>
+					<tal:block tal:condition="not: shippingModes/0">
+						<p change:translate="modules.order.document.shippingstepbean.No-shipping-mode" class="error" />
+					</tal:block>
+					<div class="cleaner"></div>
+					<br/>
+				</tal:block>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="configuration/getShowInstructions">
+			<h3 change:h="" change:translate="modules.order.frontoffice.Cart-help-title"></h3>
+			<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-removeline-titleLabel"></h4>
+			<p change:translate="modules.order.frontoffice.Cart-help-removeline"></p>
+			<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-updatequantity-titleLabel"></h4>
+			<p change:translate="modules.order.frontoffice.Cart-help-updatequantity"></p>
+			<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-addproduct-titleLabel"></h4>
+			<p change:translate="modules.order.frontoffice.Cart-help-addproduct"></p>
+			<h4 change:h="" change:translate="modules.order.frontoffice.Cart-help-updatecart-titleLabel"></h4>
+			<p change:translate="modules.order.frontoffice.Cart-help-updatecart"></p>
+		</tal:block>
 	</div>
 </div>
+
 
 <div class="cleaner"></div>
 

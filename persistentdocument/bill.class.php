@@ -278,6 +278,6 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	 */
 	function setPaymentStatus($status)
 	{
-		$this->getDocumentService()->udatePaymentStatus($this, $status);
+		$this->getDocumentService()->updatePaymentStatus($this, $status);
 	}
 }

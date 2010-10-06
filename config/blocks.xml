@@ -6,6 +6,8 @@
 	<block type="modules_order_Cart" icon="cart" label="&amp;modules.order.bo.blocks.cart.Title;">
 		<parameters>
 			<parameter name="showTotalWithFees" type="Boolean" default-value="true" />
+			<parameter name="showEvaluateShipping" type="Boolean" default-value="true" />
+			<parameter name="showInstructions" type="Boolean" default-value="false" />
 			<parameter name="useCartEmptyPage" type="Boolean" default-value="true" />
 		</parameters>
 	</block>

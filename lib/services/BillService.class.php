@@ -289,12 +289,19 @@ class order_BillService extends f_persistentdocument_DocumentService
 			->setProjection(Projections::rowCount('rowCount'))->findColumn('rowCount');
 		return $result[0] > 0;
 	}	
+	/**
+	 * @deprecated
+	 */
+	public function udatePaymentStatus($bill, $newStatus)
+	{
+		return updatePaymentStatus($bill, $newStatus);
+	}
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
 	 * @param string $newStatus in waiting, success, failed
 	 */
-	public function udatePaymentStatus($bill, $newStatus)
+	public function updatePaymentStatus($bill, $newStatus)
 	{
 		try 
 		{

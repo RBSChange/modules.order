@@ -22,6 +22,18 @@
 	<entity id="cart.showtotalwithfees-help">
 		<locale lang="fr">inclure ou non les frais de port au total indiqué.</locale>
 	</entity>
+	<entity id="cart.showEvaluateShipping">
+		<locale lang="fr">évaluation des frais d'expédition</locale>
+	</entity>
+	<entity id="cart.cart.showEvaluateShipping-help">
+		<locale lang="fr">afficher ou non le formulaire d'évaluation des frais d'expédition</locale>
+	</entity>
+	<entity id="cart.showInstructions">
+		<locale lang="fr">instructions du panier</locale>
+	</entity>
+	<entity id="cart.cart.showInstructions-help">
+		<locale lang="fr">afficher ou non les instructions à destination de l'internaute d'utilisation du panier</locale>
+	</entity>
 	<entity id="cart.usecartemptypage">
 		<locale lang="fr">utiliser la page "panier vide"</locale>
 	</entity>

@@ -85,6 +85,7 @@ class order_BlockCartAction extends website_BlockAction
 				$user->setAttribute('cartBackLink', $href);
 			}
 		}
+		$request->setAttribute('addressInfo', $cart->getAddressInfo());
 		return website_BlockView::SUCCESS;
 	}
 	
@@ -118,4 +119,13 @@ class order_BlockCartAction extends website_BlockAction
 		$cs->refresh($cart);
 		return website_BlockView::SUCCESS;
 	}	
+	
+	function executeEvaluateshipping($request, $response, order_ShippingStepBean $bean)
+	{
+		$cs =  order_CartService::getInstance();
+		$cart = $cs->getDocumentInstanceFromSession();
+		$cart->setAddressInfo($bean);
+		$cs->refresh($cart);
+		return $this->execute($request, $response);
+	}
 }
