@@ -310,7 +310,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			{
 				$orderLine = $orderDocument->getLine($index);
 				$orderlineService->createFromCartLineInfo($cartLine, $orderLine);
-				$orderLine->save();
 			}
 	
 			// Sauvegarde du coupon.
@@ -326,18 +325,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$orderDocument->setCouponData(null);
 			}
 			
-			// Sauvegarde des réductions.
-			$discountArray = $cartInfo->getDiscountArray();
-			$discountDataArray = array();
-			foreach ($discountArray as $discount) 
-			{
-				$discountData = array('id' => $discount->getId(), 
-									'label' => $discount->getLabel(),
-									'valueWithTax' => $discount->getValueWithTax(),
-									'valueWithoutTax' => $discount->getValueWithoutTax());
-				$discountDataArray[] = $discountData;
-			}
-			$orderDocument->setDiscountDataArray($discountDataArray);
+
 			
 			// Save the cart properties.
 			$orderDocument->setGlobalProperty(self::PROPERTIES_CART_PROPERTIES, $cartInfo->getPropertiesArray());
@@ -349,8 +337,39 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			{
 				$orderDocument->setCreationDate(date_Calendar::getInstance()->toString());
 			}
+			
+			// Sauvegarde des réductions.
+			$discountArray = $cartInfo->getDiscountArray();
+			$discountDataArray = array();
+			foreach ($discountArray as $discount) 
+			{
+				
+				$discountData = array('id' => $discount->getId(), 
+									'label' => $discount->getLabel(),
+									'valueWithTax' => $discount->getValueWithTax(),
+									'valueWithoutTax' => $discount->getValueWithoutTax());
+				
+				$dicountDocument = DocumentHelper::getDocumentInstance($discount->getId());				
+				if (f_util_ClassUtils::methodExists($dicountDocument, 'updateOrder'))
+				{
+					$extraData = $dicountDocument->updateOrder($orderDocument, $discount);
+					$discountData = array_merge($discountData, $extraData);
+				}
+				$discountDataArray[] = $discountData;
+			}
+			$orderDocument->setDiscountDataArray($discountDataArray);			
+			
+			//Save the Order
 			$folder = $this->getFolderOfDay($orderDocument->getUICreationdate());
 			$orderDocument->save($folder->getId());
+			foreach ($orderDocument->getLineArray() as $orderLine)
+			{
+				if ($orderLine->isModified() || $orderLine->isNew())
+				{
+					$orderLine->save();
+				}
+			}
+			
 			$cartInfo->setOrderId($orderDocument->getId());
 			$this->tm->commit();			
 		}
