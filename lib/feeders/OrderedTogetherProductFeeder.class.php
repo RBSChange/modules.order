@@ -23,8 +23,8 @@ class order_OrderedTogetherProductFeeder extends catalog_ProductFeeder
 	}
 
 	/**
-	 * @param Array<Strin, mixed> $parameters
-	 * @return catalog_persistentdocument_product[]
+	 * @param array<String, mixed> $parameters
+	 * @return array<array>
 	 */
 	public function getProductArray($parameters)
 	{
