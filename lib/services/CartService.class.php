@@ -47,14 +47,34 @@ class order_CartService extends BaseService
 			$cart = $this->initNewCart();
 			$this->saveToSession($cart);
 		}
+		else
+		{
+			$this->clearCartIfNeeded($cart);
+		}
 		return $cart;
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	protected function clearCartIfNeeded(&$cart)
+	{
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__. '  ' . $cart->getCartLineCount());
+		}
+		$orderId = $cart->getOrderId();
+		if (intval($orderId) > 0 && order_BillService::getInstance()->hasBillInTransactionByOrderId($orderId))
+		{
+			$this->clearCart($cart);
+		}
 	}
 	
 	/**
 	 * 
 	 * @param order_CartInfo $cart
 	 */
-	protected function clearCart(&$cart)
+	public function clearCart(&$cart)
 	{
 		if (Framework::isInfoEnabled())
 		{
@@ -82,19 +102,7 @@ class order_CartService extends BaseService
 			$this->getTransactionManager()->rollBack($e);
 		}
 	}
-	
-	/**
-	 * @param order_CartInfo $cart
-	 */
-	public function clearCartIfNeeded(&$cart)
-	{
-		$order = $cart->getOrder();
-		if ($order !== null && order_BillService::getInstance()->hasPublishedBill($order))
-		{
-			$this->clearCart($cart);
-		}
-	}
-	
+		
 	/**
 	 * Initialize a new cart
 	 * @return order_CartInfo
@@ -160,7 +168,6 @@ class order_CartService extends BaseService
 	 */
 	public function resetCartOrder(&$cart)
 	{	
-		$this->clearCartIfNeeded($cart);
 		if (Framework::isInfoEnabled())
 		{
 			Framework::info(__METHOD__);
@@ -425,7 +432,7 @@ class order_CartService extends BaseService
 		Framework::bench('refreshDiscount');
 				
 		// Cancel order process.
-		order_OrderProcess::getInstance()->setCurrentStep(null);
+		order_OrderProcessService::getInstance()->resetSessionOrderProcess();
 
 		$this->saveToSession($cart);
 		

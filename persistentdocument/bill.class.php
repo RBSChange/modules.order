@@ -6,25 +6,6 @@
 class order_persistentdocument_bill extends order_persistentdocument_billbase implements payment_Order
 {
 	/**
-	 * @param string $moduleName
-	 * @param string $treeType
-	 * @param array<string, string> $nodeAttributes
-	 */
-	//	protected function addTreeAttributes($moduleName, $treeType, &$nodeAttributes)
-	//	{
-	//	}
-	
-
-	/**
-	 * @param string $actionType
-	 * @param array $formProperties
-	 */
-	//	public function addFormProperties($propertiesNames, &$formProperties)
-	//	{	
-	//	}
-	
-
-	/**
 	 * @return String
 	 */
 	public function getStatusLabel()
@@ -102,8 +83,12 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	 */
 	function getPaymentCallbackURL()
 	{
-		$orderProcess = order_OrderProcess::getInstance();
-		return $orderProcess->getStepURL($orderProcess->getLastStep());		
+		$ops = order_OrderProcessService::getInstance();
+		$orderProcess = $ops->loadFromSession();
+		$params = array('orderParam' => array('orderId' => $this->getOrder()->getId()));
+		$url = $ops->getStepURL($orderProcess->getLastStep(), $orderProcess, $params);
+		Framework::info(__METHOD__ . ': ' . $url);
+		return $url;
 	}
 	
 	/**

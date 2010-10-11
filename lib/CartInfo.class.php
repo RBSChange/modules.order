@@ -1340,7 +1340,7 @@ class order_CartInfo
 	 */
 	public function getOrderProcess()
 	{
-		return order_OrderProcess::getInstance();
+		return order_OrderProcessService::getInstance()->loadFromSession();
 	}
 	
 	/**

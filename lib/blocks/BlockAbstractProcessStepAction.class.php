@@ -8,6 +8,11 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 	 * @var order_CartInfo
 	 */
 	private $cart = null;
+
+	/**
+	 * @var order_OrderProcess
+	 */
+	protected $orderProcess = null;
 	
 	/**
 	 * @return order_CartInfo
@@ -32,15 +37,27 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 		$request->setAttribute('cart', $this->getCurrentCart());	
 	}
 	
+	/**
+	 * @return order_OrderProcess
+	 */	
+	protected function getCurrentOrderProcess()
+	{
+		if ($this->orderProcess === null)
+		{
+			$this->orderProcess = order_OrderProcessService::getInstance()->loadFromSession();
+		}
+		return $this->orderProcess;
+	}
+	
 	protected function setCurrentStep($currentStep)
 	{
-		$orderProcess = order_OrderProcess::getInstance();
+		$orderProcess = $this->getCurrentOrderProcess();
 		$orderProcess->setCurrentStep($currentStep);
 	}
 	
 	protected function redirectToNextStep($currentStep = null)
 	{
-		$orderProcess = order_OrderProcess::getInstance();
+		$orderProcess = $this->getCurrentOrderProcess();
 		if ($currentStep === null)
 		{
 			$currentStep = $orderProcess->getCurrentStep();
@@ -57,7 +74,7 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 	
 	protected function redirectToStep($step)
 	{
-		$orderProcess = order_OrderProcess::getInstance();
+		$orderProcess = $this->getCurrentOrderProcess();
 		$orderProcess->setCurrentStep($step);
 		$url = $orderProcess->getOrderProcessURL();
 		HttpController::getInstance()->redirectToUrl($url);
@@ -65,7 +82,7 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 	
 	protected function redirectToFirstStep()
 	{
-		$orderProcess = order_OrderProcess::getInstance();
+		$orderProcess = $this->getCurrentOrderProcess();
 		$orderProcess->setCurrentStep(null);
 		$url = $orderProcess->getOrderProcessURL();
 		HttpController::getInstance()->redirectToUrl($url);

@@ -52,9 +52,8 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 		$cartInfo->save();
 		
 		$this->setCurrentStep('Identify');
-		$orderProcess = order_OrderProcess::getInstance();
-		$orderProcess->getOrderProcessURL();
-		
+		$orderProcess = $this->getCurrentOrderProcess();
+				
 		$url = $orderProcess->getOrderProcessURL();
 		HttpController::getInstance()->redirectToUrl($url);	
 	}

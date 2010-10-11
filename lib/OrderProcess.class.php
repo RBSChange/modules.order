@@ -21,47 +21,7 @@ class order_OrderProcess extends BaseService
 		'Confirm' => array('blocType' => 'order_ConfirmStep', 'nextStep' => 'Payment'),
 		'Payment' => array('blocType' => 'order_PaymentStep', 'nextStep' => null),
 	);
-		
-	/**
-	 * @return order_OrderProcess
-	 */
-	public static function getInstance()
-	{
-		$orderProcess = self::loadFromSession();
-		if ($orderProcess instanceof order_OrderProcess) 
-		{
-			return $orderProcess;
-		}
-		return self::getServiceClassInstance(get_class());
-	}
-	
-	/**
-	 * @return order_OrderProcess | null;
-	 */
-	private static function loadFromSession()
-	{
-		if (isset($_SESSION['order_OrderProcess']))
-		{
-			return $_SESSION['order_OrderProcess'];
-		}		
-		return null;
-	}
-	
-	/**
-	 * @param order_OrderProcess $orderProcess
-	 */
-	private static function saveToSession($orderProcess)
-	{
-		if ($orderProcess instanceof order_OrderProcess) 
-		{
-			$_SESSION['order_OrderProcess'] = $orderProcess;
-		}		
-		else
-		{
-			$_SESSION['order_OrderProcess'] = null;
-		}
-	}
-	
+			
 	/**
 	 * @param string $step
 	 * @return string | null;
@@ -117,23 +77,8 @@ class order_OrderProcess extends BaseService
 		{
 			$this->currentStep = null;
 		}
-		self::saveToSession($this);
 	}
-	
-	/**
-	 * @return string | null
-	 */
-	public function getOrderProcessURL()
-	{
-		$blocType = $this->getCurrentBlockType();
-		if ($blocType)
-		{
-			$lang = RequestContext::getInstance()->getLang();
-			return website_BlockController::getBlockUrl($blocType, $lang, array());
-		}
-		return null;
-	}
-	
+		
 	/**
 	 * @return string
 	 */	
@@ -141,22 +86,7 @@ class order_OrderProcess extends BaseService
 	{
 		return f_util_ArrayUtils::lastElement(array_keys($this->config));
 	}
-	
-	
-	/**
-	 * @return string | null
-	 */
-	public function getStepURL($step)
-	{
-		$blocType = $this->getBlockTypeForStep($step);
-		if ($blocType)
-		{
-			$lang = RequestContext::getInstance()->getLang();
-			return website_BlockController::getBlockUrl($blocType, $lang, array());
-		}
-		return null;
-	}	
-	
+		
 	public function getSteps()
 	{
 		$result = array();
@@ -179,5 +109,30 @@ class order_OrderProcess extends BaseService
 			$name = $this->getNextStepForStep($name);
 		}
 		return $result;
+	}
+
+	/**
+	 * @param string $step
+	 * @return string || null
+	 */
+	public function getStepURL($step)
+	{
+		return order_OrderProcessService::getInstance()->getStepURL($step, $this);
+	}
+	
+	/**
+	 * @return string || null
+	 */
+	public function getOrderProcessURL()
+	{
+		return order_OrderProcessService::getInstance()->getOrderProcessURL($this);
+	}
+	
+	/**
+	 * @deprecated use rder_OrderProcessService::getInstance()->loadFromSession()
+	 */
+	public static function getInstance()
+	{
+		order_OrderProcessService::getInstance()->loadFromSession();
 	}
 }

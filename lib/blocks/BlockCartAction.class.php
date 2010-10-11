@@ -15,7 +15,6 @@ class order_BlockCartAction extends website_BlockAction
 		
 		$cs =  order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();
-		$cs->clearCartIfNeeded($cart);
 		$shop = $cart->getShop();
 		$pageId = $this->getContext()->getId();
 
