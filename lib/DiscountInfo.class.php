@@ -24,6 +24,7 @@ class order_DiscountInfo
 	 */
 	private $valueWithoutTax = 0;
 	
+	private $parameters;
 	
 	/**
 	 * @return integer
@@ -88,6 +89,35 @@ class order_DiscountInfo
 	{
 		$this->valueWithTax = $valueWithTax;
 	}	
+	
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 */
+	public function setParameter($name, $value)
+	{
+		if ($this->parameters === null)
+		{
+			$this->parameters = array($name => $value);
+		}
+		else
+		{
+			$this->parameters[$name] = $value;
+		}
+	}
+	
+	/**
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function getParameter($name)
+	{
+		if ($this->parameters === null || !isset($this->parameters[$name]))
+		{
+			return null;
+		}
+		return $this->parameters[$name];
+	}
 }
 
 class order_CouponInfo extends order_DiscountInfo
