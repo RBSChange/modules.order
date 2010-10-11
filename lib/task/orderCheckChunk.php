@@ -16,3 +16,4 @@ foreach ($_POST['argv'] as $id)
 		$tm->rollBack($e);
 	}
 }
+echo 'OK';
