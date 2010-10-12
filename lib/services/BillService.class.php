@@ -202,10 +202,6 @@ class order_BillService extends f_persistentdocument_DocumentService
 			{
 				$bill = $this->getNewDocumentInstance();
 			}
-			else 
-			{
-				throw new Exception("Order has already a bill");
-			}
 			
 			$this->fillBillByOrder($bill, $order);
 			$connector = $bill->getPaymentConnector();
@@ -282,6 +278,24 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$result = $this->createQuery()
 			->add(Restrictions::eq('order', $order))
 			->add(Restrictions::published())
+			->setProjection(Projections::rowCount('rowCount'))->findColumn('rowCount');
+		return $result[0] > 0;
+	}
+
+	/**
+	 * @param integer $orderId
+	 * @return boolean
+	 */
+	public function hasBillInTransactionByOrderId($orderId)
+	{
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__. ' for orderId' . $orderId);
+		}
+		$result = $this->createQuery()
+			->add(Restrictions::eq('order.id', $orderId))
+			->add(Restrictions::ne('publicationstatus', 'FILED'))
+			->add(Restrictions::ne('publicationstatus', 'DRAFT'))
 			->setProjection(Projections::rowCount('rowCount'))->findColumn('rowCount');
 		return $result[0] > 0;
 	}	
@@ -537,256 +551,4 @@ class order_BillService extends f_persistentdocument_DocumentService
 			"label" => $order->getOrderNumber());
 		return $data;
 	}
-
-	
-	
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @param Integer $parentNodeId Parent node ID where to save the document (optionnal => can be null !).
-	 * @return void
-	 */
-//	protected function preSave($document, $parentNodeId = null)
-//	{
-//
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @param Integer $parentNodeId Parent node ID where to save the document.
-	 * @return void
-	 */
-//	protected function preInsert($document, $parentNodeId = null)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @param Integer $parentNodeId Parent node ID where to save the document.
-	 * @return void
-	 */
-//	protected function postInsert($document, $parentNodeId = null)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @param Integer $parentNodeId Parent node ID where to save the document.
-	 * @return void
-	 */
-//	protected function preUpdate($document, $parentNodeId = null)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @param Integer $parentNodeId Parent node ID where to save the document.
-	 * @return void
-	 */
-//	protected function postUpdate($document, $parentNodeId = null)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @param Integer $parentNodeId Parent node ID where to save the document.
-	 * @return void
-	 */
-//	protected function postSave($document, $parentNodeId = null)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @return void
-	 */
-//	protected function preDelete($document)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @return void
-	 */
-//	protected function preDeleteLocalized($document)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @return void
-	 */
-//	protected function postDelete($document)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @return void
-	 */
-//	protected function postDeleteLocalized($document)
-//	{
-//	}
-
-
-
-
-	/**
-	 * Methode à surcharger pour effectuer des post traitement apres le changement de status du document
-	 * utiliser $document->getPublicationstatus() pour retrouver le nouveau status du document.
-	 * @param order_persistentdocument_bill $document
-	 * @param String $oldPublicationStatus
-	 * @param array<"cause" => String, "modifiedPropertyNames" => array, "oldPropertyValues" => array> $params
-	 * @return void
-	 */
-//	protected function publicationStatusChanged($document, $oldPublicationStatus, $params)
-//	{
-//	}
-
-	/**
-	 * Correction document is available via $args['correction'].
-	 * @param f_persistentdocument_PersistentDocument $document
-	 * @param Array<String=>mixed> $args
-	 */
-//	protected function onCorrectionActivated($document, $args)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @param String $tag
-	 * @return void
-	 */
-//	public function tagAdded($document, $tag)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @param String $tag
-	 * @return void
-	 */
-//	public function tagRemoved($document, $tag)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $fromDocument
-	 * @param f_persistentdocument_PersistentDocument $toDocument
-	 * @param String $tag
-	 * @return void
-	 */
-//	public function tagMovedFrom($fromDocument, $toDocument, $tag)
-//	{
-//	}
-
-	/**
-	 * @param f_persistentdocument_PersistentDocument $fromDocument
-	 * @param order_persistentdocument_bill $toDocument
-	 * @param String $tag
-	 * @return void
-	 */
-//	public function tagMovedTo($fromDocument, $toDocument, $tag)
-//	{
-//	}
-
-	/**
-	 * Called before the moveToOperation starts. The method is executed INSIDE a
-	 * transaction.
-	 *
-	 * @param f_persistentdocument_PersistentDocument $document
-	 * @param Integer $destId
-	 */
-//	protected function onMoveToStart($document, $destId)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @param Integer $destId
-	 * @return void
-	 */
-//	protected function onDocumentMoved($document, $destId)
-//	{
-//	}
-
-	/**
-	 * this method is call before saving the duplicate document.
-	 * If this method not override in the document service, the document isn't duplicable.
-	 * An IllegalOperationException is so launched.
-	 *
-	 * @param order_persistentdocument_bill $newDocument
-	 * @param order_persistentdocument_bill $originalDocument
-	 * @param Integer $parentNodeId
-	 *
-	 * @throws IllegalOperationException
-	 */
-//	protected function preDuplicate($newDocument, $originalDocument, $parentNodeId)
-//	{
-//		throw new IllegalOperationException('This document cannot be duplicated.');
-//	}
-
-	/**
-	 * this method is call after saving the duplicate document.
-	 * $newDocument has an id affected.
-	 * Traitment of the children of $originalDocument.
-	 *
-	 * @param order_persistentdocument_bill $newDocument
-	 * @param order_persistentdocument_bill $originalDocument
-	 * @param Integer $parentNodeId
-	 *
-	 * @throws IllegalOperationException
-	 */
-//	protected function postDuplicate($newDocument, $originalDocument, $parentNodeId)
-//	{
-//	}
-
-	/**
-	 * Returns the URL of the document if has no URL Rewriting rule.
-	 *
-	 * @param order_persistentdocument_bill $document
-	 * @param string $lang
-	 * @param array $parameters
-	 * @return string
-	 */
-//	public function generateUrl($document, $lang, $parameters)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @return integer | null
-	 */
-//	public function getWebsiteId($document)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @return website_persistentdocument_page | null
-	 */
-//	public function getDisplayPage($document)
-//	{
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @param string $forModuleName
-	 * @param array $allowedSections
-	 * @return array
-	 */
-//	public function getResume($document, $forModuleName, $allowedSections = null)
-//	{
-//		$resume = parent::getResume($document, $forModuleName, $allowedSections);
-//		return $resume;
-//	}
-
-	/**
-	 * @param order_persistentdocument_bill $document
-	 * @param string $bockName
-	 * @return array with entries 'module' and 'template'. 
-	 */
-//	public function getSolrserachResultItemTemplate($document, $bockName)
-//	{
-//		return array('module' => 'order', 'template' => 'Order-Inc-BillResultDetail');
-//	}
 }

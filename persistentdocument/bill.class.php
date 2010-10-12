@@ -103,7 +103,10 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	function getPaymentCallbackURL()
 	{
 		$orderProcess = order_OrderProcess::getInstance();
-		return $orderProcess->getStepURL($orderProcess->getLastStep());		
+		$blocType = $orderProcess->getBlockTypeForStep($orderProcess->getLastStep());
+		$params = array('orderParam' => array('orderId' => $this->getOrder()->getId()));
+		$lang = RequestContext::getInstance()->getLang();
+		return website_BlockController::getBlockUrl($blocType, $lang, $params);	
 	}
 	
 	/**
