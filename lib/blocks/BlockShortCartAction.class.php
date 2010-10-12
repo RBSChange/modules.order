@@ -15,8 +15,8 @@ class order_BlockShortCartAction extends website_BlockAction
 		{
 			return website_BlockView::DUMMY;
 		}
-		$ms = order_ModuleService::getInstance();
-		
+		$ops = order_OrderProcessService::getInstance();
+		$op = $ops->loadFromSession();
 		// Get the current cart from session.
 		$cs = order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();
@@ -24,14 +24,14 @@ class order_BlockShortCartAction extends website_BlockAction
 		
 		// Check if order process is started or not.
 		$currentPage = website_WebsiteModuleService::getInstance()->getCurrentPage();
-		if ($ms->isProcessStarted())
+		if ($op->inProcess())
 		{
-			// If we are on order process page, do not set link.			
-			$page = $ms->getPage();
-			if ($page !== null && $page->getId() !== $currentPage->getId())
+			
+			$opURL = $op->getOrderProcessURL();
+			if (strpos($opURL, RequestContext::getInstance()->getPathURI()) === false)
 			{
-				$request->setAttribute('processUrl', $ms->getPageLink());
-			}
+				$request->setAttribute('processUrl', $opURL);
+			}	
 			return 'Process';
 		}
 		else

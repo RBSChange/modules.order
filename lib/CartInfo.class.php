@@ -6,6 +6,50 @@
 class order_CartInfo
 {
 	private $isModified = false;
+	
+	private $checkSum = null;
+	
+	protected function getCheckSum()
+	{
+		$keys = array($this->shopId, $this->customerId, $this->getCartLineCount());
+		foreach ($this->getCartLineArray() as $cartLine) 
+		{
+			$keys[] = $cartLine->getKey();
+			$keys[] = $cartLine->getQuantity();
+		}
+		
+		foreach ($this->getDiscountArray() as $discount) 
+		{
+			$keys[] = $discount->getId();
+			$keys[] = round($discount->getValueWithTax());
+		}
+		$keys[] = $this->getShippingModeId();
+		
+		$addressInfos = $this->getAddressInfo();
+		if ($addressInfos !== null)
+		{
+			if ($addressInfos->shippingAddress) 
+			{
+				$keys[] = $addressInfos->shippingAddress->getKey();
+			}
+			if ($addressInfos->useSameAddressForBilling) 
+			{
+				$keys[] = 'idem';
+			}
+			else if ($addressInfos->billingAddress) 
+			{
+				$keys[] = $addressInfos->billingAddress->getKey();
+			}
+		}
+		$keys[] = $this->getBillingModeId();
+		$checkSum = md5(implode('|', $keys));
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__ .': ' . $checkSum);
+		}
+		return $checkSum;
+	}
+	
 	//SHOP INFORMATION
 	
 	/**
@@ -15,12 +59,34 @@ class order_CartInfo
 	
 	public function isModified()
 	{
+		if (!$this->isModified)
+		{
+			$newCheckSum = $this->getCheckSum();		
+			if ($this->checkSum === null)
+			{
+				$this->checkSum = $newCheckSum;
+			}	
+			
+			if ($this->checkSum !== $newCheckSum)
+			{
+				$this->checkSum = $newCheckSum;
+				$this->isModified = true;
+			}
+			if (Framework::isInfoEnabled())
+			{
+				Framework::info(__METHOD__ .':' . $newCheckSum . ', '.$this->isModified);
+			}
+		}
 		return $this->isModified;
 	}
 	
 	private function setModified($value)
 	{
 		$this->isModified = $value;
+		if (!$this->isModified)
+		{
+			$this->checkSum = $this->getCheckSum();
+		}
 	}
 	
 	/**
@@ -76,7 +142,7 @@ class order_CartInfo
 	}
 	
 	
-
+	
 	//ORDER MANIPULATION
 
 	/**
@@ -130,7 +196,6 @@ class order_CartInfo
 	 */
 	public function setCartLineArray($cartLine)
 	{
-		$this->isModified = true;
 		$this->cartLine = $cartLine;
 	}
 
@@ -196,7 +261,6 @@ class order_CartInfo
 			$this->addCartLine($cartLine);
 			return;
 		}
-		$this->isModified = true;
 		$this->cartLine[$index] = $cartLine;
 	}
 
@@ -205,7 +269,6 @@ class order_CartInfo
 	 */
 	public function addCartLine($cartLine)
 	{
-		$this->isModified = true;
 		$this->cartLine[] = $cartLine;
 	}
 
@@ -221,7 +284,6 @@ class order_CartInfo
 			$this->addCartLine($cartLine);
 			return;
 		}
-		$this->isModified = true;
 		$cartLines = array();
 		for ($i = 0; $i < $count; $i++) 
 		{
@@ -239,7 +301,6 @@ class order_CartInfo
 	 */
 	public function removeCartLine($index)
 	{
-		$this->isModified = true;
 		unset($this->cartLine[$index]);
 		$this->cartLine = array_values($this->cartLine);
 	}
@@ -268,7 +329,6 @@ class order_CartInfo
 		foreach ($indexes as $index)
 		{
 			unset($this->cartLine[$index]);
-			$this->isModified = true;
 		}
 		$this->cartLine = array_values($this->cartLine);
 	}
@@ -303,7 +363,6 @@ class order_CartInfo
 	 */
 	public function setShippingAddressId($shippingAddressId)
 	{
-		$this->isModified = true;
 		$this->shippingAddressId = $shippingAddressId;
 	}
 	
@@ -322,7 +381,6 @@ class order_CartInfo
 	 */
 	public function setBillingAddressId($billingAddressId)
 	{
-		$this->isModified = true;
 		$this->billingAddressId = $billingAddressId;
 	}	
 	
@@ -339,7 +397,6 @@ class order_CartInfo
 	 */
 	public function setAddressInfo($addressInfo)
 	{
-		$this->isModified = true;
 		$this->addressInfo = $addressInfo;
 	}	
 	
@@ -358,7 +415,6 @@ class order_CartInfo
 	 */
 	public function setShippingArray($shippingArray)
 	{
-		$this->isModified = true;
 		$this->shippingArray = $shippingArray;
 	}
 	
@@ -598,7 +654,6 @@ class order_CartInfo
 	 */
 	public function setBillingModeId($billingModeId)
 	{
-		$this->isModified = true;
 		$this->billingModeId = $billingModeId;
 	}
 	
@@ -615,7 +670,6 @@ class order_CartInfo
 	 */
 	public function setBillingMode($billingMode)
 	{
-		$this->isModified = true;
 		if ($billingMode !== null)
 		{
 			$this->billingModeId = $billingMode->getId();
@@ -778,7 +832,6 @@ class order_CartInfo
 	 */
 	public function setCoupon($coupon)
 	{
-		$this->isModified = true;
 		$this->coupon = $coupon;
 	}
 	
@@ -822,13 +875,11 @@ class order_CartInfo
 	 */
 	public function setDiscountArray($discountArray)
 	{
-		$this->isModified = true;
 		$this->discountArray = $discountArray;
 	}
 	
 	public function clearDiscountArray()
 	{
-		$this->isModified = true;
 		$this->discountArray = array();
 	}	
 
@@ -837,7 +888,6 @@ class order_CartInfo
 	 */
 	public function addDiscount($discount)
 	{
-		$this->isModified = true;
 		if (!is_array($this->discountArray)) {$this->discountArray = array();}
 		$this->discountArray[] = $discount;
 	}
@@ -850,7 +900,7 @@ class order_CartInfo
 		$result = array();
 		foreach ($this->getDiscountArray() as $currentDiscount) 
 		{
-			if ($currentDiscount === $discount) {$this->isModified = true; continue;}
+			if ($currentDiscount === $discount) {continue;}
 			$result[] = $currentDiscount;
 		}
 		$this->setDiscountArray($result);
@@ -1303,7 +1353,6 @@ class order_CartInfo
 	 */
 	public function setPropertiesArray($properties)
 	{
-		$this->isModified = true;
 		$this->properties = $properties;
 	}
 
@@ -1331,7 +1380,6 @@ class order_CartInfo
 	 */
 	public function setProperties($key, $value)
 	{
-		$this->isModified = true;
 		$this->properties[$key] = $value;
 	}
 

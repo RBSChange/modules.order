@@ -120,53 +120,14 @@ class order_CartService extends BaseService
 		}
 
 		$cartInfo->setShop(catalog_ShopService::getInstance()->getCurrentShop());
+		$cartInfo->setOrderId(null);
 		return $cartInfo;	
 	}
 	
 	/**
-	 * Verification du cart en fonction de l'état de la commande
 	 * @param order_CartInfo $cart
 	 */
-	protected function checkCartValidity(&$cart)
-	{
-		if ($cart instanceof order_CartInfo && !$cart->isEmpty())
-		{
-			$order = $cart->getOrder();
-			if ($order !== null && order_BillService::getInstance()->hasValidBill($order) && $cart->isModified())
-			{
-				if (Framework::isInfoEnabled())
-				{
-					Framework::info(__METHOD__ . ' RESET CART');
-				}
-				
-				try 
-				{
-					$this->getTransactionManager()->beginTransaction();
-					
-					// The order process is ended, so clear lastAbandonedOrderDate.
-					$customer = $cart->getCustomer();
-					$customer->setLastAbandonedOrderDate(null);
-					$cart = $this->initNewCart();
-					$this->saveToSession($cart);
-					
-					if ($customer->isModified())
-					{
-						$customer->save();
-					}
-					$this->getTransactionManager()->commit();
-				}
-				catch (Exception $e)
-				{
-					$this->getTransactionManager()->rollBack($e);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * @param order_CartInfo $cart
-	 */
-	public function resetCartOrder(&$cart)
+	public function resetCartOrder($cart)
 	{	
 		if (Framework::isInfoEnabled())
 		{
@@ -180,10 +141,11 @@ class order_CartService extends BaseService
 	 */
 	public function saveToSession($cart)
 	{
-		if ($cart->isModified())
+		if ($cart->getOrderId() && $cart->isModified())
 		{
-			$cart->setOrderId(null);
+			$this->resetCartOrder($cart);
 		}
+		
 		if (Framework::isDebugEnabled())
 		{
 			Framework::debug(__METHOD__);

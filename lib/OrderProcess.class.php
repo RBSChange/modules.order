@@ -12,6 +12,12 @@ class order_OrderProcess extends BaseService
 	protected $startStep = 'Identify';
 	
 	/**
+	 * @var string
+	 */	
+	protected $lastStep = 'Payment';
+	
+	
+	/**
 	 * @var array
 	 */
 	protected $config = array(
@@ -21,6 +27,13 @@ class order_OrderProcess extends BaseService
 		'Confirm' => array('blocType' => 'order_ConfirmStep', 'nextStep' => 'Payment'),
 		'Payment' => array('blocType' => 'order_PaymentStep', 'nextStep' => null),
 	);
+	
+	public function __construct()
+	{
+		$steps = array_keys($this->config);
+		$this->startStep = f_util_ArrayUtils::firstElement($steps);
+		$this->lastStep = f_util_ArrayUtils::lastElement($steps);
+	}
 			
 	/**
 	 * @param string $step
@@ -53,8 +66,16 @@ class order_OrderProcess extends BaseService
 	 */
 	public function getCurrentStep()
 	{
-		return $this->currentStep ? $this->currentStep : $this->startStep;
+		return $this->currentStep ? $this->currentStep : $this->getFirstStep();
 	}
+	
+	/**
+	 * @return boolean
+	 */
+	public function inProcess()
+	{
+		return ($this->currentStep !== null && $this->currentStep !== $this->getLastStep());
+	}	
 	
 	/**
 	 * @return string
@@ -78,13 +99,21 @@ class order_OrderProcess extends BaseService
 			$this->currentStep = null;
 		}
 	}
-		
+
+	/**
+	 * @return string
+	 */	
+	public function getFirstStep()
+	{
+		return $this->startStep;
+	}
+	
 	/**
 	 * @return string
 	 */	
 	public function getLastStep()
 	{
-		return f_util_ArrayUtils::lastElement(array_keys($this->config));
+		return $this->lastStep;
 	}
 		
 	public function getSteps()

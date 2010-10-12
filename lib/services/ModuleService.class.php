@@ -32,35 +32,6 @@ class order_ModuleService extends ModuleBaseService
 	{
 		$this->preferencesDocument = null;
 	}
-	
-	/**
-	 * Returns the URL of the order process page.
-	 * 
-	 * @return String
-	 */
-	public function getPageLink()
-	{
-		$page = $this->getPage();
-		$currentStep = $this->getCurrentStep();
-		if ($currentStep > 0)
-		{
-			$parameters = array($this->getFormFieldName('nextStep') => $currentStep);
-			return LinkHelper::getUrl($page, null, $parameters);
-		}
-		return LinkHelper::getUrl($page);
-	}
-	
-	/**
-	 * This method should be overloaded it there are several different order
-	 * processes in your project: each order process must consist in a distinct
-	 * block in a distinc page.  
-	 * 
-	 * @return website_persistentdocument_page
-	 */
-	public function getPage()
-	{
-		return TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_process', website_WebsiteModuleService::getInstance()->getCurrentWebsite());
-	}
 		
 	/**
 	 * Checks if the order process is enable or not.
@@ -144,101 +115,7 @@ class order_ModuleService extends ModuleBaseService
 		}
 		return null;
 	}
-	
-	/**
-	 * The order process is canceled and must be restarted from the begining.
-	 *
-	 * @return void
-	 */
-	public function cancelProcess()
-	{
-		$this->setCurrentOrderProcessId(null);
-	}
-	
-	/**
-	 * @return Boolean
-	 */
-	public function isProcessStarted()
-	{
-		return ($this->getCurrentOrderProcessId() !== null);
-	}
 		
-	/**
-	 * @return String
-	 */
-	public final function getCurrentOrderProcessId()
-	{
-		return $this->getSessionAttribute('orderProcessId');
-	}
-	
-	/**
-	 * @param String $orderProcessId
-	 */
-	public final function setCurrentOrderProcessId($orderProcessId)
-	{
-		if (!$this->hasSessionAttribute('orderProcessId') || $this->getSessionAttribute('orderProcessId') != $orderProcessId)
-		{
-			$this->setSessionAttribute('orderProcessId', $orderProcessId);
-			
-			if ($orderProcessId !== null)
-			{
-				UserActionLoggerService::getInstance()->addCurrentUserDocumentEntry('order-process-start', null, null, 'customer');
-			}
-		}
-	}
-	
-	/**
-	 * @return Integer
-	 */
-	public final function getCurrentStep()
-	{
-		$wizardSessionData = f_mvc_HTTPRequest::getInstance()->getSession()->getAttribute($this->getCurrentOrderProcessId());
-		if (is_array($wizardSessionData) && isset($wizardSessionData['currentStep']))
-		{
-			return $wizardSessionData['currentStep'];
-		}
-		return 0;
-	}
-	
-	/**
-	 * @return Integer
-	 */
-	public final function getCurrentOrderId()
-	{
-		return $this->getSessionAttribute('orderId');
-	}
-	
-	/**
-	 * @param Integer $orderId
-	 */
-	public final function setCurrentOrderId($orderId)
-	{
-		$this->setSessionAttribute('orderId', $orderId);
-	}
-	
-	/**
-	 * @return order_CartInfo
-	 */
-	public final function getCartInfo()
-	{
-		$cartInfo = order_CartService::getInstance()->getDocumentInstanceFromSession();
-		$customer = $this->getCustomer();
-		if (!is_null($customer))
-		{
-			$cartInfo->setBillingAddressId($customer->getBillingAddress()->getId());
-			$cartInfo->setCustomerId($customer->getId());
-		}
-		return $cartInfo;
-	}
-	
-	/**
-	 * @return catalog_persistentdocument_catalog
-	 */
-	public final function getCatalog()
-	{
-		return DocumentHelper::getDocumentInstance($this->getCartInfo()->getCatalogId());
-	}
-	
 	/**
 	 * Returns the currently logged customer.
 	 *
@@ -249,22 +126,14 @@ class order_ModuleService extends ModuleBaseService
 		return customer_CustomerService::getInstance()->getCurrentCustomer();
 	}	
 	
-	/**
-	 * @param String $name
-	 * @return String
-	 */
-	public final function getFormFieldName($name)
-	{
-		return 'orderParam[' . $name . ']';
-	}
+
 	
 	/**
 	 * @return Boolean
 	 */
 	public function areCommentsEnabled()
 	{
-		$cms = ModuleBaseService::getInstanceByModuleName('catalog');
-		return $cms !== null && $cms->areCommentsEnabled();
+		return catalog_ModuleService::getInstance()->areCommentsEnabled();
 	}
 	
 	/**
@@ -272,48 +141,9 @@ class order_ModuleService extends ModuleBaseService
 	 */
 	public function areCommentRemindersEnabled()
 	{
-		return $this->areCommentsEnabled() && ModuleService::getInstance()->getPreferenceValue('order', 'enableCommentReminder');
+		return $this->areCommentsEnabled() && $this->getEnableCommentReminderPreference();
 	}
-	
-	// Protected stuff.
-	
-	/**
-	 * @param String $name
-	 * @param String $value
-	 */
-	protected final function setSessionAttribute($name, $value)
-	{
-		$this->getSession()->setAttribute($name, $value, self::ORDER_SESSION_NAMESPACE);
-	}
-	
-	/**
-	 * @param String $name
-	 * @return String
-	 */
-	protected final function getSessionAttribute($name)
-	{
-		return $this->getSession()->getAttribute($name, self::ORDER_SESSION_NAMESPACE);
-	}
-	
-	/**
-	 * @param String $name
-	 * @return String
-	 */
-	protected final function hasSessionAttribute($name)
-	{
-		return $this->getSession()->hasAttribute($name, self::ORDER_SESSION_NAMESPACE);
-	}
-	
-	// Private stuff.
-	
-	/**
-	 * @return User
-	 */
-	private final function getSession()
-	{
-		return Controller::getInstance()->getContext()->getUser();
-	}
-	
+		
 	/**
 	 * @var order_persistentdocument_preferences
 	 */
@@ -326,11 +156,37 @@ class order_ModuleService extends ModuleBaseService
 	{
 		if (is_null($this->preferencesDocument))
 		{
-			$this->preferencesDocument = ModuleService::getInstance()->getPreferencesDocument('order');
+			$this->preferencesDocument = order_PreferencesService::getInstance()->createQuery()->findUnique();
 		}
 		return $this->preferencesDocument;
 	}
 	
+	/**
+	 * @return boolean
+	 */
+	private function getEnableCommentReminderPreference()
+	{
+		$pref = $this->getPreferencesDocument();
+		if ($pref !== null)
+		{
+			return $pref->getEnableCommentReminder();
+		}
+		return true;
+	}
+	
+	/**
+	 * @return array
+	 */
+	private function getOrderConfirmedNotificationUserPreference()
+	{
+		$pref = $this->getPreferencesDocument();
+		if ($pref !== null)
+		{
+			return $pref->getOrderConfirmedNotificationUserArray();
+		}
+		return array();
+	}	
+		
 	/**
 	 * @param string $notifCodeName
 	 * @param order_persistentdocument_order $order
@@ -457,14 +313,12 @@ class order_ModuleService extends ModuleBaseService
 	{
 		$recipients = new mail_MessageRecipients();
 		$emails = array();
-		$admins = ModuleService::getPreferenceValue('order', 'orderConfirmedNotificationUser');
-		if (is_array($admins))
+		$admins = $this->getOrderConfirmedNotificationUserPreference();
+		foreach ($admins as $admin)
 		{
-			foreach ($admins as $admin)
-			{
-				$emails[] = $admin->getEmail();
-			}
+			$emails[] = $admin->getEmail();
 		}
+
 		if (count($emails))
 		{
 			$recipients->setTo($emails);
@@ -551,5 +405,120 @@ class order_ModuleService extends ModuleBaseService
 				}
 			}
 		}
+	}
+	
+	
+	/**
+	 * @deprecated
+	 */
+	public function getPageLink()
+	{
+		$ops = order_OrderProcessService::getInstance()->getInstance();
+		$op = $ops->loadFromSession();
+		return $op->getOrderProcessURL();
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public function getPage()
+	{
+		$ops = order_OrderProcessService::getInstance()->getInstance();
+		$op = $ops->loadFromSession();
+		return $op->getStepURL($op->getFirstStep());
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public function cancelProcess()
+	{
+		order_OrderProcessService::getInstance()->getInstance()->resetSessionOrderProcess();
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public function isProcessStarted()
+	{
+		$ops = order_OrderProcessService::getInstance()->getInstance();
+		$op = $ops->loadFromSession();
+		return $op->inProcess();
+	}
+		
+
+	
+	/**
+	 * @deprecated
+	 */
+	public final function getCurrentStep()
+	{
+		$ops = order_OrderProcessService::getInstance()->getInstance();
+		$op = $ops->loadFromSession();
+		return $op->getCurrentStep();
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public final function getCatalog()
+	{
+		return catalog_ShopService::getInstance()->getCurrentShop();
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public final function getCartInfo()
+	{
+		$cartInfo = order_CartService::getInstance()->getDocumentInstanceFromSession();
+		if (!is_null($cartInfo->getCustomerId()) && is_null($cartInfo->getBillingAddressId()))
+		{
+			$customer = $cartInfo->getCustomer();
+			$defaultAddress  = $customer->getDefaultAddress();
+			if ($defaultAddress)
+			{
+				$cartInfo->setBillingAddressId($defaultAddress->getId());
+			}
+		}
+		return $cartInfo;
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public final function getFormFieldName($name)
+	{
+		return 'orderParam[' . $name . ']';
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public final function getCurrentOrderProcessId()
+	{
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public final function setCurrentOrderProcessId($orderProcessId)
+	{	
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public final function getCurrentOrderId()
+	{
+		return 0;
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public final function setCurrentOrderId($orderId)
+	{
+			
 	}
 }

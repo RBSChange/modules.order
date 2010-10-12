@@ -125,7 +125,18 @@ class order_AddressBean
 		$persistentAddress->setEmail($this->Email);
 		$persistentAddress->setPhone($this->Phone);
 		$persistentAddress->setFax($this->Fax);		
-	}	
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getKey()
+	{
+		return implode(':', array($this->Title, $this->FirstName, $this->LastName, 
+			$this->Addressline1, $this->Addressline2, $this->Addressline3,
+			$this->Zipcode, $this->City, $this->Province, $this->CountryId,
+			$this->Company, $this->Email, $this->Phone, $this->Fax));	
+	}
 }
 
 /**
