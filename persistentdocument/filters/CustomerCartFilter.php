@@ -8,6 +8,7 @@ class order_CustomerCartFilter extends f_persistentdocument_DocumentFilterImpl
 		$parameter = new f_persistentdocument_DocumentFilterValueParameter($info);
 		$this->setParameter('customer', $parameter);
 	}
+
 	/**
 	 * @return String
 	 */
@@ -25,7 +26,7 @@ class order_CustomerCartFilter extends f_persistentdocument_DocumentFilterImpl
 		{
 			$param = $this->getParameter('customer');
 			$customer = $value->getCustomer();
-			if ($customer instanceof customer_persistentdocument_customer)
+			if (!($customer instanceof customer_persistentdocument_customer))
 			{
 				return false;
 			}
