@@ -1140,4 +1140,8 @@
 	<entity id="cart-validation-quantity-fixed-for-product">
 		<locale lang="fr">Vous avez déjà ajouté ce produit dans votre panier.</locale>
 	</entity>
+	
+	<entity id="no-order-yet">
+		<locale lang="fr">Vous n'avez encore passé aucune commande.</locale>
+	</entity>
 </localization>
