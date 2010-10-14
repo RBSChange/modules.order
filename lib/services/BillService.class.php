@@ -5,7 +5,6 @@
  */
 class order_BillService extends f_persistentdocument_DocumentService
 {
-	
 	const WAITING = "waiting";
 	const SUCCESS = "success";
 	const FAILED = "failed";
@@ -308,15 +307,6 @@ class order_BillService extends f_persistentdocument_DocumentService
 		return $result[0] > 0;
 	}		
 	
-	
-	/**
-	 * @deprecated
-	 */
-	public function udatePaymentStatus($bill, $newStatus)
-	{
-		return updatePaymentStatus($bill, $newStatus);
-	}
-	
 	/**
 	 * @param order_persistentdocument_bill $bill
 	 * @param string $newStatus in waiting, success, failed
@@ -370,7 +360,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	protected function confirmPayment($bill)
 	{
 		$order = $bill->getOrder();	
-		$bill->setLabel($this->getNextBillNumber());	
+		$bill->setLabel($this->getNextBillNumber());
 		$this->activate($bill->getId());
 		if ($bill->getStatus() == self::SUCCESS)
 		{
@@ -399,6 +389,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 		{
 			$this->pp->updateDocument($customer);
 		}
+		$bill->setPaidByCustomerId($customer->getId());
+		$this->pp->updateDocument($bill);
 		order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_success', $order, $bill);
 		order_ModuleService::getInstance()->sendAdminNotification('modules_order/bill_admin_success', $order, $bill);
 	}
@@ -574,5 +566,15 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$data['links']['customer'] = $order->getCustomer()->getLabel();
 		$data['links']['order'] = $order->getOrderNumber();
 		return $data;
+	}
+	
+	// DEPRECATED.
+	
+	/**
+	 * @deprecated
+	 */
+	public function udatePaymentStatus($bill, $newStatus)
+	{
+		return updatePaymentStatus($bill, $newStatus);
 	}
 }
