@@ -105,7 +105,7 @@
 			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
 			subject="Nouvelle commande : numéro : {orderId}, client : {fullname}, montant : {orderAmount}"
 			header="&lt;strong&gt;Une nouvelle commande est en attente de confirmation de paiement &lt;/strong&gt;"
-			body="&lt;dl&gt;&lt;dt&gt;Numéro de commande&lt;/dt&gt;&lt;dd&gt;{orderId}&lt;/dd&gt;&lt;dt&gt;Montant&lt;/dt&gt;&lt;dd&gt;{orderAmount}&lt;/dd&gt;&lt;dt&gt;Client&lt;/dt&gt;&lt;dd&gt;{fullname}&lt;/dd&gt;&lt;/dl&gt;.&lt;br&gt;&lt;strong&gt;Vous pourrez être amené à confirmer le paiement de cette commande dans le backoffice de RBS Change.&lt;/strong&gt;"
+			body="&lt;dl&gt;&lt;dt&gt;Numéro de commande&lt;/dt&gt;&lt;dd&gt;{orderId}&lt;/dd&gt;&lt;dt&gt;Montant&lt;/dt&gt;&lt;dd&gt;{orderAmount}&lt;/dd&gt;&lt;dt&gt;Client&lt;/dt&gt;&lt;dd&gt;{fullname}&lt;/dd&gt;&lt;/dl&gt;.&lt;br/&gt;&lt;strong&gt;Vous pourrez être amené à confirmer le paiement de cette commande dans le backoffice de RBS Change.&lt;/strong&gt;"
 			template="default" />
 			
 		<notification codename="modules_order/messageFromCustomer"
