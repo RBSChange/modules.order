@@ -475,7 +475,7 @@
 	</entity>		
 	
 	<entity id="confirm-cancel-bill">
-		<locale lang="fr">etes-vous sur de vouloir annuler cette facture ?</locale>
+		<locale lang="fr">êtes-vous sur de vouloir annuler cette facture ?</locale>
 	</entity>	
 
 	<entity id="ship-expedition">
@@ -484,5 +484,21 @@
 	
 	<entity id="confirm-cancel-expedition">
 		<locale lang="fr">etes-vous sur de vouloir annuler cette expedition ?</locale>
-	</entity>	
+	</entity>
+	
+	<entity id="list.statusesforordercountfilter.label">
+		<locale lang="fr">catégories de commandes par statut</locale>
+	</entity>
+	<entity id="list.statusesforordercountfilter.description">
+		<locale lang="fr">Liste des catégories de commandes par statut utilisés pour certains filtres.</locale>
+	</entity>
+	<entity id="list.statusesforordercountfilter.paid">
+		<locale lang="fr">payée</locale>
+	</entity>
+	<entity id="list.statusesforordercountfilter.uncancelled">
+		<locale lang="fr">non-annulée</locale>
+	</entity>
+	<entity id="list.statusesforordercountfilter.all">
+		<locale lang="fr">toutes</locale>
+	</entity>
 </localization>

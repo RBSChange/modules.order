@@ -10,6 +10,8 @@ class order_patch_0311 extends patch_BasePatch
 	 */
 	public function execute()
 	{
+		$this->executeModuleScript('init-lists-for-filters.xml', 'order');
+		
 		$newPath = f_util_FileUtils::buildWebeditPath('modules/order/persistentdocument/bill.xml');
 		$newModel = generator_PersistentModel::loadModelFromString(f_util_FileUtils::read($newPath), 'order', 'bill');
 		$newProp = $newModel->getPropertyByName('paidByCustomerId');

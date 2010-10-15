@@ -12,6 +12,13 @@
 			<staticitem label="&amp;modules.order.bo.general.list.payment-status-category-all;" value="all" />
 		</staticlist>
 		
+		<staticlist listid="modules_order/statusesforordercountfilter" label="&amp;modules.order.bo.general.list.statusesforordercountfilter.Label;"
+			description="&amp;modules.order.bo.general.list.statusesforordercountfilter.Description;">
+			<staticitem label="&amp;modules.order.bo.general.list.statusesforordercountfilter.Paid;" value="paid" />
+			<staticitem label="&amp;modules.order.bo.general.list.statusesforordercountfilter.Uncancelled;" value="uncancelled" />
+			<staticitem label="&amp;modules.order.bo.general.list.statusesforordercountfilter.All;" value="all" />
+		</staticlist>
+		
 		<staticlist listid="modules_order/addrtypefilter" label="type d'adresse" >
 			<staticitem label="&amp;modules.order.bo.documentfilters.Addrtypefilter-billing;" value="billing" />
 			<staticitem label="&amp;modules.order.bo.documentfilters.Addrtypefilter-shipping;" value="shipping" />
