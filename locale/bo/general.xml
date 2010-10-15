@@ -483,7 +483,7 @@
 	</entity>	
 	
 	<entity id="confirm-cancel-expedition">
-		<locale lang="fr">etes-vous sur de vouloir annuler cette expedition ?</locale>
+		<locale lang="fr">êtes-vous sur de vouloir annuler cette expedition ?</locale>
 	</entity>
 	
 	<entity id="list.statusesforordercountfilter.label">
