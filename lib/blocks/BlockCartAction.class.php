@@ -99,7 +99,6 @@ class order_BlockCartAction extends website_BlockAction
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
 		if ($cgv)
 		{
-		
 			HttpController::getInstance()->redirectToUrl($cart->getOrderProcessURL());
 		}
 		$this->addError(f_Locale::translate("&modules.order.frontoffice.Must-agree-with-general-sales-conditions-error;"));
@@ -119,6 +118,12 @@ class order_BlockCartAction extends website_BlockAction
 		return website_BlockView::SUCCESS;
 	}	
 	
+	/**
+	 * @param f_mvc_Request $request
+	 * @param f_mvc_Response $response
+	 * @param order_ShippingStepBean $bean
+	 * @return String
+	 */
 	function executeEvaluateshipping($request, $response, order_ShippingStepBean $bean)
 	{
 		$cs =  order_CartService::getInstance();

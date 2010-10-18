@@ -39,8 +39,18 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 			$customer->setLastAbandonedOrderDate($lastAbandonedOrderDate);
 	
 			$shippingStep = $cartInfo->getAddressInfo();
-			if (!$shippingStep instanceof order_ShippingStepBean)
+			if (!$shippingStep instanceof order_ShippingStepBean || !$shippingStep->shippingAddress->Email)
 			{
+				$Zipcode = null;
+				$City = null;
+				$CountryId = null;
+				if ($shippingStep instanceof order_ShippingStepBean)
+				{
+					$Zipcode = $shippingStep->shippingAddress->Zipcode;
+					$City = $shippingStep->shippingAddress->City;
+					$CountryId = $shippingStep->shippingAddress->CountryId;
+				}
+				
 				$shippingStep = new order_ShippingStepBean();
 				if ($customer->getDefaultAddress())
 				{
@@ -53,6 +63,9 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 					$shippingStep->shippingAddress->FirstName = $user->getFirstname();
 					$shippingStep->shippingAddress->LastName = $user->getLastname();
 					$shippingStep->shippingAddress->Title = $user->getTitle();
+					$shippingStep->shippingAddress->Zipcode = $Zipcode;
+					$shippingStep->shippingAddress->City = $City;
+					$shippingStep->shippingAddress->CountryId = $CountryId;
 				}
 				$shippingStep->billingAddress->Email = $customer->getUser()->getEmail();
 				$cartInfo->setAddressInfo($shippingStep);			
@@ -98,8 +111,7 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 		$request->setAttribute('shippingStep', $shippingStep);
 		return $this->getInputViewName();
 	}
-	
-	
+		
 	/**
 	 * @param f_mvc_Request $request
 	 * @param order_ShippingStepBean $shippingStep
@@ -145,7 +157,6 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 		}
 		return $ok;
 	}
-	
 	
 	/**
 	 * @param f_mvc_Request $request

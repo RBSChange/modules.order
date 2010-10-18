@@ -69,6 +69,7 @@ class order_AddressBean
 
 	/**
 	 * @var String
+	 * @required
 	 */
 	public $Email;
 
