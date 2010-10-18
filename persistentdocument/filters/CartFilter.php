@@ -78,8 +78,7 @@ class order_CartFilter extends order_LinesCartFilterBase
 		switch ($paremeter->getPropertyName())
 		{
 			case 'coupon':
-				$coupon = $value->getCoupon();
-				return ($coupon) ? array($coupon->getId()) : array();
+				return ($value->hasCoupon()) ? array($value->getCoupon()->getId()) : array();
 			case 'totalAmountWithTax':
 				return $value->getTotalWithTax();
 			case 'totalAmountWithoutTax':
