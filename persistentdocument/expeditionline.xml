@@ -2,7 +2,7 @@
 <document xmlns="http://www.rbs.fr/schema/change-document/1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd"
-	model-version="1.0" publish-on-day-change="false" has-url="false" icon="document" >
+	model-version="1.0" publish-on-day-change="false" has-url="false" icon="document" backoffice-indexable="false">
 	<properties>
 		<add name="label" type="String"/>
 		<add name="orderlineid" type="Integer"></add>
