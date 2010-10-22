@@ -503,7 +503,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$query = $this->createQuery();
 		$query->add(Restrictions::eq('customer.id', $customer->getId()));
-		$query->add(Restrictions::eq('orderStatus', self::PAYMENT_SUCCESS));
+		$query->add(Restrictions::eq('bill.status', order_BillService::SUCCESS));
 		$query->addOrder(Order::desc('document_creationdate'));
 		return $query->find();
 	}
