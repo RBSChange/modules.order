@@ -41,7 +41,7 @@ class order_UserLoginListener
 								$product = $line->getProduct();
 								if ($product !== null)
 								{
-									if ($cartService->addProductToCart($sessionCart, $product, $line->getQuantity()))
+									if ($cartService->addProductToCart($sessionCart, $product, $line->getQuantity(), $line->getPropertiesArray()))
 									{
 										$added = true;
 									}
