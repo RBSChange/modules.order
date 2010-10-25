@@ -671,7 +671,11 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	public function sendMessageFromCustomer($order, $content)
 	{
 		$recipients = order_ModuleService::getInstance()->getAdminRecipients();
-		if ($recipients && $order->getCustomer() && $order->getCustomer()->getUser())
+		if (!$recipients)
+		{
+			Framework::warn(__METHOD__ . ' There is no admin recipient defined in order preferences.');
+		}
+		else if ($order->getCustomer() && $order->getCustomer()->getUser())
 		{
 			return $this->execSendMessage($order, $content, self::MESSAGE_FROM_USER, $recipients, $order->getCustomer()->getUser());
 		}
@@ -958,10 +962,11 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$data['properties']['customerFullName'] = $billingAddress->getDocumentService()->getFullName($billingAddress);
 			$data['properties']['customerCode'] = $document->getCustomer()->getUser()->getEmail();
 			$data['properties']['totalAmount'] = $document->formatPrice($document->getTotalAmountWithTax());
-
+			
 			// Messages.
 			$data['messages'] = order_MessageService::getInstance()->getInfosByOrder($document);
-				
+			$data['messages']['needsAnswer'] = f_Locale::translateUI('&modules.uixul.bo.general.' . ($document->getNeedsAnswer() ? 'Yes' : 'No') . ';');
+			
 			$rc->endI18nWork();
 		}
 		catch (Exception $e)

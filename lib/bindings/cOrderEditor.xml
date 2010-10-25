@@ -195,6 +195,7 @@
 							this.showTextMessage("&amp;modules.order.bo.doceditor.panel.messages.Success-sending-message;");
 							this.fireInitializeComplete(result);
 							node.value = '';
+							this.documentEditor.refresh();
 						}
 					}
 					else

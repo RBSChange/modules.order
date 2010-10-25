@@ -186,4 +186,11 @@
 	<entity id="containedproductcartshippingfilter-text">
 		<locale lang="fr">avec {quantity} des produits {product} sur les lignes affectées au mode {mode}</locale>
 	</entity>
+	
+	<entity id="waitingresponseorderfilter-label">
+		<locale lang="fr">commandes sur lesquelles le client est en attente d'une réponse</locale>
+	</entity>
+	<entity id="waitingresponseorderfilter-text">
+		<locale lang="fr">commandes sur lesquelles le client est en attente d'une réponse</locale>
+	</entity>
 </localization>

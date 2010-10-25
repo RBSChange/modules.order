@@ -36,6 +36,23 @@ class order_MessageService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
+	 * @see f_persistentdocument_DocumentService::preInsert()
+	 *
+	 * @param mailbox_persistentdocument_message $document
+	 * @param Integer $parentNodeId
+	 */
+	protected function preInsert($document, $parentNodeId)
+	{
+		$order = $document->getOrder();
+		$update = !$order->isModified();
+		$order->setNeedsAnswer(!($document->getSender() instanceof users_persistentdocument_backenduser));
+		if ($update && $order->isModified())
+		{
+			$this->pp->updateDocument($order);
+		}
+	}
+	
+	/**
 	 * @param order_persistentdocument_order $order
 	 * @return Array<mailbox_persistentdocument_message>
 	 */

@@ -85,4 +85,7 @@
 		<locale lang="de">shipping mode</locale>
 		<locale lang="de">Delivery Mode</locale>
 	</entity>
+	<entity id="NeedsAnswer">
+		<locale lang="fr">en attente de réponse</locale>
+	</entity>
 </localization>

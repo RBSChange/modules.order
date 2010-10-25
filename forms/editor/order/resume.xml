@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <panel>	
 	<section name="properties" linkedtab="properties" actiontexti18n="modules.uixul.bo.doceditor.section.action.View"
-		labeli18n="modules.uixul.bo.doceditor.section.Properties" 
-		image="{IconsBase}/small/edit-properties.png">
+		labeli18n="modules.uixul.bo.doceditor.section.Properties" image="{IconsBase}/small/edit-properties.png">
 		<property name="orderNumber" labeli18n="modules.order.bo.doceditor.property.Reference" />
 		<property name="orderStatus" labeli18n="modules.order.bo.doceditor.property.Order-status" />
 		<property name="paymentStatus" labeli18n="modules.order.bo.doceditor.property.Payment-status" />
@@ -14,16 +13,15 @@
 	</section>
 	
 	<section name="history" linkedtab="history" actiontexti18n="modules.uixul.bo.doceditor.section.action.View"
-		labeli18n="modules.uixul.bo.doceditor.section.History" 
-		image="{IconsBase}/small/history.png">
+		labeli18n="modules.uixul.bo.doceditor.section.History" image="{IconsBase}/small/history.png">
 		<property name="modificationdate" labeli18n="modules.uixul.bo.doceditor.property.Modificationdate"/>
 	</section>		
 			
 	<section name="messages" linkedtab="messages" actiontexti18n="modules.uixul.bo.doceditor.section.action.View"
-		labeli18n="modules.order.bo.doceditor.section.Messages" 
-		image="{IconsBase}/small/mail.png">
+		labeli18n="modules.order.bo.doceditor.section.Messages" image="{IconsBase}/small/mail.png">
 		<property name="totalCount" labeli18n="modules.order.bo.doceditor.property.Total-count"/>
 		<property name="fromCustomerCount" labeli18n="modules.order.bo.doceditor.property.From-customer-message-count"/>
 		<property name="toCustomerCount" labeli18n="modules.order.bo.doceditor.property.To-customer-message-count"/>
+		<property name="needsAnswer" labeli18n="modules.order.bo.doceditor.property.NeedsAnswer" />
 	</section>					
 </panel>

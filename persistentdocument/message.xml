@@ -3,12 +3,9 @@
 	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd" 
     model-version="1.0" publish-on-day-change="false" backoffice-indexable="false" has-url="false">
 	<properties>
-		<add name="content" type="XHTMLFragment" min-occurs="1" max-occurs="1" />
-		<add name="order" type="modules_order/order" min-occurs="1" max-occurs="1" inverse="true" />
-		<add name="sender" type="modules_users/user" min-occurs="1" max-occurs="1" inverse="true" />
+		<add name="content" type="XHTMLFragment" min-occurs="1" />
+		<add name="order" type="modules_order/order" min-occurs="1" inverse="true" />
+		<add name="sender" type="modules_users/user" min-occurs="1" inverse="true" />
 	</properties>
-	
 	<statuses default="PUBLICATED" />
-	
-	<form />
 </document>

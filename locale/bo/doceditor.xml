@@ -54,6 +54,9 @@
 		<locale lang="fr">montant total</locale>
 		<locale lang="en">total amount</locale>
 	</entity>
+	<entity id="property.needsAnswer">
+		<locale lang="fr">en attente de réponse</locale>
+	</entity>
 
 	<entity id="property.bill">
 		<locale lang="fr">facture</locale>

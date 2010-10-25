@@ -17,7 +17,7 @@
 			<li>
 				<label class="standard" for="comment" change:translate="modules.customer.frontoffice.Your-messageLabel"></label>
 				<textarea rows="10" cols="60" class="textfield" id="comment" name="orderParam[comment]">${comment}</textarea>	
-				<input type="hidden" tal:attributes="orderParam[cmpref] order/getId" />	
+				<input type="hidden" name="{orderParam[cmpref]}" value="${order/getId}" />	
 			</li>
 			<li class="buttons">
 				<label>&nbsp;</label>
