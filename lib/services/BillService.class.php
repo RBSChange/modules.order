@@ -575,6 +575,6 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function udatePaymentStatus($bill, $newStatus)
 	{
-		return updatePaymentStatus($bill, $newStatus);
+		return $this->updatePaymentStatus($bill, $newStatus);
 	}
 }
