@@ -21,7 +21,7 @@ class order_RemoveCartLineAction extends f_action_BaseAction
 		$url = null;
 		if (is_numeric($pageId))
 		{
-			$url = LinkHelper::getUrl(DocumentHelper::getDocumentInstance($pageId, 'modules_website/page'));
+			$url = LinkHelper::getDocumentUrl(DocumentHelper::getDocumentInstance($pageId, 'modules_website/page'));
 		}		
 		$context->getController()->redirectToUrl(str_replace('&amp;', '&', $url));
 

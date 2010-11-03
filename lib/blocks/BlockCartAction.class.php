@@ -19,7 +19,7 @@ class order_BlockCartAction extends website_BlockAction
 		$pageId = $this->getContext()->getId();
 
 		$request->setAttribute('shop', $shop);
-		$hrefShop = LinkHelper::getUrl($shop->getTopic()->getIndexPage());
+		$hrefShop = LinkHelper::getDocumentUrl($shop->getTopic()->getIndexPage());
 		$request->setAttribute('hrefShop', $hrefShop);
 
 		// 1st case: Cart is empty
@@ -37,7 +37,7 @@ class order_BlockCartAction extends website_BlockAction
 					);
 					if ($emptyCartPage->getId() != $pageId)
 					{
-						$url = LinkHelper::getUrl($emptyCartPage);
+						$url = LinkHelper::getDocumentUrl($emptyCartPage);
 						HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 					}
 				}
@@ -52,7 +52,7 @@ class order_BlockCartAction extends website_BlockAction
 		}
 
 		// Cart is not empty.
-		$request->setAttribute('updateActionUrl', LinkHelper::getUrl('order', 'UpdateCart', array('pageref' => $pageId)));
+		$request->setAttribute('updateActionUrl', LinkHelper::getActionUrl('order', 'UpdateCart', array('pageref' => $pageId)));
 		$request->setAttribute('pageref', $pageId);
 		$request->setAttribute('cart', $cart);
 

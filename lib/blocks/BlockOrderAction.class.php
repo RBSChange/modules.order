@@ -64,7 +64,7 @@ class order_BlockOrderAction extends website_TaggerBlockAction
 		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
 		$tagService = TagService::getInstance();
 		$page = $tagService->getDocumentByContextualTag('contextual_website_website_modules_order_cart', $website);
-		$url = LinkHelper::getUrl($page, RequestContext::getInstance()->getLang());
+		$url = LinkHelper::getDocumentUrl($page, RequestContext::getInstance()->getLang());
 		HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 		return website_BlockView::NONE;
 	}

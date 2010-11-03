@@ -96,7 +96,7 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 		try
 		{
 			$emptyCartPage = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart-empty', website_WebsiteModuleService::getInstance()->getCurrentWebsite());
-			$url = LinkHelper::getUrl($emptyCartPage);
+			$url = LinkHelper::getDocumentUrl($emptyCartPage);
 			HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 		}
 		catch ( TagException $e )
