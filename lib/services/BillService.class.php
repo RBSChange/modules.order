@@ -359,6 +359,12 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */	
 	protected function confirmPayment($bill)
 	{
+		if ($bill->getPublicationstatus() == 'FILED')
+        {
+			$bill->setPublicationstatus('DRAFT');
+			$this->save($bill);
+		}
+                
 		$order = $bill->getOrder();	
 		$bill->setLabel($this->getNextBillNumber());
 		$this->activate($bill->getId());
@@ -575,6 +581,6 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function udatePaymentStatus($bill, $newStatus)
 	{
-		return updatePaymentStatus($bill, $newStatus);
+		$this->updatePaymentStatus($bill, $newStatus);
 	}
 }
