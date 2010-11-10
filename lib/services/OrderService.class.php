@@ -204,6 +204,132 @@ class order_OrderService extends f_persistentdocument_DocumentService
 
 	/**
 	 * @param order_CartInfo $cartInfo
+	 */
+	protected function prepareCartForOrder($cartInfo)
+	{
+		//Prepare cart for order generation
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $orderDocument
+	 * @param order_CartInfo $cartInfo
+	 */	
+	protected function finalizeOrderAndCart($orderDocument, $cartInfo)
+	{
+		//Nettoyage du panier et de la commande
+		if ($orderDocument === null)
+		{
+			//La commande n'a pas pu etre créer
+		}
+		else
+		{
+			//Tous c'est bien passé
+		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $orderDocument
+	 * @param order_CartInfo $cartInfo
+	 */
+	protected function populateOrderAddresses($orderDocument, $cartInfo)
+	{
+		if ($orderDocument->getShippingAddress() === null)
+		{
+			$shippingAddress = customer_AddressService::getNewDocumentInstance();
+			$orderDocument->setShippingAddress($shippingAddress);
+		}
+		if ($orderDocument->getBillingAddress() === null)		
+		{
+			$billingAddress = customer_AddressService::getNewDocumentInstance();
+			$orderDocument->setBillingAddress($billingAddress);
+		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_order orderDocument
+	 * @param order_CartInfo $cartInfo
+	 */
+	protected function populateOrderLines($orderDocument, $cartInfo)
+	{
+		$cartLineCount = $cartInfo->getCartLineCount();
+		if ($orderDocument->isNew())
+		{
+			for($i = 0; $i< $cartLineCount; $i++)
+			{
+				$orderDocument->addLine(order_OrderlineService::getInstance()->getNewDocumentInstance());
+			}			
+		}
+		else
+		{
+			$currentOrderLine = $orderDocument->getLineCount();
+			if ($currentOrderLine < $cartLineCount)
+			{
+				for($i = $currentOrderLine; $i< $cartLineCount; $i++)
+				{
+					$orderDocument->addLine(order_OrderlineService::getInstance()->getNewDocumentInstance());
+				}					
+			} 
+			else if ($currentOrderLine > $cartLineCount)
+			{
+				for($i = $cartLineCount; $i< $currentOrderLine; $i++)
+				{
+					$orderDocument->removeLineByIndex($i);
+				}					
+			}
+		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_order orderDocument
+	 * @param order_CartInfo $cartInfo
+	 */	
+	protected function fillOrderShippingAddress($orderDocument, $cartInfo)
+	{
+		$shippingAddress = $orderDocument->getShippingAddress();
+		$cartInfo->getAddressInfo()->exportShippingAddress($shippingAddress);
+		$shippingAddress->setPublicationstatus('FILED');
+		$shippingAddress->save();	
+		$cartInfo->setShippingAddressId($shippingAddress->getId());
+	}
+	
+	/**
+	 * @param order_persistentdocument_order orderDocument
+	 * @param order_CartInfo $cartInfo
+	 */	
+	protected function fillOrderBillingAddress($orderDocument, $cartInfo)
+	{
+		$billingAddress = $orderDocument->getBillingAddress();
+		if ($cartInfo->getAddressInfo()->useSameAddressForBilling)
+		{
+			$cartInfo->getAddressInfo()->exportShippingAddress($billingAddress);
+		}
+		else
+		{
+			$cartInfo->getAddressInfo()->exportBillingAddress($billingAddress);
+		}
+		$billingAddress->setPublicationstatus('FILED');
+		$billingAddress->save();
+		$cartInfo->setBillingAddressId($billingAddress->getId());
+	}
+	
+	/**
+	 * @param order_persistentdocument_order orderDocument
+	 * @param order_CartInfo $cartInfo
+	 */
+	protected function generateDefaultAddressByOrder($orderDocument, $cartInfo)
+	{
+		$customer = $orderDocument->getCustomer();
+		if ($customer->getDefaultAddress() === null)
+		{
+			$defaultAddress = customer_AddressService::getNewDocumentInstance();
+			$cartInfo->getAddressInfo()->exportShippingAddress($defaultAddress);
+			$defaultAddress->setLabel(f_Locale::translate('&modules.customer.frontoffice.Primary-address;'));
+			$customer->addAddress($defaultAddress);
+			$customer->save();
+		}
+	}
+	/**
+	 * @param order_CartInfo $cartInfo
 	 * @return order_persistentdocument_order
 	 */
 	public function createFromCartInfo($cartInfo)
@@ -211,65 +337,41 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		try
 		{
 			$this->tm->beginTransaction();
-			
-			$shop = $cartInfo->getShop();
-			$cartLineCount = $cartInfo->getCartLineCount();
-			
+			$this->prepareCartForOrder($cartInfo);
+						
 			$orderDocument = $cartInfo->getOrder();
 			if ($orderDocument === null)
 			{
 				$orderDocument = $this->getNewDocumentInstance();				
-				$shippingAddress = customer_AddressService::getNewDocumentInstance();
-				$orderDocument->setShippingAddress($shippingAddress);
 				
-				$billingAddress = customer_AddressService::getNewDocumentInstance();
-				$orderDocument->setBillingAddress($billingAddress);
-				
-				for($i = 0; $i< $cartLineCount; $i++)
-				{
-					$orderDocument->addLine(order_OrderlineService::getInstance()->getNewDocumentInstance());
-				}
 			}
 			else
 			{
 				$orderDocument->setLabel(date_Calendar::now()->toString());
-				$shippingAddress = $orderDocument->getShippingAddress();
-				$billingAddress = $orderDocument->getBillingAddress();
-				$currentOrderLine = $orderDocument->getLineCount();
-				if ($currentOrderLine < $cartLineCount)
-				{
-					for($i = $currentOrderLine; $i< $cartLineCount; $i++)
-					{
-						$orderDocument->addLine(order_OrderlineService::getInstance()->getNewDocumentInstance());
-					}					
-				} 
-				else if ($currentOrderLine > $cartLineCount)
-				{
-					for($i = $cartLineCount; $i< $currentOrderLine; $i++)
-					{
-						$orderDocument->removeLineByIndex($i);
-					}					
-				}
 			}
+			
+			$this->populateOrderAddresses($orderDocument, $cartInfo);
+			$this->populateOrderLines($orderDocument, $cartInfo);
+			
 			$orderDocument->setOrderStatus(null);
 			
+			
+			$shop = $cartInfo->getShop();
 			$orderDocument->setCurrencyCode($shop->getCurrencyCode());
 			$orderDocument->setPriceFormat($shop->getDocumentService()->getPriceFormat($shop));
 					
 			$orderDocument->setTotalAmountWithTax(catalog_PriceHelper::roundPrice($cartInfo->getTotalWithTax()));
 			$orderDocument->setTotalAmountWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getTotalWithoutTax()));
-			
+						
 			$customer = $cartInfo->getCustomer();
 			$orderDocument->setCustomer($customer);
 			$orderDocument->setShopId($shop->getId());
 			$orderDocument->setWebsiteId($shop->getWebsite()->getId());
 	
 			// Adresse de livraison.
-			$cartInfo->getAddressInfo()->exportShippingAddress($shippingAddress);
-			$shippingAddress->setPublicationstatus('FILED');
-			$shippingAddress->save();
-			$cartInfo->setShippingAddressId($shippingAddress->getId());
+			$this->fillOrderShippingAddress($orderDocument, $cartInfo);
 			
+			//Frais de livraison
 			$shippingModeId = intval($cartInfo->getShippingModeId()) > 0 ? intval($cartInfo->getShippingModeId()) : -1;
 			$orderDocument->setShippingModeId($shippingModeId);
 			$orderDocument->setShippingModeTaxCode($cartInfo->getShippingTaxCode());
@@ -280,31 +382,17 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$orderDocument->setShippingDataArray($cartInfo->getShippingArray());
 			
 			// Adresse de facturation.
-			if ($cartInfo->getAddressInfo()->useSameAddressForBilling)
-			{
-				$cartInfo->getAddressInfo()->exportShippingAddress($billingAddress);
-			}
-			else
-			{
-				$cartInfo->getAddressInfo()->exportBillingAddress($billingAddress);
-			}
-			$billingAddress->setPublicationstatus('FILED');
-			$billingAddress->save();
-			$cartInfo->setBillingAddressId($billingAddress->getId());
+			$this->fillOrderBillingAddress($orderDocument, $cartInfo);
+			
 			
 			// Adresse par defaut.
-			if ($customer->getDefaultAddress() === null)
-			{
-				$defaultAddress = customer_AddressService::getNewDocumentInstance();
-				$cartInfo->getAddressInfo()->exportShippingAddress($defaultAddress);
-				$defaultAddress->setLabel(f_Locale::translate('&modules.customer.frontoffice.Primary-address;'));
-				$customer->addAddress($defaultAddress);
-				$customer->save();
-			}
+			$this->generateDefaultAddressByOrder($orderDocument, $cartInfo);
 			
+			//Mode de facturation
 			$billingMode = $cartInfo->getBillingMode();
 			$orderDocument->setBillingModeDocument($billingMode);
 			
+			//Traitements des lignes de la commande
 			$orderlineService = order_OrderlineService::getInstance();
 			foreach ($cartInfo->getCartLineArray() as $index => $cartLine)
 			{
@@ -324,8 +412,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			{
 				$orderDocument->setCouponData(null);
 			}
-			
-
 			
 			// Save the cart properties.
 			$orderDocument->setGlobalProperty(self::PROPERTIES_CART_PROPERTIES, $cartInfo->getPropertiesArray());
@@ -357,8 +443,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				}
 				$discountDataArray[] = $discountData;
 			}
-			$orderDocument->setDiscountDataArray($discountDataArray);			
-			
+			$orderDocument->setDiscountDataArray($discountDataArray);	
+					
 			//Save the Order
 			$folder = $this->getFolderOfDay($orderDocument->getUICreationdate());
 			$orderDocument->save($folder->getId());
@@ -369,15 +455,18 @@ class order_OrderService extends f_persistentdocument_DocumentService
 					$orderLine->save();
 				}
 			}
-			
+
 			$cartInfo->setOrderId($orderDocument->getId());
+			
+			$this->finalizeOrderAndCart($orderDocument, $cartInfo);
 			$this->tm->commit();			
 		}
 		catch (Exception $e)
 		{
 			$cartInfo->addErrorMessage('Impossible de creer la commande');
 			$this->tm->rollBack($e);
-			$orderDocument = null;			
+			$orderDocument = null;	
+			$this->finalizeOrderAndCart($orderDocument, $cartInfo);		
 		}
 		return $orderDocument;
 	}
