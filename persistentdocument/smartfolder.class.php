@@ -6,7 +6,7 @@
 class order_persistentdocument_smartfolder extends order_persistentdocument_smartfolderbase 
 {
 	/**
-	 * @return order_persistentdocument_order
+	 * @deprecated (will be removed in 4.0) use getVirtualChildrenAt on order_SmartfolderService.
 	 */
 	public function getOrders()
 	{

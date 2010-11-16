@@ -53,8 +53,7 @@ class order_SmartfolderService extends filter_QueryfolderService
 	}
 	
 	/**
-	 * @param order_persistentdocument_smartfolder $folder
-	 * @return order_persistentdocument_order[]
+	 * @deprecated (will be removed in 4.0) use getVirtualChildrenAt
 	 */
 	public function getOrders($folder)
 	{

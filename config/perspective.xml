@@ -31,7 +31,7 @@
 		</model>
 		<model name="modules_order/smartfolder">
 			<children>
-				<child model="modules_order/order" from="orders" />
+				<child model="modules_order/order" from="function" />
 			</children>
 			<columns>
 				<column name="formattedTotalAmountWithTax" flex="1" label="TotalAmountWithTax" />
