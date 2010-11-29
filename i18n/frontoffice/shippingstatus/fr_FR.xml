@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.frontoffice.shippingstatus" lcid="fr_FR">
+  <key id="prepare">préparation</key>
+  <key id="progress">en cours</key>
+</i18n>

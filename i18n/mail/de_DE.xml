@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.mail" lcid="de_DE">
+  <key id="message-label">Nachricht von der Reihenfolge n°{orderId} gesendet am {date}</key>
+</i18n>

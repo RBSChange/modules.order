@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.doceditor" lcid="fr_FR">
+  <key id="cancelation-in-progress">annulation de cette commande en cours.</key>
+  <key id="links">Documents associés</key>
+  <key id="customer">client</key>
+  <key id="order">commande</key>
+  <key id="bills">factures</key>
+  <key id="expeditions">expeditions</key>
+  <key id="actions">Actions</key>
+</i18n>

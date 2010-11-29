@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.orderline" lcid="de_DE">
+  <key id="document-name">Befehlszeile</key>
+  <key id="codereference">Code Reference</key>
+  <key id="gencode">Gen code</key>
+  <key id="articleid">Identifikation der Artikel</key>
+  <key id="productid">Produkt-ID</key>
+</i18n>

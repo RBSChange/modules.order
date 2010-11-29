@@ -265,13 +265,14 @@ class order_CartService extends BaseService
 		if ($product->isPublished() && $product->canBeOrdered($cart->getShop()) && 
 			$product->getPrice($cart->getShop(), $cart->getCustomer(), $quantity) != null)
 		{
-			if ($product instanceof catalog_StockableDocument)
+			$stDoc = catalog_StockService::getInstance()->getStockableDocument($product);
+			if ($stDoc !== null)
 			{
 				if (!catalog_StockService::getInstance()->isAvailable($product, $quantity))
 				{
 					$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
 						'quantity' => $quantity, 'unit' => '', 
-						'availableQuantity' => $product->getStockQuantity(), 'availableUnit' => '');
+						'availableQuantity' => $stDoc->getCurrentStockQuantity(), 'availableUnit' => '');
 					$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-quantity;', $replacements));
 					return false;					
 				}
@@ -569,16 +570,16 @@ class order_CartService extends BaseService
 					return false;
 				}
 				
-				if ($product instanceof catalog_StockableDocument)
+				if (!catalog_StockService::getInstance()->isValidCartQuantity($product, $cartLine->getQuantity(), $cart))
 				{
-					if (!catalog_StockService::getInstance()->isAvailable($product, $cartLine->getQuantity()))
-					{
-						$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
+					$stDoc = catalog_StockService::getInstance()->getStockableDocument($product);
+					$stockQuantity = $stDoc !== null ? $stDoc->getCurrentStockQuantity() : 0;
+					$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
 							'quantity' => $cartLine->getQuantity(), 'unit' => '', 
-							'availableQuantity' => $product->getStockQuantity(), 'availableUnit' => '');
-						$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-quantity;', $replacements));
-						return true;
-					}
+							'availableQuantity' => $stockQuantity, 'availableUnit' => '');
+					$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-quantity;', $replacements));
+					return true;
+
 				}
 				return true;
 			}

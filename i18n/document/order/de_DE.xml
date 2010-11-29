@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.order" lcid="de_DE">
+  <key id="edition-form-title">Eigenschaften Auftrag</key>
+  <key id="document-name">Befehl</key>
+  <key id="creationdate">Erstellungsdatum</key>
+  <key id="commentadmin">Administrator Kommentar</key>
+  <key id="commentadmin-help">Dieser Kommentar wird hier sichtbar. Es ist zu Notter Rückmeldungen, die diese Ordnung bestimmt sind.</key>
+  <key id="orderstatus">Staat</key>
+  <key id="bostatusasjson">Staat</key>
+  <key id="bostatusasjson-help">Die Veränderung des Status einer Bestellung sendet eine Benachrichtigung per E-Mail-Client (customerName ()). Sie können dieses Verhalten in der Notification-Modul, erreichbar über das Menü Verwaltung aus dem Hauptmenü wechseln Change to RBS.</key>
+  <key id="amountwithtax">Zwischensumme Steuern</key>
+  <key id="amountwithouttax">Zwischensumme ohne Steuern</key>
+  <key id="totalamountwithtax">Total Steuern</key>
+  <key id="totalamountwithouttax">gesamten Dienstzeiten,</key>
+  <key id="currencycode">Währungscode</key>
+  <key id="currencysymbol">Währungssymbol</key>
+  <key id="ordernumber">Anzahl</key>
+  <key id="reference">Referenz</key>
+  <key id="shippingmode">shipping mode</key>
+</i18n>

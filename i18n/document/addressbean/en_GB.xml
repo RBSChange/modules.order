@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.addressbean" lcid="en_GB">
+  <key id="title">title</key>
+  <key id="firstname">firstname</key>
+  <key id="lastname">lastname</key>
+  <key id="email">email</key>
+  <key id="company">company</key>
+  <key id="addressline1">address (line 1)</key>
+  <key id="addressline2">address (line 2)</key>
+  <key id="addressline3">addressline3</key>
+  <key id="zipcode">zipcode</key>
+  <key id="city">city</key>
+  <key id="province">province</key>
+  <key id="countryid">country</key>
+  <key id="phone">phone</key>
+  <key id="fax">fax</key>
+</i18n>

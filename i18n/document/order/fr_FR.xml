@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.order" lcid="fr_FR">
+  <key id="edition-form-title">propriétés d'une commande</key>
+  <key id="document-name">commande</key>
+  <key id="creationdate">date de création</key>
+  <key id="commentadmin">commentaire de l'administrateur</key>
+  <key id="commentadmin-help">ce commentaire ne sera visible qu'ici. Il est destiné à noter des remarques concernant cette commande.</key>
+  <key id="orderstatus">état</key>
+  <key id="bostatusasjson">état</key>
+  <key id="bostatusasjson-help">Le changement de statut d'une commande envoie une notification par e-mail au client ({customerName}). Vous pouvez modifier ce comportement dans le module Notification, accessible depuis le menu Administration du menu principal de RBS Change.</key>
+  <key id="amountwithtax">sous-total TTC</key>
+  <key id="amountwithouttax">sous-total hors taxes</key>
+  <key id="totalamountwithtax">montant total TTC</key>
+  <key id="totalamountwithouttax">montant total hors taxes</key>
+  <key id="currencycode">code devise</key>
+  <key id="currencysymbol">symbole devise</key>
+  <key id="ordernumber">numéro</key>
+  <key id="reference">référence</key>
+  <key id="shippingmode">mode de livraison</key>
+  <key id="needsanswer">en attente de réponse</key>
+</i18n>

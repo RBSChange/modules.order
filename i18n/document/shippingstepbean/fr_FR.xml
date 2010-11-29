@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.shippingstepbean" lcid="fr_FR">
+  <key id="usesameaddressforbilling">Utiliser votre adresse de livraison</key>
+  <key id="select">Continuer</key>
+  <key id="shippingmode-error">Le mode de livraison choisi n'est pas valide</key>
+  <key id="delivery-address-legend">Adresse de livraison</key>
+  <key id="delivery-address-text">Pour que votre colis arrive à destination sans encombres, merci de bien vouloir remplir le fomulaire ci-dessous.</key>
+  <key id="billing-address-legend">Adresse de facturation</key>
+  <key id="billing-address-text">Vous pouvez choisir une adresse de facturation différente de l'adresse de livraison ou simplement ré-utiliser la même adresse.</key>
+  <key id="choose-delivery-legend">Choix du mode de livraison</key>
+  <key id="choose-delivery-text">Parmi la liste ci-dessous, veuillez sélectionner le mode de livraison pour votre commande.</key>
+  <key id="no-shipping-mode">Il n'y a pas de modes de livraison disponibles pour les informations saisie.</key>
+  <key id="registered-address-text">Utiliser une adresse prédéfinie de votre compte</key>
+  <key id="registered-address-choose">[Sélectionner]</key>
+  <key id="registered-address-select">Utiliser cette adresse</key>
+  <key id="fixed-shipping-mode">Mode de livraison predefini</key>
+  <key id="evaluateshipping">évaluer vos frais d'expédition</key>
+  <key id="evaluateshipping-text">Pour évaluer les frais d'expédition de votre panier, merci d'indiquer votre code postal, ville ou pays.</key>
+  <key id="evaluateshipping-button">évaluer</key>
+  <key id="evaluateshipping-results">Frais d'expédition pour votre panier</key>
+</i18n>

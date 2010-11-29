@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.doceditor.panel.carts" lcid="en_GB">
+  <key id="tva-amounts">VAT amount</key>
+</i18n>

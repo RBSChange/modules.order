@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.doceditor.panel.carts" lcid="fr_FR">
+  <key id="tva-amounts">montant TVA</key>
+</i18n>

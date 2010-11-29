@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.preferences" lcid="en_GB">
+  <key id="edition-form-title">preferences for module Orders</key>
+  <key id="orderconfirmednotificationuser">order confirmed notification user</key>
+  <key id="orderconfirmednotificationuser-help">order confirmed notification user</key>
+  <key id="disablecoupons">disable coupons</key>
+  <key id="disablecoupons-help">this option disable coupons forms in frontoffice.</key>
+  <key id="orderprocessclosedbegindate">closed (start date)</key>
+  <key id="orderprocessclosedbegindate-help">closed (start date)</key>
+  <key id="orderprocessclosedenddate">closed (end date)</key>
+  <key id="orderprocessclosedenddate-help">closed (end date)</key>
+  <key id="orderprocessclosed">closed</key>
+  <key id="orderprocessclosed-help">Order process is temporarily closed.</key>
+  <key id="orderprocessclosedmessage">closed message</key>
+  <key id="orderprocessclosedmessage-help">Message to tell customers the store is closed.</key>
+  <key id="orderprocesscloseddatemessage">closed message</key>
+  <key id="orderprocesscloseddatemessage-help">Message to tell customers the store is closed.</key>
+  <key id="orderprocessallowedcustomer">allowed customers</key>
+  <key id="orderprocessallowedcustomer-help">Choose customers allowed to purchase items while the store is closed.</key>
+  <key id="enablecommentreminder">enable reminder</key>
+  <key id="commentreminderperiod">period before reminder</key>
+  <key id="commentreminderreference">référence date</key>
+  <key id="commentreminderselection">product selection</key>
+  <key id="commentremindercount">product maximum count</key>
+</i18n>

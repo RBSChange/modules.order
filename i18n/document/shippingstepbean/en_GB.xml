@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.shippingstepbean" lcid="en_GB">
+  <key id="usesameaddressforbilling">Use your shipping address</key>
+  <key id="select">Continue</key>
+  <key id="shippingmode-error">The delivery method chosen is not valid</key>
+  <key id="delivery-address-legend">Delivery Address</key>
+  <key id="delivery-address-text">To ensure that your package has arrived without a hitch, thank you fill out this request form below.</key>
+  <key id="billing-address-legend">Billing Address</key>
+  <key id="billing-address-text">You can select a billing address different from shipping address or just re-use the same address.</key>
+  <key id="choose-delivery-legend">Choice of delivery method</key>
+  <key id="choose-delivery-text">Among the list below, please select the delivery method for your order.</key>
+  <key id="no-shipping-mode">There are no shipping modes available for your order.</key>
+  <key id="registered-address-text">Use a predefined address of your account</key>
+  <key id="registered-address-choose">[Select]</key>
+  <key id="registered-address-select">Use this address</key>
+</i18n>

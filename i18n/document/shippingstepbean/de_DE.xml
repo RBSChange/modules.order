@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.shippingstepbean" lcid="de_DE">
+  <key id="usesameaddressforbilling">Verwenden Sie Ihre Lieferadresse</key>
+  <key id="select">Weiter</key>
+  <key id="shippingmode-error">Die Lieferung der gewählten Methode ist nicht gültig</key>
+  <key id="delivery-address-legend">Lieferanschrift</key>
+  <key id="delivery-address-text">Um sicherzustellen, dass Ihr Paket ohne ecombres angekommen ist, ich danke Ihnen, füllen Sie das Formular unten.</key>
+  <key id="billing-address-legend">Rechnungsadresse</key>
+  <key id="billing-address-text">Sie können wählen, eine Rechnungsadresse anders als Lieferadresse oder einfach nur die Wiederverwendung der gleichen Adresse.</key>
+  <key id="choose-delivery-legend">Wahl der Versandart der</key>
+  <key id="choose-delivery-text">Unter der unten stehenden Liste, wählen Sie bitte die Lieferzeit für Ihre Bestellung.</key>
+  <key id="registered-address-text">Verwenden Sie eine vordefinierte Adresse Ihres Kontos</key>
+  <key id="registered-address-choose">[Select]</key>
+  <key id="registered-address-select">Verwenden Sie diese Adresse</key>
+</i18n>

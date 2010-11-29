@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.blocks" lcid="fr_FR">
+  <key id="order-list">mes commandes</key>
+  <key id="order">détail d'une commande</key>
+  <key id="messages">messagerie</key>
+</i18n>

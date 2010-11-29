@@ -1236,11 +1236,13 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		{
 			try 
 			{
-				$product = DocumentHelper::getDocumentInstance($line->getProductId(), 'modules_catalog/product');
-				if ($product instanceof catalog_StockableDocument) 
+				$product = $line->getProduct();
+				if (!is_null($product))
 				{
-					Framework::info(__METHOD__ . " decreaseQuantity " . $product->getId() . ' ' . $line->getQuantity());
-					catalog_StockService::getInstance()->decreaseQuantity($product, $line->getQuantity());
+					$properties = $line->getGlobalPropertyArray();
+					$product->getDocumentService()->updateProductFromCartProperties($product, $properties);
+					catalog_StockService::getInstance()->decreaseQuantity($product, $line->getQuantity(), $order->getId());
+
 				}
 			}
 			catch (Exception $e)

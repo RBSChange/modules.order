@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.doceditor.panel.messages" lcid="en_GB">
+  <key id="title">send new mail for this order</key>
+  <key id="send">send</key>
+  <key id="error-no-message-to-send">you must set a content to send.</key>
+  <key id="success-sending-message">message successfully sent.</key>
+</i18n>

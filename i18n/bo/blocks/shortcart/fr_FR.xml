@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.blocks.shortcart" lcid="fr_FR">
+  <key id="title">panier en cours (encart)</key>
+  <key id="showtotalwithfees">inclure les frais</key>
+  <key id="showtotalwithfees-help">inclure ou non les frais de port au total indiqué.</key>
+</i18n>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.order" lcid="en_GB">
+  <key id="edition-form-title">order properties</key>
+  <key id="document-name">order</key>
+  <key id="creationdate">creation date</key>
+  <key id="commentadmin">admin comment's</key>
+  <key id="commentadmin-help">admin comment's</key>
+  <key id="orderstatus">status</key>
+  <key id="bostatusasjson">status</key>
+  <key id="bostatusasjson-help">Changing the status of an order will send an e-mail notification for the customer ({customerName}). This behaviour may be changed in the Notification module, located in the Administration main menu.</key>
+  <key id="amountwithtax">sub-total with tax</key>
+  <key id="amountwithouttax">sub-total without tax</key>
+  <key id="totalamountwithtax">total amount with tax</key>
+  <key id="totalamountwithouttax">total amount without tax</key>
+  <key id="currencycode">currency code</key>
+  <key id="currencysymbol">currency symbol</key>
+  <key id="ordernumber">number</key>
+  <key id="reference">reference</key>
+</i18n>

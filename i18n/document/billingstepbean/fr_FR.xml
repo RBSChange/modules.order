@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.billingstepbean" lcid="fr_FR">
+  <key id="refresh">Ajouter</key>
+  <key id="removecoupon">Supprimer</key>
+  <key id="select">Continuer</key>
+  <key id="invalid-coupon-code">Le code {coupon} ne correspond pas à un coupon valide</key>
+  <key id="transaction-amount-overview-legend">Mode de paiment</key>
+  <key id="transaction-amount-overview-text">Veuillez trouver ci-dessous les informations sur la transaction que vous souhaitez effectuer. Merci de choisir le mode de paiement que vous désirez utiliser. A l'issu de cette étape, vous pourrez visualiser le récapitulatif de votre commande et en effectuer le paiement.</key>
+  <key id="transaction-amount-overview-head">Informations sur la transaction</key>
+  <key id="mops-legend">Modes de paiement disponibles</key>
+  <key id="no-valid-mop">Pas de modes de paiement disponibles pour votre commande.</key>
+</i18n>

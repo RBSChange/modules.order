@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.useractionlogger" lcid="fr_FR">
+  <key id="create-order">début du processus de commande</key>
+  <key id="update-order">Mise à jour de la commande numéro {orderNumber} associée au client {customerFullName}</key>
+  <key id="log-update-order">log-update-order</key>
+  <key id="update-smartfolder">update.smartfolder {documentlabel}</key>
+  <key id="log-update-smartfolder">log-update-smartfolder</key>
+  <key id="create-new-order">Création de la commande numéro {orderNumber} associée au client {customerFullName}</key>
+  <key id="log-create-new-order">log-create-new-order</key>
+  <key id="update-order-status">La commande numéro {orderNumber} associée au client {customerFullName} passe au statut {orderStatus}</key>
+  <key id="log-update-order-status">log-update-order-status</key>
+  <key id="insert-smartfolder">insert.smartfolder {documentlabel}</key>
+  <key id="log-insert-smartfolder">log-insert-smartfolder</key>
+  <key id="move-smartfolder">move.smartfolder {destinationlabel} {documentlabel}</key>
+  <key id="log-move-smartfolder">log-move-smartfolder</key>
+  <key id="cancelorder-order">cancelorder.order {documentlabel}</key>
+  <key id="log-cancelorder-order">log-cancelorder-order</key>
+  <key id="purge-bill">Purge de la facture {billId} / {billLabel} pour la commande {orderNumber}</key>
+  <key id="log-purge-bill">Purge de facture</key>
+</i18n>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.frontoffice.paymentstatus" lcid="en_GB">
+  <key id="success">validated</key>
+  <key id="waiting">waiting</key>
+  <key id="failed">failed</key>
+  <key id="delayed">in progress</key>
+</i18n>

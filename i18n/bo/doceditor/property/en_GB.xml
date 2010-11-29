@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.doceditor.property" lcid="en_GB">
+  <key id="total-count">total count</key>
+  <key id="from-customer-message-count">messages sent by customer</key>
+  <key id="to-customer-message-count">messages sent to customer</key>
+  <key id="reference">reference</key>
+  <key id="order-status">status</key>
+  <key id="payment-status">payment</key>
+  <key id="shipping-status">shipping</key>
+  <key id="customer-full-name">customer full name</key>
+  <key id="customer-code">customer code</key>
+  <key id="total-amount">total amount</key>
+  <key id="bill">bill</key>
+  <key id="bill-download">download</key>
+</i18n>

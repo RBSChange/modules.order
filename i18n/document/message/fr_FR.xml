@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.message" lcid="fr_FR">
+  <key id="document-name">message</key>
+  <key id="sender">émetteur</key>
+  <key id="creationdate">date d'envoi</key>
+  <key id="content">contenu</key>
+</i18n>

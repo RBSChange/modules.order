@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.blocks.dashboardgeneralstatistics" lcid="fr_FR">
+  <key id="title">commandes de la boutique</key>
+  <key id="shop">boutique</key>
+  <key id="shop-help">sélectionner la boutique dont vous voulez afficher les statistiques</key>
+  <key id="usecharts">utiliser des graphiques</key>
+  <key id="usecharts-help">positionner à 'oui' pour afficher les statistiques sous forme de graphique et positionner à 'non' pour les afficher sous forme de tableau.</key>
+  <key id="columns">colonnes</key>
+  <key id="columns-help">cocher les colonnes à afficher.</key>
+  <key id="statistics-for-shop">statistiques de commandes pour la boutique</key>
+  <key id="column-month">mois</key>
+  <key id="column-orders">commandes</key>
+  <key id="column-amount">chiffre d'affaire</key>
+  <key id="column-todeliver">à expédier</key>
+</i18n>

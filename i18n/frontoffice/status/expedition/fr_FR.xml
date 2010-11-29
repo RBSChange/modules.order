@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.frontoffice.status.expedition" lcid="fr_FR">
+  <key id="shipped">expédié</key>
+  <key id="prepare">préparation</key>
+  <key id="delivered">réceptioné</key>
+  <key id="canceled">annulé</key>
+</i18n>

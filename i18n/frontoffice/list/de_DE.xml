@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.frontoffice.list" lcid="de_DE">
+  <key id="order-statuses">Bestell-Status</key>
+</i18n>

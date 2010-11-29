@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.blocks.cart.cart" lcid="fr_FR">
+  <key id="showevaluateshipping-help">afficher ou non le formulaire d'évaluation des frais d'expédition</key>
+  <key id="showinstructions-help">afficher ou non les instructions à destination de l'internaute d'utilisation du panier</key>
+</i18n>

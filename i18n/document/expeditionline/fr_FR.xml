@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.expeditionline" lcid="fr_FR">
+  <key id="document-name">ligne d'expedition</key>
+  <key id="label">libellé</key>
+  <key id="quantity">quantité</key>
+</i18n>

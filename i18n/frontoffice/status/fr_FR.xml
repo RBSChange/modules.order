@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.frontoffice.status" lcid="fr_FR">
+  <key id="error">erreur</key>
+  <key id="canceled">annulé</key>
+  <key id="complete">expédié</key>
+  <key id="unknown">indéterminé</key>
+  <key id="in_progress">en cours</key>
+</i18n>

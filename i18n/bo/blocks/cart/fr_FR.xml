@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.blocks.cart" lcid="fr_FR">
+  <key id="title">panier en cours (détaillé)</key>
+  <key id="showtotalwithfees">inclure les frais</key>
+  <key id="showtotalwithfees-help">inclure ou non les frais de port au total indiqué.</key>
+  <key id="showevaluateshipping">évaluation des frais d'expédition</key>
+  <key id="showinstructions">instructions du panier</key>
+  <key id="usecartemptypage">utiliser la page ″panier vide″</key>
+  <key id="usecartemptypage-help">Rediriger ou non vers la page taguée ″Panier vide″ si le panier est vide.</key>
+</i18n>

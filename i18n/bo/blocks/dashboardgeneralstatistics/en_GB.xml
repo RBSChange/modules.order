@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.blocks.dashboardgeneralstatistics" lcid="en_GB">
+  <key id="title">orders of the shop</key>
+  <key id="shop">shop</key>
+  <key id="shop-help">shop</key>
+  <key id="columns">columns</key>
+  <key id="column-month">month</key>
+  <key id="column-orders">orders</key>
+  <key id="column-amount">total amount</key>
+  <key id="column-todeliver">to deliver</key>
+</i18n>

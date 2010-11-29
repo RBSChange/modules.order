@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.permission" lcid="en_GB">
+  <key id="edition-form-title">right management</key>
+  <key id="admin">Administrator</key>
+  <key id="admin-help">Administrator</key>
+  <key id="writer">Writer</key>
+  <key id="writer-help">Writer</key>
+  <key id="translator">Translator</key>
+  <key id="translator-help">Translator</key>
+  <key id="validator">Validator</key>
+  <key id="validator-help">Validator</key>
+  <key id="user">User</key>
+  <key id="user-help">User</key>
+</i18n>
