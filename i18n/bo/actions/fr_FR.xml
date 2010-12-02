@@ -7,6 +7,7 @@
   <key id="create-orderline">Create orderline</key>
   <key id="cancelorder">annuler</key>
   <key id="cancel-order">annuler cette commande</key>
+  <key id="cancel-order-success">Commande(s) annulée(s) : {OrderNumbers}</key>
   <key id="cancel-multiple-orders-confirm-message">L'annulation d'une commande entraîne l'envoi d'une notification d'annulation de commande au client. Souhaitez-vous réellement annuler les {count} commandes sélectionnées ?</key>
   <key id="cancel-order-confirm-message">L'annulation d'une commande entraîne l'envoi d'une notification d'annulation de commande au client. Souhaitez-vous réellement annuler la commande n° {order} de {customer} passée le {date} ?</key>
   <key id="create-billingmode">Create billingmode</key>

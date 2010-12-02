@@ -23,7 +23,7 @@
 			var lang = this.getContextLang(listWidget);
 			if (confirm(locale.toString()))
 			{
-				this.execute("%label%", "CancelOrder", { cmpref: ids, lang: lang });
+				this.executeJSON("CancelOrder", { cmpref: ids, lang: lang });
 			}
 		]]></body>
 	</action>

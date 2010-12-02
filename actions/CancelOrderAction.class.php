@@ -1,10 +1,5 @@
 <?php
-/**
- * @date Tue Dec 11 14:43:05 CET 2007
- * @author intbonjf
- * @package modules.order
- */
-class order_CancelOrderAction extends f_action_BaseAction
+class order_CancelOrderAction extends f_action_BaseJSONAction
 {
 	/**
 	 * @param Context $context
@@ -13,14 +8,18 @@ class order_CancelOrderAction extends f_action_BaseAction
 	public function _execute($context, $request)
 	{
 		$os = order_OrderService::getInstance();
+		$labels = array("");
 		foreach ($this->getDocumentInstanceArrayFromRequest($request) as $order)
 		{
 			if ($order instanceof order_persistentdocument_order)
 			{
-				$os->cancelOrder($order); // Save the order after it has been cancelled.
+				$os->cancelOrder($order);
 				$this->logAction($order);
+				$labels[] = $order->getOrderNumber();
 			}
 		}
-		return self::getSuccessView();
+		return $this->sendJSON(array('message' => 
+        	LocaleService::getInstance()->transBO('m.order.bo.actions.cancel-order-success', 
+        		array(), array('OrderNumbers' => implode("\n ", $labels)))));
 	}
 }
