@@ -579,6 +579,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	public function getByCustomer($customer)
 	{
 		$query = $this->createQuery();
+		$query->add(Restrictions::isNotNull('orderStatus'));
 		$query->add(Restrictions::eq('customer.id', $customer->getId()));
 		$query->addOrder(Order::desc('document_creationdate'));
 		return $query->find();
