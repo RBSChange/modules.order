@@ -342,8 +342,9 @@ class order_ModuleService extends ModuleBaseService
 	
 	/**
 	 * @param order_persistentdocument_order $order
+	 * @param integer $maxAge in minutes
 	 */	
-	public function checkOrderProcessing($order)
+	public function checkOrderProcessing($order, $maxAge = 60)
 	{
 		$orderStatus = $order->getOrderStatus();
 		if ($orderStatus == order_OrderService::IN_PROGRESS)
@@ -366,20 +367,20 @@ class order_ModuleService extends ModuleBaseService
 				}
 			}
 		}
-		else if ($orderStatus != order_OrderService::CANCELED && $orderStatus != order_OrderService::COMPLETE)
+		else if ($orderStatus == null)
 		{
-			
 			//Payment interompu en cours de processus
 			$orderDate = $order->getCreationdate();
-			$limitDate = date_Calendar::getInstance()->sub(date_Calendar::MINUTE, 60)->toString();
+			$limitDate = date_Calendar::getInstance()->sub(date_Calendar::MINUTE, $maxAge)->toString();
 						
 			if ($orderDate < $limitDate)
 			{
 				$cancel = true;
-				if (users_BackenduserService::getInstance()->getCurrentBackEndUser() === null)
+				$user = users_BackenduserService::getInstance()->getCurrentBackEndUser();
+				if ($user === null)
 				{
 					$rootUsers = users_BackenduserService::getInstance()->getRootUsers();
-					users_BackenduserService::getInstance()->authenticateBackEndUser($rootUsers[0]);
+					$user = $rootUsers[0];
 				}
 						
 				foreach ($order->getBillArrayInverse() as $bill) 
@@ -391,17 +392,24 @@ class order_ModuleService extends ModuleBaseService
 					}
 					else
 					{
-
 						
-						UserActionLoggerService::getInstance()->getInstance()
-							->addCurrentUserDocumentEntry('purge.bill', $order, array('orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
-						$bill->delete();
+						if ($bill->getTransactionId())
+						{
+							UserActionLoggerService::getInstance()->getInstance()->addUserDocumentEntry($user, 'filed.bill', $order, array('orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
+							$bill->setPublicationstatus('FILED');
+							$bill->save();
+						}
+						else
+						{
+							UserActionLoggerService::getInstance()->getInstance()->addUserDocumentEntry($user, 'purge.bill', $order, array('orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
+							$bill->delete();
+						}
 					}
 				}
 				
 				if ($cancel)
 				{
-					$order->getDocumentService()->cancelOrder($order);
+					$order->getDocumentService()->cancelOrder($order, false);
 				}
 			}
 		}
