@@ -508,6 +508,8 @@ class order_CartService extends BaseService
 		// If there are lines, clean them.
 		$cartLines = $cart->getCartLineArray();
 		$removeCartLineIndex = array();
+		$globalProductsArray = array();
+		
 		foreach ($cartLines as $index => $cartLine)
 		{
 			if (!in_array($index, $removeCartLineIndex))
@@ -519,7 +521,7 @@ class order_CartService extends BaseService
 					continue;
 				}
 				
-				if (!$this->validateCartLine($cartLine, $cart))
+				if (!$this->validateCartLine($cartLine, $cart, $globalProductsArray))
 				{
 					$removeCartLineIndex[] = $index;
 					continue;
@@ -538,6 +540,18 @@ class order_CartService extends BaseService
 			}
 		}
 		
+		$unavailableProducts = catalog_StockService::getInstance()->validCartQuantities($globalProductsArray, $cart);
+		foreach ($unavailableProducts as $productInfo)
+		{
+			$product = $productInfo[0];
+			$stDoc = catalog_StockService::getInstance()->getStockableDocument($product);
+			$stockQuantity = $stDoc !== null ? $stDoc->getCurrentStockQuantity() : 0;
+			$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
+					'quantity' => $productInfo[1], 'unit' => '', 
+					'availableQuantity' => $stockQuantity, 'availableUnit' => '');
+			$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-quantity;', $replacements));
+		}
+		
 		$cart->removeCartLines($removeCartLineIndex);
 		
 		if (count($cart->getWarningMessageArray()) > 0 || count($cart->getErrorMessageArray()) > 0)
@@ -553,9 +567,10 @@ class order_CartService extends BaseService
 	/**
 	 * @param order_CartLineInfo $cartLine
 	 * @param order_CartInfo $cart
+	 * @param array $globalProductsArray
 	 * @return Boolean
 	 */
-	protected function validateCartLine($cartLine, $cart)
+	protected function validateCartLine($cartLine, $cart, &$globalProductsArray)
 	{
 		try 
 		{
@@ -570,16 +585,18 @@ class order_CartService extends BaseService
 					return false;
 				}
 				
-				if (!catalog_StockService::getInstance()->isValidCartQuantity($product, $cartLine->getQuantity(), $cart))
+				if ($product instanceof catalog_BundleProduct)
 				{
-					$stDoc = catalog_StockService::getInstance()->getStockableDocument($product);
-					$stockQuantity = $stDoc !== null ? $stDoc->getCurrentStockQuantity() : 0;
-					$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
-							'quantity' => $cartLine->getQuantity(), 'unit' => '', 
-							'availableQuantity' => $stockQuantity, 'availableUnit' => '');
-					$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-quantity;', $replacements));
-					return true;
-
+					 foreach ($product->getBundledProducts() as $bundledProduct)
+					 {
+					 	 $productQty = $bundledProduct->getQuantity() * $cartLine->getQuantity();
+					 	 $this->addProductToGlobalProductsArray($bundledProduct->getProduct(), $productQty, $globalProductsArray);
+					 }
+				}
+				else
+				{
+					 $productQty = $cartLine->getQuantity();
+					 $this->addProductToGlobalProductsArray($product, $productQty, $globalProductsArray);
 				}
 				return true;
 			}
@@ -595,6 +612,24 @@ class order_CartService extends BaseService
 			$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-price;', $replacements));
 		}
 		return false;
+	}
+	
+	/**
+	 * @param catalog_persistentdocument_product $product
+	 * @param double $productQty
+	 * @param array $globalProductsArray
+	 */
+	protected function addProductToGlobalProductsArray($product, $productQty, &$globalProductsArray)
+	{
+		 $productId = $product->getId();
+		 if (!isset($globalProductsArray[$productId]))
+		 {
+		 	$globalProductsArray[$productId] = array($product, $productQty);
+		 }
+		 else
+		 {
+		 	 $globalProductsArray[$productId][1] += $productQty;
+		 }
 	}
 	
 	/**
