@@ -110,7 +110,14 @@ class order_CartInfo
 	 */
 	function getShop()
 	{
-		return DocumentHelper::getDocumentInstance($this->shopId, "modules_catalog/shop");
+		if ($this->shopId !== null)
+		{
+			return DocumentHelper::getDocumentInstance($this->shopId, "modules_catalog/shop");
+		}
+		else 
+		{
+			return catalog_ShopService::getInstance()->getCurrentShop();
+		}
 	}
 	
 	/**
@@ -118,11 +125,18 @@ class order_CartInfo
 	 */
 	function setShop($shop)
 	{
-		if (!$shop instanceof catalog_persistentdocument_shop)
+		if ($shop === null)
+		{
+			$this->shopId = null;
+		}
+		else if (!$shop instanceof catalog_persistentdocument_shop)
 		{
 			throw new Exception('Invalid shop');
 		}
-		$this->shopId = $shop->getId();
+		else 
+		{
+			$this->shopId = $shop->getId();
+		}
 	}
 	
 	/**
@@ -1187,6 +1201,74 @@ class order_CartInfo
 	}
 	
 	//TEMPLATING MANIPULATION
+	
+	/**
+	 * @var Array<String>
+	 */
+	private $successMessage = null;
+
+	/**
+	 * @return Array<String>
+	 */
+	public function getSuccessMessageArray()
+	{
+		return $this->successMessage;
+	}
+
+	/**
+	 * @param Array<String> $successMessage
+	 */
+	public function setSuccessMessageArray($successMessage)
+	{
+		$this->successMessage = $successMessage;
+	}
+
+	/**
+	 * @param unknown_type $key
+	 * @return Boolean
+	 */
+	public function hasSuccessMessage($key)
+	{
+		return isset($this->successMessage[$key]);
+	}
+
+	/**
+	 * @param unknown_type $key
+	 * @return String
+	 */
+	public function getSuccessMessage($key)
+	{
+		return $this->successMessage[$key];
+	}
+
+	/**
+	 * @param unknown_type $key
+	 * @param String $value
+	 */
+	public function setSuccessMessage($key, $value)
+	{
+		$this->successMessage[$key] = $value;
+	}
+
+	/**
+	 * @param String $message
+	 */
+	public function addSuccessMessage($message)
+	{
+		if (!is_array($this->successMessage))
+		{
+			$this->successMessage = array();
+		}
+		$this->successMessage[] = $message;
+	}
+
+	/**
+	 * @return void
+	 */
+	public function clearSuccessMessages()
+	{
+		$this->successMessage = array();
+	}
 	
     /**
 	 * @var Array<String>

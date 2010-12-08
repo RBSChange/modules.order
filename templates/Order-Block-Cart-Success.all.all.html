@@ -10,13 +10,8 @@
 		<a change:link="module order; action ContinueShopping; cmpref cart/getShopId" change:translate="modules.order.frontoffice.Continue-shopping"></a>
 	</li>
 </ul>
-<div id="cart-errors">
-	<h3 change:h="" class="error" tal:condition="errorMessages" change:translate="modules.order.frontoffice.Cart-can-not-order"></h3>
-	<ul class="normal">
-		<li tal:condition="warningMessages" class="error" tal:repeat="message warningMessages">${message}</li>
-		<li tal:condition="errorMessages" class="error" tal:repeat="message errorMessages">${message}</li>
-	</ul>
-</div>
+
+<tal:block change:block="" module="order" name="CartMessages" handleCantOrderMessage="true" />
 
 <form class="" method="post" tal:attributes="action updateActionUrl">
 	<input name="orderParam[shopId]" type="hidden" tal:attributes="value cart/getShopId" />

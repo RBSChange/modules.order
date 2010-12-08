@@ -32,4 +32,5 @@
 			<parameter name="columns" type="String" default-value="orders,amount" max-occurs="-1" from-list="modules_order/dashboardshopstatisticscolums" fieldtype="checklist" />
 		</parameters>
 	</block>
+	<block type="modules_order_CartMessages" icon="cart" label="&amp;modules.order.bo.blocks.cartmessages.Title;" />
 </blocks>

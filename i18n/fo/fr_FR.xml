@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.fo" lcid="fr_FR">
+	<key id="add-to-cart">ajouter à mon panier</key>
+	<key id="product-label-added">le produit {label} a bien été ajouté à votre panier.</key>
+	<key id="product-labels-added">les produits {firstLabels} et {lastLabel} ont bien été ajoutés à votre panier.</key>
+	<key id="product-label-not-added">le produit {label} n'a pas pu être ajouté à votre panier.</key>
+	<key id="product-labels-not-added">les produits {firstLabels} et {lastLabel} n'ont pas pu être ajoutés à votre panier.</key>
+	<key id="confirm-incompatible-shop">Votre panier contient déjà un ou plusieurs produits d'une autre boutique. Ajouter ce produit au panier retirera les autres. Confirmez-vous l'ajout au panier ?</key>
+	<key id="confirm">confirmer</key>
+	<key id="cancel">annuler</key>
+	<key id="add-to-cart-confirm">annuler</key>
+	<key id="product-added">Produit ajouté au panier.</key>
+</i18n>

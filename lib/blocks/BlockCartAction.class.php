@@ -65,10 +65,6 @@ class order_BlockCartAction extends website_BlockAction
 		// Any cart validation error.
 		$cs->refresh($cart);
 		
-		$request->setAttribute('warningMessages', $cart->getWarningMessageArray());
-		$cart->clearWarningMessages();
-		$request->setAttribute('errorMessages', $cart->getErrorMessageArray());
-		
 		// Backlink.
 		$user = $this->getContext()->getUser();
 		if (!$user->hasAttribute('cartBackLink'))
@@ -131,5 +127,32 @@ class order_BlockCartAction extends website_BlockAction
 		$cart->setAddressInfo($bean);
 		$cs->refresh($cart);
 		return $this->execute($request, $response);
+	}
+	
+	/**
+	 * @param f_mvc_Request $request
+	 * @param f_mvc_Response $response
+	 * @return String
+	 */
+	public function executeConfirmClear($request, $response)
+	{
+		return 'ConfirmClear';
+	}
+	
+	/**
+	 * @param f_mvc_Request $request
+	 * @param f_mvc_Response $response
+	 * @return String
+	 */
+	public function executeClear($request, $response)
+	{
+		$cs = order_CartService::getInstance();
+		$cart = $cs->getDocumentInstanceFromSession();
+		$cs->clearCart($cart);
+		$params = $request->getParameters();
+		unset($params['website_BlockAction_submit']);
+		unset($params['message']);
+		$url = LinkHelper::getActionUrl($params['addToCartModule'], $params['addToCartAction'], $params);
+		HttpController::getInstance()->redirectToUrl($url);
 	}
 }
