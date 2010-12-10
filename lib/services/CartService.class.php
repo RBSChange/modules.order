@@ -376,12 +376,6 @@ class order_CartService extends BaseService
 		$this->validateCart($cart);		
 		Framework::bench('validateCart');
 		
-		if ($cart->isEmpty())
-		{
-			$this->clearCart($cart);
-			return;
-		}
-		
 		// Refresh the prices infos.
 		$this->refreshCartPrice($cart);
 		Framework::bench('refreshCartPrice');
@@ -746,7 +740,7 @@ class order_CartService extends BaseService
 	 */
 	public function checkAddToCart($cart, $shop, $products, $quantities, $paramsToRedirect)
 	{
-		if (!$cart->getShopId())
+		if (!$cart->getShopId() || $cart->isEmpty())
 		{
 			$cart->setShop($shop);
 		}
