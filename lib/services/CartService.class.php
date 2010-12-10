@@ -262,12 +262,15 @@ class order_CartService extends BaseService
 	 */
 	private function validateProduct($cart, $product, $quantity)
 	{
+		$shop = $cart->getShop();
+		if ($product->isPublished() && $product->canBeOrdered($shop) && 
+				$product->getPrice($shop, $cart->getCustomer(), $quantity) != null)
 		if ($product->isPublished() && $product->canBeOrdered($cart->getShop()) && 
 			$product->getPrice($cart->getShop(), $cart->getCustomer(), $quantity) != null)
 		{
 			if ($product instanceof catalog_StockableDocument)
 			{
-				if (!catalog_StockService::getInstance()->isAvailable($product, $quantity))
+				if (!$shop->getAllowOrderOutOfStock() && !catalog_StockService::getInstance()->isAvailable($product, $quantity))
 				{
 					$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
 						'quantity' => $quantity, 'unit' => '', 
@@ -561,7 +564,8 @@ class order_CartService extends BaseService
 			$product = $cartLine->getProduct();
 			if ($product !== null && $product->isPublished())
 			{
-				$compiledProduct = $product->getDocumentService()->getPrimaryCompiledProductForWebsite($product, $cart->getShop()->getWebsite());
+				$shop = $cart->getShop();
+				$compiledProduct = $product->getDocumentService()->getPrimaryCompiledProductForWebsite($product, $shop->getWebsite());
 				if ($compiledProduct === null || !$compiledProduct->isPublished())
 				{
 					$replacements = array('articleLabel' => $product->getLabelAsHtml());
@@ -571,7 +575,7 @@ class order_CartService extends BaseService
 				
 				if ($product instanceof catalog_StockableDocument)
 				{
-					if (!catalog_StockService::getInstance()->isAvailable($product, $cartLine->getQuantity()))
+					if (!$shop->getallowOrderOutOfStock() && !catalog_StockService::getInstance()->isAvailable($product, $cartLine->getQuantity()))
 					{
 						$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
 							'quantity' => $cartLine->getQuantity(), 'unit' => '', 
