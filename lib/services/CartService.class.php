@@ -86,14 +86,12 @@ class order_CartService extends BaseService
 			
 			// The order process is ended, so clear lastAbandonedOrderDate.
 			$customer = $cart->getCustomer();
-			$customer->setLastAbandonedOrderDate(null);
+			if ($customer !== null)
+			{
+				$customer->setLastAbandonedOrderDate(null);
+			}
 			$cart = $this->initNewCart();
 			$this->saveToSession($cart);
-			
-			if ($customer->isModified())
-			{
-				$customer->save();
-			}
 			$this->getTransactionManager()->commit();
 		}
 		catch (Exception $e)
@@ -252,7 +250,6 @@ class order_CartService extends BaseService
 			$params = array('product' => $product->getLabel());
 			UserActionLoggerService::getInstance()->addCurrentUserDocumentEntry('add-product-to-cart', null, $params, 'customer');
 		}
-		
 		return true;
 	}	
 	
@@ -281,6 +278,7 @@ class order_CartService extends BaseService
 			}
 			return true;
 		}
+		
 		return false;
 	}
 	
