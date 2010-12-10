@@ -73,4 +73,12 @@ class order_AddToCartAction extends f_action_BaseAction
 		}
 		return max(1, intval($quantity));
 	}
+	
+	/**
+	 * @return boolean
+	 */
+	public function isSecure()
+	{
+		return false;
+	}
 }
