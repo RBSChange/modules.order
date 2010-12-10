@@ -254,18 +254,19 @@ class order_CartService extends BaseService
 	 */
 	private function validateProduct($cart, $product, $quantity)
 	{
-		if ($product->isPublished() && $product->canBeOrdered($cart->getShop()) && 
-			$product->getPrice($cart->getShop(), $cart->getCustomer(), $quantity) != null)
+		$shop = $cart->getShop();
+		if ($product->isPublished() && $product->canBeOrdered($shop) && 
+			$product->getPrice($shop, $cart->getCustomer(), $quantity) != null)
 		{
 			if ($product instanceof catalog_StockableDocument)
 			{
-				if (!catalog_StockService::getInstance()->isAvailable($product, $quantity))
+				if (!$shop->getAllowOrderOutOfStock() && !catalog_StockService::getInstance()->isAvailable($product, $quantity))
 				{
 					$replacements = array('articleLabel' => $product->getLabel(), 
 						'quantity' => $quantity, 'unit' => '', 
 						'availableQuantity' => $product->getStockQuantity(), 'availableUnit' => '');
 					$cart->addErrorMessage(f_Locale::translate('&modules.order.frontoffice.cart-validation-error-unavailable-article-quantity;', $replacements));
-					return false;					
+					return false;	
 				}
 			}
 			return true;
@@ -546,7 +547,8 @@ class order_CartService extends BaseService
 			$product = $cartLine->getProduct();
 			if ($product !== null && $product->isPublished())
 			{
-				$compiledProduct = $product->getDocumentService()->getPrimaryCompiledProductForWebsite($product, $cart->getShop()->getWebsite());
+				$shop = $cart->getShop();
+				$compiledProduct = $product->getDocumentService()->getPrimaryCompiledProductForWebsite($product, $shop->getWebsite());
 				if ($compiledProduct === null || !$compiledProduct->isPublished())
 				{
 					$replacements = array('articleLabel' => $product->getLabel());
@@ -556,7 +558,7 @@ class order_CartService extends BaseService
 				
 				if ($product instanceof catalog_StockableDocument)
 				{
-					if (!catalog_StockService::getInstance()->isAvailable($product, $cartLine->getQuantity()))
+					if (!$shop->getallowOrderOutOfStock() && !catalog_StockService::getInstance()->isAvailable($product, $cartLine->getQuantity()))
 					{
 						$replacements = array('articleLabel' => $product->getLabel(), 
 							'quantity' => $cartLine->getQuantity(), 'unit' => '', 
