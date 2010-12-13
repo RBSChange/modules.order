@@ -732,6 +732,15 @@ class order_CartService extends BaseService
 	{
 		return (!is_null($cart) && !$cart->isEmpty() && count($cart->getErrorMessageArray()) === 0);
 	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 * @return order_persistentdocument_order
+	 */
+	public function createOrder($cart)
+	{
+		return order_OrderService::getInstance()->createFromCartInfo($cart);
+	}
 		
 	/**
 	 * @param order_CartInfo $cart

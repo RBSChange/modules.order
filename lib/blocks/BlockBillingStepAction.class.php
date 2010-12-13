@@ -103,7 +103,7 @@ class order_BlockBillingStepAction extends order_BlockAbstractProcessStepAction
 		{
 			$cart = $this->getCurrentCart();
 			$cart->setBillingMode($billingStep->getPaymentFilter()->getConnector());
-			$order = order_OrderService::getInstance()->createFromCartInfo($cart);
+			$order = order_CartService::getInstance()->createOrder($cart);
 			$cart->save();
 			$save = false;
 			if ($order !== null)

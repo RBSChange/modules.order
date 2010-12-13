@@ -10,4 +10,5 @@
 	<key id="cancel">annuler</key>
 	<key id="add-to-cart-confirm">annuler</key>
 	<key id="product-added">Produit ajouté au panier.</key>
+	<key id="cant-create-order">Impossible de créer la commande.</key>
 </i18n>

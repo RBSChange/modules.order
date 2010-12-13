@@ -329,6 +329,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		}
 	}
 	/**
+	 * /!\ Do not call this method directly, call order_CartService::createOrder instead. 
 	 * @param order_CartInfo $cartInfo
 	 * @return order_persistentdocument_order
 	 */
@@ -463,7 +464,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		}
 		catch (Exception $e)
 		{
-			$cartInfo->addErrorMessage('Impossible de creer la commande');
+			$cartInfo->addErrorMessage(LocaleService::getInstance()->transFO('m.order.fo.cant-create-order'));
 			$this->tm->rollBack($e);
 			$orderDocument = null;	
 			$this->finalizeOrderAndCart($orderDocument, $cartInfo);		
@@ -1253,10 +1254,10 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		}
 	}
 	
-	//DEPRECATED
+	// Deprecated
 	
 	/**
-	 * @deprecated use order_BillService::getInstance()->generateBillIsActive()
+	 * @deprecated (will be removed in 4.0) use order_BillService::getInstance()->generateBillIsActive()
 	 */
 	public function generateBillIsActive()
 	{
@@ -1264,7 +1265,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * @deprecated use order_BillService::getInstance()->genBills();
+	 * @deprecated (will be removed in 4.0) use order_BillService::getInstance()->genBills();
 	 */
 	public function genBills()
 	{
@@ -1272,7 +1273,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * @deprecated use order_BillService::getInstance()->genBill()
+	 * @deprecated (will be removed in 4.0) use order_BillService::getInstance()->genBill()
 	 */
 	public function genBill($order)
 	{	
@@ -1281,7 +1282,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * @deprecated use order_BillService::getInstance()->createBill()
+	 * @deprecated (will be removed in 4.0) use order_BillService::getInstance()->createBill()
 	 */
 	public function createBill($order)
 	{
@@ -1290,7 +1291,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * @deprecated 
+	 * @deprecated
 	 */
 	public function getStatusLabel($orderStatus)
 	{
@@ -1299,7 +1300,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * @deprecated 
+	 * @deprecated
 	 */
 	public function getBoStatusLabel($orderStatus)
 	{

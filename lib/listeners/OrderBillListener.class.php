@@ -11,6 +11,6 @@ class order_OrderBillListener
 	 */
 	public function onHourChange($sender, $params)
 	{
-		order_OrderService::getInstance()->genBills();
+		order_BillService::getInstance()->genBills();
 	}
 }
