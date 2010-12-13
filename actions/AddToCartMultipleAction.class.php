@@ -151,4 +151,12 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 		}
 		return $message;
 	}
+	
+	/**
+	 * @return boolean
+	 */
+	public function isSecure()
+	{
+		return false;
+	}
 }
