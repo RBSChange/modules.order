@@ -20,4 +20,5 @@
   <key id="cannotgeneratebillmsg">This order has not yet been paid or shipped : the invoice can not be generated.</key>
   <key id="downloadbill">Download invoice</key>
   <key id="unable-to-generate-pdf-bill">An error occured while generating the invoice.</key>
+  <key id="create-creditnote">create</key>
 </i18n>

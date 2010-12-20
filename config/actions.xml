@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <actions>
-	<action name="cancelOrder">
-		<parameter name="listWidget" />
-		<body><![CDATA[
+  <action name="cancelOrder">
+    <parameter name="listWidget"/>
+    <body><![CDATA[
 			var docs = listWidget.getSelectedItems();
 			if (docs.length == 1)
 			{
@@ -26,17 +26,24 @@
 				this.executeJSON("CancelOrder", { cmpref: ids, lang: lang });
 			}
 		]]></body>
-	</action>
-	<action name="cancelOrderIsActive">
-		<parameter name="itemData" />
-		<body><![CDATA[
+  </action>
+  <action name="cancelOrderIsActive">
+    <parameter name="itemData"/>
+    <body><![CDATA[
 			return itemData.canBeCanceled;
 		]]></body>
-	</action>
-	<action name="createSmartfolder">
-		<parameter name="listWidget" />
-		<body><![CDATA[
+  </action>
+  <action name="createSmartfolder">
+    <parameter name="listWidget"/>
+    <body><![CDATA[
 			this.createDocumentEditor('modules_order_smartfolder', listWidget.getSelectedItems()[0].id);
 		]]></body>
-	</action>
+  </action>
+  
+   <action name="createCreditNoteForOrder">
+   <parameter name="params"/>
+  	 <body><![CDATA[
+  	 	this.createDocumentEditor(params[2], params[3]);
+	]]></body>
+  </action>
 </actions>

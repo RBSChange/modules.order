@@ -4,6 +4,9 @@
     <document name="rootfolder"/>
     <document name="order">
       <action name="CancelOrder"/>
+      <action name="LoadOrderMessages"/>
+      <action name="LoadOrderFinancial"/>
+      <action name="LoadOrderShipping"/>
     </document>
     <document name="orderline"/>
     <document name="message"/>
@@ -11,6 +14,9 @@
     <document name="bill"/>
     <document name="expeditionline"/>
     <document name="expedition"/>
+    <document name="creditnote"/>
+    
+   
   </actions>
   <roles>
     <role name="Admin">
@@ -30,6 +36,10 @@
       <permission name="Deactivated.*"/>
       <permission name="CancelOrder.order"/>
       <permission name="EditLocale"/>
+     
+      <permission name="LoadOrderMessages.order"/> 
+      <permission name="LoadOrderFinancial.order"/>
+      <permission name="LoadOrderShipping.order"/>
     </role>
   </roles>
 </rights>

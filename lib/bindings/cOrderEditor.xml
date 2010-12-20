@@ -28,185 +28,135 @@
 		</implementation>
 	</binding>
 
-	<binding id="linesSection">
-		<resources>
-			<stylesheet src="modules.uixul.cFieldsGroup" />
-		</resources>
+	<binding id="cOrderLines" extends="widgets.cGrid#cAbstractSortableGrid">
+		<implementation>
+			<constructor><![CDATA[
+				this.fireEvent('gridInitialised');
+			]]></constructor>				
+		</implementation>	
 		<content>
-			<xul:groupbox flex="1">
-				<xul:caption xbl:inherits="label" />
-				<xul:grid class="cart-lines">
-					<xul:columns>
-						<xul:column flex="2" />
-						<xul:column flex="1"/>
-						<xul:column />
-						<xul:column />
-						<xul:column />
-					</xul:columns>
-					<xul:rows>
-						<xbl:children />
-					</xul:rows>
-				</xul:grid>
-			</xul:groupbox>
+			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
+				<xul:columns>	
+					<xul:column flex="1" />
+					<xul:column flex="5" />
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+				</xul:columns>
+				<xul:rows anonid="document-rows">
+					<xul:row class="head" anonid="head-row">
+						<xul:label name="codeReference" value="${transui:m.order.frontoffice.codereference,ucf,attr}" sortonfield="true"/>
+						<xul:label name="productLabel" value="${transui:m.order.frontoffice.designation,ucf,attr}" sortonfield="true"/>
+						<xul:label name="unitPriceWithTax" value="${transui:m.customer.bo.doceditor.panel.carts.unit-price,ucf,attr}" sortonfield="true"/>
+						<xul:label name="quantity" value="${transui:m.order.frontoffice.quantity,ucf,attr}" sortonfield="true"/>
+						<xul:label name="totalPriceWithTax" value="${transui:m.customer.bo.doceditor.panel.carts.total-price,ucf,attr}" sortonfield="true"/>
+					</xul:row>
+				</xul:rows>
+			</xul:grid>		
+			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+			</xul:row>				
 		</content>
 	</binding>
 	
-	<binding id="headRow">
-		<resources>
-			<stylesheet src="modules.order.cOrderEditor" />
-		</resources>
+	<binding id="cDiscountLines" extends="widgets.cGrid#cAbstractSortableGrid">
+		<implementation>
+			<constructor><![CDATA[
+				this.fireEvent('gridInitialised');
+			]]></constructor>				
+		</implementation>	
 		<content>
-			<xul:label value="&amp;modules.order.frontoffice.Designation;" />
-			<xul:label value="&amp;modules.order.frontoffice.CodeReference;" />
-			<xul:label value="&amp;modules.customer.bo.doceditor.panel.carts.Unit-price;" />
-			<xul:label value="&amp;modules.order.frontoffice.Quantity;" />
-			<xul:label value="&amp;modules.customer.bo.doceditor.panel.carts.Total-price;" />
+			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
+				<xul:columns>	
+					<xul:column flex="5" />
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+				</xul:columns>
+				<xul:rows anonid="document-rows">
+					<xul:row class="head" anonid="head-row">
+						<xul:label name="label" value="Label" sortonfield="true"/>
+						<xul:label name="valueWithoutTax" value="Montant HT" />
+						<xul:label name="valueWithTax" value="Montant TTC" />
+					</xul:row>
+				</xul:rows>
+			</xul:grid>		
+			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+			</xul:row>				
 		</content>
-	</binding>	
+	</binding>
 	
-	<binding id="lineRow">
-		<resources>
-			<stylesheet src="modules.order.cOrderEditor" />
-		</resources>
+	<binding id="cCustomerAddress" extends="layout.cDocumentEditor#cFieldsGroup">
+		<implementation>
+			<field name="mLabelNames">["label", "line1","line2","line3","zipAndCity","province","country","phone","fax"]</field>
+			
+			<method name="fireEvent">
+				<parameter name="name" />
+				<body><![CDATA[
+					var evt = document.createEvent("Event");
+					evt.initEvent(name, true, true);
+					this.dispatchEvent(evt);
+				]]></body>
+			</method>
+			
+			<constructor><![CDATA[
+				this.fireEvent('addressInitialised');
+			]]></constructor>
+			
+			<method name="initJSONDataset">
+				<parameter name="dataset" />
+				<body><![CDATA[
+					if (!dataset) {dataset = {};}
+					for each (var name in this.mLabelNames)
+					{
+						var ctrl = document.getAnonymousElementByAttribute(this, "anonid", name);
+						if (name in dataset)
+						{
+							ctrl.setAttribute('value', dataset[name]);
+						}
+						else
+						{
+							ctrl.setAttribute('value', '');
+						}
+					}
+				]]></body>
+			</method>						
+		</implementation>
+		
 		<content>
-			<xul:vbox>
-				<xul:label class="allow-text-selection" xbl:inherits="xbl:text=productLabel" />
-			</xul:vbox>
-			<xul:label class="allow-text-selection" xbl:inherits="xbl:text=codeReference" />
-			<xul:vbox>
-				<xul:label class="allow-text-selection" xbl:inherits="xbl:text=unitPriceWithoutTax" />
-				<xul:label class="allow-text-selection" xbl:inherits="xbl:text=unitPriceWithTax" />
-			</xul:vbox>
-			<xul:label class="allow-text-selection" xbl:inherits="xbl:text=quantity" />
-			<xul:vbox>
-				<xul:label class="allow-text-selection" xbl:inherits="xbl:text=totalPriceWithoutTax" />
-				<xul:label class="allow-text-selection" xbl:inherits="xbl:text=totalPriceWithTax" />
-			</xul:vbox>
+			<xul:groupbox flex="1">
+				<xul:caption xbl:inherits="label"/>
+				<xul:grid flex="1">
+					<xul:columns>
+						<xul:column/>
+						<xul:column flex="1"/>
+					</xul:columns>
+					<xul:rows>
+						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="label"/></xul:row>
+						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="line1"/></xul:row>
+						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="line2"/></xul:row>
+						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="line3"/></xul:row>
+						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="zipAndCity"/></xul:row>
+						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="province"/></xul:row>
+						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="country"/></xul:row>
+						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="phone"/></xul:row>
+						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="fax"/></xul:row>
+					</xul:rows>
+				</xul:grid>
+				<children />
+			</xul:groupbox>
 		</content>
+		
 	</binding>	
 	
 	<!-- Messages panel -->
 	
-	<binding id="cMessagesPanel" extends="layout.cDocumentEditor#cDocumentEditorPanel">
-		<resources>
-			<stylesheet src="modules.uixul.cFieldsGroup" />
-			<stylesheet src="modules.order.cOrderEditor" />
-		</resources>
-		<content>
-			<xul:vbox flex="1">
-				<xul:cmessageinfo anonid="message" />
-				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
-					<xul:groupbox class="messageForm">
-						<xul:caption label="&amp;modules.order.bo.doceditor.panel.messages.Title;" />
-						<vbox>
-							<xul:cfield name="messageContent" anonid="field_messageContent" fieldtype="longtext" cols="100" hidehelp="true" />
-							<hbox><xul:button anonid="sendMessageButton" label="&amp;modules.order.bo.doceditor.panel.messages.Send;" image="{IconsBase}/small//mail.png" /></hbox>
-						</vbox>
-					</xul:groupbox>
-					<xul:vbox anonid="messages" />
-					<xul:spacer flex="1" />
-				</xul:scrollbox>					
-			</xul:vbox>
-		</content>
-		<implementation>
-			<constructor><![CDATA[
-				var _this = this;
-				var node = document.getAnonymousElementByAttribute(this, 'anonid', 'sendMessageButton');
-				node.addEventListener('command', function () { _this.sendNewMessage(); }, true);
-			]]></constructor>
-		
-			<method name="getInitializeParameters">
-				<body><![CDATA[
-					return {
-						action: "LoadOrderMessages", 
-						cmpref: this.documentEditor.documentid, 
-						lang : Context.W_LANG
-					};
-				]]></body>
-			</method>
-									
-			<method name="fireInitializeComplete">
-				<parameter name="result" />
-				<body><![CDATA[
-					if (result.status != "OK")
-					{
-						this.showErrorMessage(result.contents.errorMessage);
-					}
-					else
-					{									
-						var messages = result.contents.messages;
-						var message;
-						var section;
-						var messagesNode = document.getAnonymousElementByAttribute(this, "anonid", 'messages');
-						for (var i = 0; i < messages.length; i++)
-						{
-							message = messages[i];
-							section = messagesNode.childNodes[i];
-							if (section == null)
-							{
-								section = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'section');
-								section.className = 'message';
-								messagesNode.appendChild(section);
-							}
-							else
-							{
-								section.removeAttribute('collapsed');
-								section.removeChild(section.firstChild);
-							}
-							
-							for (var name in message)
-							{
-								section.setAttribute(name, message[name]);
-								if (message[name] && message[name] != '')
-								{
-									section.removeAttribute(name+'hidden');
-								}
-								else
-								{
-									section.setAttribute(name+'hidden', true);
-								}
-							}
-							
-							section.appendChild(document.createTextNode(message['content']));
-						}
-						while (section = messagesNode.childNodes[i])
-						{
-							section.setAttribute('collapsed', 'true');
-							i++;
-						}
-					}
-					this.mInitialized = true;
-					this.gotoTop();
-				]]></body>
-			</method>
-			
-			<method name="sendNewMessage">
-				<body><![CDATA[
-					var node = document.getAnonymousElementByAttribute(this, 'anonid', 'field_messageContent');
-					if (node.value)
-					{
-						var result = wCore.executeJSON('order', 'SendMessageForOrder', {cmpref: this.documentEditor.documentid, content: node.value}, null, true);
-						if (result.status != 'OK')
-						{	
-							this.showErrorMessage(result.contents.errorMessage);
-						}
-						else
-						{
-							this.showTextMessage("&amp;modules.order.bo.doceditor.panel.messages.Success-sending-message;");
-							this.fireInitializeComplete(result);
-							node.value = '';
-							this.documentEditor.refresh();
-						}
-					}
-					else
-					{
-						this.showErrorMessage("&amp;modules.order.bo.doceditor.panel.messages.Error-no-message-to-send;");
-					}
-				]]></body>
-			</method>
-		</implementation>
-	</binding>	
-
 	<binding id="messageSection">
 		<resources>
 			<stylesheet src="modules.order.cOrderEditor" />

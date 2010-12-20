@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	
+	<binding id="order_messages" extends="layout.cDocumentEditor#cDocumentEditorPanel">
+		<resources>
+			<stylesheet src="modules.uixul.cFieldsGroup" />
+			<stylesheet src="modules.order.cOrderEditor" />
+		</resources>
+		<content>
+			<xul:vbox flex="1">
+				<xul:cmessageinfo anonid="message" />
+				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
+					<xul:groupbox class="messageForm">
+						<xul:caption label="&amp;modules.order.bo.doceditor.panel.messages.Title;" />
+						<vbox>
+							<xul:cfield name="messageContent" anonid="field_messageContent" fieldtype="longtext" cols="100" hidehelp="true" />
+							<hbox><xul:button anonid="sendMessageButton" label="&amp;modules.order.bo.doceditor.panel.messages.Send;" image="{IconsBase}/small//mail.png" /></hbox>
+						</vbox>
+					</xul:groupbox>
+					<xul:vbox anonid="messages" />
+					<xul:spacer flex="1" />
+				</xul:scrollbox>					
+			</xul:vbox>
+		</content>
+		<implementation>
+			<constructor><![CDATA[
+				var _this = this;
+				var node = document.getAnonymousElementByAttribute(this, 'anonid', 'sendMessageButton');
+				node.addEventListener('command', function () { _this.sendNewMessage(); }, true);
+			]]></constructor>
+		
+			<method name="getInitializeParameters">
+				<body><![CDATA[
+					return {
+						action: "LoadOrderMessages", 
+						cmpref: this.documentEditor.documentid, 
+						lang : Context.W_LANG
+					};
+				]]></body>
+			</method>
+									
+			<method name="fireInitializeComplete">
+				<parameter name="result" />
+				<body><![CDATA[
+					if (result.status != "OK")
+					{
+						this.showErrorMessage(result.contents.errorMessage);
+					}
+					else
+					{									
+						var messages = result.contents.messages;
+						var message;
+						var section;
+						var messagesNode = document.getAnonymousElementByAttribute(this, "anonid", 'messages');
+						for (var i = 0; i < messages.length; i++)
+						{
+							message = messages[i];
+							section = messagesNode.childNodes[i];
+							if (section == null)
+							{
+								section = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'section');
+								section.className = 'message';
+								messagesNode.appendChild(section);
+							}
+							else
+							{
+								section.removeAttribute('collapsed');
+								section.removeChild(section.firstChild);
+							}
+							
+							for (var name in message)
+							{
+								section.setAttribute(name, message[name]);
+								if (message[name] && message[name] != '')
+								{
+									section.removeAttribute(name+'hidden');
+								}
+								else
+								{
+									section.setAttribute(name+'hidden', true);
+								}
+							}
+							
+							section.appendChild(document.createTextNode(message['content']));
+						}
+						while (section = messagesNode.childNodes[i])
+						{
+							section.setAttribute('collapsed', 'true');
+							i++;
+						}
+					}
+					this.mInitialized = true;
+					this.gotoTop();
+				]]></body>
+			</method>
+			
+			<method name="sendNewMessage">
+				<body><![CDATA[
+					var node = document.getAnonymousElementByAttribute(this, 'anonid', 'field_messageContent');
+					if (node.value)
+					{
+						var result = wCore.executeJSON('order', 'SendMessageForOrder', {cmpref: this.documentEditor.documentid, content: node.value}, null, true);
+						if (result.status != 'OK')
+						{	
+							this.showErrorMessage(result.contents.errorMessage);
+						}
+						else
+						{
+							this.showTextMessage("&amp;modules.order.bo.doceditor.panel.messages.Success-sending-message;");
+							this.fireInitializeComplete(result);
+							node.value = '';
+							this.documentEditor.refresh();
+						}
+					}
+					else
+					{
+						this.showErrorMessage("&amp;modules.order.bo.doceditor.panel.messages.Error-no-message-to-send;");
+					}
+				]]></body>
+			</method>
+		</implementation>
+	</binding>
+
+</bindings>

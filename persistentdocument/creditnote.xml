@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd"
+	model-version="1.0" has-url="false" publish-on-day-change="false" icon="creditnote">
+	<properties>
+		<add name="label" type="String" /><!-- Use for credit note number storage -->
+		<add name="order" type="modules_order/order" min-occurs="1" inverse="true" />
+		<add name="customer" type="modules_customer/customer" />
+		<add name="amount" type="Double" />
+		<add name="currency" type="String" db-size="5" />
+		
+		<add name="connectorId" type="Integer" />
+		<add name="transactionId" type="String" />
+		<add name="transactionDate" type="DateTime" />
+		
+		
+		<add name="amountNotApplied" type="Double" />
+		<add name="appliedInOrder" type="modules_order/order" max-occurs="-1" />
+	</properties>
+	<statuses default="DRAFT" />
+	<serializedproperties>
+		<add name="transactionData" type="LongString" />
+		<add name="transactionText" type="LongString" />
+	</serializedproperties>
+</document>

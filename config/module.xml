@@ -12,11 +12,19 @@
 		<modulesCatalogProductSuggestionFeeder>
 			<entry name="1">order_OrderedTogetherProductFeeder</entry>
 		</modulesCatalogProductSuggestionFeeder>
+		
 		<!-- In normal cases, genPDF needs genNumber.
 		If genPDF is setted to true and genNumber to false,
 		be sure some code set the orderNumber in OrderService::preInsert() -->
 		<entry name="genNumber">true</entry>
 		<entry name="genBill">false</entry>
 		<entry name="odtphp2pdfURL">http://odtphp2pdf.rd.devlinux.france.rbs.fr</entry>
+		
+		<!-- 
+			<entry name="orderNumberStrategyClass">order_OrderNumberSequenceStrategy</entry>
+			<entry name="billNumberStrategyClass">order_BillNumberYearSequenceStrategy</entry>
+			<entry name="expeditionNumberStrategyClass">order_ExpeditionOrderNumberStrategy</entry>
+			<entry name="creditNoteNumberStrategyClass">order_CreditNoteNumberYearSequenceStrategy</entry>
+		  -->
 	</project>
 </config>

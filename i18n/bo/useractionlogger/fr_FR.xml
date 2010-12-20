@@ -17,4 +17,6 @@
   <key id="log-cancelorder-order">log-cancelorder-order</key>
   <key id="purge-bill">Purge de la facture {billId} / {billLabel} pour la commande {orderNumber}</key>
   <key id="log-purge-bill">Purge de facture</key>
+  <key id="insert-creditnote">insert.creditnote {documentlabel}</key>
+  <key id="log-insert-creditnote">log insert creditnote</key>
 </i18n>

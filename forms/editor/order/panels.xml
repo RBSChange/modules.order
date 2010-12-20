@@ -2,13 +2,8 @@
 <panels>
 	<panel name="resume" />
 	<panel name="properties" />
-	<panel name="history" />
-	
-	<xul>
-		<javascript>
-			<constructor><![CDATA[
-				this.addTab('messages', '&modules.order.bo.doceditor.tab.Messages;', 'mail');
-			]]></constructor>
-		</javascript>
-	</xul>	 
+	<panel name="financial" icon="price" labeli18n="m.order.bo.doceditor.tab.financial" />
+	<panel name="shipping" icon="redirection" labeli18n="m.order.bo.doceditor.tab.shipping" />
+	<panel name="messages" icon="mail" labeli18n="m.order.bo.doceditor.tab.messages" />
+	<panel name="history" /> 
 </panels>

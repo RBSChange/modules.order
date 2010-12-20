@@ -59,4 +59,20 @@ class order_SmartfolderService extends filter_QueryfolderService
 	{
 		return f_persistentdocument_DocumentFilterService::getInstance()->getQueryIntersectionFromJson($folder->getQuery())->find();
 	}
+	
+	/**
+	 * @param filter_persistentdocument_queryfolder $document
+	 * @param string[] $subModelNames
+	 * @param integer $locateDocumentId null if use startindex
+	 * @param integer $pageSize
+	 * @param integer $startIndex
+	 * @param integer $totalCount
+	 * @return f_persistentdocument_PersistentDocument[]
+	 */
+	public function getVirtualChildrenAt($document, $subModelNames, $locateDocumentId, $pageSize, &$startIndex, &$totalCount)
+	{
+		$queryIntersection = f_persistentdocument_DocumentFilterService::getInstance()->getQueryIntersectionFromJson($document->getQuery());
+		$result = $queryIntersection->findAtOffset($startIndex, $pageSize, $totalCount, 'DESC');
+		return $result;
+	}
 }

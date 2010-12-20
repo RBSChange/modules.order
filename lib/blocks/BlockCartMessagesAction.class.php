@@ -33,13 +33,13 @@ class order_BlockCartMessagesAction extends website_BlockAction
 				$request->setAttribute('showCantOrderMessage', true);
 			}
 		}
+		$cart->clearErrorMessages();
 		
 		// Warnings.
 		foreach ($cart->getWarningMessageArray() as $msg)
 		{
 			$this->addError($msg);
 		}
-		$cart->clearErrorMessages();
 		
 		// Successes.
 		foreach ($cart->getSuccessMessageArray() as $msg)

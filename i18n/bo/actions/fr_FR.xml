@@ -21,4 +21,5 @@
   <key id="cannotgeneratebillmsg">La commande n'est ni payée, ni expédiée : la génération de la facture est donc impossible.</key>
   <key id="downloadbill">Télécharger la facture</key>
   <key id="unable-to-generate-pdf-bill">Une erreur est survenue pendant la génération de la facture. Si le problème persiste, contactez votre administrateur.</key>
+  <key id="createcreditnote">créer un avoir</key>
 </i18n>

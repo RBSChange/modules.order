@@ -37,10 +37,31 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function addFormProperties($propertiesNames, &$formProperties)
 	{
-		$infos = $this->getDocumentService()->getInfo($this);
-		foreach ($infos as $key => $value)
+		Framework::info(__METHOD__ . ' ' . implode(', ', $propertiesNames));
+		if (in_array('financial', $propertiesNames))
 		{
-			$formProperties[$key] = $value;
+			$infos = $this->getDocumentService()->getFinancialInfos($this);
+			foreach ($infos as $key => $value)
+			{
+				$formProperties[$key] = $value;
+			}
+		}
+		else if (in_array('shipping', $propertiesNames))
+		{
+			$infos = $this->getDocumentService()->getShippingInfos($this);
+			foreach ($infos as $key => $value)
+			{
+				$formProperties[$key] = $value;
+			}
+		}
+		else
+		{
+			//Global Infos
+			$infos = $this->getDocumentService()->getPropertyInfos($this);
+			foreach ($infos as $key => $value)
+			{
+				$formProperties[$key] = $value;
+			}
 		}
 	}
 
@@ -447,24 +468,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	{
 		$orderStatus = $this->getOrderStatus();
 		return $orderStatus == order_OrderService::IN_PROGRESS;
-	}
-	
-	/**
-	 * @return string JSON
-	 */
-	public function getBillsJSON()
-	{
-		$bills = order_BillService::getInstance()->getBoList($this);
-		return JsonService::getInstance()->encode($bills);
-	}
-	
-	/**
-	 * @return string JSON
-	 */
-	public function getExpeditionsJSON()
-	{
-		$expeditions = order_ExpeditionService::getInstance()->getBoList($this);
-		return JsonService::getInstance()->encode($expeditions);
 	}
 	
 	/**

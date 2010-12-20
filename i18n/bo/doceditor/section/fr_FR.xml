@@ -2,4 +2,5 @@
 <i18n baseKey="m.order.bo.doceditor.section" lcid="fr_FR">
   <key id="messages">messagerie relative à cette commande</key>
   <key id="lines">lignes concernées</key>
+  <key id="discounts">réductions</key>
 </i18n>

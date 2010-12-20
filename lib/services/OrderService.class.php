@@ -50,6 +50,142 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		return $this->pp->createQuery('modules_order/order');
 	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 */
+	public function getFinancialInfos($order)
+	{
+		$result = array();
+		
+		$billingAddress = $order->getBillingAddress();
+		$address = array();
+		$address['label'] = $billingAddress->getDocumentService()->getFullName($billingAddress);
+		$address['line1'] = $billingAddress->getAddressLine1();
+		$address['line2'] = $billingAddress->getAddressLine2();
+		$address['line3'] = $billingAddress->getAddressLine3();
+		$address['zipAndCity'] = $billingAddress->getZipcode() . ' ' . $billingAddress->getCity();
+		$address['province'] = $billingAddress->getProvince();
+		$address['country'] = $billingAddress->getCountry()->getLabel();
+		$address['phone'] = $billingAddress->getPhone();
+		$address['fax'] = $billingAddress->getFax();	
+		$result['address'] = $address;
+		$result['totalAmount'] = $order->formatPrice($order->getTotalAmountWithTax());
+		
+		$result['billArray'] = order_BillService::getInstance()->getBoList($order);
+		return $result;
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 */
+	public function getShippingInfos($order)
+	{
+		$result = array();
+		$shippingAddress = $order->getShippingAddress();
+		$address = array();
+		$address['label'] = $shippingAddress->getDocumentService()->getFullName($shippingAddress);
+		$address['line1'] = $shippingAddress->getAddressLine1();
+		$address['line2'] = $shippingAddress->getAddressLine2();
+		$address['line3'] = $shippingAddress->getAddressLine3();
+		$address['zipAndCity'] = $shippingAddress->getZipcode() . ' ' . $shippingAddress->getCity();
+		$address['province'] = $shippingAddress->getProvince();
+		$address['country'] = $shippingAddress->getCountry()->getLabel();
+		$address['phone'] = $shippingAddress->getPhone();
+		$address['fax'] = $shippingAddress->getFax();	
+		$result['address'] = $address;
+		$result['expeditionArray'] = order_ExpeditionService::getInstance()->getBoList($order);
+		
+		return $result;
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 */
+	public function getPropertyInfos($order)
+	{
+		$result = array();
+		$informations = array();
+		
+		$informations['canBeCanceled'] = $order->canBeCanceled();
+		$informations['reference'] = $order->getOrderNumber();
+		$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
+		$informations['creationdate'] = date_DateFormat::format($order->getUICreationdate(), $dateTimeFormat);
+		
+		try 
+		{
+		 	$informations['website'] = $order->getWebsite()->getLabel();
+		}
+		catch (Exception $e)
+		{
+			$informations['website'] = '';
+		}
+		
+		$customer = $order->getCustomer();
+		$informations['customerId'] = $customer->getId();
+		$informations['email'] = $customer->getUser()->getEmail();	
+
+		
+		$informations['subTotal'] =  $order->formatPrice($order->getLinesAmountWithTax());
+		
+		$couponId = $order->getCouponId();
+		if (intval($couponId) > 0)
+		{
+			$coupon = $order->getCouponData();
+			try 
+			{
+				$couponDocument = DocumentHelper::getDocumentInstance($couponId, 'modules_customer/coupon');
+				$couponLabel = $couponDocument->getLabel();
+			}
+			catch (Exception $e)
+			{
+				$couponLabel = $coupon['code'];
+				Framework::info("Coupon $couponId not found :" . $e->getMessage());
+			}
+		
+			$informations['couponName'] = $couponLabel;
+			$informations['couponSectionName'] = $couponLabel;
+			$informations['couponSectionCode'] = $coupon['code'];
+		}	
+		
+		$result['discountDataArray'] = array();
+		if ($order->hasDiscount())
+		{
+			$informations['discountTotal'] = $order->formatPrice($order->getDiscountTotalWithTax());
+			foreach ($order->getDiscountDataArray() as $data) 
+			{
+				$result['discountDataArray'][] = array(
+					'label' => 	$data['label'],
+					'valueWithTax' => 	$order->formatPrice($data['valueWithTax']),
+					'valueWithoutTax' => $order->formatPrice($data['valueWithoutTax']),
+				);
+			}
+		}
+
+		$tvaAmounts = array();
+		foreach ($order->getTotalTaxInfoArray() as $subTotal)
+		{
+			if ($subTotal['taxAmount'] > 0)
+			{
+				$tvaAmounts[] = $subTotal['formattedTaxRate'] . ' : ' . $order->formatPrice($subTotal['taxAmount']);
+			}
+		}
+		$informations['tvaAmounts'] = implode(', ', $tvaAmounts);
+		$informations['totalAmount'] = $order->formatPrice($order->getTotalAmountWithTax());
+		
+		$result['informations'] = $informations;
+		
+		$result['lines'] = array();
+		foreach ($order->getLineArray() as $line)
+		{
+			$lineInfo = $this->getLineInfo($line, 'cart-line', $order);
+			if ($lineInfo !== null)
+			{
+				$result['lines'][] = $lineInfo;
+			}
+		}
+		return $result;
+	}
 
 	/**
 	 * @param order_persistentdocument_order $order
@@ -1022,20 +1158,23 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				
 			// Informations.
 			$billingAddress = $document->getBillingAddress();
-			$data['properties']['orderNumber'] = $document->getOrderNumber();
+			$data['properties']['orderNumber'] = $document->getOrderNumber();	
+			$data['properties']['orderStatus'] = $document->getBoOrderStatusLabel();
+			$data['properties']['customerFullName'] = $billingAddress->getDocumentService()->getFullName($billingAddress);
+			$data['properties']['customerCode'] = $document->getCustomer()->getUser()->getEmail();
 			
-			$data['properties']['orderStatus'] = $this->getStatusLabel($document->getOrderStatus());
+			$data['financial']['totalAmount'] = $document->formatPrice($document->getTotalAmountWithTax());			
 			$obs = order_BillService::getInstance();
 			$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
 			$bills = $obs->getByOrder($document);
 			if (count($bills))
 			{
 				$bill = f_util_ArrayUtils::lastElement($bills);
-				$data['properties']['paymentStatus'] = $bill->getBoStatusLabel();
+				$data['financial']['paymentStatus'] = $bill->getBoStatusLabel();
 				if ($bill->getTransactionDate())
 				{
 					
-					$data['properties']['paymentStatus'] .= ' '	. date_DateFormat::format($bill->getUITransactionDate(), $dateTimeFormat);
+					$data['financial']['paymentStatus'] .= ' '	. date_DateFormat::format($bill->getUITransactionDate(), $dateTimeFormat);
 				}
 			}
 			
@@ -1043,16 +1182,12 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			if (count($expeditions))
 			{
 				$expedition = f_util_ArrayUtils::lastElement($expeditions);
-				$data['properties']['shippingStatus'] = $expedition->getBoStatusLabel();
+				$data['shipping']['shippingStatus'] = $expedition->getBoStatusLabel();
 				if ($expedition->getShippingDate())
 				{
-					$data['properties']['shippingStatus'] .= ' ' . date_DateFormat::format($expedition->getUIShippingDate(), $dateTimeFormat);
+					$data['shipping']['shippingStatus'] .= ' ' . date_DateFormat::format($expedition->getUIShippingDate(), $dateTimeFormat);
 				}
 			}
-			
-			$data['properties']['customerFullName'] = $billingAddress->getDocumentService()->getFullName($billingAddress);
-			$data['properties']['customerCode'] = $document->getCustomer()->getUser()->getEmail();
-			$data['properties']['totalAmount'] = $document->formatPrice($document->getTotalAmountWithTax());
 			
 			// Messages.
 			$data['messages'] = order_MessageService::getInstance()->getInfosByOrder($document);

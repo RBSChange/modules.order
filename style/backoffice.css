@@ -22,3 +22,6 @@ treechildren::-moz-tree-image(modules_order_expeditionline){
 treechildren::-moz-tree-image(modules_order_expedition){
 	list-style-image: url(/changeicons/small/expedition.png);
 }
+treechildren::-moz-tree-image(modules_order_creditnote){
+	list-style-image: url(/changeicons/small/document.png);
+}

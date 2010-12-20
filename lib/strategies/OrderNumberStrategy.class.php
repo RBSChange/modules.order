@@ -1,7 +1,5 @@
 <?php
 /**
- * @date Fri Jan 18 09:51:39 CET 2008
- * @author intbonjf
  * @package modules.order
  */
 interface order_OrderNumberStrategy
@@ -19,14 +17,26 @@ class order_OrderNumberGenerator
 	 * @var order_OrderNumberGenerator
 	 */
 	private static $instance;
-
+	
 	/**
-	 * Constructor of order_OrderNumberGenerator
+	 * @var order_OrderNumberStrategy
 	 */
+	private $strategy = null;
+
+
 	private function __construct()
 	{
+		$className = Framework::getConfiguration('modules/order/orderNumberStrategyClass', false);
+		if ($className !== false)
+		{
+			$this->strategy = new $className;
+			if (!($this->strategy instanceof order_OrderNumberStrategy))
+			{
+				$this->strategy = null;
+			}
+		} 
 	}
-
+	
 	/**
 	 * @return order_OrderNumberGenerator
 	 */
@@ -34,82 +44,39 @@ class order_OrderNumberGenerator
 	{
 		if (is_null(self::$instance))
 		{
-			self::$instance = new order_OrderNumberGenerator();
+			self::$instance = new self();
 		}
 		return self::$instance;
 	}
-
-	/**
-	 * @return void
-	 */
-	public static final function clearInstance()
-	{
-		if (PROFILE != 'test')
-		{
-			throw new Exception(__METHOD__." is only available in test mode.");
-		}
-		self::$instance = null;
-	}
-
-	/**
-	 * @var order_OrderNumberStrategy
-	 */
-	private $strategy = null;
-
-	/**
-	 * @param order_OrderNumberStrategy $strategy
-	 * @return order_OrderNumberGenerator $this
-	 */
-	public final function setStrategy($strategy)
-	{
-		$this->strategy = $strategy;
-		return $this;
-	}
-
-	/**
-	 * @return order_OrderNumberStrategy
-	 */
-	public final function getStrategy()
-	{
-		if ( is_null($this->strategy) )
-		{
-			try
-			{
-				$className = Framework::getConfiguration('modules/order/orderNumberStrategyClass');
-			}
-			catch (ConfigurationException $e)
-			{
-				// No strategy defined in the project's config file: use default one.
-				$className = 'order_OrderNumberDefaultStrategy';
-				if (Framework::isInfoEnabled())
-				{
-					Framework::info("No strategy defined to build order numbers for this projet: using default one (".$className.").");
-					Framework::debug($e->getMessage());
-				}
-			}
-			$this->strategy = new $className;
-		}
-		return $this->strategy;
-	}
-
-	/**
-	 * @param order_persistentdocument_order $order
-	 * @return String
-	 */
-	public final function generate($order)
-	{
-		return $this->getStrategy()->generate($order);
-	}
-}
-
-class order_OrderNumberDefaultStrategy implements order_OrderNumberStrategy
-{
+	
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @return String
 	 */
 	public function generate($order)
 	{
+		if ($this->strategy !== null)
+		{
+			return $this->strategy->generate($order);
+		}
+		return $this->generateDefault($order);
+	}	
+	
+	/**
+	 * @return void
+	 */
+	public static final function clearInstance()
+	{
+		self::$instance = null;
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return string
+	 */
+	protected function generateDefault($order)
+	{
+		Framework::info(__METHOD__);
 		$beginDate = date_Converter::convertDateToGMT(date("Y").'-01-01 00:00:00');
 		$endDate = date_Converter::convertDateToGMT((date("Y")+1).'-01-01 00:00:00');
 
@@ -118,10 +85,7 @@ class order_OrderNumberDefaultStrategy implements order_OrderNumberStrategy
 			->add(Restrictions::lt("creationdate", $endDate))
 			->setProjection(Projections::rowCount("orderCount"))->findColumn("orderCount");
 		$newCount = strval($orderCount[0]+1);
-		while (strlen($newCount) < 8)
-		{
-			$newCount = "0".$newCount;
-		}
+		$newCount = str_pad($newCount, 8, '0', STR_PAD_LEFT);
 		return date("Y").$newCount;
 	}
 }
@@ -134,13 +98,10 @@ class order_OrderNumberSequenceStrategy implements order_OrderNumberStrategy
 	 */
 	public function generate($order)
 	{
+		Framework::info(__METHOD__);
 		$orderCount = $order->getDocumentService()->createQuery()
 			->setProjection(Projections::rowCount("orderCount"))->findColumn("orderCount");
 		$newCount = strval($orderCount[0]+1);
-		while (strlen($newCount) < 10)
-		{
-			$newCount = "0".$newCount;
-		}
-		return $newCount;
+		return str_pad($newCount, 10, '0', STR_PAD_LEFT);
 	}
 }

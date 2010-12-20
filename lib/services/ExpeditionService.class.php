@@ -199,21 +199,6 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		}
 		return $result;
 	}
-
-	/**
-	 * @param order_persistentdocument_order $order
-	 * @return integer
-	 */
-	private function getLastExpeditionNumber($order)
-	{
-		$result = $this->createQuery()->setProjection(Projections::rowCount('count'))
-			->add(Restrictions::eq('order', $order))->find();
-		if (is_array($result) && count($result) == 1)
-		{
-			return $result[0]['count'];
-		}
-		return 0;
-	}
 	
 	/**
 	 * @param order_persistentdocument_order $order
@@ -259,7 +244,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			$expedition->setOrder($order);
 			$expedition->setStatus(self::PREPARE);
 			$expedition->setAddress($order->getShippingAddress());
-			$expedition->setLabel(strval($this->getLastExpeditionNumber($order) + 1));
+			$expedition->setLabel(order_ExpeditionNumberGenerator::getInstance()->generate($expedition));
 			Framework::info('Add Expedition ' . $expedition->getLabel() . ' for order '. $order->getId() . ' => ' . $order->getOrderNumber());
 			$expedition->setUseOrderlines(false);
 			foreach ($lines as $id => $qtt) 
@@ -312,7 +297,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		if (count($previouslines) == 0)
 		{
 			$expedition->setUseOrderlines(true);	
-			$expedition->setLabel(strval($this->getLastExpeditionNumber($order) + 1));
+			$expedition->setLabel(order_ExpeditionNumberGenerator::getInstance()->generate($expedition));
 			$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);
 			return $expedition;			
 		}
@@ -338,7 +323,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		
 		if ($expedition->getLineCount() > 0)
 		{
-			$expedition->setLabel(strval($this->getLastExpeditionNumber($order) + 1));
+			$expedition->setLabel(order_ExpeditionNumberGenerator::getInstance()->generate($expedition));
 			$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);	
 			return $expedition;
 		}

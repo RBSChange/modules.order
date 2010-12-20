@@ -9,11 +9,12 @@ class order_GetTreeChildrenJSONAction extends generic_GetTreeChildrenJSONAction
 	 */
 	protected function getVirtualChildren($document, $subModelNames, $propertyName)
 	{
-		if ($document instanceof generic_persistentdocument_folder && !($document instanceof order_persistentdocument_smartfolder))
+		if ($document instanceof generic_persistentdocument_folder && 
+			!($document instanceof order_persistentdocument_smartfolder))
 		{
 			$dateLabel = $document->getLabel();
 			$matches = null;			
-			if (preg_match('/^\d{4}\-\d{2}\-\d{2}$/', $dateLabel, $matches))
+			if (preg_match('/^\d{4}\-\d{2}\-\d{2}$/', $dateLabel, $matches) && $this->getTreeType() == "wlist")
 			{
 				$startdate = date_Converter::convertDateToGMT($matches[0] . ' 00:00:00');
 				$endate = date_Calendar::getInstance($startdate)->add(date_Calendar::DAY, 1)->toString();
@@ -26,9 +27,16 @@ class order_GetTreeChildrenJSONAction extends generic_GetTreeChildrenJSONAction
 				$this->setTotal(intval($resultCount[0]['countItems']));
 				$query = order_OrderService::getInstance()->createQuery()
 					->add(Restrictions::between('creationdate', $startdate, $endate))
-					->addOrder(Order::desc('document_creationdate'))
+					->addOrder(Order::desc('id'))
 					->setFirstResult($offset)->setMaxResults($pageSize);
 				return $query->find();
+			}
+			else
+			{
+				return generic_FolderService::getInstance()->createQuery()
+				->add(Restrictions::childOf($document->getId()))
+				->addOrder(Order::desc('label'))
+				->find();
 			}
 			return array();
 		}

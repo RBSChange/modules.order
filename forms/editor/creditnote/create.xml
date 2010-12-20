@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel>
+  <section labeli18n="modules.uixul.bo.doceditor.fieldsgroup.Title">
+    <field name="orderNumber" type="text" disabled="true" labeli18n="m.order.document.creditnote.ordernumber" />
+    <field name="customer" disabled="true" />
+    <field name="label" required="false" />
+    <field name="amount" type="price"/> 
+  </section>
+  
+	<xul>
+		<javascript>	
+			<constructor><![CDATA[
+				// Cancel order button.
+				this.extendMethod("fireInitializeComplete", this.initializeExtra);				
+
+			]]></constructor>
+				
+			<method name="prepareInitializeValues">
+				<parameter name="attributes" />
+				<body><![CDATA[
+					attributes.documentproperties += ',currencySymbol,maxAmount';
+				]]></body>				
+			</method>
+			
+			<method name="initializeExtra">
+				<parameter name="result" />
+				<body><![CDATA[	
+					if (result.status != 'OK')
+					{
+						this.mInitData = null;
+						return;
+					}
+					this.fields.amount.setAttribute('currency', result.contents.currencySymbol);
+					this.fields.amount.setAttribute('mode', "${transui:m.order.document.creditnote.maxamount,ucf,space,js}" + result.contents.maxAmount + result.contents.currencySymbol);
+					this.fields.amount.value = result.contents.maxAmount;	
+				]]></body>
+			</method>
+		</javascript>
+	</xul>
+</panel>

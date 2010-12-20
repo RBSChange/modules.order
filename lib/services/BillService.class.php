@@ -180,17 +180,6 @@ class order_BillService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * Generate the next Bill number
-	 * @return string
-	 */
-	public function getNextBillNumber()
-	{
-		$orderCount = $this->createQuery()->add(Restrictions::ne('publicationstatus', 'DRAFT'))
-			->setProjection(Projections::rowCount("orderCount"))->findColumn("orderCount");
-		return str_pad(strval($orderCount[0]+1), 5, '0', STR_PAD_LEFT);
-	}
-	
-	/**
 	 * @param order_persistentdocument_order $order
 	 * @return order_persistentdocument_bill
 	 */
@@ -364,9 +353,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$bill->setPublicationstatus('DRAFT');
 			$this->save($bill);
 		}
-                
 		$order = $bill->getOrder();	
-		$bill->setLabel($this->getNextBillNumber());
+		$bill->setLabel(order_BillNumberGenerator::getInstance()->generate($bill));
 		$this->activate($bill->getId());
 		if ($bill->getStatus() == self::SUCCESS)
 		{

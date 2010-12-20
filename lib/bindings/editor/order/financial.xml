@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<binding id="order_financial" extends="layout.cDocumentEditor#cDocumentEditorPanel">
+		<content>
+			<xul:vbox flex="1">
+		        <xul:cmessageinfo anonid="message"/>
+		        <xul:hbox anonid="action-bar">
+		          <!-- <xul:button anonid="save_properties" oncommand="saveProperties()" label="Enregistrer" image="http://web35.localhost/changeicons/small/save.png"/> -->
+		        </xul:hbox>
+				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
+				
+					<xul:cfieldsgroup class="customeraddress" label="${transui:m.order.bo.general.Billing-address,ucf,attr}"/>
+					
+					<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.Bills,ucf,attr}">
+						<xul:cfieldsgroup class="orderbills" />
+					</xul:cfieldsgroup>
+
+				</xul:scrollbox>
+			</xul:vbox>	
+		</content>
+		<implementation>
+			<field name="mOrderBills">null</field>
+			<field name="mAddress">null</field>				
+			<field name="mInitData">null</field>
+			<field name="mCreateCreditNoteButton">null</field>
+			
+			<constructor><![CDATA[
+				this.mCreateCreditNoteButton = this.addActionButton("${transui:m.order.bo.actions.createcreditnote,ucf,js}", wToolkit.getIcon('add', 'small'));
+				this.mCreateCreditNoteButton.addEventListener('command', function(event) {me.onCreateCreditNote(event);}, true);
+				var me = this;			
+				this.addEventListener("gridInitialised", function (event) {return me.onGridInitialised(event);}, true);
+				this.addEventListener("addressInitialised", function (event) {return me.onAddressInitialised(event);}, true);		
+			]]></constructor>
+			
+			<method name="onCreateCreditNote">
+				<parameter name="event" />
+				<body><![CDATA[
+				var id = this.documentEditor.documentid;	
+				var uri = ['order', 'createCreditNoteForOrder', 'modules_order_creditnote', id].join(',');
+				var from = ['order', 'openDocument', 'modules_order_order', id, 'financial'].join(',');
+				openActionUri(uri, from);
+				]]></body>
+			</method>
+						
+			<method name="onGridInitialised">
+				<parameter name="event" />
+				<body><![CDATA[	
+					var grid = event.originalTarget;
+					if (grid.className == 'orderbills')
+					{
+						this.mOrderBills = grid;
+						if (this.mInitData && this.mInitData.billArray)
+						{
+							this.mOrderBills.initJSONDataset(this.mInitData.billArray);
+						}	
+						else
+						{
+							this.mOrderBills.initJSONDataset(null);
+						}
+					}	
+				]]></body>
+			</method>
+
+			<method name="onAddressInitialised">
+				<parameter name="event" />
+				<body><![CDATA[	
+					var grid = event.originalTarget;
+					wCore.debug('onAddressInitialised :' + grid.className);
+					if (grid.className == 'customeraddress')
+					{
+						this.mAddress = grid;
+						if (this.mInitData && this.mInitData.address)
+						{
+							this.mAddress.initJSONDataset(this.mInitData.address);
+						}	
+						else
+						{
+							this.mAddress.initJSONDataset(null);
+						}
+					}	
+				]]></body>
+			</method>	
+					
+			<method name="getInitializeParameters">
+				<body><![CDATA[
+					return {
+						action: 'LoadOrderFinancial',
+						cmpref: this.documentEditor.documentid, 
+						lang : this.documentEditor.documentInfos.vo
+					};
+				]]></body>
+			</method>
+												
+			<method name="fireInitializeComplete">
+				<parameter name="result" />
+				<body><![CDATA[					
+					if (result.status != 'OK')
+					{	
+						this.showErrorMessage(result.contents.errorMessage);
+						this.collapseContentZone(true);						
+						this.mInitialized = true;
+						return;
+					}
+					this.mInitData = result.contents;
+					if (this.mOrderBills)
+					{
+						this.mOrderBills.initJSONDataset(this.mInitData.billArray);
+					}
+					if (this.mAddress)
+					{
+						this.mAddress.initJSONDataset(this.mInitData.address);
+					}										
+					this.collapseContentZone(false);
+					this.mInitialized = true;
+					this.fireEvent("panelInitializeComplete");
+					this.gotoTop();
+				]]></body>
+			</method>
+		
+		</implementation>
+	</binding>
+</bindings>

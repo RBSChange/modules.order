@@ -1205,7 +1205,7 @@ class order_CartInfo
 	/**
 	 * @var Array<String>
 	 */
-	private $successMessage = null;
+	private $successMessage = array();
 
 	/**
 	 * @return Array<String>
@@ -1273,7 +1273,7 @@ class order_CartInfo
     /**
 	 * @var Array<String>
 	 */
-	private $warningMessage = null;
+	private $warningMessage = array();
 
 	/**
 	 * @return Array<String>

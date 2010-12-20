@@ -4,42 +4,23 @@
 		<sectionrow labeli18n="modules.order.bo.general.Website" id="website" />
 		<sectionrow labeli18n="modules.order.bo.general.Reference" id="reference" />
 		<sectionrow labeli18n="modules.order.bo.general.Date" id="creationdate" />
-		<sectionrow labeli18n="modules.order.document.order.ShippingMode" id="shippingMode" />
-		<field name="commentadmin" type="longtext" />	
-	</section>
-	<section labeli18n="modules.order.bo.doceditor.Bills">
-		<fieldinput name="billsJSON" type="namedgridlist" flex="1" />
-	</section>
-	<section labeli18n="modules.order.bo.doceditor.Expeditions">
-		<fieldinput name="expeditionsJSON" type="namedgridlist" flex="1" />
-	</section>
-	<section labeli18n="modules.order.bo.general.Customer">
 		<section class="customer" />
-		<section labeli18n="modules.order.bo.general.Billing-address">
-			<sectionrow id="billingAddressLabel" />
-			<sectionrow id="billingAddressLine1" />
-			<sectionrow id="billingAddressLine2" />
-			<sectionrow id="billingAddressLine3" />
-			<sectionrow id="billingAddressZipAndCity" />
-			<sectionrow id="billingAddressProvince" />
-			<sectionrow id="billingAddressCountry" />
-			<sectionrow id="billingAddressPhone" />
-			<sectionrow id="billingAddressFax" />
-		</section>
-		<section labeli18n="modules.order.bo.general.Shipping-address">
-			<sectionrow id="shippingAddressLabel" />
-			<sectionrow id="shippingAddressLine1" />
-			<sectionrow id="shippingAddressLine2" />
-			<sectionrow id="shippingAddressLine3" />
-			<sectionrow id="shippingAddressZipAndCity" />
-			<sectionrow id="shippingAddressProvince" />
-			<sectionrow id="shippingAddressCountry" />
-			<sectionrow id="shippingAddressPhone" />
-			<sectionrow id="shippingAddressFax" />
-		</section>
+		<field name="commentadmin" type="longtext" />	
+	</section>	
+	
+	<section labeli18n="modules.order.bo.general.Order-details" >
+		<section class="orderlines"/>
 	</section>
-
-	<section labeli18n="modules.order.bo.general.Order-details" class="lines" />
+	
+	<section labeli18n="modules.order.bo.general.Coupon" class="couponSection">
+		<sectionrow labeli18n="modules.order.bo.general.Coupon-name" id="couponSectionName" />
+		<sectionrow labeli18n="modules.order.bo.general.Coupon-code" id="couponSectionCode" />
+	</section>
+		
+	<section labeli18n="m.order.bo.doceditor.section.Discounts" class="discountsSection">
+		<section class="discountlines" />
+	</section>
+	
 	<section labeli18n="modules.order.bo.general.Amount">
 		<sectionrow labeli18n="modules.order.bo.general.Sub-total" id="subTotal" />
 		<sectionrow labeli18n="modules.order.frontoffice.Coupon-name" id="couponName" />
@@ -50,10 +31,7 @@
 		<sectionrow labeli18n="modules.order.bo.doceditor.panel.carts.Tva-amounts" id="tvaAmounts" />
 		<sectionrow labeli18n="modules.order.bo.general.Total-to-pay" id="totalAmount" />
 	</section>
-	<section labeli18n="modules.order.bo.general.Coupon" class="couponSection">
-		<sectionrow labeli18n="modules.order.bo.general.Coupon-name" id="couponSectionName" />
-		<sectionrow labeli18n="modules.order.bo.general.Coupon-code" id="couponSectionCode" />
-	</section>
+
 	<xul>
 		<javascript>
 			<constructor><![CDATA[
@@ -62,45 +40,23 @@
 				var me = this;
 				this.mCancelOrderButton.addEventListener('command', function(event) {me.onCancelOrder();}, true);			
 				this.extendMethod("updateCommandsUI", this.updateCancelOrderUI);
+				this.extendMethod("fireInitializeComplete", this.initializeExtra);				
+				this.addEventListener("gridInitialised", function (event) {return me.onGridInitialised(event);}, true);
 			]]></constructor>
 			
-			<field name="mPropIds">[
-				"billingAddressLabel",
-				"billingAddressLine1",
-				"billingAddressLine2",
-				"billingAddressLine3",
-				"billingAddressZipAndCity",
-				"billingAddressProvince",
-				"billingAddressCountry",
-				"billingAddressPhone",
-				"billingAddressFax",
-				"shippingAddressLabel",
-				"shippingAddressLine1",
-				"shippingAddressLine2",
-				"shippingAddressLine3",
-				"shippingAddressZipAndCity",
-				"shippingAddressProvince",
-				"shippingAddressCountry",
-				"shippingAddressPhone",
-				"shippingAddressFax",
-				"website",
-				"reference",
-				"creationdate",
-				"shippingMode",
-				"subTotal",
-				"couponName",
-				"shippingFees",
-				"billingMode",
-				"billingFees",
-				"tvaAmounts",
-				"discountTotal",
-				"totalAmount",
-				"couponSectionName",
-				"couponSectionCode"
-			]</field>
+			<field name="mPropIds">["website", "reference", "creationdate",
+				"subTotal", "couponName", "shippingFees",
+				"billingMode", "billingFees",
+				"tvaAmounts", "discountTotal", "totalAmount",
+				"couponSectionName", "couponSectionCode"]</field>
 			
 			<field name="mCancelOrderButton">null</field>
 			<field name="mCanBeCanceled">false</field>
+			
+			<field name="mOrderlines">null</field>
+			<field name="mDiscountLines">null</field>
+			
+			<field name="mInitData">null</field>
 
 			<method name="updateCancelOrderUI">
 				<parameter name="event" />
@@ -149,21 +105,56 @@
 					}
 				]]></body>
 			</method>
-			
-			<method name="fireInitializeComplete">
+				
+			<method name="onGridInitialised">
+				<parameter name="event" />
+				<body><![CDATA[	
+					var grid = event.originalTarget;
+					if (grid.className == 'orderlines')
+					{
+						this.mOrderlines = grid;
+						if (this.mInitData && this.mInitData.lines)
+						{
+							this.mOrderlines.initJSONDataset(this.mInitData.lines);
+						}	
+						else
+						{
+							this.mOrderlines.initJSONDataset(null);
+						}
+					}
+					else if (grid.className == 'discountlines')
+					{
+						this.mDiscountLines = grid;
+						if (this.mInitData && this.mInitData.discountDataArray)
+						{
+							this.mDiscountLines.initJSONDataset(this.mInitData.discountDataArray);
+						}	
+						else
+						{
+							this.mDiscountLines.initJSONDataset(null);
+						}
+					}		
+				]]></body>
+			</method>
+						
+			<method name="initializeExtra">
 				<parameter name="result" />
 				<body><![CDATA[	
-					// Information.
-					this.mDocumentId = result.contents.id;
-					var informations = result.contents.informations;
-					var node;
+					if (result.status != 'OK')
+					{
+						this.mInitData = null;
+						return;
+					}
 					
+					this.mInitData = result.contents;					
+					var informations = this.mInitData.informations;
 					this.mCanBeCanceled = informations['canBeCanceled'];
+					wCore.debug ('initializeExtra mCanBeCanceled ' + this.mCanBeCanceled);
 					this.updateCancelOrderUI();
 					
 					for each (var name in this.mPropIds)
 					{
-						node = document.getAnonymousElementByAttribute(this, "anonid", name);
+						var node = document.getAnonymousElementByAttribute(this, "anonid", name);
 						if (informations[name])
 						{
 							node.setAttribute('value', informations[name]);
@@ -189,106 +180,24 @@
 					}
 					
 					// Lines handling.
-					var section = document.getAnonymousElementByAttribute(this, 'class', 'lines');
-					var lines = result.contents.lines;
-					var line;
-					var row;
-					if (section.childNodes.length == 0)
+					if (this.mOrderlines)
 					{
-						row = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:row');
-						row.setAttribute('linetype', 'grid-header');
-						section.appendChild(row);
-					}
-					for (var j = 0; j < lines.length; j++)
-					{
-						line = lines[j];
-						row = section.childNodes[j+1];
-						if (row == null)
-						{
-							row = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:row');
-							section.appendChild(row);
-						}
-						else
-						{
-							row.removeAttribute('collapsed');
-						}
-						
-						for (var name in line)
-						{
-							row.setAttribute(name, line[name]);
-							if (line[name] && line[name] != '')
-							{
-								row.removeAttribute(name+'hidden');
-							}
-							else
-							{
-								row.setAttribute(name+'hidden', true);
-							}
-						}
-					}
-					while (row = section.childNodes[j+1])
-					{
-						row.setAttribute('collapsed', 'true');
-						j++;
+						this.mOrderlines.initJSONDataset(this.mInitData.lines);
 					}
 					
-					// Populate fields.
-					var fields = this.fields;
-					var valid = true;
-					var field = null;
-					this.documentEditor.documentInfos.revision = result.contents.documentversion;
-					for (var name in fields)
+					if (this.mDiscountLines)
 					{
-						field = fields[name];
-						if (name in result.contents && result.contents[name] !== null)
-						{
-							field.setInitialValue(result.contents[name]);
-						}
-						else
-						{
-							field.setInitialValue("");
-						}
-						valid = valid && field.valid; 
+						this.mDiscountLines.initJSONDataset(this.mInitData.discountDataArray);
 					}
 					
-					this.modified = false;
-					this.error = !valid;
-					this.updateCommandsUI();
-					
-					this.mInitialized = true;
-					this.fireEvent("panelInitializeComplete");
-					this.gotoTop();
-				]]></body>
-			</method>
-
-			<method name="getUpdateParameters">
-				<body><![CDATA[
-					var documentInfos = this.documentEditor.documentInfos;
-					 
-					var attributes = {
-						action: 'UpdateJSON',
-						cmpref: documentInfos.id, 
-						lang : documentInfos.vo,
-						documentversion: documentInfos.revision,
-						documentproperties: this.mFieldNames.join(',')
-					};
-
-					var fields = this.fields;
-					var field = null;
-					for (var name in fields)
+					if (this.mInitData.discountDataArray.length == 0)
 					{
-						field = fields[name];
-						if (field.modified) 
-						{
-							attributes[name] = field.value;
-						}
+						document.getAnonymousElementByAttribute(this, 'class', 'discountsSection').setAttribute('collapsed', 'true');
 					}
-
-					if ("preparePropertiesValues" in this)
+					else
 					{
-						this.preparePropertiesValues(attributes);
-					}
-					return attributes;
+						document.getAnonymousElementByAttribute(this, 'class', 'discountsSection').removeAttribute('collapsed');
+					}	
 				]]></body>
 			</method>
 		</javascript>

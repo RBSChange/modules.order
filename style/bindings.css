@@ -1,18 +1,26 @@
-cdocumenteditor#edt_order_order cfieldsgroup.lines{
-	-moz-binding: url(binding:modules.order.cOrderEditor#linesSection);
-}
 cdocumenteditor#edt_order_order cfieldsgroup.customer{
 	-moz-binding: url(binding:modules.order.cOrderEditor#customerSection);
 }
-cdocumenteditor#edt_order_order row[linetype="grid-header"]{
-	-moz-binding: url(binding:modules.order.cOrderEditor#headRow);
+
+cdocumenteditor#edt_order_order cfieldsgroup.orderlines{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cOrderLines);
 }
-cdocumenteditor#edt_order_order row[linetype="cart-line"]{
-	-moz-binding: url(binding:modules.order.cOrderEditor#lineRow);
+cdocumenteditor#edt_order_order cfieldsgroup.discountlines{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cDiscountLines);
 }
-cdocumenteditor#edt_order_order cmessagespanel{
-	-moz-binding: url(binding:modules.order.cOrderEditor#cMessagesPanel);
+
+cdocumenteditor#edt_order_order cfieldsgroup.customeraddress{	
+	-moz-binding: url(binding:modules.order.cOrderEditor#cCustomerAddress);
 }
+
+cdocumenteditor#edt_order_order cfieldsgroup.orderbills{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cBillsSoratbleGrid);
+}
+
+cdocumenteditor#edt_order_order cfieldsgroup.orderexpeditions{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionsSoratbleGrid);
+}
+
 cdocumenteditor#edt_order_order section.message{
 	-moz-binding: url(binding:modules.order.cOrderEditor#messageSection);
 }
@@ -22,18 +30,16 @@ cfield[fieldtype="billgenerator"]{
 cfield[fieldtype="editorderstatus"]{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cEditOrderStatus);
 }
-gridlist.billsJSON{
-	-moz-binding: url(binding:modules.order.cOrderEditor#cBillsSoratbleGrid);
-}
-gridlist.expeditionsJSON{
-	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionsSoratbleGrid);
-}
+
+
+
 cdocumenteditor#edt_order_expedition cresumesection[sectionname="lines"]{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionLinesResumeSection);
 }
 cdocumenteditor#edt_order_expedition cresumesection[sectionname="lines"] linesgrid{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionLinesGrid);
 }
+
 wdialog[template="ValidateBill"]{
 	-moz-binding: url(binding:modules.order.cOrderEditor#validateBillDialog);
 }
