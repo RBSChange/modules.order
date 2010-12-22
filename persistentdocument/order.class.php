@@ -509,6 +509,48 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		return implode(', ', $result);
 	}
 	
+	/**
+	 * @example array<creditNoteId => amount>
+	 */
+	public function getCreditNoteDataArray()
+	{
+		$result = $this->getGlobalProperty('__creditnote');
+		if (!is_array($result))
+		{
+			$result = array();
+		}
+		return $result;
+	}
+	
+	/**
+	 * @param array $creditNoteDataArray
+	 * @example array<creditNoteId => amount>
+	 */
+	public function setCreditNoteDataArray($creditNoteDataArray)
+	{
+		$this->setGlobalProperty('__creditnote', $creditNoteDataArray);
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	public function hasCreditNote()
+	{
+		return $this->getUsecreditnoteCount() > 0;
+	}
+	
+	/**
+	 * @return double
+	 */
+	public function getTotalCreditNoteAmount()
+	{
+		if (!$this->hasCreditNote())
+		{
+			return 0;
+		}
+		return array_sum($this->getCreditNoteDataArray());
+	}
+	
 	//DEPRECTAED FUNCTIONS
 
 	/**

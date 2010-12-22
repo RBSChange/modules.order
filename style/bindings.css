@@ -17,6 +17,10 @@ cdocumenteditor#edt_order_order cfieldsgroup.orderbills{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cBillsSoratbleGrid);
 }
 
+cdocumenteditor#edt_order_order cfieldsgroup.ordercreditnotes{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cCreditNotesSoratbleGrid);
+}
+
 cdocumenteditor#edt_order_order cfieldsgroup.orderexpeditions{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionsSoratbleGrid);
 }

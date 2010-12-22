@@ -56,6 +56,12 @@ class order_CartInfo
 	 * @var Integer
 	 */
 	private $shopId = null;
+
+	/**
+	 * @var string
+	 */
+	private $priceFormat;
+	
 	
 	public function isModified()
 	{
@@ -103,6 +109,7 @@ class order_CartInfo
 	public function setShopId($shopId)
 	{
 		$this->shopId = $shopId;
+		$this->priceFormat = null;
 	}
 
 	/**
@@ -125,17 +132,18 @@ class order_CartInfo
 	 */
 	function setShop($shop)
 	{
+		$this->priceFormat = null;
 		if ($shop === null)
 		{
 			$this->shopId = null;
 		}
-		else if (!$shop instanceof catalog_persistentdocument_shop)
+		else if ($shop instanceof catalog_persistentdocument_shop)
 		{
-			throw new Exception('Invalid shop');
+			$this->shopId = $shop->getId();
 		}
 		else 
 		{
-			$this->shopId = $shop->getId();
+			throw new Exception('Invalid shop');
 		}
 	}
 	
@@ -877,7 +885,7 @@ class order_CartInfo
 			if (f_util_StringUtils::isNotEmpty($discount->getLabel()) && $discount->getValueWithTax() > 0)
 			{
 				$result[] = array('label' => $discount->getLabel(),  
-					'valueWithTax' => '-' . $this->formatValue($discount->getValueWithTax()));
+					'valueWithTax' => '-' . $this->formatPrice($discount->getValueWithTax()));
 			}
 		}
 		return $result;
@@ -961,8 +969,83 @@ class order_CartInfo
 		return count($this->getDiscountArray()) > 0;
 	}
 	
-
+	//CREDIT NOTE
 	
+	private $creditNoteInfos = null;
+	
+	/**
+	 * @return boolean
+	 */
+	public function hasCreditNote()
+	{
+		return $this->creditNoteInfos !== null && count($this->creditNoteInfos) > 0;
+	}
+
+	/**
+	 * @return double
+	 */
+	public function getTotalCreditNoteAmount()
+	{
+		if (!$this->hasCreditNote())
+		{
+			return 0;
+		}
+		return array_sum($this->creditNoteInfos);
+	}
+	
+	/**
+	 * @param integer $creditNoteId
+	 * @param double $amount
+	 */
+	public function setCreditNoteAmount($creditNoteId, $amount)
+	{
+		if ($amount <= 0) 
+		{
+			$this->removeCreditNote($creditNoteId);
+		}
+		
+		if ($this->hasCreditNote())
+		{
+			$this->creditNoteInfos[$creditNoteId] = $amount;
+		}
+		else
+		{
+			$this->creditNoteInfos = array($creditNoteId => $amount);
+		}
+	}
+	
+	/**
+	 * @param integer $creditNoteId
+	 * @param double $amount
+	 */
+	public function removeCreditNote($creditNoteId)
+	{
+		if ($this->hasCreditNote())
+		{
+			if (array_key_exists($creditNoteId, $this->creditNoteInfos))
+			{
+				unset($this->creditNoteInfos[$creditNoteId]);
+				if (count($this->creditNoteInfos) === 0)
+				{
+					$this->creditNoteInfos = null;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @return array<$creditNoteId => $amount>
+	 */
+	public function getCreditNoteArray()
+	{
+		return ($this->hasCreditNote()) ? $this->creditNoteInfos : array();
+	}
+	
+	public function removeAllCreditNote()
+	{
+		$this->creditNoteInfos = null;
+	}
+		
 	/**
 	 * @return array<rate => value>
 	 */
@@ -1097,8 +1180,17 @@ class order_CartInfo
 	 */	
 	public function getTotalAmount()
 	{
-		return $this->getTotalWithTax();
+		return $this->getTotalWithTax() - $this->getTotalCreditNoteAmount();
 	}		
+	
+	public function formatPrice($value)
+	{
+		if ($this->priceFormat == null)
+		{
+			$this->priceFormat = catalog_ShopService::getInstance()->getPriceFormat($this->getShop());
+		}
+		return catalog_PriceHelper::applyFormat($value, $this->priceFormat);
+	}
 	
 	/**
 	 * @param double value
@@ -1114,7 +1206,7 @@ class order_CartInfo
 	 */
 	public function getFormattedSubTotalWithTax()
 	{
-		return $this->formatValue($this->getSubTotalWithTax());
+		return $this->formatPrice($this->getSubTotalWithTax());
 	}
 	
 	/**
@@ -1122,7 +1214,7 @@ class order_CartInfo
 	 */
 	public function getFormattedDiscountTotalWithTax()
 	{
-		return $this->formatValue($this->getDiscountTotalWithTax());
+		return $this->formatPrice($this->getDiscountTotalWithTax());
 	}
 	
 	/**
@@ -1131,7 +1223,7 @@ class order_CartInfo
 	public function getFormattedSubTotalWithoutTax()
 	{
 		
-		return $this->formatValue($this->getSubTotalWithoutTax());
+		return $this->formatPrice($this->getSubTotalWithoutTax());
 	}
 	
 	public function getFormattedSubTotalTaxByRate()
@@ -1139,7 +1231,7 @@ class order_CartInfo
 		$result = array();
 		foreach ($this->getSubTotalTaxByRate() as $rate => $value) 
 		{
-			$result[] = array('formattedTaxRate' => $rate, 'formattedTaxAmount' => $this->formatValue($value));	
+			$result[] = array('formattedTaxRate' => $rate, 'formattedTaxAmount' => $this->formatPrice($value));	
 		}
 		return $result;
 	}
@@ -1149,7 +1241,7 @@ class order_CartInfo
 	 */
 	function getFormattedShippingPriceWithTax()
 	{
-		return $this->formatValue($this->getShippingPriceWithTax());
+		return $this->formatPrice($this->getShippingPriceWithTax());
 	}	
 	
 	/**
@@ -1157,7 +1249,7 @@ class order_CartInfo
 	 */
 	function getFormattedShippingPriceWithoutTax()
 	{
-		return $this->formatValue($this->getShippingPriceWithoutTax());
+		return $this->formatPrice($this->getShippingPriceWithoutTax());
 	}
 	
 	/**
@@ -1165,7 +1257,7 @@ class order_CartInfo
 	 */
 	public function getFormattedTotalExcludingFeesWithoutTax()
 	{
-		return $this->formatValue($this->getTotalExcludingFeesWithoutTax());
+		return $this->formatPrice($this->getTotalExcludingFeesWithoutTax());
 	}	
 	
 	/**
@@ -1173,7 +1265,7 @@ class order_CartInfo
 	 */
 	public function getFormattedTotalExcludingFeesWithTax()
 	{
-		return $this->formatValue($this->getTotalExcludingFeesWithTax());
+		return $this->formatPrice($this->getTotalExcludingFeesWithTax());
 	}	
 
 	/**
@@ -1181,7 +1273,7 @@ class order_CartInfo
 	 */
 	public function getFormattedTotalWithoutTax()
 	{
-		return $this->formatValue($this->getTotalWithoutTax());
+		return $this->formatPrice($this->getTotalWithoutTax());
 	}	
 	
 	/**
@@ -1189,7 +1281,7 @@ class order_CartInfo
 	 */
 	public function getFormattedTotalWithTax()
 	{
-		return $this->formatValue($this->getTotalWithTax());
+		return $this->formatPrice($this->getTotalWithTax());
 	}	
 	
 	/**
@@ -1197,7 +1289,7 @@ class order_CartInfo
 	 */
 	public function getFormattedTotalTax()
 	{
-		return $this->formatValue($this->getTotalTax());
+		return $this->formatPrice($this->getTotalTax());
 	}
 	
 	//TEMPLATING MANIPULATION
@@ -1563,7 +1655,7 @@ class order_CartInfo
 	 */
 	public function getFormattedTotalAmount()
 	{
-		return $this->formatValue($this->getTotalAmount());
+		return $this->formatPrice($this->getTotalAmount());
 	}
 	
 	/**

@@ -3,24 +3,24 @@
 	<form change:form="beanName billingStep">
 		<ul change:errors=""></ul>
 	
-		<p change:translate="modules.order.document.billingstepbean.Transaction-amount-overview-text"></p>
+		<p>${trans:m.order.document.billingstepbean.transaction-amount-overview-text,ucf}</p>
 		<br />
 		<div class="payment-information-block" id="payment" tal:define="shop cart/getShop">
-			<h4 change:h="" change:translate="modules.order.document.billingstepbean.Transaction-amount-overview-head"></h4>
+			<h4 change:h="">${trans:m.order.document.billingstepbean.transaction-amount-overview-head,ucf}</h4>
 			<dl>
 				<tal:block tal:condition="shop/getDisplayPriceWithoutTax">
-					<dd change:translate="&modules.order.frontoffice.Sub-total-withouttax-abrLabel;; currency shop/getCurrency">Sous-total HT :</dd>
-					<dt>${cart/getFormattedSubTotalWithoutTax}</dt>
+					<dd>${trans:m.order.frontoffice.sub-total-withouttax-abr,ucf,lab}</dd>
+					<dt>${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</dt>
 				</tal:block>
 				<tal:block tal:condition="shop/getDisplayPriceWithTax">
-					<dd change:translate="&modules.order.frontoffice.Sub-total-withtax-abrLabel;; currency shop/getCurrency">Sous-total HT :</dd>
-					<dt>${cart/getFormattedSubTotalWithTax}</dt>
+					<dd>${trans:m.order.frontoffice.sub-total-withtax-abr,ucf,lab}</dd>
+					<dt>${php:cart.formatPrice(cart.getSubTotalWithTax())}</dt>
 				</tal:block>
 				
 				<tal:block tal:condition="billingStep/coupon">
-					<dd change:translate="modules.order.frontoffice.Coupon-nameLabel"></dd>
+					<dd>${trans:m.order.frontoffice.coupon-name,ucf,lab}</dd>
 					<dt>${billingStep/coupon}
-						(<a class="link" change:actionlink="" block="order_billingStep" action="RemoveCoupon"><tal:block change:translate="modules.order.document.billingstepbean.RemoveCoupon" /> </a>)
+						(<a class="link" change:actionlink="" block="order_billingStep" action="RemoveCoupon">${trans:m.order.document.billingstepbean.removecoupon,ucf} </a>)
 					</dt>
 				</tal:block>
 				
@@ -32,31 +32,44 @@
 				
 				<tal:block tal:condition="cart/getShippingMode">
 					<!-- Mode d'envoi -->
-					<dd change:translate="modules.order.frontoffice.Shipping-modeLabel"></dd>
+					<dd>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</dd>
 					<dt>${cart/getShippingMode/getLabelAsHtml}</dt>
 					<!-- Frais d'envoi -->
-					<dd change:translate="modules.order.frontoffice.Shipping-feesLabel"></dd>
-					<dt>${cart/getFormattedShippingPriceWithTax}</dt>
+					<dd>${trans:m.order.frontoffice.shipping-fees,ucf,lab}</dd>
+					<dt>${php:cart.formatPrice(cart.getShippingPriceWithTax())}</dt>
 				</tal:block>
 				
-				<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withtax-abrLabel" />
-				<dt class="pricetotal">${cart/getFormattedTotalWithTax}</dt>			
+				<tal:block tal:condition="not:cart/hasCreditNote">	
+					<dd class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</dd>
+					<dt class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</dt>
+				</tal:block>
+		
+				<tal:block tal:condition="cart/hasCreditNote">	
+					<dd class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</dd>
+					<dt class="pricetotal">${php:cart.formatPrice(cart.getTotalWithTax())}</dt>
+					
+					<dd>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</dd>
+					<dt>${php:shop.formatPrice(cart.getTotalCreditNoteAmount())}</dt>
+						
+					<dd class="pricetotal">${trans:m.order.frontoffice.creditnote-total,ucf,lab}</dd>
+					<dt class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</dt>
+				</tal:block>	
 			</dl>
 		</div>
 
 		<tal:block tal:condition="cart/useCoupon">
 			<dl tal:condition="not: billingStep/coupon">
-				<dd change:translate="modules.order.frontoffice.Coupon-codeLabel" />
+				<dd>${trans:m.order.frontoffice.coupon-code,ucf,lab}</dd>
 				<dt>	
 					<input change:textinput="name coupon" size="10"/>
-					<input class="button" change:submit="name Refresh" label="&modules.order.document.billingstepbean.Refresh;" />
+					<input class="button" change:submit="name Refresh" label="${trans:m.order.document.billingstepbean.refresh,ucf,attr}" />
 				</dt>		
 			</dl>
 		</tal:block>
 		<br />
 	
-		<h3 change:h="" change:translate="modules.order.document.billingstepbean.Mops-legend"></h3>
-		<p class="error" tal:condition="not: cart/getPaymentConnectors/0" change:translate="&modules.order.document.billingstepbean.No-valid-mop;"></p>
+		<h3 change:h="">${trans:m.order.document.billingstepbean.mops-legend,ucf}</h3>
+		<p class="error" tal:condition="not: cart/getPaymentConnectors/0">${trans:m.order.document.billingstepbean.no-valid-mop,ucf}</p>
 		<tal:block tal:condition="cart/getPaymentConnectors/0">
 			<ol id="paymentselector" style="clear: both">
 				<li tal:repeat="connectorFilter cart/getPaymentConnectors">
@@ -68,9 +81,9 @@
 				</li>
 			</ol>			
 			<p class="buttons">
-				<input class="button" change:submit="name Select" label="&modules.order.document.billingstepbean.Select;" />				
+				<input class="button" change:submit="name Select" label="${trans:m.order.document.billingstepbean.select,ucf,attr}" />				
 			</p>
 		</tal:block>
 	</form>
-	<a class="link" change:actionlink="" block="order_shippingStep" change:translate="modules.order.frontoffice.Back-to-previous-step"></a>
+	<a class="link" change:actionlink="" block="order_shippingStep">${trans:m.order.frontoffice.back-to-previous-step,ucf}</a>
 </div>

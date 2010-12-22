@@ -391,6 +391,9 @@ class order_CartService extends BaseService
 	
 		$this->refreshDiscount($cart);
 		Framework::bench('refreshDiscount');
+		
+		$this->refreshCreditNote($cart);
+		Framework::bench('refreshCreditNote');
 				
 		// Cancel order process.
 		order_OrderProcessService::getInstance()->resetSessionOrderProcess();
@@ -399,6 +402,8 @@ class order_CartService extends BaseService
 		
 		Framework::endBench(__METHOD__);
 	}
+	
+	
 	
 	/**
 	 * @param order_CartInfo $cart
@@ -466,6 +471,14 @@ class order_CartService extends BaseService
 		{
 			marketing_DiscountService::getInstance()->refreshDiscountArrayForCart($cart);	
 		}
+	}
+
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	protected function refreshCreditNote($cart)
+	{
+		order_CreditnoteService::getInstance()->refreshCreditnoteArrayForCart($cart);	
 	}
 	
 	/**

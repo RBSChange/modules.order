@@ -115,6 +115,48 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		}
 		return 0;
 	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return order_persistentdocument_creditnote[]
+	 */
+	public function getByOrder($order)
+	{
+		return $this->createQuery()
+			->addOrder(Order::asc('creationdate'))
+			->add(Restrictions::eq('order', $order))
+			->find();
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 */
+	public function getBoList($order)
+	{
+		$result = array();
+		foreach ($this->getByOrder($order) as $creditNote) 
+		{
+			$result[] = $this->buildBoRow($creditNote);
+		}
+		return $result;			
+	}
+	
+	/**
+	 * @param order_persistentdocument_creditnote $creditNote
+	 * @return array
+	 */
+	private function buildBoRow($creditNote)
+	{
+		$result = array(
+			'id' => $creditNote->getId(),
+			'lang' => $creditNote->getLang(),
+			'type' => str_replace('/', '_', $creditNote->getDocumentModelName()),
+			'label' => $creditNote->getLabel(),
+			'amount' => $creditNote->getAmountFormated(),
+			'amountNotApplied' => $creditNote->getAmountNotAppliedFormated(),
+		);		
+		return $result;
+	}
 
 	/**
 	 * @param order_persistentdocument_creditnote $document
@@ -126,6 +168,117 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		$document->setCustomer($order->getCustomer()); 
 		$document->setCurrency($order->getCurrencyCode());
 		$document->setLabel(order_CreditNoteNumberGenerator::getInstance()->generate($document));
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	public function refreshCreditnoteArrayForCart($cart)
+	{
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__);
+		}
+		$cart->removeAllCreditNote();
+		$customer = $cart->getCustomer();
+		if ($customer === null) {return;}
+		$maxAmount = $cart->getTotalAmount();
+		
+		$creditNotes = $this->createQuery()
+			->add(Restrictions::eq('customer', $customer))
+			->add(Restrictions::gt('amountNotApplied', 0))
+			->setProjection(Projections::property('id', 'id'), Projections::property('amountNotApplied', 'amountNotApplied'))
+			->addOrder(Order::asc('creationdate'))
+			->find();
+
+		foreach ($creditNotes as $row) 
+		{
+			$creditNoteId = $row['id'];
+			$creditNoteAmount = doubleval($row['amountNotApplied']);
+			$amount = $maxAmount - $creditNoteAmount;
+			if ($amount <= 0)
+			{
+				$cart->setCreditNoteAmount($creditNoteId, $maxAmount);
+				break;
+			}
+			$cart->setCreditNoteAmount($creditNoteId, $creditNoteAmount);
+			$maxAmount = $amount;
+		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @param order_CartInfo $cart
+	 */
+	public function setOrderInfoFromCart($order, $cart)
+	{
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__);
+		}
+		
+		$oldCreditNoteDataArray = $order->getCreditNoteDataArray();
+		$oldCreditnotes = $order->getUsecreditnoteArray();
+		foreach ($oldCreditnotes as $creditNote) 
+		{
+			$amount = $oldCreditNoteDataArray[$creditNote->getId()];
+			$creditNote->setAmountNotApplied($creditNote->getAmountNotApplied() + $amount);
+		}
+		$order->setCreditNoteDataArray(null);
+		$order->removeAllUsecreditnote();
+		
+	
+		$totalAmountWithTax = $cart->getTotalWithTax();
+		$order->setTotalAmountWithoutTax(catalog_PriceHelper::roundPrice($cart->getTotalWithoutTax()));
+		
+		$newCreditNoteDataArray = array();
+		foreach ($cart->getCreditNoteArray() as $creditNoteId => $creditNoteAmount) 
+		{
+			$creditNote = DocumentHelper::getDocumentInstance($creditNoteId, 'modules_order/creditnote');
+			$newamount = $creditNote->getAmountNotApplied() - $creditNoteAmount;
+			if ($newamount >= 0)
+			{
+				$creditNote->setAmountNotApplied($newamount);
+				$newCreditNoteDataArray[$creditNote->getId()] = $creditNoteAmount;
+				$order->addUsecreditnote($creditNote);
+				$creditNote->save();
+				$totalAmountWithTax -= $creditNoteAmount;
+			}
+		}
+		$order->setCreditNoteDataArray($newCreditNoteDataArray);
+		
+		//Save removed credit note
+		foreach ($oldCreditnotes as $creditNote) 
+		{
+			if (!isset($newCreditNoteDataArray[$creditNote->getId()]))
+			{
+				$creditNote->save();
+			}
+		}
+		
+		$order->setTotalAmountWithTax(catalog_PriceHelper::roundPrice($totalAmountWithTax));
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 */
+	public function removeFromCart($order)
+	{
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__);
+		}
+		
+		$oldCreditNoteDataArray = $order->getCreditNoteDataArray();
+		$oldCreditnotes = $order->getUsecreditnoteArray();
+		foreach ($oldCreditnotes as $creditNote) 
+		{
+			$amount = $oldCreditNoteDataArray[$creditNote->getId()];
+			$creditNote->setAmountNotApplied($creditNote->getAmountNotApplied() + $amount);
+			$creditNote->save();
+		}
+		$order->setCreditNoteDataArray(null);
+		$order->removeAllUsecreditnote();
 	}
 	
 	/**

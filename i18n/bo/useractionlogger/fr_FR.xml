@@ -19,4 +19,8 @@
   <key id="log-purge-bill">Purge de facture</key>
   <key id="insert-creditnote">insert.creditnote {documentlabel}</key>
   <key id="log-insert-creditnote">log insert creditnote</key>
+  <key id="update-creditnote">update.creditnote {documentlabel}</key>
+  <key id="log-update-creditnote">log update creditnote</key>
+  <key id="delete-creditnote">delete.creditnote {documentlabel}</key>
+  <key id="log-delete-creditnote">log delete creditnote</key>
 </i18n>

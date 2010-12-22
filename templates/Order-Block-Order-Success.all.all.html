@@ -121,10 +121,24 @@
 			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withouttax-abrLabel" />
 			<dt class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithoutTax())}</dt>
 			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-TVA-abrLabel" />
-			<dt class="pricetotal">${php:order.formatPrice(order.getTotalTax())}</dt>				
-			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withtax-abrLabel" />
-			<dt class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithTax())}</dt>
+			<dt class="pricetotal">${php:order.formatPrice(order.getTotalTax())}</dt>	
 			
+			<tal:block tal:condition="not:order/hasCreditNote">				
+				<dd class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</dd>
+				<dt class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithTax())}</dt>
+			</tal:block>
+			
+			<tal:block tal:condition="order/hasCreditNote">				
+				<dd class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</dd>
+				<dt class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithTax() + order.getTotalCreditNoteAmount())}</dt>
+				
+				<dd>Montant de l'avoir</dd>
+				<dt>${php:order.formatPrice(order.getTotalCreditNoteAmount())}</dt>
+				
+				<dd class="pricetotal">Reste à payer</dd>
+				<dt class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithTax())}</dt>
+			</tal:block>	
+
 		</dl>
 	</div>
 	<a change:actionlink="" block="order_order" class="link" action="addToCart" cmpref="${order/getId}" change:translate="modules.order.frontoffice.Add-order-articles-to-cart"></a>

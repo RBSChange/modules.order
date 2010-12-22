@@ -14,9 +14,7 @@
 		<add name="transactionId" type="String" />
 		<add name="transactionDate" type="DateTime" />
 		
-		
 		<add name="amountNotApplied" type="Double" />
-		<add name="appliedInOrder" type="modules_order/order" max-occurs="-1" />
 	</properties>
 	<statuses default="DRAFT" />
 	<serializedproperties>

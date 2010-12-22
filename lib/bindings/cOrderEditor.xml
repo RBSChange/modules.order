@@ -901,4 +901,48 @@
 			</xul:row>				
 		</content>
 	</binding>
+	
+	
+	<binding id="cCreditNotesSoratbleGrid" extends="widgets.cGrid#cAbstractSortableGrid">
+		<implementation>
+			<constructor><![CDATA[
+				this.fireEvent('gridInitialised');
+			]]></constructor>
+			
+			<method name="execute_edit">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
+				<body><![CDATA[
+					if (this.disabled) {return;}
+					var uri = ['order', 'openDocument', rowData.type, rowData.id].join(',');
+					openActionUri(uri);
+				]]></body>
+			</method>									
+		</implementation>
+		<content>
+			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
+				<xul:columns>	
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+					<xul:column />
+				</xul:columns>
+				<xul:rows anonid="document-rows">
+					<xul:row class="head" anonid="head-row">
+						<xul:label name="label" value="&amp;modules.order.document.creditnote.Label;" />
+						<xul:label name="amount" value="&amp;modules.order.document.creditnote.Amount;" />	
+						<xul:label name="amountNotApplied" value="&amp;modules.order.document.creditnote.AmountNotApplied;" />				
+					</xul:row>
+				</xul:rows>
+			</xul:grid>
+			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:toolbar class="actions">
+					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="&amp;modules.uixul.bo.actions.Edit;" />
+				</xul:toolbar>
+			</xul:row>				
+		</content>
+	</binding>
 </bindings>

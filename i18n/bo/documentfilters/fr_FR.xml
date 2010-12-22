@@ -54,4 +54,10 @@
   <key id="containedproductcartshippingfilter-text">avec {quantity} des produits {product} sur les lignes affectées au mode {mode}</key>
   <key id="waitingresponseorderfilter-label">commandes sur lesquelles le client est en attente d'une réponse</key>
   <key id="waitingresponseorderfilter-text">commandes sur lesquelles le client est en attente d'une réponse</key>
+  
+  <key id="ordercreditnotefilter-label">avoirs sur les commandes</key>
+  <key id="ordercreditnotefilter-text">les commandes qui {status}</key>
+  <key id="creditnote-hascreditnote">ont des avoirs</key>
+  <key id="creditnote-consumecreditnote">utilisent des avoirs</key>
+  <key id="creditnote-nocreditnote">n'ont pas d'avoir</key>
 </i18n>

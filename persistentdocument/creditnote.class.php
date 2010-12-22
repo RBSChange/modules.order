@@ -20,12 +20,13 @@ class order_persistentdocument_creditnote extends order_persistentdocument_credi
 	 */
 	public function addFormProperties($propertiesNames, &$formProperties)
 	{	
-		if (in_array('maxAmount', $propertiesNames))
+		$tamount = $this->getDocumentService()->getTotalAmountForOrder($this->getOrder(), $this);
+		$this->setOtherCreditNoteAmount($tamount);
+		$formProperties['maxAmount'] = $this->getOrderAmount() - $this->getOtherCreditNoteAmount();
+		if (!isset($formProperties['currencySymbol']))
 		{
-			$tamount = $this->getDocumentService()->getTotalAmountForOrder($this->getOrder(), $this);
-			$this->setOtherCreditNoteAmount($tamount);
-			$formProperties['maxAmount'] = $this->getOrderAmount() - $this->getOtherCreditNoteAmount();
-		}	
+			$formProperties['currencySymbol'] = $this->getCurrencySymbol();
+		}
 	}
 
 	/**
@@ -76,5 +77,31 @@ class order_persistentdocument_creditnote extends order_persistentdocument_credi
 	public function getCurrencySymbol()
 	{
 		return catalog_PriceHelper::getCurrencySymbol($this->getCurrency());
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getAmountFormated()
+	{
+		$priceFormat = $this->getOrder()->getPriceFormat();
+		return catalog_PriceHelper::applyFormat($this->getAmount(), $priceFormat ? $priceFormat : "%s €");
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAmountNotAppliedFormated()
+	{
+		$priceFormat = $this->getOrder()->getPriceFormat();
+		return catalog_PriceHelper::applyFormat($this->getAmountNotApplied(), $priceFormat ? $priceFormat : "%s €");
+	}
+	
+	public function setAutoActivate($activate)
+	{
+		if ($activate == "1")
+		{
+			$this->setPublicationstatus(f_persistentdocument_PersistentDocument::STATUS_ACTIVE);
+		}
 	}
 }

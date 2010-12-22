@@ -73,6 +73,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$result['totalAmount'] = $order->formatPrice($order->getTotalAmountWithTax());
 		
 		$result['billArray'] = order_BillService::getInstance()->getBoList($order);
+		
+		$result['creditnoteArray'] = order_CreditnoteService::getInstance()->getBoList($order);
 		return $result;
 	}
 	
@@ -473,6 +475,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		try
 		{
+			Framework::info(__METHOD__);
+			
 			$this->tm->beginTransaction();
 			$this->prepareCartForOrder($cartInfo);
 						
@@ -496,9 +500,16 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$shop = $cartInfo->getShop();
 			$orderDocument->setCurrencyCode($shop->getCurrencyCode());
 			$orderDocument->setPriceFormat($shop->getDocumentService()->getPriceFormat($shop));
-					
-			$orderDocument->setTotalAmountWithTax(catalog_PriceHelper::roundPrice($cartInfo->getTotalWithTax()));
-			$orderDocument->setTotalAmountWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getTotalWithoutTax()));
+			
+			if ($cartInfo->hasCreditNote())
+			{
+				order_CreditnoteService::getInstance()->setOrderInfoFromCart($orderDocument, $cartInfo);
+			}
+			else
+			{		
+				$orderDocument->setTotalAmountWithTax(catalog_PriceHelper::roundPrice($cartInfo->getTotalWithTax()));
+				$orderDocument->setTotalAmountWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getTotalWithoutTax()));
+			}
 						
 			$customer = $cartInfo->getCustomer();
 			$orderDocument->setCustomer($customer);
@@ -769,6 +780,11 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		{
 			Framework::info(__METHOD__ . ' '. $order->__toString());
 			$order->setOrderStatus(self::CANCELED);
+			if ($order->hasCreditNote())
+			{
+				order_CreditnoteService::getInstance()->removeFromCart($order);
+			}
+			
 			$this->save($order);
 			if ($sendNotification)
 			{

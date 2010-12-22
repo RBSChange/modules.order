@@ -12,4 +12,6 @@
   <actiondef modulename="order" actionname="purge.bill" label="modules.order.bo.useractionlogger.purge-bill"/>
   <actiondef modulename="order" actionname="update.smartfolder" label="modules.order.bo.useractionlogger.update-smartfolder"/>
   <actiondef modulename="order" actionname="insert.creditnote" label="m.order.bo.useractionlogger.insert-creditnote"/>
+  <actiondef modulename="order" actionname="update.creditnote" label="m.order.bo.useractionlogger.update-creditnote"/>
+  <actiondef modulename="order" actionname="delete.creditnote" label="m.order.bo.useractionlogger.delete-creditnote"/>
 </script>

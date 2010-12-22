@@ -4,7 +4,9 @@
     <field name="orderNumber" type="text" disabled="true" labeli18n="m.order.document.creditnote.ordernumber" />
     <field name="customer" disabled="true" />
     <field name="label" required="false" />
-    <field name="amount" type="price"/> 
+    <field name="amount" type="price">
+    	<constraint name="min" parameter="0" />
+    </field>
   </section>
   
 	<xul>
@@ -21,6 +23,14 @@
 					attributes.documentproperties += ',currencySymbol,maxAmount';
 				]]></body>				
 			</method>
+			
+			<method name="preparePropertiesValues">
+				<parameter name="attributes" />
+				<body><![CDATA[
+					attributes.documentproperties += ',autoActivate';
+					attributes.autoActivate = '1';
+				]]></body>				
+			</method>			
 			
 			<method name="initializeExtra">
 				<parameter name="result" />
