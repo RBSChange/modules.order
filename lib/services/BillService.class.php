@@ -337,7 +337,15 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$order = $bill->getOrder();	
 		order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_failed', $order, $bill);
 		$order->getDocumentService()->cancelOrder($order, false);
-		$this->delete($bill);
+		if($bill->getTransactionId())
+		{
+			$bill->setPublicationstatus('FILED');
+			$this->save($bill);
+		}
+		else
+		{
+			$this->delete($bill);
+		}
 	}
 	
 	/**
@@ -345,6 +353,13 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */	
 	protected function confirmPayment($bill)
 	{
+		 if ($bill->getPublicationstatus() == 'FILED')
+                {
+			$bill->setPublicationstatus('DRAFT');
+                        $this->save($bill);
+                }
+
+
 		$order = $bill->getOrder();	
 		$bill->setLabel($this->getNextBillNumber());	
 		$this->activate($bill->getId());
