@@ -545,7 +545,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			foreach ($cartInfo->getCartLineArray() as $index => $cartLine)
 			{
 				$orderLine = $orderDocument->getLine($index);
-				$orderlineService->createFromCartLineInfo($cartLine, $orderLine);
+				$orderlineService->createFromCartLineInfo($cartLine, $orderLine, $orderDocument);
 			}
 	
 			// Sauvegarde du coupon.
@@ -653,11 +653,11 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		
 		if ($shop->getDisplayPriceWithTax() || !$shop->getDisplayPriceWithoutTax())
 		{
-			$orderAmount = $orderAmountWithTax." ".f_locale::translate("&modules.catalog.frontoffice.ttc;");	
+			$orderAmount = $orderAmountWithTax." ".f_Locale::translate("&modules.catalog.frontoffice.ttc;");	
 		}
 		elseif ($shop->getDisplayPriceWithoutTax())
 		{
-			$orderAmount = $orderAmountWithoutTax." ".f_locale::translate("&modules.catalog.frontoffice.ht;");
+			$orderAmount = $orderAmountWithoutTax." ".f_Locale::translate("&modules.catalog.frontoffice.ht;");
 		}
 		
 		$shippingFeesWithTax = $shop->formatPrice($order->getShippingFeesWithTax());

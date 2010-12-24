@@ -52,8 +52,7 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	 */
 	public function getAmountFormated()
 	{
-		$priceFormat = $this->getOrder()->getPriceFormat();
-		return catalog_PriceHelper::applyFormat($this->getAmount(), $priceFormat ? $priceFormat : "%s €");
+		return catalog_PriceFormatter::getInstance()->format($this->getAmount(), $this->getCurrency());
 	}
 	
 	/**

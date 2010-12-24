@@ -1185,11 +1185,7 @@ class order_CartInfo
 	
 	public function formatPrice($value)
 	{
-		if ($this->priceFormat == null)
-		{
-			$this->priceFormat = catalog_ShopService::getInstance()->getPriceFormat($this->getShop());
-		}
-		return catalog_PriceHelper::applyFormat($value, $this->priceFormat);
+		return $this->getShop()->formatPrice($value);
 	}
 	
 	/**

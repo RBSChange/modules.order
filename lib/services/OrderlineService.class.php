@@ -42,9 +42,10 @@ class order_OrderlineService extends f_persistentdocument_DocumentService
 	/**
 	 * @param order_CartLineInfo $cartLine
 	 * @param order_persistentdocument_orderline $orderLine
+	 * @param order_persistentdocument_order $order
 	 * @return order_persistentdocument_orderline
 	 */
-	public function createFromCartLineInfo($cartLine, $orderLine = null)
+	public function createFromCartLineInfo($cartLine, $orderLine = null, $order)
 	{
 		if ($orderLine === null)
 		{
@@ -54,7 +55,8 @@ class order_OrderlineService extends f_persistentdocument_DocumentService
 		{
 			$orderLine->setGlobalPropertyArray(array());
 		}
-		
+		$cpf = catalog_PriceFormatter::getInstance();
+		$currencyCode = $order->getCurrencyCode();
 		$product = $cartLine->getProduct();
 		$orderLine->setProductId($product->getId());
 		$orderLine->setLabel($product->getLabel());
@@ -62,23 +64,23 @@ class order_OrderlineService extends f_persistentdocument_DocumentService
 		$orderLine->setOrderLabelAsHtml($product->getOrderLabelAsHtml());
 		$orderLine->setCodeReference($product->getCodeReference());
 		$orderLine->setQuantity($cartLine->getQuantity());
-		$orderLine->setUnitPriceWithTax(catalog_PriceHelper::roundPrice($cartLine->getValueWithTax()));
-		$orderLine->setUnitPriceWithoutTax(catalog_PriceHelper::roundPrice($cartLine->getValueWithoutTax()));
+		$orderLine->setUnitPriceWithTax($cpf->round($cartLine->getValueWithTax(), $currencyCode));
+		$orderLine->setUnitPriceWithoutTax($cpf->round($cartLine->getValueWithoutTax(), $currencyCode));
 		
 		// If there is no old price, duplicate the normal price.
 		if (!is_null($cartLine->getOldValueWithTax()))
 		{
-			$orderLine->setBaseUnitPriceWithTax(catalog_PriceHelper::roundPrice($cartLine->getOldValueWithTax()));
-			$orderLine->setBaseUnitPriceWithoutTax(catalog_PriceHelper::roundPrice($cartLine->getOldValueWithoutTax()));
+			$orderLine->setBaseUnitPriceWithTax($cpf->round($cartLine->getOldValueWithTax(), $currencyCode));
+			$orderLine->setBaseUnitPriceWithoutTax($cpf->round($cartLine->getOldValueWithoutTax(), $currencyCode));
 		}
 		else
 		{
-			$orderLine->setBaseUnitPriceWithTax(catalog_PriceHelper::roundPrice($cartLine->getValueWithTax()));
-			$orderLine->setBaseUnitPriceWithoutTax(catalog_PriceHelper::roundPrice($cartLine->getValueWithoutTax()));
+			$orderLine->setBaseUnitPriceWithTax($cpf->round($cartLine->getValueWithTax(), $currencyCode));
+			$orderLine->setBaseUnitPriceWithoutTax($cpf->round($cartLine->getValueWithoutTax(), $currencyCode));
 		}
 
-		$orderLine->setAmountWithTax(catalog_PriceHelper::roundPrice($cartLine->getTotalValueWithTax()));
-		$orderLine->setAmountWithoutTax(catalog_PriceHelper::roundPrice($cartLine->getTotalValueWithoutTax()));
+		$orderLine->setAmountWithTax($cpf->round($cartLine->getTotalValueWithTax(), $currencyCode));
+		$orderLine->setAmountWithoutTax($cpf->round($cartLine->getTotalValueWithoutTax(), $currencyCode));
 		
 		$orderLine->setTaxCode($cartLine->getTaxCode());
 		$orderLine->setTaxRate($cartLine->getTaxRate());		
