@@ -113,7 +113,7 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 		{
 			$cartInfo->setCustomerId($customer->getId());
 			$cartInfo->setUserId($user->getId());
-			$cartInfo->save();
+			order_CartService::getInstance()->refresh($cartInfo, false);
 			$this->redirectToNextStep();
 		}
 		$errMsg = f_Locale::translate('&modules.order.document.identifystepbean.CreateAccount-error;');

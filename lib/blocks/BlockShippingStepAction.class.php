@@ -179,7 +179,7 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 		}
 		
 		$cartInfo->setAddressInfo($shippingStep);
-		$cartInfo->save();
+		order_CartService::getInstance()->refresh($cartInfo, false);
 		$this->redirectToNextStep();
 		return $this->getInputViewName();	
 	}

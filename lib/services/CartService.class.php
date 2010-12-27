@@ -369,9 +369,10 @@ class order_CartService extends BaseService
 	 * Update prices info.
 	 *
 	 * @param order_CartInfo $cart
+	 * @param boolean $resetSessionOrderProcess
 	 * @throws order_ValidationException
 	 */
-	public function refresh($cart)
+	public function refresh($cart, $resetSessionOrderProcess = true)
 	{
 		Framework::startBench();
 			
@@ -395,8 +396,10 @@ class order_CartService extends BaseService
 		$this->refreshCreditNote($cart);
 		Framework::bench('refreshCreditNote');
 				
-		// Cancel order process.
-		order_OrderProcessService::getInstance()->resetSessionOrderProcess();
+		if ($resetSessionOrderProcess)
+		{
+			order_OrderProcessService::getInstance()->resetSessionOrderProcess();
+		}
 
 		$this->saveToSession($cart);
 		

@@ -29,6 +29,8 @@
   <key id="cartfilter-text">panier dont {cart}</key>
   <key id="cart-totalamountwithtax">montant total TTC</key>
   <key id="cart-totalamountwithouttax">montant total HT</key>
+  <key id="cart-totalamount">montant à payer</key>
+  
   <key id="cart-coupon">coupon</key>
   <key id="cart-linesamountwithouttax">montant total des lignes HT</key>
   <key id="cart-linesamountwithtax">montant total des lignes TTC</key>
