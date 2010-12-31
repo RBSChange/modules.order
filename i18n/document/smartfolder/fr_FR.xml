@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.document.smartfolder" lcid="fr_FR">
-  <key id="document-name">dossier intelligent</key>
-  <key id="label">libellé</key>
-  <key id="description">description</key>
-  <key id="query">requête</key>
-  <key id="query-help">la requête permettant de retrouver les commandes de ce dossier.</key>
+	<include id="m.filter.document.queryfolder" />
 </i18n>

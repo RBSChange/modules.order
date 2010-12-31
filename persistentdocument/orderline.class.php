@@ -47,8 +47,6 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 		return $l; 	
 	}
 	
-	
-	
 	/**
 	 * @param String $propertyName
 	 * @param Mixed $value serializable data.
@@ -110,9 +108,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	{
 		return order_ModuleService::getInstance()->areCommentsEnabled() && !comment_CommentService::getInstance()->hasCurrentUserCommented($this->getProductId());
 	}
-	
-	// Private methods.
-	
+		
 	/**
 	 * @param String $name
 	 * @param Array $properties
@@ -164,8 +160,6 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 		}
 		return $properties;
 	}
-	
-
 	
 	/**
 	 * @return Double
@@ -259,9 +253,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	{
 		$this->setGlobalProperty('genCode', $genCode);
 	}
-	
-
-	
+		
 	/**
 	 * @param string $label
 	 */
@@ -294,9 +286,10 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 		return  $this->getGlobalProperty('orderLabelAsHtml');
 	}
 	
+	// Deprecated.
+	
 	/**
-	 * @deprecated 
-	 * @return catalog_persistentdocument_product 
+	 * @deprecated (will be removed in 4.0)
 	 */	
 	public function getSynchronizedProduct()
 	{
@@ -304,8 +297,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @deprecated 
-	 * @return Integer
+	 * @deprecated (will be removed in 4.0)
 	 */
 	public function getArticleId()
 	{
@@ -313,8 +305,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @deprecated 
-	 * @param Integer $articleId
+	 * @deprecated (will be removed in 4.0)
 	 */
 	public function setArticleId($articleId)
 	{
