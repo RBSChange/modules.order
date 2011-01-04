@@ -214,6 +214,17 @@ class order_BillService extends f_persistentdocument_DocumentService
 		return $bill;
 	}
 	
+	/* (non-PHPdoc)
+	 * @see f_persistentdocument_DocumentService::preInsert()
+	 * @param order_persistentdocument_bill $document
+	 * @param integer $parentNodeId
+	 */
+	protected function preInsert($document, $parentNodeId)
+	{
+		parent::preInsert($document, $parentNodeId);
+		$document->setClientIp(RequestContext::getInstance()->getClientIp());
+	}
+
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @return order_persistentdocument_bill[]

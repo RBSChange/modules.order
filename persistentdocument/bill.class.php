@@ -264,4 +264,20 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	{
 		$this->getDocumentService()->updatePaymentStatus($this, $status);
 	}
+	
+	/**
+	 * @return String
+	 */
+	function getClientIp()
+	{
+		return $this->getMeta('clientip');
+	}
+	
+	/**
+	 * @param String $ip
+	 */
+	function setClientIp($ip)
+	{
+		return $this->setMeta('clientip', $ip);
+	}
 }
