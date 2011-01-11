@@ -264,9 +264,7 @@ class order_CartService extends BaseService
 	{
 		$shop = $cart->getShop();
 		if ($product->isPublished() && $product->canBeOrdered($shop) && 
-				$product->getPrice($shop, $cart->getCustomer(), $quantity) != null)
-		if ($product->isPublished() && $product->canBeOrdered($cart->getShop()) && 
-			$product->getPrice($cart->getShop(), $cart->getCustomer(), $quantity) != null)
+			$product->getPrice($shop, $cart->getCustomer(), $quantity) != null)
 		{
 			if ($product instanceof catalog_StockableDocument)
 			{
