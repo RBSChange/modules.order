@@ -401,14 +401,26 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	public function cancelExpeditionFromBo($expedition)
 	{
+		$backendUser = users_UserService::getInstance()->getCurrentBackEndUser();
+		$message = 'Cancel by :' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN');
+		$this->cancelExpedition($expedition, $message);
+		return $this->buildBoRow($expedition);
+	}
+	
+	/**
+	 * 
+	 * @param order_persistentdocument_expedition $expedition
+	 * @param string $message
+	 * @throws Exception
+	 */
+	public function cancelExpedition($expedition, $message)
+	{
 		try
 		{
 			$this->tm->beginTransaction();
 			$expedition->setShippingDate(null);
 			$expedition->setStatus(self::CANCELED);
-			
-			$backendUser = users_UserService::getInstance()->getCurrentBackEndUser();
-			$expedition->setTrackingText('Cancel by :' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
+			$expedition->setTrackingText($message);
 			$this->save($expedition);
 			$order = $expedition->getOrder();
 			order_ModuleService::getInstance()->sendCustomerNotification('modules_order/expedition_canceled', $order, $expedition->getBill(), $expedition);
@@ -418,9 +430,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		{
 			$this->tm->rollBack($e);
 			throw $e;
-		}
-
-		return $this->buildBoRow($expedition);
+		}		
 	}
 	
 	/**
@@ -431,15 +441,36 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	public function shipExpeditionFromBo($expedition, $shippingDate, $trackingNumber)
 	{
-		
 		if ($expedition->getStatus() == self::PREPARE	&& f_util_StringUtils::isNotEmpty($shippingDate))
 		{
+			$this->shipExpedition($expedition, date_Converter::convertDateToGMT($shippingDate), $trackingNumber);
+		}
+		return $this->buildBoRow($expedition);
+	}	
+	
+	/**
+	 * @param order_persistentdocument_expedition $expedition
+	 * @param string $shippingDate
+	 * @param string $trackingNumber
+	 * @param string $message
+	 */
+	public function shipExpedition($expedition, $shippingDate, $trackingNumber, $message)
+	{
+		
+		if ($expedition->getStatus() == self::PREPARE)
+		{
+			if (empty($shippingDate))
+			{
+				$shippingDate = date_Calendar::getInstance()->toString();
+			}
+			
 			try 
 			{
 				$this->tm->beginTransaction();				
 				$expedition->setStatus(self::SHIPPED);
+				$expedition->setTrackingText($message);
 				$expedition->setTrackingNumber($trackingNumber);
-				$expedition->setShippingDate(date_Converter::convertDateToGMT($shippingDate));
+				$expedition->setShippingDate($shippingDate);
 				$this->save($expedition);	
 				$order = $expedition->getOrder();
 				order_ModuleService::getInstance()->sendCustomerNotification('modules_order/expedition_shipped', $order, $expedition->getBill(), $expedition);
@@ -461,7 +492,6 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		{
 			throw new Exception('Error on expedition shipping');
 		}
-		return $this->buildBoRow($expedition);
 	}
 	
 	/**
