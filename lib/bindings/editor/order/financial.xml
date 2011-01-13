@@ -10,16 +10,15 @@
 		          <!-- <xul:button anonid="save_properties" oncommand="saveProperties()" label="Enregistrer" image="http://web35.localhost/changeicons/small/save.png"/> -->
 		        </xul:hbox>
 				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
-				
-				<xul:cfieldsgroup class="customeraddress" label="${transui:m.order.bo.general.Billing-address,ucf,attr}"/>
-				
-				<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.bills,ucf,attr}">
-					<xul:cfieldsgroup class="orderbills" />
-				</xul:cfieldsgroup>
-				
-				<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.creditnotes,ucf,attr}">
-					<xul:cfieldsgroup class="ordercreditnotes" />
-				</xul:cfieldsgroup>
+					<xul:cfieldsgroup class="customeraddress" label="${transui:m.order.bo.general.Billing-address,ucf,attr}"/>
+					
+					<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.bills,ucf,attr}">
+						<xul:cfieldsgroup class="orderbills" />
+					</xul:cfieldsgroup>
+					
+					<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.creditnotes,ucf,attr}">
+						<xul:cfieldsgroup class="ordercreditnotes" />
+					</xul:cfieldsgroup>
 				</xul:scrollbox>
 			</xul:vbox>	
 		</content>

@@ -10,17 +10,21 @@
 		          <!-- <xul:button anonid="save_properties" oncommand="saveProperties()" label="Enregistrer" image="http://web35.localhost/changeicons/small/save.png"/> -->
 		        </xul:hbox>
 				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
-				
 					<xul:cfieldsgroup class="customeraddress" label="${transui:m.order.bo.general.shipping-address,ucf,attr}"/>
 					
 					<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.expeditions,ucf,attr}">
 						<xul:cfieldsgroup class="orderexpeditions" />
+					</xul:cfieldsgroup>
+					
+					<xul:cfieldsgroup anonid="orderreturns" label="${transui:m.order.bo.doceditor.returns,ucf,attr}">
+						<xul:cfieldsgroup class="orderreturns" />
 					</xul:cfieldsgroup>
 				</xul:scrollbox>
 			</xul:vbox>	
 		</content>
 		<implementation>
 			<field name="mOrderExpeditions">null</field>
+			<field name="mOrderReturns">null</field>
 			<field name="mAddress">null</field>				
 			<field name="mInitData">null</field>
 			
@@ -44,6 +48,18 @@
 						else
 						{
 							this.mOrderExpeditions.initJSONDataset(null);
+						}
+					}
+					else if (grid.className == 'orderreturns')
+					{
+						this.mOrderReturns = grid;
+						if (this.mInitData && "returnsArray" in this.mInitData && this.mInitData.returnArray)
+						{
+							this.mOrderReturns.initJSONDataset(this.mInitData.returnsArray);
+						}	
+						else
+						{
+							this.mOrderReturns.initJSONDataset(null);
 						}
 					}	
 				]]></body>
@@ -95,10 +111,21 @@
 					{
 						this.mOrderExpeditions.initJSONDataset(this.mInitData.expeditionArray);
 					}
+					if ("returnsArray" in this.mInitData)
+					{
+						if (this.mOrderReturns)
+						{
+							this.mOrderReturns.initJSONDataset(this.mInitData.returnsArray);
+						}
+					}
+					else
+					{
+						this.getElementByAnonId('orderreturns').setAttribute('hidden', 'true');
+					}
 					if (this.mAddress)
 					{
 						this.mAddress.initJSONDataset(this.mInitData.address);
-					}										
+					}														
 					this.collapseContentZone(false);
 					this.mInitialized = true;
 					this.fireEvent("panelInitializeComplete");

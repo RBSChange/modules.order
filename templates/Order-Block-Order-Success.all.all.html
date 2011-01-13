@@ -8,6 +8,10 @@
 	<li><a change:link="tag ctx_order_order-list" change:translate="modules.order.frontoffice.Order-back-to-list"></a></li>
 	<li><a change:link="tag ctx_order_order-messages; orderParam[cmpref] order/getId" change:translate="modules.customer.frontoffice.Send-message-for-this-order"></a></li>
 	<li><a change:link="tag ctx_order_order-messages; orderParam[cmpref] order/getId" change:translate="modules.customer.frontoffice.Message-history-for-this-order"></a></li>
+	<tal:block change:loadhandler="generic_TaggedDocumentLoadHandler" args="returnsListPage, contextual_website_website_modules_productreturns_returnslist" />
+	<li tal:condition="returnsListPage">
+		<a change:link="document returnsListPage; productreturnsParam[cmpref] order/getId">${trans: m.productreturns.fo.returns-list-for-this-order,ucf}</a>
+	</li>
 </ul>
 
 <table border="0" class="normal" change:i18nattr="summary &modules.order.frontoffice.Address;">
@@ -48,22 +52,22 @@
 	</tr>
 </tbody>
 </table>
-<table border="0" class="normal" change:i18nattr="summary &modules.order.frontoffice.Cart-table-summary;">
+<table border="0" class="normal" summary="${trans:m. &modules.order.frontoffice.cart-table-summary,ucf}">
 	<thead>
 		<tr>
-		    <th change:translate="&modules.order.frontoffice.Designation;" />
+		    <th>${trans:m.order.frontoffice.designation,ucf}</th>
 			<th tal:condition="shop/getDisplayPriceWithoutTax">
-				<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-without-tax;" change:translate="modules.order.frontoffice.unitprice-without-tax-abr"></abbr>
+				<abbr title="${trans:m.order.frontoffice.unitprice-without-tax,ucf}">${trans:m.order.frontoffice.unitprice-without-tax-abr,ucf}</abbr>
 			</th>
 			<th tal:condition="shop/getDisplayPriceWithTax">
-				<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-with-tax;" change:translate="modules.order.frontoffice.unitprice-with-tax-abr"></abbr>
+				<abbr title="${trans:m.order.frontoffice.unitprice-with-tax,ucf}">${trans:m.order.frontoffice.unitprice-with-tax-abr,ucf}</abbr>
 			</th>
-		    <th change:translate="&modules.order.frontoffice.Quantity;" />
+		    <th>${trans:m.order.frontoffice.quantity,ucf}</th>
 			<th tal:condition="shop/getDisplayPriceWithoutTax">
-				<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-without-tax;" change:translate="modules.order.frontoffice.totalprice-without-tax-abr"></abbr>
+				<abbr title="${trans:m.order.frontoffice.totalprice-without-tax,ucf}">${trans:m.order.frontoffice.totalprice-without-tax-abr,ucf}</abbr>
 			</th>
 		   	<th class="last" tal:condition="shop/getDisplayPriceWithTax">
-				<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-with-tax;" change:translate="modules.order.frontoffice.totalprice-with-tax-abr"></abbr>
+				<abbr title="${trans:m.order.frontoffice.totalprice-with-tax,ucf}">${trans:m.order.frontoffice.totalprice-with-tax-abr,ucf}</abbr>
 			</th>
 		</tr>
 	</thead>

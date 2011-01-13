@@ -73,8 +73,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$result['totalAmount'] = $order->formatPrice($order->getTotalAmountWithTax());
 		
 		$result['billArray'] = order_BillService::getInstance()->getBoList($order);
-		
 		$result['creditnoteArray'] = order_CreditnoteService::getInstance()->getBoList($order);
+		
 		return $result;
 	}
 	
@@ -96,7 +96,12 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$address['phone'] = $shippingAddress->getPhone();
 		$address['fax'] = $shippingAddress->getFax();	
 		$result['address'] = $address;
+		
 		$result['expeditionArray'] = order_ExpeditionService::getInstance()->getBoList($order);
+		if (ModuleService::getInstance()->moduleExists('productreturns'))
+		{
+			$result['returnsArray'] = productreturns_ReturnService::getInstance()->getBoList($order);
+		}
 		
 		return $result;
 	}
