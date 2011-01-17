@@ -41,7 +41,7 @@ class order_BillScriptDocumentElement extends import_ScriptDocumentElement
 	{
 		$document = $this->getPersistentDocument();
 		$document->setPublicationstatus('ACTIVE');
-		$document->setLabel(order_BillService::getInstance()->getNextBillNumber());
+		$document->setLabel(order_BillNumberGenerator::getInstance()->generate($document));
 		$document->save();
 		if ($document->getStatus() == order_BillService::FAILED)
 		{
