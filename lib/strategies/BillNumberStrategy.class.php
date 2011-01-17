@@ -94,7 +94,7 @@ class order_BillNumberYearSequenceStrategy implements order_BillNumberStrategy
 	public function generate($bill)
 	{
 		Framework::info(__METHOD__);
-		$year = date_Calendar::getInstance()->getYear();
+		$year = ($bill->getCreationdate()) ? substr($bill->getCreationdate(), 0, 4) : date("Y");
 		$beginDate = date_Converter::convertDateToGMT($year.'-01-01 00:00:00');
 		$endDate = date_Converter::convertDateToGMT(($year+1).'-01-01 00:00:00');
 		

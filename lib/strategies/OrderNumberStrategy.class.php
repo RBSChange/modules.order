@@ -77,8 +77,9 @@ class order_OrderNumberGenerator
 	protected function generateDefault($order)
 	{
 		Framework::info(__METHOD__);
-		$beginDate = date_Converter::convertDateToGMT(date("Y").'-01-01 00:00:00');
-		$endDate = date_Converter::convertDateToGMT((date("Y")+1).'-01-01 00:00:00');
+		$year = ($order->getCreationdate()) ? substr($order->getCreationdate(), 0, 4) : date("Y");
+		$beginDate = date_Converter::convertDateToGMT($year.'-01-01 00:00:00');
+		$endDate = date_Converter::convertDateToGMT(($year+1).'-01-01 00:00:00');
 
 		$orderCount = $order->getDocumentService()->createQuery()
 			->add(Restrictions::ge("creationdate", $beginDate))
@@ -86,7 +87,7 @@ class order_OrderNumberGenerator
 			->setProjection(Projections::rowCount("orderCount"))->findColumn("orderCount");
 		$newCount = strval($orderCount[0]+1);
 		$newCount = str_pad($newCount, 8, '0', STR_PAD_LEFT);
-		return date("Y").$newCount;
+		return $year.$newCount;
 	}
 }
 
