@@ -24,7 +24,7 @@ class PHPTAL_Php_Attribute_CHANGE_addtocartbutton extends ChangeTalAttribute
 	public static function renderAddtocartbutton($params)
 	{
 		$ls = LocaleService::getInstance();
-		$html .= '<input type="hidden" value="' . self::getFromParams('shop', $params)->getId() . '" name="shopId" />';
+		$html = '<input type="hidden" value="' . self::getFromParams('shop', $params)->getId() . '" name="shopId" />';
 		
 		// Product.
 		$product = self::getFromParams('product', $params);
