@@ -35,48 +35,22 @@ class order_OrderedTogetherProductFeeder extends catalog_ProductFeeder
 		}
 		$query->createCriteria('order')->createCriteria('line')
 			->add(Restrictions::eq('productId', $parameters['productId']));
-		$query->setProjection(Projections::groupProperty('productId'), Projections::rowCount('count'));
+			
+		$query->createPropertyCriteria('productId', 'modules_catalog/product')
+				->setProjection(Projections::groupProperty('id', 'productId'), Projections::rowCount('count'));
 		
-		$productInstances = array();
 		$productCounts = array();
 		foreach ($query->find() as $row)
 		{
 			$productId = $row['productId'];
-			if (isset($productInstances[$productId]))
-			{
-				$product = $productInstances[$productId];
-			}
-			else 
-			{
-				$product = DocumentHelper::getDocumentInstance($productId);
-				if ($product instanceof catalog_persistentdocument_productdeclination)
-				{
-					$product = $product->getRelatedDeclinedProduct();
-					if (in_array($product->getId(), $parameters['excludedId']))
-					{
-						continue;
-					}
-					$productInstances[$product->getId()] = $product;
-				}
-				$productInstances[$productId] = $product;
-			}
-			
-			$productId = $product->getId();
-			if (isset($productCounts[$productId]))
-			{
-				$productCounts[$productId] += intval($row['count']);
-			}
-			else
-			{
-				$productCounts[$productId] = intval($row['count']);
-			}
+			$productCounts[$productId] = intval($row['count']);
 		}
 		
 		arsort($productCounts);
 		$result = array();
 		foreach (array_slice($productCounts, 0, $parameters['maxResults'], true) as $id => $count)
 		{
-			$result[] = array($productInstances[$id], $count);
+			$result[] = array(catalog_persistentdocument_product::getInstanceById($id), $count);
 		}
 		return $result;
 	}
