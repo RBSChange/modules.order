@@ -90,7 +90,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 			$document->setCurrency($order->getCurrencyCode()); 
 		}
 		
-		if ($document->getAmountnotapplied() == null)
+		if ($document->getAmountnotapplied() === null)
 		{
 			$document->setAmountnotapplied($document->getAmount());
 		}
