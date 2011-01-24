@@ -236,6 +236,20 @@ class order_BillService extends f_persistentdocument_DocumentService
 				->addOrder(Order::asc('document_label'));
 		return $query->find();
 	}
+
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return order_persistentdocument_bill[]
+	 */
+	public function getValidByOrder($order)
+	{
+		$query = $this->createQuery()->add(Restrictions::eq('order', $order))
+				->add(Restrictions::ne('publicationstatus', 'DRAFT'))
+				->add(Restrictions::in('status', array(self::WAITING, self::SUCCESS)))
+				->addOrder(Order::asc('status'))
+				->addOrder(Order::asc('document_label'));
+		return $query->find();
+	}
 		
 	/**
 	 * @param order_persistentdocument_order $order
