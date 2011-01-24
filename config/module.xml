@@ -26,5 +26,11 @@
 			<entry name="expeditionNumberStrategyClass">order_ExpeditionOrderNumberStrategy</entry>
 			<entry name="creditNoteNumberStrategyClass">order_CreditNoteNumberYearSequenceStrategy</entry>
 		  -->
+
+		<!--  Generation de l'expedition par défaut pour les commandes payés --> 
+		<entry name="generateDefaultExpedition">true</entry>
+		
+		<!-- Durrée maximum en minutes d'une facture en publicationstatus DRAFT avant son annulation --> 
+		<entry name="maxDraftBillAge">60</entry>
 	</project>
 </config>

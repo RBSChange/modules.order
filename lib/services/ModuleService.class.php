@@ -344,12 +344,15 @@ class order_ModuleService extends ModuleBaseService
 	 * @param order_persistentdocument_order $order
 	 * @param integer $maxAge in minutes
 	 */	
-	public function checkOrderProcessing($order, $maxAge = 60)
+	public function checkOrderProcessing($order)
 	{
+		$generateDefaultExpedition = Framework::getConfigurationValue('modules/order/generateDefaultExpedition', 'true') == 'true';
+		$maxAge = intval(Framework::getConfigurationValue('modules/order/maxDraftBillAge', '60'));
+		
 		$orderStatus = $order->getOrderStatus();
 		if ($orderStatus == order_OrderService::IN_PROGRESS)
 		{
-			if (order_BillService::getInstance()->hasPublishedBill($order))
+			if ($generateDefaultExpedition && order_BillService::getInstance()->hasPublishedBill($order))
 			{
 				$result = order_ExpeditionService::getInstance()->createQuery()
 						->add(Restrictions::eq('order', $order))
