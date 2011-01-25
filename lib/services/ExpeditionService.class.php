@@ -71,6 +71,18 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 * @param order_persistentdocument_order $order
 	 * @return order_persistentdocument_expedition[]
 	 */
+	public function getShippedByOrder($order)
+	{
+		$query = $this->createQuery()->add(Restrictions::eq('order', $order))
+				->add(Restrictions::eq('status', self::SHIPPED))
+				->addOrder(Order::asc('document_label'));
+		return $query->find();
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return order_persistentdocument_expedition[]
+	 */
 	public function getByOrderForDisplay($order)
 	{
 		$query = $this->createQuery()
