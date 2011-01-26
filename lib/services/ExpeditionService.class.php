@@ -348,25 +348,22 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	private function getOrderLineIds($expedition, &$array)
 	{
-		if ($expedition->getStatus() != self::CANCELED)
+		if ($expedition->getUseOrderlines())
 		{
-			if ($expedition->getUseOrderlines())
+			foreach ($expedition->getOrder()->getLineArray() as $line) 
 			{
-				foreach ($expedition->getOrder()->getLineArray() as $line) 
-				{
-					$array[$line->getId()] = $line->getQuantity();
-				}
+				$array[$line->getId()] = $line->getQuantity();
 			}
-			foreach ($expedition->getLineArray() as $line) 
+		}
+		foreach ($expedition->getLineArray() as $line) 
+		{
+			if (isset($array[$line->getOrderlineid()]))
 			{
-				if (isset($array[$line->getOrderlineid()]))
-				{
-					$array[$line->getOrderlineid()] += $line->getQuantity();
-				}
-				else
-				{
-					$array[$line->getOrderlineid()] = $line->getQuantity();
-				}
+				$array[$line->getOrderlineid()] += $line->getQuantity();
+			}
+			else
+			{
+				$array[$line->getOrderlineid()] = $line->getQuantity();
 			}
 		}
 		return $array;
@@ -436,6 +433,19 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			$this->save($expedition);
 			$order = $expedition->getOrder();
 			order_ModuleService::getInstance()->sendCustomerNotification('modules_order/expedition_canceled', $order, $expedition->getBill(), $expedition);
+			
+			$nextExpedition = $this->createForOrder($order);
+			if ($nextExpedition === null)
+			{
+				if ($this->hasShippedExpeditionFromOrder($order))
+				{
+					order_OrderService::getInstance()->completeOrder($order);
+				}
+				else
+				{
+					order_OrderService::getInstance()->cancelOrder($order);
+				}	
+			}
 			$this->tm->commit();
 		}
 		catch (Exception $e)
@@ -443,6 +453,19 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			$this->tm->rollBack($e);
 			throw $e;
 		}		
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return boolean
+	 */
+	protected function hasShippedExpeditionFromOrder($order)
+	{
+		$result = $this->createQuery()
+			->add(Restrictions::eq('order', $order))
+			->add(Restrictions::eq('status', self::SHIPPED))
+			->setProjection(Projections::rowCount('countShipped'))->findColumn('countShipped');
+		return (count($result)) ? $result[0] > 0 : false;
 	}
 	
 	/**

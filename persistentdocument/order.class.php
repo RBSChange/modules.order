@@ -236,6 +236,14 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
+	 * @return string
+	 */
+	public function getContextReference()
+	{
+		return $this->getShop()->getCodeReference();
+	}
+	
+	/**
 	 * @return website_persistentdocument_website
 	 */
 	public function getWebsite()
