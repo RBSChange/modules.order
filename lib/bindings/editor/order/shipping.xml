@@ -29,10 +29,25 @@
 			<field name="mInitData">null</field>
 			
 			<constructor><![CDATA[
+				if (getController().hasModule('productreturns'))
+				{
+					this.mCreateReturnButton = this.addActionButton("${transui:m.productreturns.bo.actions.createreturn,ucf,js}", wToolkit.getIcon('add', 'small'));
+					this.mCreateReturnButton.addEventListener('command', function(event) {me.onCreateReturn(event);}, true);
+				}
 				var me = this;			
 				this.addEventListener("gridInitialised", function (event) {return me.onGridInitialised(event);}, true);
 				this.addEventListener("addressInitialised", function (event) {return me.onAddressInitialised(event);}, true);		
 			]]></constructor>
+	
+			<method name="onCreateReturn">
+				<parameter name="event" />
+				<body><![CDATA[
+				var id = this.documentEditor.documentid;	
+				var uri = ['productreturns', 'createReturnForOrder', 'modules_productreturns_return', id].join(',');
+				var from = ['order', 'openDocument', 'modules_order_order', id, 'shipping'].join(',');
+				openActionUri(uri, from);
+				]]></body>
+			</method>
 	
 			<method name="onGridInitialised">
 				<parameter name="event" />

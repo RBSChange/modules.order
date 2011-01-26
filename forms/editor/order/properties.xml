@@ -17,7 +17,7 @@
 		<sectionrow labeli18n="modules.order.bo.general.Coupon-code" id="couponSectionCode" />
 	</section>
 		
-	<section labeli18n="m.order.bo.doceditor.section.Discounts" class="discountsSection">
+	<section labeli18n="modules.order.bo.doceditor.section.Discounts" class="discountsSection">
 		<section class="discountlines" />
 	</section>
 	
