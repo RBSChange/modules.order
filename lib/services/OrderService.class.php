@@ -750,6 +750,21 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$query->addOrder(Order::desc('document_creationdate'));
 		return $query->find();
 	}
+	
+	/**
+	 * Returns the number of "paid"/"waiting" orders for customer
+	 * 
+	 * @param customer_persistentdocument_customer $customer
+	 * @return Integer
+	 */
+	public function getOrderCountByCustomer($customer)
+	{
+		$query = $this->createQuery();
+		$query->add(Restrictions::eq('customer.id', $customer->getId()));
+		$query->add(Restrictions::in('bill.status', array(order_BillService::SUCCESS, order_BillService::WAITING)));
+		$query->setProjection(Projections::count('id', 'count'));		
+		return intval(f_util_ArrayUtils::firstElement($query->findColumn('count')));
+	}
 
 	/**
 	 * @param customer_persistentdocument_customer $customer
