@@ -61,5 +61,5 @@
 	<key id="creditnote-consumecreditnote">utilisent des avoirs</key>
 	<key id="creditnote-nocreditnote">n'ont pas d'avoir</key>
 	<key id="firstordercartfilter-label">première commande</key>
-	<key id="firstordercartfilter-text">les clients qui passent leurs premières commandes</key>
+	<key id="firstordercartfilter-text">première commande du client</key>
 </i18n>

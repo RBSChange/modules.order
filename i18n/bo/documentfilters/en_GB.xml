@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.documentfilters" lcid="en_GB">
-  <key id="orderfilter-text">orders having {field}</key>
-  <key id="shoporderfilter-label">orders from shops</key>
-  <key id="shoporderfilter-text">orders from {shop}</key>
-  <key id="addrtypefilter-billing">billing</key>
-  <key id="addrtypefilter-shipping">shipping</key>
-  <key id="addrpartfilter-country">country</key>
-  <key id="addrpartfilter-zipcode">zip code</key>
+	<key id="orderfilter-text">orders having {field}</key>
+	<key id="shoporderfilter-label">orders from shops</key>
+	<key id="shoporderfilter-text">orders from {shop}</key>
+	<key id="addrtypefilter-billing">billing</key>
+	<key id="addrtypefilter-shipping">shipping</key>
+	<key id="addrpartfilter-country">country</key>
+	<key id="addrpartfilter-zipcode">zip code</key>
+	<key id="firstordercartfilter-label">first order</key>
+	<key id="firstordercartfilter-text">customer's first order</key>
 </i18n>
