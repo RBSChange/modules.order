@@ -25,10 +25,6 @@ cdocumenteditor#edt_order_order cfieldsgroup.orderexpeditions{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionsSoratbleGrid);
 }
 
-cdocumenteditor#edt_order_order cfieldsgroup.orderreturns{
-	-moz-binding: url(binding:modules.order.cOrderEditor#cReturnsSoratbleGrid);
-}
-
 cdocumenteditor#edt_order_order section.message{
 	-moz-binding: url(binding:modules.order.cOrderEditor#messageSection);
 }
@@ -53,4 +49,8 @@ wdialog[template="ValidateBill"]{
 }
 wdialog[template="ShipExpedition"]{
 	-moz-binding: url(binding:modules.order.cOrderEditor#shipExpeditionDialog);
+}
+
+cproperty.shipExpedition{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cShipExpeditionProperty);
 }

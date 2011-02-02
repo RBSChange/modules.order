@@ -84,4 +84,5 @@
   <key id="confirm-cancel-bill">êtes-vous sur de vouloir annuler cette facture ?</key>
   <key id="ship-expedition">Envoyer une expedition</key>
   <key id="confirm-cancel-expedition">êtes-vous sur de vouloir annuler cette expedition ?</key>
+  <key id="canceled-by">annulé par</key>
 </i18n>
