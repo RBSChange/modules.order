@@ -399,19 +399,22 @@ class order_BillService extends f_persistentdocument_DocumentService
 	protected function validatePayment($bill)
 	{
 		$order = $bill->getOrder();
-		$order->getDocumentService()->updateStock($order);
-		$order->getDocumentService()->processOrder($order);
-		$customer = $order->getCustomer();
-		$customer->setCart(null);
-		$customer->setLastAbandonedOrderDate(null);
-		if ($customer->isModified())
+		if ($order->getOrderStatus() == null)
 		{
-			$this->pp->updateDocument($customer);
+			$order->getDocumentService()->updateStock($order);
+			$order->getDocumentService()->processOrder($order);
+			$customer = $order->getCustomer();
+			$customer->setCart(null);
+			$customer->setLastAbandonedOrderDate(null);
+			if ($customer->isModified())
+			{
+				$this->pp->updateDocument($customer);
+			}
+			$bill->setPaidByCustomerId($customer->getId());
+			$this->pp->updateDocument($bill);
+			order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_success', $order, $bill);
+			order_ModuleService::getInstance()->sendAdminNotification('modules_order/bill_admin_success', $order, $bill);
 		}
-		$bill->setPaidByCustomerId($customer->getId());
-		$this->pp->updateDocument($bill);
-		order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_success', $order, $bill);
-		order_ModuleService::getInstance()->sendAdminNotification('modules_order/bill_admin_success', $order, $bill);
 	}
 	
 	/**
