@@ -154,6 +154,7 @@
   <key id="shipping-number">Expedition N°</key>
   <key id="transport-name">Transporteur</key>
   <key id="tracking-number">Numéro de suivi</key>
+  <key id="tracking-text">état de la livraison</key>
   <key id="product-download">Télécharger</key>
   <key id="product-download-count">Téléchargement(s)</key>
   <key id="cart-validation-error-max-lines">Le nombre maximum de ligne du panier est atteint</key>

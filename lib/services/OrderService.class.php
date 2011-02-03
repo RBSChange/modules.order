@@ -100,7 +100,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$result['expeditionArray'] = order_ExpeditionService::getInstance()->getBoList($order);
 		if (ModuleService::getInstance()->moduleExists('productreturns'))
 		{
-			$result['returnsArray'] = productreturns_ReturnService::getInstance()->getBoList($order);
+			$result['returnsArray'] = productreturns_BasereturnService::getInstance()->getBoList($order);
 		}
 		
 		return $result;

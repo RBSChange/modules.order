@@ -407,6 +407,22 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	/**
 	 * @param order_persistentdocument_expedition $expedition
 	 * @return array
+	 */	
+	public function buildShipExpeditionDialogParams($expedition)
+	{
+		$trackingNumber = $expedition->getTrackingNumber();
+		$result = array(
+			'id' => $expedition->getId(),
+			'lang' => $expedition->getLang(),
+			'label' => $expedition->getLabel(),
+			'transporteur' => $expedition->getTransporteur()
+		);		
+		return $result;
+	}
+	
+	/**
+	 * @param order_persistentdocument_expedition $expedition
+	 * @return array
 	 */
 	public function cancelExpeditionFromBo($expedition)
 	{
@@ -489,7 +505,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 * @param string $trackingNumber
 	 * @param string $message
 	 */
-	public function shipExpedition($expedition, $shippingDate, $trackingNumber, $message)
+	public function shipExpedition($expedition, $shippingDate, $trackingNumber, $message = null)
 	{
 		
 		if ($expedition->getStatus() == self::PREPARE)
@@ -544,6 +560,12 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			'label' => ($trackingNumber) ? $trackingNumber : '-', 
 			'href' => ($trackingNumber) ? $document->getTrackingURL() : null
 		);
+		
+		$resume['properties']['status'] = array('label' => $document->getBoStatusLabel());
+		if ($document->getStatus() == self::PREPARE)
+		{
+			$resume['properties']['status']['rowData'] = JsonService::getInstance()->encode($this->buildShipExpeditionDialogParams($document));
+		}
 		
 		$resume['lines'] = array();
 		foreach ($this->getLinesForDisplay($document) as $line)

@@ -268,7 +268,6 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	protected function fillBillByOrder($bill, $order)
 	{
-		
 		$bill->setOrder($order);
 		$bill->setLabel($order->getOrderNumber());
 		$bill->setAddress($order->getBillingAddress());
@@ -545,7 +544,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			{
 				$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ?  $backendUser->getId() : 'UNKNOWN'));
 			}
-			$bill->setTransactionText('Cancel by :' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
+			$bill->setTransactionText(LocaleService::getInstance()->transBO('m.order.bo.general.canceled-by', array('ucf', 'labl')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
 			$this->save($bill);
 			$order = $bill->getOrder();
 			order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_failed', $order, $bill);

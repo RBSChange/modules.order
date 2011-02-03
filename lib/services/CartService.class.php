@@ -262,10 +262,7 @@ class order_CartService extends BaseService
 	private function validateProduct($cart, $product, $quantity)
 	{
 		$shop = $cart->getShop();
-		if ($product->isPublished() && $product->canBeOrdered($shop) && 
-				$product->getPrice($shop, $cart->getCustomer(), $quantity) != null)
-		if ($product->isPublished() && $product->canBeOrdered($cart->getShop()) && 
-			$product->getPrice($cart->getShop(), $cart->getCustomer(), $quantity) != null)
+		if ($product->isPublished() && $product->canBeOrdered($shop) && $product->getPrice($shop, $cart->getCustomer(), $quantity) != null)
 		{
 			$stDoc = catalog_StockService::getInstance()->getStockableDocument($product);
 			if ($stDoc !== null)

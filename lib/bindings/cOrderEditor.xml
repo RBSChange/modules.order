@@ -902,6 +902,62 @@
 		</content>
 	</binding>
 	
+	<binding id="cShipExpeditionProperty" extends="layout.cDocumentEditor#cLinkProperty">
+		<implementation>
+			<field name="rowData" />
+		
+			<method name="setValue">
+				<parameter name="val" />
+				<body><![CDATA[
+					if (val)
+					{
+						this.setAttribute('linklabel', val.label);
+						if ('rowData' in val)
+						{
+							this.setAttribute('linkclass', 'text-link');
+							this.rowData = val.rowData;
+						}
+						else
+						{
+							this.setAttribute('linkclass', 'text-error');
+							this.rowData = null;
+						}
+						this.removeAttribute('hidden');
+					}
+					else
+					{
+						this.setAttribute('linklabel', '');
+						this.rowData = null;
+						this.setAttribute('hidden', 'true');
+					}
+				]]></body>
+			</method>
+		
+			<method name="click">
+				<body><![CDATA[
+					if (this.rowData !== null)
+					{
+						var me = this;
+						var callBack = function() { me.onShipped(); }
+						getController().openModalDialog(this, 'ShipExpedition', {callBack: callBack, rowData: wCore.parseJSON(this.rowData)});
+					}
+				]]></body>
+			</method>
+			
+			<method name="onShipped">
+				<body><![CDATA[
+					var module = this.parentNode;
+					while (module && module.tagName != "wmodule")
+					{
+						module = module.parentNode;
+					}
+					module.refreshMainViewDeck();
+				]]></body>
+			</method>
+		</implementation>
+	</binding>
+	
+	<!-- Credit notes -->
 	
 	<binding id="cCreditNotesSoratbleGrid" extends="widgets.cGrid#cAbstractSortableGrid">
 		<implementation>
@@ -933,50 +989,6 @@
 						<xul:label name="amount" value="&amp;modules.order.document.creditnote.Amount;" />	
 						<xul:label name="amountNotApplied" value="&amp;modules.order.document.creditnote.AmountNotApplied;" />				
 						<xul:label name="actionrow" value="&amp;modules.order.bo.doceditor.Actions;" />
-					</xul:row>
-				</xul:rows>
-			</xul:grid>
-			<xul:row anonid="template-row" class="document" hidden="true">
-				<xul:label value="" />
-				<xul:label value="" />
-				<xul:label value="" />
-				<xul:toolbar class="actions">
-					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="&amp;modules.uixul.bo.actions.Edit;" />
-				</xul:toolbar>
-			</xul:row>				
-		</content>
-	</binding>
-	
-	<binding id="cReturnsSoratbleGrid" extends="widgets.cGrid#cAbstractSortableGrid">
-		<implementation>
-			<constructor><![CDATA[
-				this.fireEvent('gridInitialised');
-			]]></constructor>
-			
-			<method name="execute_edit">
-				<parameter name="rowNode" />
-				<parameter name="rowData" />			
-				<body><![CDATA[
-					if (this.disabled) {return;}
-					var uri = ['productreturns', 'openDocument', rowData.type, rowData.id].join(',');
-					openActionUri(uri);
-				]]></body>
-			</method>									
-		</implementation>
-		<content>
-			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
-				<xul:columns>	
-					<xul:column flex="1" />
-					<xul:column flex="1" />
-					<xul:column flex="1" />
-					<xul:column />
-				</xul:columns>
-				<xul:rows anonid="document-rows">
-					<xul:row class="head" anonid="head-row">
-						<xul:label name="label" value="&amp;modules.productreturns.document.return.Label;" />
-						<xul:label name="reason" value="&amp;modules.productreturns.document.return.Reason;" />	
-						<xul:label name="status" value="&amp;modules.productreturns.document.return.Amount;" />				
-						<xul:label name="actionrow" value="&amp;modules.order.bo.doceditor.Actions;" />				
 					</xul:row>
 				</xul:rows>
 			</xul:grid>
