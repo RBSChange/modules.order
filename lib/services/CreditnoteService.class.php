@@ -283,6 +283,22 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param order_persistentdocument_creditnote $document
+	 * @param string $actionType
+	 * @param array $formProperties
+	 */
+	public function addFormProperties($document, $propertiesNames, &$formProperties)
+	{	
+		$tamount = $this->getTotalAmountForOrder($document->getOrder(), $this);
+		$document->setOtherCreditNoteAmount($tamount);
+		$formProperties['maxAmount'] = $document->getOrderAmount() - $document->getOtherCreditNoteAmount();
+		if (!isset($formProperties['currencySymbol']))
+		{
+			$formProperties['currencySymbol'] = $document->getCurrencySymbol();
+		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_creditnote $document
 	 * @param Integer $parentNodeId Parent node ID where to save the document.
 	 * @return void
 	 */

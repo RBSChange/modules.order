@@ -6,66 +6,6 @@
 class order_persistentdocument_order extends order_persistentdocument_orderbase
 {
 	/**
-	 * @see f_persistentdocument_PersistentDocumentImpl::addTreeAttributes()
-	 *
-	 * @param string $moduleName
-	 * @param string $treeType
-	 * @param unknown_type $nodeAttributes
-	 */
-	protected function addTreeAttributes($moduleName, $treeType, &$nodeAttributes)
-	{
-		$nodeAttributes['label'] = $this->getOrderNumber();
-		
-		if ($treeType === 'wtree' || $treeType === 'wlist')
-		{
-			$nodeAttributes['orderStatus'] = $this->getOrderStatus();
-			if ($treeType === 'wlist')
-			{
-				$nodeAttributes['date'] = date_DateFormat::format($this->getUICreationdate());
-				$nodeAttributes['orderStatusLabel'] = $this->getBoOrderStatusLabel();
-				$nodeAttributes['formattedTotalAmountWithTax'] = $this->formatPrice($this->getTotalAmountWithTax());
-				$user = $this->getCustomer()->getUser();
-				$nodeAttributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
-				$nodeAttributes['canBeCanceled'] = $this->canBeCanceled();
-			}
-		}
-	}
-	
-	/**
-	 * @param string[] $propertiesNames
-	 * @param array $formProperties
-	 */
-	public function addFormProperties($propertiesNames, &$formProperties)
-	{
-		Framework::info(__METHOD__ . ' ' . implode(', ', $propertiesNames));
-		if (in_array('financial', $propertiesNames))
-		{
-			$infos = $this->getDocumentService()->getFinancialInfos($this);
-			foreach ($infos as $key => $value)
-			{
-				$formProperties[$key] = $value;
-			}
-		}
-		else if (in_array('shipping', $propertiesNames))
-		{
-			$infos = $this->getDocumentService()->getShippingInfos($this);
-			foreach ($infos as $key => $value)
-			{
-				$formProperties[$key] = $value;
-			}
-		}
-		else
-		{
-			//Global Infos
-			$infos = $this->getDocumentService()->getPropertyInfos($this);
-			foreach ($infos as $key => $value)
-			{
-				$formProperties[$key] = $value;
-			}
-		}
-	}
-
-	/**
 	 * @return String
 	 */
 	public function getBoOrderStatusLabel()
