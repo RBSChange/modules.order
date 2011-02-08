@@ -1,0 +1,30 @@
+<table width="100%" border="1" cellspacing="0" cellpadding="0" tal:define="shop cart/getShop">
+	<tr>
+		<th>${trans: m.order.frontoffice.designation,ucf}</th>
+		<th tal:condition="shop/getDisplayPriceWithoutTax">
+			<abbr title="${trans: m.order.frontoffice.unitprice-without-tax}">${trans: m.order.frontoffice.unitprice-without-tax-abr,ucf}</abbr>
+		</th>
+		<th tal:condition="shop/getDisplayPriceWithTax">
+			<abbr title="${trans: m.order.frontoffice.unitprice-with-tax}">${trans: m.order.frontoffice.unitprice-with-tax-abr,ucf}</abbr>
+		</th>
+	    <th>${trans: m.order.frontoffice.quantity,ucf}</th>
+		<th tal:condition="shop/getDisplayPriceWithoutTax">
+			<abbr title="${trans: m.order.frontoffice.totalprice-without-tax}">${trans: m.order.frontoffice.totalprice-without-tax-abr,ucf}</abbr>
+		</th>
+	   	<th tal:condition="shop/getDisplayPriceWithTax">
+			<abbr title="${trans: m.order.frontoffice.totalprice-with-tax}">${trans: m.order.frontoffice.totalprice-with-tax-abr,ucf}</abbr>
+		</th>
+	</tr>
+	<tal:block tal:repeat="line cart/getCartLineArray">
+		<tr tal:define="product line/getProduct" tal:condition="line/getProduct" align="center">
+			<td>
+				<a tal:condition="product" change:link="document product">${product/getLabelAsHtml}</a>
+			</td>
+			<td tal:condition="shop/getDisplayPriceWithoutTax">${php:shop.formatPrice(line.getValueWithoutTax())}</td>
+			<td tal:condition="shop/getDisplayPriceWithTax">${php:shop.formatPrice(line.getValueWithTax())}</td>
+			<td>${line/getQuantity}</td>
+			<td tal:condition="shop/getDisplayPriceWithoutTax">${php:shop.formatPrice(line.getTotalValueWithoutTax())}</td>
+			<td tal:condition="shop/getDisplayPriceWithTax">${php:shop.formatPrice(line.getTotalValueWithTax())}</td>
+		</tr>
+	</tal:block>
+</table>

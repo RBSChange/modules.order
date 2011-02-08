@@ -1,44 +1,37 @@
 <table width="100%" border="1" cellspacing="0" cellpadding="0">
 	<tr>
 		<th>
-			<abbr change:i18nattr="title &modules.order.frontoffice.Reference;" change:translate="modules.order.frontoffice.Reference-abbr">Ref.</abbr>
+			<abbr title="${trans: m.order.frontoffice.reference,ucf}">${trans: m.order.frontoffice.reference-abbr,ucf}</abbr>
 		</th>
-	    <th change:translate="modules.order.frontoffice.Designation" />
+	    <th>${trans: m.order.frontoffice.designation,ucf}</th>
 		<th tal:condition="shop/getDisplayPriceWithoutTax">
-			<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-without-tax;" change:translate="modules.order.frontoffice.unitprice-without-tax-abr">PU HT€</abbr>
+			<abbr title="${trans: m.order.frontoffice.unitprice-without-tax}">${trans: m.order.frontoffice.unitprice-without-tax-abr,ucf}</abbr>
 		</th>
 		<th tal:condition="shop/getDisplayPriceWithTax">
-			<abbr change:i18nattr="title &modules.order.frontoffice.unitprice-with-tax;" change:translate="modules.order.frontoffice.unitprice-with-tax-abr">PU TTC€</abbr>
+			<abbr title="${trans: m.order.frontoffice.unitprice-with-tax}">${trans: m.order.frontoffice.unitprice-with-tax-abr,ucf}</abbr>
 		</th>
-	    <th change:translate="modules.order.frontoffice.Quantity" />
+	    <th>${trans: m.order.frontoffice.quantity,ucf}</th>
 		<th tal:condition="shop/getDisplayPriceWithoutTax">
-			<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-without-tax;" change:translate="modules.order.frontoffice.totalprice-without-tax-abr">PT HT€</abbr>
+			<abbr title="${trans: m.order.frontoffice.totalprice-without-tax}">${trans: m.order.frontoffice.totalprice-without-tax-abr,ucf}</abbr>
 		</th>
 	   	<th tal:condition="shop/getDisplayPriceWithTax">
-			<abbr change:i18nattr="title &modules.order.frontoffice.totalprice-with-tax;" change:translate="modules.order.frontoffice.totalprice-with-tax-abr">PT TTC€</abbr>
+			<abbr title="${trans: m.order.frontoffice.totalprice-with-tax}">${trans: m.order.frontoffice.totalprice-with-tax-abr,ucf}</abbr>
 		</th>
 	</tr>
 
 	<tr tal:repeat="line order/getLineArray" align="center">
-		<tal:block tal:define="global product cartLine/getProduct" />
-		<tal:block tal:define="global cartLineIndex repeat/cartLine/index" />
-		<!-- Article -->
-		<td>${line/getCodeReference}</td>
-		<!-- Désignation -->
-		<td>
-			<a tal:condition="product" change:link="document product">${line/getLabel}</a>
-			<a tal:condition="not: product">${line/getLabel}</a>
-		</td>
-		<!-- PU HT -->
-		<td tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getUnitPriceWithoutTax())}</td>
-		<!-- PU TTC -->
-		<td tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getUnitPriceWithTax())}</td>
-		<!-- Quantity -->
-		<td>${line/getQuantity}</td>
-		<!-- PT HT -->
-		<td tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getAmountWithoutTax())}</td>
-		<!-- PT TTC -->
-		<td tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getAmountWithTax())}</td>
+		<tal:block tal:define="global product line/getProduct">
+			<td>${line/getCodeReference}</td>
+			<td>
+				<a tal:condition="product" change:link="document product">${line/getLabel}</a>
+				<a tal:condition="not: product">${line/getLabel}</a>
+			</td>
+			<td tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getUnitPriceWithoutTax())}</td>
+			<td tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getUnitPriceWithTax())}</td>
+			<td>${line/getQuantity}</td>
+			<td tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getAmountWithoutTax())}</td>
+			<td tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getAmountWithTax())}</td>
+		</tal:block>
 	</tr>
 </table><br />
 
