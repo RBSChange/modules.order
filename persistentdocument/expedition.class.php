@@ -6,23 +6,6 @@
 class order_persistentdocument_expedition extends order_persistentdocument_expeditionbase 
 {
 	/**
-	 * @param string $moduleName
-	 * @param string $treeType
-	 * @param array<string, string> $nodeAttributes
-	 */
-//	protected function addTreeAttributes($moduleName, $treeType, &$nodeAttributes)
-//	{
-//	}
-	
-	/**
-	 * @param string $actionType
-	 * @param array $formProperties
-	 */
-//	public function addFormProperties($propertiesNames, &$formProperties)
-//	{	
-//	}
-
-	/**
 	 * @return order_persistentdocument_expeditionline[]
 	 */
 	public function getLinesForDisplay()

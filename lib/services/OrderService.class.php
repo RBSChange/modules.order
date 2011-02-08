@@ -1425,6 +1425,68 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		}
 	}
 	
+	
+	
+	/**
+	 * @param f_persistentdocument_PersistentDocument $document
+	 * @param String[] $propertiesName
+	 * @param Array $datas
+	 */
+	public function addFormProperties($document, $propertiesNames, &$datas)
+	{
+		Framework::info(__METHOD__ . ' ' . implode(', ', $propertiesNames));
+		if (in_array('financial', $propertiesNames))
+		{
+			$infos = $this->getFinancialInfos($this);
+			foreach ($infos as $key => $value)
+			{
+				$formProperties[$key] = $value;
+			}
+		}
+		else if (in_array('shipping', $propertiesNames))
+		{
+			$infos = $this->getShippingInfos($this);
+			foreach ($infos as $key => $value)
+			{
+				$formProperties[$key] = $value;
+			}
+		}
+		else
+		{
+			//Global Infos
+			$infos = $this->getPropertyInfos($this);
+			foreach ($infos as $key => $value)
+			{
+				$formProperties[$key] = $value;
+			}
+		}
+		
+	}
+
+	/**
+	 * @param f_persistentdocument_PersistentDocument $document
+	 * @param string $moduleName
+	 * @param string $treeType
+	 * @param array<string, string> $nodeAttributes
+	 */
+	public function addTreeAttributes($document, $moduleName, $treeType, &$nodeAttributes)
+	{
+		$nodeAttributes['label'] = $document->getOrderNumber();	
+		if ($treeType === 'wtree' || $treeType === 'wlist')
+		{
+			$nodeAttributes['orderStatus'] = $document->getOrderStatus();
+			if ($treeType === 'wlist')
+			{
+				$nodeAttributes['date'] = date_DateFormat::format($document->getUICreationdate());
+				$nodeAttributes['orderStatusLabel'] = $document->getBoOrderStatusLabel();
+				$nodeAttributes['formattedTotalAmountWithTax'] = $document->formatPrice($document->getTotalAmountWithTax());
+				$user = $document->getCustomer()->getUser();
+				$nodeAttributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
+				$nodeAttributes['canBeCanceled'] = $document->canBeCanceled();
+			}
+		}
+	}
+
 	// Deprecated
 	
 	/**
