@@ -51,6 +51,14 @@ class order_CartService extends BaseService
 		{
 			$this->clearCartIfNeeded($cart);
 		}
+		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
+		$user = users_UserService::getInstance()->getCurrentFrontEndUser();
+		if ($customer !== null && $user != null)
+		{
+			$cart->setCustomerId($customer->getId());
+			$cart->setUserId($user->getId());
+		}
+
 		return $cart;
 	}
 	
