@@ -18,11 +18,15 @@ class order_RemoveCartLineAction extends f_action_BaseAction
 		}
 
 		$pageId = $request->getParameter('pageref', null);
-		$url = null;
+		
 		if (is_numeric($pageId))
 		{
 			$url = LinkHelper::getDocumentUrl(DocumentHelper::getDocumentInstance($pageId, 'modules_website/page'));
-		}		
+		}	
+		else 
+		{
+			$url = $_SERVER['HTTP_REFERER'];
+		}	
 		$context->getController()->redirectToUrl(str_replace('&amp;', '&', $url));
 
 		return View::NONE;
