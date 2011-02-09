@@ -113,7 +113,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$result = array();
 		$informations = array();
-		
+				
 		$informations['canBeCanceled'] = $order->canBeCanceled();
 		$informations['reference'] = $order->getOrderNumber();
 		$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
@@ -1437,30 +1437,29 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		Framework::info(__METHOD__ . ' ' . implode(', ', $propertiesNames));
 		if (in_array('financial', $propertiesNames))
 		{
-			$infos = $this->getFinancialInfos($this);
+			$infos = $this->getFinancialInfos($document);
 			foreach ($infos as $key => $value)
 			{
-				$formProperties[$key] = $value;
+				$datas[$key] = $value;
 			}
 		}
 		else if (in_array('shipping', $propertiesNames))
 		{
-			$infos = $this->getShippingInfos($this);
+			$infos = $this->getShippingInfos($document);
 			foreach ($infos as $key => $value)
 			{
-				$formProperties[$key] = $value;
+				$datas[$key] = $value;
 			}
 		}
 		else
 		{
 			//Global Infos
-			$infos = $this->getPropertyInfos($this);
+			$infos = $this->getPropertyInfos($document);
 			foreach ($infos as $key => $value)
 			{
-				$formProperties[$key] = $value;
+				$datas[$key] = $value;
 			}
 		}
-		
 	}
 
 	/**
