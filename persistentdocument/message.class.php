@@ -2,7 +2,7 @@
 class order_persistentdocument_message extends order_persistentdocument_messagebase
 {
 	/**
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function isSentByCustomer()
 	{
@@ -12,9 +12,7 @@ class order_persistentdocument_message extends order_persistentdocument_messageb
 	// DEPRECATED
 	
 	/**
-	 * Get the readable message date.
-	 * @return String
-	 * @deprecated use getCreationdate() or getUICreationdate()
+	 * @deprecated (will be removed in 4.0) use getCreationdate() or getUICreationdate()
 	 */
 	public function getMessageDate()
 	{

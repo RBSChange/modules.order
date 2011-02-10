@@ -288,7 +288,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	 */
 	public function addFormProperties($document, $propertiesNames, &$formProperties)
 	{	
-		$tamount = $this->getTotalAmountForOrder($document->getOrder(), $this);
+		$tamount = $this->getTotalAmountForOrder($document->getOrder(), $document);
 		$document->setOtherCreditNoteAmount($tamount);
 		$formProperties['maxAmount'] = $document->getOrderAmount() - $document->getOtherCreditNoteAmount();
 		if (!isset($formProperties['currencySymbol']))
