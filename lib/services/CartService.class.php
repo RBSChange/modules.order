@@ -722,25 +722,28 @@ class order_CartService extends BaseService
 	}
 				
 	/**
-	 * @param customer_persistentdocument_address $address
 	 * @param order_CartInfo $cart
 	 * @return Boolean
 	 */
-	public function validateBillingAddress($address, $cart)
+	public function validateBillingAddress($cart)
 	{
-		$isCountryInZone = zone_ZoneService::getInstance()->isCountryInZone($address->getCountry(), $cart->getShop()->getBillingZone());
-		return $isCountryInZone && zone_CountryService::getInstance()->isZipCodeValid($address->getCountry()->getId(), $address->getZipCode());
+		$countryId = $cart->getAddressInfo()->billingAddress->CountryId;
+		if ($countryId)
+		{
+			$country = zone_persistentdocument_country::getInstanceById($countryId);
+			return zone_ZoneService::getInstance()->isCountryInZone($country, $cart->getShop()->getBillingZone());
+		}
+		return false;
 	}
 	
 	/**
-	 * @param customer_persistentdocument_address $address
 	 * @param order_CartInfo $cart
 	 * @return Boolean
 	 */
-	public function validateShippingAddress($address, $cart)
+	public function validateShippingAddress($cart)
 	{
-		$isCountryInZone = zone_ZoneService::getInstance()->isCountryInZone($address->getCountry(), $cart->getShop()->getShippingZone());
-		return $isCountryInZone && zone_CountryService::getInstance()->isZipCodeValid($address->getCountry()->getId(), $address->getZipCode());
+		$taxZone = catalog_TaxService::getInstance()->getCurrentTaxZone($cart->getShop(), $cart);
+		return $taxZone !== null;
 	}
 	
 	/**

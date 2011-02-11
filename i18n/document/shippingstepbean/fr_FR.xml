@@ -3,6 +3,7 @@
   <key id="usesameaddressforbilling">Utiliser votre adresse de livraison</key>
   <key id="select">Continuer</key>
   <key id="shippingmode-error">Le mode de livraison choisi n'est pas valide</key>
+  <key id="shipping-invalid-address">Adresse de livraison non valide</key>
   <key id="delivery-address-legend">Adresse de livraison</key>
   <key id="delivery-address-text">Pour que votre colis arrive à destination sans encombres, merci de bien vouloir remplir le fomulaire ci-dessous.</key>
   <key id="billing-address-legend">Adresse de facturation</key>

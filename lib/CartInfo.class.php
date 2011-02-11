@@ -150,14 +150,6 @@ class order_CartInfo
 	/**
 	 * @return zone_persistentdocument_zone
 	 */
-	public function getShippingZone()
-	{
-		return $this->getShop()->getShippingZone();
-	}
-
-	/**
-	 * @return zone_persistentdocument_zone
-	 */
 	public function getBillingZone()
 	{
 		return $this->getShop()->getBillingZone();

@@ -152,8 +152,18 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 		if ($cartInfo->canSelectShippingModeId() && !$shippingStep->shippingFilterId)
 		{
 			$ok = false;
-			$errMsg = f_Locale::translate('&modules.order.document.shippingstepbean.ShippingMode-Error;');
+			$errMsg = LocaleService::getInstance()->transFO('m.order.document.shippingstepbean.shippingmode-error', array('ucf', 'html'));
 			$this->addError($errMsg);
+		}
+		
+		if ($ok)
+		{	
+			if (!order_CartService::getInstance()->validateShippingAddress($cartInfo))
+			{
+				$ok = false;
+				$errMsg = LocaleService::getInstance()->transFO('m.order.document.shippingstepbean.shipping-invalid-address', array('ucf', 'html'));
+				$this->addError($errMsg);
+			}
 		}
 		return $ok;
 	}
