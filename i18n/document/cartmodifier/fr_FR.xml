@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.cartmodifier" lcid="fr_FR">
+	<include id="m.generic.document.document" />
+	<key id="document-name">modificateur de panier</key>
+	<key id="shop">boutique</key>
+	<key id="description">description</key>
+	<key id="exclusive">modificateur non cumulatif</key>
+	<key id="exclusive-help">Indique que l'application de ce modificateur de panier exclut tout autre modificateur</key>
+	<key id="excludemodifier">modificateurs à exclure</key>
+	<key id="excludemodifier-help">Liste des modificateurs de panier qui ne peuvent pas etre appliqués en meme temps que cette réduction.</key>
+	<key id="startpublicationdate">début de validité</key>
+	<key id="endpublicationdate">fin de validité</key>
+</i18n>

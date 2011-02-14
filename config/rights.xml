@@ -15,8 +15,7 @@
     <document name="expeditionline"/>
     <document name="expedition"/>
     <document name="creditnote"/>
-    
-   
+    <document name="cartmodifier"/>
   </actions>
   <roles>
     <role name="Admin">
@@ -36,8 +35,7 @@
       <permission name="Deactivated.*"/>
       <permission name="CancelOrder.order"/>
       <permission name="EditLocale"/>
-     
-      <permission name="LoadOrderMessages.order"/> 
+      <permission name="LoadOrderMessages.order"/>
       <permission name="LoadOrderFinancial.order"/>
       <permission name="LoadOrderShipping.order"/>
     </role>

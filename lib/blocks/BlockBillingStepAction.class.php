@@ -131,8 +131,7 @@ class order_BlockBillingStepAction extends order_BlockAbstractProcessStepAction
 		$save = false;
 		if (f_util_StringUtils::isNotEmpty($couponCode)) 
 		{		
-			$ocs = marketing_CouponService::getInstance();
-			$coupon = $ocs->getByCode($couponCode);
+			$coupon = customer_CouponService::getInstance()->getByCode($couponCode);
 			$currentCoupon = order_CartService::getInstance()->setCoupon($cartInfo, $coupon);
 			if ($currentCoupon !== null)
 			{		
@@ -144,7 +143,7 @@ class order_BlockBillingStepAction extends order_BlockAbstractProcessStepAction
 			}
 		}
 		
-		//Mise à jour de l'affichage
+		// Mise à jour de l'affichage.
 		if ($currentCoupon)
 		{
 			$billingStep->coupon = $currentCoupon->getLabel();

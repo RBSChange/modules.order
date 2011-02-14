@@ -310,7 +310,7 @@ class order_CartService extends BaseService
 	
 	/**
 	 * @param order_CartInfo $cart
-	 * @param marketing_persistentdocument_coupon $coupon
+	 * @param customer_persistentdocument_coupon $coupon
 	 */
 	public function setCoupon($cart, $coupon)
 	{
@@ -319,7 +319,7 @@ class order_CartService extends BaseService
 			if ($cart->hasCoupon())
 			{
 				$cart->setCoupon(null);
-				$this->refreshDiscount($cart);
+				$this->refreshModifiers($cart);
 			}
 		}
 		else
@@ -328,7 +328,7 @@ class order_CartService extends BaseService
 			$couponinfo->setId($coupon->getId());
 			$cart->setCoupon($couponinfo);
 			$this->refreshCoupon($cart);
-			$this->refreshDiscount($cart);
+			$this->refreshModifiers($cart);
 		}
 		return $cart->getCoupon();
 	}
@@ -395,8 +395,8 @@ class order_CartService extends BaseService
 		$this->refreshShipping($cart);
 		Framework::bench('refreshShipping');
 	
-		$this->refreshDiscount($cart);
-		Framework::bench('refreshDiscount');
+		$this->refreshModifiers($cart);
+		Framework::bench('refreshModifiers');
 		
 		$this->refreshCreditNote($cart);
 		Framework::bench('refreshCreditNote');
@@ -473,12 +473,9 @@ class order_CartService extends BaseService
 	/**
 	 * @param order_CartInfo $cart
 	 */
-	protected function refreshDiscount($cart)
+	protected function refreshModifiers($cart)
 	{
-		if (ModuleService::getInstance()->isInstalled('marketing'))
-		{
-			marketing_DiscountService::getInstance()->refreshDiscountArrayForCart($cart);	
-		}
+		order_CartmodifierService::getInstance()->refreshModifiersForCart($cart);
 	}
 
 	/**
@@ -497,7 +494,7 @@ class order_CartService extends BaseService
 		if ($cart->hasCoupon())
 		{
 			$coupon = $cart->getCoupon();
-			$document = DocumentHelper::getDocumentInstance($coupon->getId(), 'modules_marketing/coupon');
+			$document = customer_persistentdocument_coupon::getInstanceById($coupon->getId());
 			if ($document->getDocumentService()->validateForCart($document, $cart))
 			{
 				$coupon->setLabel($document->getCode());

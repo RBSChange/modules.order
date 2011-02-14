@@ -141,7 +141,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$coupon = $order->getCouponData();
 			try 
 			{
-				$couponDocument = DocumentHelper::getDocumentInstance($couponId, 'modules_customer/coupon');
+				$couponDocument = customer_persistentdocument_coupon::getInstanceById($couponId);
 				$couponLabel = $couponDocument->getLabel();
 			}
 			catch (Exception $e)
@@ -250,7 +250,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$coupon = $order->getCouponData();
 			try 
 			{
-				$couponDocument = DocumentHelper::getDocumentInstance($couponId, 'modules_customer/coupon');
+				$couponDocument = customer_persistentdocument_coupon::getInstanceById($couponId);
 				$couponLabel = $couponDocument->getLabel();
 			}
 			catch (Exception $e)
@@ -501,7 +501,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			
 			$orderDocument->setOrderStatus(null);
 			
-			
 			$shop = $cartInfo->getShop();
 			$orderDocument->setCurrencyCode($shop->getCurrencyCode());
 			$orderDocument->setPriceFormat($shop->getDocumentService()->getPriceFormat($shop));
@@ -524,7 +523,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			// Adresse de livraison.
 			$this->fillOrderShippingAddress($orderDocument, $cartInfo);
 			
-			//Frais de livraison
+			// Frais de livraison.
 			$shippingModeId = intval($cartInfo->getShippingModeId()) > 0 ? intval($cartInfo->getShippingModeId()) : -1;
 			$orderDocument->setShippingModeId($shippingModeId);
 			$orderDocument->setShippingModeTaxCode($cartInfo->getShippingTaxCode());
@@ -537,15 +536,14 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			// Adresse de facturation.
 			$this->fillOrderBillingAddress($orderDocument, $cartInfo);
 			
-			
 			// Adresse par defaut.
 			$this->generateDefaultAddressByOrder($orderDocument, $cartInfo);
 			
-			//Mode de facturation
+			// Mode de facturation.
 			$billingMode = $cartInfo->getBillingMode();
 			$orderDocument->setBillingModeDocument($billingMode);
 			
-			//Traitements des lignes de la commande
+			// Traitements des lignes de la commande.
 			$orderlineService = order_OrderlineService::getInstance();
 			foreach ($cartInfo->getCartLineArray() as $index => $cartLine)
 			{
@@ -582,23 +580,22 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$discountDataArray = array();
 			foreach ($discountArray as $discount) 
 			{
-				
 				$discountData = array('id' => $discount->getId(), 
 									'label' => $discount->getLabel(),
 									'valueWithTax' => $discount->getValueWithTax(),
 									'valueWithoutTax' => $discount->getValueWithoutTax());
 				
-				$dicountDocument = DocumentHelper::getDocumentInstance($discount->getId());				
-				if (f_util_ClassUtils::methodExists($dicountDocument, 'updateOrder'))
+				$discountDocument = DocumentHelper::getDocumentInstance($discount->getId());				
+				if (f_util_ClassUtils::methodExists($discountDocument, 'updateOrder'))
 				{
-					$extraData = $dicountDocument->updateOrder($orderDocument, $discount);
+					$extraData = $discountDocument->updateOrder($orderDocument, $discount);
 					$discountData = array_merge($discountData, $extraData);
 				}
 				$discountDataArray[] = $discountData;
 			}
 			$orderDocument->setDiscountDataArray($discountDataArray);	
 					
-			//Save the Order
+			// Save the Order.
 			$folder = $this->getFolderOfDay($orderDocument->getUICreationdate());
 			$orderDocument->save($folder->getId());
 			foreach ($orderDocument->getLineArray() as $orderLine)
@@ -1143,7 +1140,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 
 	/**
 	 * @param order_persistentdocument_order $order
-	 * @return order_persistentdocument_coupon
+	 * @return customer_persistentdocument_coupon
 	 */
 	public function getUsedCouponByOrder($order)
 	{
@@ -1152,7 +1149,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		{
 			try
 			{
-				return $this->getDocumentInstance($couponId, 'modules_marketing/coupon');
+				return customer_persistentdocument_coupon::getInstanceById($couponId);
 			}
 			catch (Exception $e)
 			{

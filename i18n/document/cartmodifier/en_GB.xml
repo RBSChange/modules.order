@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.cartmodifier" lcid="en_GB">
+	<include id="m.generic.document.document" />
+	<key id="document-name">cart modifier</key>
+	<key id="description">description</key>
+	<key id="shop">shop</key>
+	<key id="startpublicationdate">start validity date</key>
+	<key id="endpublicationdate">end validity date</key>
+</i18n>

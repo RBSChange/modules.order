@@ -29,3 +29,6 @@ treechildren::-moz-tree-image(modules_order_creditnote){
 wdialog[template="ProcessReshipmentNpai"] .dialog-header{
 	background: url(/changeicons/small/expedition.png) transparent center  left no-repeat!important;
 }
+treechildren::-moz-tree-image(modules_order_cartmodifier){
+	list-style-image: url(/changeicons/small/cart-modifier.png);
+}
