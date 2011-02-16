@@ -19,6 +19,7 @@ class order_Setup extends object_InitDataSetup
 			$scriptReader->executeModuleScript('order', 'init.xml');
 			$scriptReader->executeModuleScript('order', 'init-lists-for-filters.xml');
 			$scriptReader->executeModuleScript('order', 'init-comment.xml');
+			$scriptReader->executeModuleScript('order', 'init-expeditions.xml');
 		}
 		catch (Exception $e)
 		{
