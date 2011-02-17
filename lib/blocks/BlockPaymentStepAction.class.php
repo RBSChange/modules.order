@@ -23,9 +23,9 @@ class order_BlockPaymentStepAction extends order_BlockAbstractProcessStepAction
 		{
 			if (Framework::isInfoEnabled())
 			{
-				Framework::info(__METHOD__ . ' No current order found');	
-				$this->redirectToFirstStep();
+				Framework::info(__METHOD__ . ' No current order found');
 			}
+			$this->redirectToFirstStep();
 		}
 		
 		$this->setCurrentStep('Payment');
