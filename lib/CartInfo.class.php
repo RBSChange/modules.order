@@ -1339,7 +1339,10 @@ class order_CartInfo
 		{
 			$this->successMessage = array();
 		}
-		$this->successMessage[] = $message;
+		if (!in_array($message, $this->successMessage))
+		{
+			$this->successMessage[] = $message;
+		}
 	}
 
 	/**
@@ -1407,7 +1410,10 @@ class order_CartInfo
 		{
 			$this->warningMessage = array();
 		}
-		$this->warningMessage[] = $message;
+		if (!in_array($message, $this->warningMessage))
+		{
+			$this->warningMessage[] = $message;
+		}
 	}
 
 	/**
@@ -1476,7 +1482,10 @@ class order_CartInfo
 		{
 			$this->errorMessage = array();
 		}
-		$this->errorMessage[] = $message;
+		if (!in_array($message, $this->errorMessage))
+		{
+			$this->errorMessage[] = $message;
+		}
 	}
 	
 	/**
