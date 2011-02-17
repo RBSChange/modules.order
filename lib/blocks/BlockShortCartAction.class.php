@@ -26,9 +26,18 @@ class order_BlockShortCartAction extends website_BlockAction
 		$currentPage = website_WebsiteModuleService::getInstance()->getCurrentPage();
 		if ($op->inProcess())
 		{
-			
+			// Set the url only if it is not the current page.
 			$opURL = $op->getOrderProcessURL();
-			if (strpos($opURL, RequestContext::getInstance()->getPathURI()) === false)
+			if (strpos($opURL, '?') !== false)
+			{
+				list($urlToCheck, ) = explode('?', $opURL);
+			}
+			else
+			{
+				$urlToCheck = $opURL;
+			}
+			
+			if ($urlToCheck != $_SERVER['SCRIPT_URI'])
 			{
 				$request->setAttribute('processUrl', $opURL);
 			}	

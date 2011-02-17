@@ -49,52 +49,52 @@
 	<systemfolder module="notification" relatedmodule="order">
 		<notification codename="modules_order/bill_waiting"
 			label="Commande enregistrée"
-			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
-			subject="Votre commande sur le site {company-name} est enregistrée"
+			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}"
+			subject="Votre commande sur le site {website-url} est enregistrée"
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
 			body="Votre commande d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt; a été enregistrée sous le numéro &lt;em&gt;{orderId}&lt;/em&gt;."
-			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
 			template="default" />
 			
 		<notification codename="modules_order/bill_success"
 			label="Paiement accepté"
-			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
-			subject="Le paiement de votre commande {orderId} sur le site {company-name} est validé"
+			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}"
+			subject="Le paiement de votre commande {orderId} sur le site {website-url} est validé"
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
 			body="Nous avons le plaisir de vous informer que le paiement concernant votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;validé&lt;/strong&gt; par notre banque."
-			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
 			template="default" />			
 			
 		<notification codename="modules_order/bill_failed"
 			label="Paiement refusé"
-			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
-			subject="Le paiement de votre commande {orderId} sur le site {company-name} a été refusé"
+			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}"
+			subject="Le paiement de votre commande {orderId} sur le site {website-url} a été refusé"
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
 			body="Nous avons le regret de vous informer que le paiement concernant votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;refusé&lt;/strong&gt; par notre banque."
-			footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
 			template="default" />
 			
 		<notification codename="modules_order/order_canceled"
 			label="Commande annulée"
-			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
-			subject="Votre commande {orderId} sur le site {company-name} a été annulée"
+			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {website-url}"
+			subject="Votre commande {orderId} sur le site {website-url} a été annulée"
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
 			body="Nous avons le regret de vous informer que votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;annulée&lt;/strong&gt;."
-			footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
 			template="default" />
 			
 		<notification codename="modules_order/order_complete"
-			label="Commande expédiée"
-			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
-			subject="Votre commande {orderId} sur le site {company-name} est expédiée"
+			label="Commande complètement expédiée"
+			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {website-url}"
+			subject="Votre commande {orderId} sur le site {website-url} est complètement expédiée"
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
-			body="Nous avons le plaisir de vous informer que votre commande &lt;em&gt;{orderId}&lt;/em&gt; a été &lt;strong&gt;expédiée&lt;/strong&gt;. Le numéro du colis ({shippingMode}) est : &lt;em&gt;{packageNumber}&lt;/em&gt;."
-			footer="&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			body="Nous avons le plaisir de vous informer que votre commande &lt;em&gt;{orderId}&lt;/em&gt; est désormais complètement expédiée."
+			footer="&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
 			template="default" />
 			
 		<notification codename="modules_order/bill_admin_success"
 			label="Nouvelle commande (administrateur)"
-			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}"
 			subject="Nouvelle commande : numéro : {orderId}, client : {fullname}, montant : {orderAmount}"
 			header="&lt;strong&gt;Une nouvelle commande est validée et payée.&lt;/strong&gt;"
 			body="&lt;dl&gt;&lt;dt&gt;Numéro de commande&lt;/dt&gt;&lt;dd&gt;{orderId}&lt;/dd&gt;&lt;dt&gt;Montant&lt;/dt&gt;&lt;dd&gt;{orderAmount}&lt;/dd&gt;&lt;dt&gt;Client&lt;/dt&gt;&lt;dd&gt;{fullname}&lt;/dd&gt;&lt;/dl&gt;."
@@ -102,15 +102,15 @@
 			
 		<notification codename="modules_order/bill_admin_waiting"
 			label="Nouvelle commande en attente de confirmation de paiement (administrateur)"
-			availableparameters="{orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}"
 			subject="Nouvelle commande : numéro : {orderId}, client : {fullname}, montant : {orderAmount}"
 			header="&lt;strong&gt;Une nouvelle commande est en attente de confirmation de paiement &lt;/strong&gt;"
 			body="&lt;dl&gt;&lt;dt&gt;Numéro de commande&lt;/dt&gt;&lt;dd&gt;{orderId}&lt;/dd&gt;&lt;dt&gt;Montant&lt;/dt&gt;&lt;dd&gt;{orderAmount}&lt;/dd&gt;&lt;dt&gt;Client&lt;/dt&gt;&lt;dd&gt;{fullname}&lt;/dd&gt;&lt;/dl&gt;.&lt;br/&gt;&lt;strong&gt;Vous pourrez être amené à confirmer le paiement de cette commande dans le backoffice de RBS Change.&lt;/strong&gt;"
 			template="default" />
-			
+
 		<notification codename="modules_order/messageFromCustomer"
 			label="Message envoyé par un client"
-			availableparameters="{content}, {orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {content}, {website-url}"
 			subject="Message à propos de la commande numéro : {orderId}, client : {fullname}"
 			header="&lt;strong&gt;Message à propos de la commande numéro {orderId}.&lt;/strong&gt;"
 			body="&lt;p&gt;{content}&lt;/p&gt;"
@@ -118,8 +118,8 @@
 			
 		<notification codename="modules_order/messageToCustomer"
 			label="Message envoyé à un client"
-			availableparameters="{content}, {orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
-			subject="Message à propos de votre commande numéro {orderId} sur le site {company-name}"
+			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {content}, {website-url}"
+			subject="Message à propos de votre commande numéro {orderId} sur le site {website-url}"
 			header="&lt;strong&gt;Message à propos de la commande numéro {orderId}.&lt;/strong&gt;"
 			body="&lt;p&gt;{content}&lt;/p&gt;"
 			template="default" />

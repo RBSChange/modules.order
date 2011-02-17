@@ -19,11 +19,11 @@
 	<systemfolder module="notification" relatedmodule="order">
 		<notification codename="modules_order/comment-reminder"
 			label="Suggestion de commenter les produits commandés"
-			availableparameters="{reminderProductBlock}, {orderId}, {orderAmount}, {title}, {fullname}, {orderDetail}, {packageNumber}, {billingMode}, {shippingMode}, {date}, {company-name}, {website-url}"
+			availableparameters="{reminderProductBlock}, {orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {website-url}"
 			subject="Donnez votre avis"
 			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
 			body="Vous avez commandé dernièrement les produits suivants. Vous pouvez publier votre avis les concernant en suivant les liens indiqués : {reminderProductBlock}"
-			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {company-name}.&lt;/p&gt;"
+			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
 			template="default" />
 	</systemfolder>
 </script>
