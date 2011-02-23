@@ -427,6 +427,11 @@
 	<entity id="list.comment-reminder-selection-random">
 		<locale lang="fr">aléatoire</locale>
 	</entity>
+
+        <entity id="column.lastMessageDate">
+		<locale lang="fr">Date du dernier message</locale>
+		<locale lang="en">last message date</locale>
+	</entity>
 	
 	<entity id="column.date">
 		<locale lang="fr">Date</locale>
