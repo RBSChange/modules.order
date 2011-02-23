@@ -850,9 +850,11 @@ class order_CartService extends BaseService
 	 * @param catalog_persistentdocument_shop $shop
 	 * @param catalog_persistentdocument_product[] $products
 	 * @param integer[] $quantity
+	 * @param boolean $askConfirmation
 	 * @param array $paramsToRedirect
+	 * @return boolean
 	 */
-	public function checkAddToCart($cart, $shop, $products, $quantities, $paramsToRedirect)
+	public function checkAddToCart($cart, $shop, $products, $quantities, $askConfirmation, $paramsToRedirect = array())
 	{
 		if (!$cart->getShopId() || $cart->isEmpty())
 		{
@@ -860,6 +862,11 @@ class order_CartService extends BaseService
 		}
 		else if ($cart->getShopId() !== $shop->getId())
 		{
+			if (!$askConfirmation)
+			{
+				return false;
+			}
+			
 			if (!isset($paramsToRedirect['website_BlockAction_submit']))
 			{
 				$paramsToRedirect['website_BlockAction_submit'] = array();
@@ -873,6 +880,7 @@ class order_CartService extends BaseService
 			$url = LinkHelper::getTagUrl('contextual_website_website_modules_order_cart', null, array('orderParam' => $paramsToRedirect));
 			HttpController::getInstance()->redirectToUrl($url);
 		}
+		return true;
 	}
 		
 	// Deprecated

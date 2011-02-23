@@ -30,7 +30,7 @@ class order_AddToCartAction extends f_action_BaseAction
 		unset($paramsToRedirect['module']);
 		unset($paramsToRedirect['action']);
 		unset($paramsToRedirect['lang']);
-		$cs->checkAddToCart($cart, $shop, array($product), array($product->getId() => $quantity), $paramsToRedirect);
+		$cs->checkAddToCart($cart, $shop, array($product), array($product->getId() => $quantity), true, $paramsToRedirect);
 
 		// Add.
 		if ($cs->addProductToCart($cart, $product, $quantity, $shop))
