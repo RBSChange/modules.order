@@ -14,4 +14,5 @@
   <binding name="expedition" className="order_ExpeditionScriptDocumentElement"/>
   <binding name="creditnote" className="order_CreditnoteScriptDocumentElement"/>
   <binding name="cartmodifier" className="order_CartmodifierScriptDocumentElement"/>
+  <binding name="fees" className="order_FeesScriptDocumentElement"/>
 </script>

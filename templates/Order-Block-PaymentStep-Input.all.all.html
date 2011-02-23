@@ -13,21 +13,30 @@
 				<dt>${php:order.formatPrice(order.getLinesAmountWithTax())}</dt>
 			</tal:block>
 
-			<!-- discount -->
-			<tal:block tal:condition="order/hasDiscount">
-				<tal:block tal:repeat="discount order/getDiscountDataArrayForDisplay">	
-					<dd>${discount/label}</dd>
-					<dt class="discount">${discount/valueWithTax}</dt>
-				</tal:block>
-			</tal:block>
-			
-			<!-- shipping -->
-			<tal:block tal:condition="order/getShippingFeesWithTax">
+			<!-- Mode d'envoi -->
+			<tal:block tal:condition="order/getShippingModeId">
 				<dd>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</dd>
 				<dt>${order/getShippingMode}</dt>
-				<dd>${trans:m.order.frontoffice.shipping-fees,ucf,lab}</dd>
-				<dt>${php:order.formatPrice(order.getShippingFeesWithTax())}</dt>
 			</tal:block>
+			
+			<!-- fees -->
+			<tal:block tal:repeat="fees order/getFeesDataArrayForDisplay">	
+					<dd>${fees/label}</dd>
+					<dt class="discount">${fees/valueWithTax}</dt>
+			</tal:block>	
+	
+			<!-- discount -->
+			<tal:block tal:repeat="discount order/getDiscountDataArrayForDisplay">	
+				<dd>${discount/label}</dd>
+				<dt class="discount">${discount/valueWithTax}</dt>
+			</tal:block>
+							
+			<!-- Montants par taxe -->
+			<tal:block tal:repeat="PriceByTax order/getTotalTaxInfoArray">
+				<dd>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</dd>
+				<dt>${php:order.formatPrice(PriceByTax['taxAmount'])}</dt>
+			</tal:block>
+								
 	
 			<tal:block tal:condition="not:order/hasCreditNote">				
 				<dd class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</dd>

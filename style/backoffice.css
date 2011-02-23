@@ -32,3 +32,6 @@ wdialog[template="ProcessReshipmentNpai"] .dialog-header{
 treechildren::-moz-tree-image(modules_order_cartmodifier){
 	list-style-image: url(/changeicons/small/cart-modifier.png);
 }
+treechildren::-moz-tree-image(modules_order_fees){
+	list-style-image: url(/changeicons/small/cart-modifier.png);
+}

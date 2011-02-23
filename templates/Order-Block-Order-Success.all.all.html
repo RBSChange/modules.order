@@ -90,7 +90,19 @@
 				<dd change:translate="modules.order.frontoffice.Sub-total-withtax-abrLabel" />
 				<dt>${php:order.formatPrice(order.getLinesAmountWithTax())}</dt>
 			</tal:block>
+	
+			<!-- Mode d'envoi -->
+			<tal:block tal:condition="order/getShippingModeId">
+				<dd>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</dd>
+				<dt>${order/getShippingMode}</dt>
+			</tal:block>
 			
+			<!-- fees -->
+			<tal:block tal:repeat="fees order/getFeesDataArrayForDisplay">	
+					<dd>${fees/label}</dd>
+					<dt class="discount">${fees/valueWithTax}</dt>
+			</tal:block>	
+					
 			<!-- coupon -->
 			<tal:block tal:condition="order/getCouponId" tal:define="coupon order/getCouponData">
 				<dd change:translate="modules.order.frontoffice.Coupon-codeLabel"></dd>
@@ -98,32 +110,18 @@
 			</tal:block>
 			
 			<!-- discount -->
-			<tal:block tal:condition="order/hasDiscount">
-				<tal:block tal:repeat="discount order/getDiscountDataArrayForDisplay">	
-					<dd>${discount/label}</dd>
-					<dt class="discount">${discount/valueWithTax}</dt>
-				</tal:block>
-				<!-- 			
-					<dd change:translate="&modules.order.frontoffice.Discount-nameLabel;" />
-					<dt>-${php:order.formatPrice(order.getDiscountTotalWithTax())}</dt>
-				 -->
+			<tal:block tal:repeat="discount order/getDiscountDataArrayForDisplay">	
+				<dd>${discount/label}</dd>
+				<dt class="discount">${discount/valueWithTax}</dt>
 			</tal:block>
 			
-			<!-- shipping -->
-			<tal:block tal:condition="order/getShippingFeesWithTax">
-				<dd change:translate="modules.order.frontoffice.Shipping-modeLabel"></dd>
-				<dt>${order/getShippingMode}</dt>
-				<dd change:translate="modules.order.frontoffice.Shipping-feesLabel"></dd>
-				<dt>${php:order.formatPrice(order.getShippingFeesWithTax())}</dt>
-			</tal:block>
-
 			<!-- Montants par taxe -->
-			<tal:block tal:repeat="PriceByTax order/getSubTotalTaxInfoArray">
-				<dd change:translate="&modules.order.frontoffice.TvaLabel;; rate PriceByTax/formattedTaxRate"></dd>
+			<tal:block tal:repeat="PriceByTax order/getTotalTaxInfoArray">
+				<dd>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</dd>
 				<dt>${php:order.formatPrice(PriceByTax['taxAmount'])}</dt>
 			</tal:block>
-			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withouttax-abrLabel" />
-			<dt class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithoutTax())}</dt>
+			
+			
 			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-TVA-abrLabel" />
 			<dt class="pricetotal">${php:order.formatPrice(order.getTotalTax())}</dt>	
 			

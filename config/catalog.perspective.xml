@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<perspective>
+	<models>
+		<updatemodel name="modules_catalog/shop">
+			<addchild model="modules_order/fees" from="fees" />
+			<addcontextaction name="createFees" group="createFilter_" before="initDefaultStructure" />
+		</updatemodel>
+		<model name="modules_order/fees">
+			<contextactions>
+				<contextaction name="edit" />
+				<contextaction name="delete" />
+				<contextaction name="activate" />
+				<contextaction name="deactivated" />
+				<contextaction name="reactivate" />
+			</contextactions>
+		</model>
+	</models>
+	<actions>
+		<action name="createFees" single="true" permission="Insert_fees" icon="add" 
+			label="&amp;modules.order.bo.actions.createFees;"/>
+	</actions>
+</perspective>

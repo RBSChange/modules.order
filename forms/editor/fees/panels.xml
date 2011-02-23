@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<panels hidden="true">
+	<panel name="resume"/>
+	<panel name="properties"/>
+	<panel name="strategy" icon="price" labeli18n="m.order.bo.doceditor.tab.strategy" />
+	<panel name="publication"/>
+	<panel name="history"/>
+	<panel name="create"/>
+</panels>

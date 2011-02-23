@@ -1,0 +1,389 @@
+<?xml version="1.0"?>
+<bindings xmlns="http://www.mozilla.org/xbl" 
+	xmlns:xbl="http://www.mozilla.org/xbl" 
+	xmlns:html="http://www.w3.org/1999/xhtml" 
+	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	
+	<binding id="fees_strategy" extends="layout.cDocumentEditor#cDocumentEditorPanel">	
+		<content>
+			<xul:vbox flex="1">
+				<xul:cmessageinfo anonid="message"/>
+				<xul:hbox anonid="action-bar">
+					<xul:button anonid="save_properties" oncommand="saveProperties()" 
+						label="&amp;modules.uixul.bo.doceditor.button.Save;" 
+						image="{IconsBase}/small/save.png"
+						disabled="true" />
+					<xul:button anonid="reset_properties" oncommand="resetProperties()" 
+						label="&amp;modules.uixul.bo.doceditor.button.Canceledit;" 
+						image="{IconsBase}/small/undo.png"
+						disabled="true" />
+				</xul:hbox>
+				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
+					<xul:vbox flex="1" anonid="parameterseditor">
+					</xul:vbox>						
+				</xul:scrollbox>					
+			</xul:vbox>
+		</content>
+			
+		<implementation>
+			<field name="mFieldNames">["strategyParametersJSON"]</field>
+			<field name="mDocumentIdentifier">null</field>
+			<field name="mParameters">null</field>
+						
+			<property name="modified">
+				<getter><![CDATA[
+					return this.getAttribute("modified") === "true";
+				]]>
+				</getter>
+				<setter><![CDATA[
+					var oldval = this.modified;
+					if (val) {
+						this.setAttribute("modified", "true");
+					} else {
+						this.removeAttribute("modified");
+					}
+					if (val != oldval) {
+						this.updateCommandsUI();
+					}
+				]]>
+				</setter>
+			</property>
+			
+			<method name="updateCommandsUI">
+				<body><![CDATA[	
+					this.getElementByAnonId('save_properties').disabled = !this.modified || this.error;;
+					this.getElementByAnonId('reset_properties').disabled = !this.modified;
+					this.documentEditor.lockTabs(this.modified);
+				]]>
+				</body>
+			</method>
+						
+			<method name="resetProperties">
+				<body><![CDATA[
+					this.getElementByAnonId('parameterseditor').reset();
+					this.refreshErrorState();
+					this.modified = false;
+					this.gotoTop();
+				]]>
+				</body>
+			</method>
+					
+			<method name="getInitializeParameters">
+				<body><![CDATA[
+					return {
+						action : "LoadJSON",
+						cmpref : this.documentEditor.documentid,
+						lang : this.documentEditor.vo,
+						documentproperties : this.mFieldNames.join(',')
+					};
+				]]>
+				</body>
+			</method>
+			
+			<method name="fireInitializeComplete">
+				<parameter name="result" />
+				<body><![CDATA[
+					if (result.status != "OK") {
+						this.showErrorMessage(result.contents.errorMessage);
+						this.mDocumentIdentifier = null;
+						this.mParameters = {};	
+						this.updateEditorBinding();
+						this.collapseContentZone(true);
+					} else {
+						var datas = result.contents;
+						this.mDocumentIdentifier = {
+							id : datas.id,
+							lang : datas.lang,
+							documentversion : datas.documentversion
+						};
+						this.mParameters = datas.strategyParametersJSON;
+						this.updateEditorBinding();
+						this.modified = false;
+						this.collapseContentZone(false);
+					}
+					this.mInitialized = true;
+					this.gotoTop();
+				]]>
+				</body>
+			</method>
+			
+			<method name="updateEditorBinding">
+				<body><![CDATA[
+					var cmpref = (this.mDocumentIdentifier != null) ? this.mDocumentIdentifier.id : null;
+					
+					var old = this.getElementByAnonId('parameterseditor');
+					var parameterseditor = document.createElement('vbox');
+					parameterseditor.setAttribute("flex", "1");
+					old.parentNode.replaceChild(parameterseditor, old);
+					parameterseditor.setAttribute("anonid", "parameterseditor");
+					if (cmpref)
+					{
+						var bindingurl = Context.CHROME_BASEURL
+								+ '/module=order&action=GetBinding&uilang=' + Context.W_UILANG + '&cmpref=' + cmpref
+								+ '&class=' + this.mParameters.strategyClassName;	
+						wCore.debug("updateEditorBinding: " + bindingurl);	
+						parameterseditor.style.MozBinding = 'url(' + bindingurl + '#cStrategy)';
+					}
+				]]>
+				</body>
+			</method>			
+			
+
+			
+			<method name="saveProperties">
+				<body><![CDATA[
+					this.documentEditor.executeServerAction('strategy', 'Update');
+				]]>
+				</body>
+			</method>			
+					
+			<method name="getUpdateParameters">
+				<body><![CDATA[
+					var parameterseditor = this.getElementByAnonId('parameterseditor');				
+					var attributes = {
+						action : 'UpdateJSON',
+						cmpref : this.mDocumentIdentifier.id,
+						lang : this.mDocumentIdentifier.lang,
+						documentversion : this.mDocumentIdentifier.documentversion,
+						documentproperties : this.mFieldNames.join(','),
+						strategyParametersJSON: parameterseditor.getValues()
+					};
+					return attributes;
+				]]>
+				</body>
+			</method>
+			
+			<method name="fireUpdateComplete">
+				<parameter name="result" />
+				<body><![CDATA[
+					if (result.status == "OK") {
+						this.modified = false;
+						this.documentEditor.clearTabs();
+						var datas = result.contents;
+						this.mDocumentIdentifier = {
+							id : datas.id,
+							lang : datas.lang,
+							documentversion : datas.documentversion
+						};
+						this.mParameters = datas.strategyParametersJSON;		
+						var parameterseditor = this.getElementByAnonId('parameterseditor');
+						parameterseditor.setInitialValues(this.mParameters);
+						this.showTextMessage("&modules.uixul.bo.doceditor.message.Document-updated;");
+					} 
+					else 
+					{
+						this.showErrorMessage(result.contents.errorMessage);
+					}
+				]]>
+				</body>
+			</method>
+						
+			<method name="clear">
+				<body><![CDATA[
+					wCore.debug("clear cStrategyPanel");
+					this.showTextMessage('');
+					this.mInitialized = false;
+				]]>
+				</body>
+			</method>
+			
+			<method name="onCloseEditor">
+				<body><![CDATA[
+					wCore.debug("onCloseEditor cStrategyPanel");
+					try {
+						this.updateEditorBinding(null);
+					} catch (e) {
+						wCore.error("onCloseEditor", [], e);
+					}
+				]]>
+				</body>
+			</method>
+			
+			<method name="onFieldHelp">
+				<parameter name="field" />
+				<body><![CDATA[	
+					if (field.hasAttribute("shorthelp"))
+					{
+						this.showHelpMessage(new wServerLocale(field.getAttribute("shorthelp")).toString());
+					}
+				]]></body>
+			</method>
+			
+			<method name="onFieldFocus">
+				<parameter name="field" />
+				<body><![CDATA[
+					if (!field.valid)
+					{
+						this.showErrorMessage(field.errormessage);
+					}
+				]]></body>
+			</method>
+			
+			
+			<property name="error">
+				<getter><![CDATA[
+					return this.getAttribute("error") === "true";
+				]]></getter>
+				<setter><![CDATA[
+					var oldval = this.error;
+					if (val)
+					{
+						this.setAttribute("error", "true");
+					}
+					else
+					{
+						this.removeAttribute("error");
+					}
+					if (val != oldval) {this.updateCommandsUI();}
+				]]></setter>
+			</property>
+					
+			<method name="refreshErrorState">
+				<body><![CDATA[
+					var parameterseditor = this.getElementByAnonId('parameterseditor');
+					this.error = parameterseditor.refreshErrorState();
+				]]></body>
+			</method>
+			
+			<method name="onFieldError">
+				<parameter name="field" />
+				<body><![CDATA[	
+					this.error = true;
+					this.showErrorMessage(field.errormessage);
+				]]></body>
+			</method>
+
+			<method name="onFieldValidated">
+				<parameter name="field" />
+				<body><![CDATA[
+					if (this.error) {this.refreshErrorState();}
+					if (this.messageBox) {this.messageBox.clear();}
+				]]></body>
+			</method>
+		</implementation>
+	</binding>
+	
+	<binding id="cStrategySections">
+		<implementation>						
+			<method name="setInitialValues">
+				<parameter name="initialValues" />
+				<body><![CDATA[
+					wCore.debug('cStrategySections.setInitialValues');
+					for (var i = 0; i < this.mParameters.length; i++) {
+						var name = this.mParameters[i];
+						var field = document.getAnonymousElementByAttribute(this, "name", name);
+						if (name in initialValues && initialValues[name] !== null) {
+							if ('setInitialValue' in field) {
+								field.setInitialValue(initialValues[name]);
+							} else {
+								field.setAttribute('initialvalue', initialValues[name]);
+							}
+						} 
+						else 
+						{
+							if ('setInitialValue' in field) 
+							{
+								field.setInitialValue(field.getAttribute('defaultvalue'));
+							} else {
+								field.setAttribute('initialvalue', field.getAttribute('defaultvalue'));
+							}
+						}
+					}
+				]]>
+				</body>
+			</method>	
+			
+			<method name="getValues">
+				<body><![CDATA[
+					var datas = {};
+					for (var i = 0; i < this.mParameters.length; i++) {
+						var name = this.mParameters[i];
+						var field = document.getAnonymousElementByAttribute(this, "name", name);
+						if (field.modified)
+						{
+							datas[name] = field.value;
+						}
+					}
+					return datas;
+				]]>
+				</body>
+			</method>	
+						
+			<method name="reset">
+				<body><![CDATA[
+					for (var i = 0; i < this.mParameters.length; i++) {
+						var name = this.mParameters[i];
+						var field = document.getAnonymousElementByAttribute(this, "name", name);
+						if ('reset' in field) {
+							field.reset();
+						}
+					}
+				]]>
+				</body>
+			</method>	
+			
+			<method name="refreshModifiedState">
+				<body><![CDATA[
+					for (var i = 0; i < this.mParameters.length; i++) 
+					{
+						var name = this.mParameters[i];
+						var field = document.getAnonymousElementByAttribute(this, "name", name);
+						if (field.modified) 
+						{
+							this.mPanel.modified = true; 
+							return;
+						}
+					}
+					this.mPanel.modified = false;
+				]]></body>
+			</method>
+			
+			<method name="refreshErrorState">
+				<body><![CDATA[
+					for (var i = 0; i < this.mParameters.length; i++) 
+					{
+						var name = this.mParameters[i];
+						var field = document.getAnonymousElementByAttribute(this, "name", name);
+						if (field.hasAttribute('error') && field.getAttribute('error') === 'true')
+						{
+							return true;
+						}
+					}
+					return false;
+				]]></body>
+			</method>
+		</implementation>
+		
+		<handlers> 			
+			<handler event="fieldModified"><![CDATA[
+				if (!this.mPanel) {return;}
+				if (!this.mPanel.modified) {this.mPanel.modified = true;}
+			]]></handler>
+
+			<handler event="fieldRestored"><![CDATA[
+				if (!this.mPanel) {return;}
+				if (this.mPanel.modified) {this.refreshModifiedState();}
+			]]></handler>
+			
+			<handler event="fieldHelp"><![CDATA[
+				if (!this.mPanel) {return;}
+				this.mPanel.onFieldHelp(event.originalTarget);
+			]]></handler> 
+			
+			<handler event="fieldFocus"><![CDATA[
+				if (!this.mPanel) {return;}
+				this.mPanel.onFieldFocus(event.originalTarget);
+			]]></handler>
+			
+			<handler event="fieldError"><![CDATA[
+				if (!this.mPanel) {return;}
+				this.mPanel.onFieldError(event.originalTarget);
+			]]></handler>
+			
+			<handler event="fieldValidated"><![CDATA[
+				if (!this.mPanel) {return;}
+				this.mPanel.onFieldValidated(event.originalTarget);
+			]]></handler>
+		</handlers>	
+	</binding>
+</bindings>

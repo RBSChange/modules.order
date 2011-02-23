@@ -2,11 +2,11 @@
 <i18n baseKey="m.order.bo.useractionlogger" lcid="fr_FR">
   <key id="create-order">début du processus de commande</key>
   <key id="update-order">Mise à jour de la commande numéro {orderNumber} associée au client {customerFullName}</key>
-  <key id="log-update-order">log-update-order</key>
+  <key id="log-update-order">Mise à jour de commande</key>
   <key id="update-smartfolder">update.smartfolder {documentlabel}</key>
   <key id="log-update-smartfolder">log-update-smartfolder</key>
   <key id="create-new-order">Création de la commande numéro {orderNumber} associée au client {customerFullName}</key>
-  <key id="log-create-new-order">log-create-new-order</key>
+  <key id="log-create-new-order">Création de la commande</key>
   <key id="update-order-status">La commande numéro {orderNumber} associée au client {customerFullName} passe au statut {orderStatus}</key>
   <key id="log-update-order-status">log-update-order-status</key>
   <key id="insert-smartfolder">insert.smartfolder {documentlabel}</key>
@@ -23,4 +23,15 @@
   <key id="log-update-creditnote">log update creditnote</key>
   <key id="delete-creditnote">delete.creditnote {documentlabel}</key>
   <key id="log-delete-creditnote">log delete creditnote</key>
+  
+  <key id="insert-fees">insert.fees {documentlabel}</key>
+  <key id="log-insert-fees">log insert fees</key>
+  <key id="update-fees">update.fees {documentlabel}</key>
+  <key id="log-update-fees">log update fees</key>
+  <key id="activate-fees">activate.fees {documentlabel}</key>
+  <key id="log-activate-fees">log activate fees</key>
+  <key id="deactivated-fees">deactivated.fees {documentlabel}</key>
+  <key id="log-deactivated-fees">log deactivated fees</key>
+  <key id="delete-fees">delete.fees {documentlabel}</key>
+  <key id="log-delete-fees">log delete fees</key>
 </i18n>

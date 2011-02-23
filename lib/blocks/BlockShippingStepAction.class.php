@@ -134,7 +134,6 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 	 */
 	function validateSelectInput($request, $shippingStep)
 	{
-		Framework::info(__METHOD__);
 		$cartInfo = $this->getCurrentCart();
 		$validationRules = $this->getSelectInputValidationRules($request, $shippingStep);
 		$ok = $this->processValidationRules($validationRules, $request, $shippingStep);

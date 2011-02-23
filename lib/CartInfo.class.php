@@ -57,12 +57,28 @@ class order_CartInfo
 	 */
 	private $shopId = null;
 
+
 	/**
 	 * @var string
 	 */
-	private $priceFormat;
+	private $taxZone;
 	
-	
+	/**
+	 * @return string $taxZone
+	 */
+	public function getTaxZone()
+	{
+		return $this->taxZone;
+	}
+
+	/**
+	 * @param string $taxZone
+	 */
+	public function setTaxZone($taxZone)
+	{
+		$this->taxZone = $taxZone;
+	}
+
 	public function isModified()
 	{
 		if (!$this->isModified)
@@ -109,7 +125,6 @@ class order_CartInfo
 	public function setShopId($shopId)
 	{
 		$this->shopId = $shopId;
-		$this->priceFormat = null;
 	}
 
 	/**
@@ -119,7 +134,7 @@ class order_CartInfo
 	{
 		if ($this->shopId !== null)
 		{
-			return DocumentHelper::getDocumentInstance($this->shopId, "modules_catalog/shop");
+			return  catalog_persistentdocument_shop::getInstanceById($this->shopId);
 		}
 		else 
 		{
@@ -132,14 +147,15 @@ class order_CartInfo
 	 */
 	function setShop($shop)
 	{
-		$this->priceFormat = null;
 		if ($shop === null)
 		{
+			$this->taxZone = null;
 			$this->shopId = null;
 		}
 		else if ($shop instanceof catalog_persistentdocument_shop)
 		{
 			$this->shopId = $shop->getId();
+			$this->taxZone = $shop->getDefaultTaxZone();
 		}
 		else 
 		{
@@ -186,7 +202,7 @@ class order_CartInfo
 	 */
 	public function getOrder()
 	{
-		return $this->orderId ? DocumentHelper::getDocumentInstance($this->orderId, "modules_order/order") : null;
+		return $this->orderId ? order_persistentdocument_order::getInstanceById($this->orderId) : null;
 	}
 	
 	
@@ -380,8 +396,6 @@ class order_CartInfo
 		$this->shippingAddressId = $shippingAddressId;
 	}
 	
-
-
 	/**
 	 * @return Integer
 	 */
@@ -439,7 +453,6 @@ class order_CartInfo
 	{
 		if (!is_array($this->shippingArray))
 		{
-			Framework::info(__METHOD__ . ' OLD CartInfo assume no required shipping mode!');
 			$this->shippingArray = array(0 => array('lines' => array()));
 			for ($i = 0; $i < count($this->cartLine); $i++)
 			{
@@ -512,10 +525,9 @@ class order_CartInfo
 		{
 			$this->shippingArray[$shippingModeId]['filter'] = 
 				array('id' => $filter->getId(), 
-				'modeId' => $filter->getMode()->getId(),
-				'shippingvalueWithTax' => $filter->getValueWithTax(),
-				'shippingvalueWithoutTax' => $filter->getValueWithoutTax(),
-				'shippingTaxCode' => $filter->getTaxCode());
+				      'modeId' => $filter->getMode()->getId(),
+					  'feesId' => $filter->getFeesId()
+				);
 		}	
 	}
 
@@ -572,80 +584,6 @@ class order_CartInfo
 	{
 		$mode = $this->getShippingMode();	
 		return $mode ? $mode->getLabel() : null;
-	}
-	
-	/**
-	 * @return string
-	 */
-	function getShippingTaxCode()
-	{
-		$taxCode = null;
-		foreach ($this->getShippingArray() as $datas) 
-		{
-			if (isset($datas['filter']))
-			{
-				$modeTaxCode = $datas['filter']['shippingTaxCode'];
-				if ($taxCode === null)
-				{
-					$taxCode = $modeTaxCode;
-				}
-				else if ($taxCode != $modeTaxCode)
-				{
-					$taxCode = '0';
-				}
-			}
-		}
-		return $taxCode;
-	}
-	
-	/**
-	 * @return string
-	 */
-	function getShippingTaxRate()
-	{
-		$withTaxe = 0;
-		$withouTaxe = 0;
-		foreach ($this->getShippingArray() as $datas) 
-		{
-			if (isset($datas['filter']))
-			{
-				$withTaxe += $datas['filter']['shippingvalueWithTax'];
-				$withouTaxe += $datas['filter']['shippingvalueWithoutTax'];
-			}
-		}
-		return catalog_PriceHelper::getTaxRateByValue($withTaxe, $withouTaxe);
-	}	
-	
-	/**
-	 * @return double
-	 */
-	function getShippingPriceWithTax()
-	{
-		$result = 0;
-		foreach ($this->getShippingArray() as $datas) 
-		{
-			if (isset($datas['filter']))
-			{
-				$result += $datas['filter']['shippingvalueWithTax'];
-			}
-		}
-		return $result;
-	}
-	
-	/**
-	 * @return double
-	 */
-	function getShippingPriceWithoutTax()
-	{
-		$result = 0;
-		foreach ($this->getShippingArray() as $datas) 
-		{
-			if (isset($datas['filter']))
-			{
-				$result += $datas['filter']['shippingvalueWithoutTax'];
-			}
-		}
-		return $result;
 	}
 	
 	//Payment Mode
@@ -807,6 +745,102 @@ class order_CartInfo
 		return null;
 	}
 	
+	//FEES
+	
+	/**
+	 * @var array
+	 */
+	private $feesArray;
+	
+	/**
+	 * @return order_FeesInfo[]
+	 */
+	public function getFeesArray()
+	{
+		if (!is_array($this->feesArray)) {$this->feesArray = array();}
+		return $this->feesArray;
+	}
+	
+	/**
+	 * @param order_FeesInfo[] $feesArray
+	 */
+	public function setFeesArray($feesArray)
+	{
+		$this->feesArray = $feesArray;
+	}
+	
+	public function clearFeesArray()
+	{
+		$this->feesArray = array();
+	}
+	
+	/**
+	 * @param integer $id
+	 * @return order_FeesInfo
+	 */
+	public function getFeesById($id)
+	{
+		foreach ($this->getFeesArray() as $fees) 
+		{
+			if ($fees->getId() == $id) 
+			{
+				return $fees;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @param order_FeesInfo $fees
+	 */
+	public function addFeesInfo($feesInfo)
+	{
+		if (!is_array($this->feesArray)) {$this->feesArray = array();}
+		$this->feesArray[] = $feesInfo;
+	}
+	
+	/**
+	 * @param order_FeesInfo $fees
+	 */	
+	public function removeFeesInfo($feesInfo)
+	{
+		$result = array();
+		foreach ($this->getFeesArray() as $currentFees) 
+		{
+			if ($currentFees === $feesInfo) {continue;}
+			$result[] = $currentFees;
+		}
+		$this->setFeesArray($result);		
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	public function hasFees()
+	{
+		return count($this->getFeesArray()) > 0;
+	}
+
+	/**
+	 * @return array<'label' => string, valueWithTax => string>
+	 */
+	public function getFeesDataArrayForDisplay()
+	{
+		$result = array();
+		foreach ($this->getFeesArray() as $fees) 
+		{
+			if ($fees instanceof order_FeesInfo) 
+			{
+				if (f_util_StringUtils::isNotEmpty($fees->getLabel()) && $fees->getValueWithTax() > 0)
+				{
+					$result[] = array('label' => $fees->getLabel(),  
+						'valueWithTax' => $this->formatPrice($fees->getValueWithTax()),
+						'valueWithoutTax' => $this->formatPrice($fees->getValueWithoutTax()));
+				}
+			}
+		}
+		return $result;
+	}
 
 	//DISCOUNT AND COUPON
 	
@@ -1037,28 +1071,10 @@ class order_CartInfo
 	{
 		$this->creditNoteInfos = null;
 	}
-		
-	/**
-	 * @return array<rate => value>
-	 */
-	public function getSubTotalTaxByRate()
-	{
-		$result = array();
-		foreach ($this->cartLine as $cartLineInfo) 
-		{
-			$rate = $cartLineInfo->getFormattedTaxCode();
-			if (isset($result[$rate]))
-			{
-				$result[$rate] += $cartLineInfo->getTotalValueWithTax() - $cartLineInfo->getTotalValueWithoutTax();
-			}
-			else
-			{
-				$result[$rate] = $cartLineInfo->getTotalValueWithTax() - $cartLineInfo->getTotalValueWithoutTax();
-			}
-		}
-		return $result;
-	}
 	
+	
+	//AMOUNT
+		
 	/**
 	 * @return double
 	 */	
@@ -1085,6 +1101,54 @@ class order_CartInfo
 		return $value;
 	}
 	
+	
+	/**
+	 * @return double
+	 */	
+	public function getFeesTotalWithTax()
+	{
+		$value = 0.0;
+		if ($this->hasFees())
+		{
+			foreach ($this->getFeesArray() as $fees) 
+			{
+				$value += $fees->getValueWithTax();
+			}
+		}
+		return $value;
+	}
+	
+	/**
+	 * @return double
+	 */	
+	public function getFeesTotalWithoutTax()
+	{
+		$value = 0.0;
+		if ($this->hasFees())
+		{
+			foreach ($this->getFeesArray() as $fees) 
+			{
+				$value += $fees->getValueWithoutTax();
+			}
+		}
+		return $value;
+	}
+		
+	private $taxRates;
+	
+	public function setTaxRates($taxRates)
+	{
+		$this->taxRates = $taxRates;
+	}
+	
+	/**
+	 * array <taxRate => value>
+	 */
+	public function getTaxRates()
+	{
+		return is_array($this->taxRates) ? $this->taxRates : array();
+	}	
+
 	/**
 	 * @return double
 	 */	
@@ -1117,17 +1181,14 @@ class order_CartInfo
 		return $value;
 	}
 	
+	
+
 	/**
 	 * @return double
 	 */
 	public function getTotalExcludingFeesWithoutTax()
 	{
-		$total = $this->getSubTotalWithoutTax();
-		if ($this->hasDiscount())
-		{
-			$total -= $this->getDiscountTotalWithoutTax();
-		}
-		return $total;
+		return $this->getSubTotalWithoutTax() - $this->getDiscountTotalWithoutTax();
 	}
 	
 	/**
@@ -1135,36 +1196,32 @@ class order_CartInfo
 	 */
 	public function getTotalExcludingFeesWithTax()
 	{
-		$total = $this->getSubTotalWithTax();
-		if ($this->hasDiscount())
-		{
-			$total -= $this->getDiscountTotalWithTax();
-		}
-		return $total;
+		return $this->getSubTotalWithTax() - $this->getDiscountTotalWithTax();
 	}	
+	
+
+	/**
+	 * @return double
+	 */
+	public function getTotalTax()
+	{
+		return array_sum($this->getTaxRates());
+	}
+
+	/**
+	 * @return double
+	 */
+	public function getTotalWithTax()
+	{
+		return $this->getSubTotalWithTax() - $this->getDiscountTotalWithTax() + $this->getFeesTotalWithTax();
+	}
 	
 	/**
 	 * @return double
 	 */
 	public function getTotalWithoutTax()
 	{
-		return $this->getTotalExcludingFeesWithoutTax() + $this->getShippingPriceWithoutTax();
-	}
-	
-	/**
-	 * @return double
-	 */
-	public function getTotalWithTax()
-	{
-		return $this->getTotalExcludingFeesWithTax() + $this->getShippingPriceWithTax();
-	}	
-	
-	/**
-	 * @return double
-	 */
-	public function getTotalTax()
-	{
-		return $this->getTotalWithTax() - $this->getTotalWithoutTax();
+		return $this->getTotalWithTax() - $this->getTotalTax();
 	}
 		
 	/**
@@ -1200,46 +1257,30 @@ class order_CartInfo
 	/**
 	 * @return String
 	 */
-	public function getFormattedDiscountTotalWithTax()
+	public function getFormattedSubTotalWithoutTax()
 	{
-		return $this->formatPrice($this->getDiscountTotalWithTax());
+		return $this->formatPrice($this->getSubTotalWithoutTax());
 	}
 	
 	/**
 	 * @return String
 	 */
-	public function getFormattedSubTotalWithoutTax()
+	public function getFormattedDiscountTotalWithTax()
 	{
-		
-		return $this->formatPrice($this->getSubTotalWithoutTax());
+		return $this->formatPrice($this->getDiscountTotalWithTax());
 	}
 	
 	public function getFormattedSubTotalTaxByRate()
 	{
 		$result = array();
-		foreach ($this->getSubTotalTaxByRate() as $rate => $value) 
+		foreach ($this->getTaxRates() as $rate => $value) 
 		{
 			$result[] = array('formattedTaxRate' => $rate, 'formattedTaxAmount' => $this->formatPrice($value));	
 		}
 		return $result;
 	}
 	
-	/**
-	 * String
-	 */
-	function getFormattedShippingPriceWithTax()
-	{
-		return $this->formatPrice($this->getShippingPriceWithTax());
-	}	
-	
-	/**
-	 * String
-	 */
-	function getFormattedShippingPriceWithoutTax()
-	{
-		return $this->formatPrice($this->getShippingPriceWithoutTax());
-	}
-	
+
 	/**
 	 * @return String
 	 */
@@ -1646,7 +1687,32 @@ class order_CartInfo
 	}
 	
 	// Deprecated
-		
+
+	/**
+	 * @deprecated
+	 */
+	function getShippingPriceWithTax()
+	{
+		Framework::warn(f_util_ProcessUtils::getBackTrace());
+		return $this->getFeesTotalWithTax();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	function getFormattedShippingPriceWithTax()
+	{
+		return $this->formatPrice($this->getShippingPriceWithTax());
+	}	
+	
+	/**
+	 * @deprecated
+	 */
+	function getFormattedShippingPriceWithoutTax()
+	{
+		return $this->formatPrice($this->getShippingPriceWithTax());
+	}
+	
 	/**
 	 * @deprecated
 	 */
@@ -1664,7 +1730,7 @@ class order_CartInfo
 	}	
 	
 	/**
-	 * @depreacated use getFormattedShippingPriceWithoutTax
+	 * @deprecated use getFormattedShippingPriceWithoutTax
 	 */
 	function getFormatedShippingPriceWithoutTax()
 	{

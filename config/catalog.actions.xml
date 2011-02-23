@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+	<action name="createFees">
+		<parameter name="listWidget" />
+		<body><![CDATA[this.createDocumentEditor('modules_order_fees', listWidget.getSelectedItems()[0].id);]]></body>
+	</action>
+</actions>

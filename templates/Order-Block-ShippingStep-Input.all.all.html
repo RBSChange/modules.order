@@ -86,11 +86,12 @@
 			tal:define="shippingModes cart/getRequiredShippingModes">
 				<h3 change:h="">${trans:m.order.document.shippingstepbean.fixed-shipping-mode,ucf}</h3>
 				<ol>
-					<li tal:repeat="modeFilter shippingModes">
+					<li tal:repeat="modeFilter shippingModes">${php:modeFilter.evaluateValue(cart)}
 						<span tal:define="mode modeFilter/getMode">
 						<label class="nocmx">
 							<tal:block tal:replace="mode/getLabel" />
-							<tal:block tal:condition="modeFilter/getValueWithTax"> (<tal:block tal:replace="modeFilter/getFormattedValueWithTax" />)</tal:block>
+							<tal:block tal:condition="modeFilter/getValueWithTax">  (${modeFilter/getFormattedValueWithTax})</tal:block>
+							<tal:block tal:condition="not: modeFilter/getValueWithTax"> (${trans:m.order.frontoffice.freeshipping,ucf})</tal:block>
 						</label>
 						<img style="display:inline;float:left" change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
 						</span>
@@ -114,13 +115,16 @@
 			<p>${trans:m.order.document.shippingstepbean.choose-delivery-text,ucf}</p>
 			<br />
 			<ol>
-				<li tal:repeat="modeFilter shippingModes">
+				<li tal:repeat="modeFilter shippingModes">${php:modeFilter.evaluateValue(cart)}
 					<span tal:define="mode modeFilter/getMode">
 					<label class="nocmx" for="mode_${modeFilter/getId}">
 					<input tal:condition="php:shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" checked="checked" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
 					<input tal:condition="php:!shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
-	<tal:block tal:replace="mode/getLabel" /><tal:block tal:condition="modeFilter/getValueWithTax"> (<tal:block tal:replace="modeFilter/getFormattedValueWithTax" />)</tal:block></label>
-													<img style="display:inline;float:left" change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
+						<tal:block tal:replace="mode/getLabel" />
+						<tal:block tal:condition="modeFilter/getValueWithTax"> (${modeFilter/getFormattedValueWithTax})</tal:block>
+						<tal:block tal:condition="not: modeFilter/getValueWithTax"> (${trans:m.order.frontoffice.freeshipping,ucf})</tal:block></label>
+						
+						<img style="display:inline;float:left" change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
 						
 					</span>
 						<p tal:condition="mode/getDescription">	

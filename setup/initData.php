@@ -27,6 +27,18 @@ class order_Setup extends object_InitDataSetup
 			echo "ERROR: " . $e->getMessage() . "\n";
 			Framework::exception($e);
 		}
+		
+		$mbs = uixul_ModuleBindingService::getInstance();
+		$mbs->addImportInPerspective('catalog', 'order', 'catalog.perspective');
+		$mbs->addImportInActions('catalog', 'order', 'catalog.actions');
+		$result = $mbs->addImportform('catalog', 'modules_order/fees');
+		if ($result['action'] == 'create')
+		{
+			uixul_DocumentEditorService::getInstance()->compileEditorsConfig();
+		}
+		f_permission_PermissionService::getInstance()->addImportInRight('catalog', 'order', 'catalog.rights');
+		
+		$this->executeModuleScript('order', 'listfeesstrategy.xml');
 	}
 	
 	private $resourceDir = null;

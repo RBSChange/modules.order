@@ -160,7 +160,7 @@
   <key id="cart-validation-error-max-lines">Le nombre maximum de ligne du panier est atteint</key>
   <key id="cart-validation-quantity-fixed-for-product">Vous avez déjà ajouté ce produit dans votre panier.</key>
   <key id="no-order-yet">Vous n'avez encore passé aucune commande.</key>
-  
+  <key id="freeshipping">offert</key>
   <key id="creditnote-amount">Montant de l'avoir</key>
   <key id="creditnote-total">Reste à payer</key>
 </i18n>

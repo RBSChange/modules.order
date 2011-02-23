@@ -526,11 +526,9 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			// Frais de livraison.
 			$shippingModeId = intval($cartInfo->getShippingModeId()) > 0 ? intval($cartInfo->getShippingModeId()) : -1;
 			$orderDocument->setShippingModeId($shippingModeId);
-			$orderDocument->setShippingModeTaxCode($cartInfo->getShippingTaxCode());
-			
-			$orderDocument->setShippingModeTaxRate($cartInfo->getShippingTaxRate());
-			$orderDocument->setShippingFeesWithTax(catalog_PriceHelper::roundPrice($cartInfo->getShippingPriceWithTax()));
-			$orderDocument->setShippingFeesWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getShippingPriceWithoutTax()));
+
+			$orderDocument->setShippingFeesWithTax(catalog_PriceHelper::roundPrice($cartInfo->getFeesTotalWithTax()));
+			$orderDocument->setShippingFeesWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getFeesTotalWithoutTax()));
 			$orderDocument->setShippingDataArray($cartInfo->getShippingArray());
 			
 			// Adresse de facturation.
@@ -593,8 +591,31 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				}
 				$discountDataArray[] = $discountData;
 			}
-			$orderDocument->setDiscountDataArray($discountDataArray);	
-					
+			$orderDocument->setDiscountDataArray($discountDataArray);
+
+			// Sauvegarde des frais.
+			$feesDataArray = array();
+			foreach ($cartInfo->getFeesArray() as $fees) 
+			{
+				$feesData = array('id' => $fees->getId(), 
+									'label' => $fees->getLabel(),
+									'valueWithTax' => $fees->getValueWithTax(),
+									'valueWithoutTax' => $fees->getValueWithoutTax());
+				
+				$feesDocument = DocumentHelper::getDocumentInstance($fees->getId());				
+				if (f_util_ClassUtils::methodExists($feesDocument, 'updateOrder'))
+				{
+					$extraData = $feesDocument->updateOrder($orderDocument, $fees);
+					$feesData = array_merge($feesData, $extraData);
+				}
+				$feesDataArray[] = $feesData;
+			}
+			$orderDocument->setFeesDataArray($feesDataArray);			
+			
+			// Sauvegarde des taxes
+			$orderDocument->setTaxDataArray($cartInfo->getTaxRates());
+			
+
 			// Save the Order.
 			$folder = $this->getFolderOfDay($orderDocument->getUICreationdate());
 			$orderDocument->save($folder->getId());

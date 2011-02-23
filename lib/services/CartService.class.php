@@ -388,15 +388,18 @@ class order_CartService extends BaseService
 		// Refresh the prices infos.
 		$this->refreshCartPrice($cart);
 		Framework::bench('refreshCartPrice');
-		
+
 		$this->refreshCoupon($cart);
 		Framework::bench('refreshCoupon');			
 		
 		$this->refreshShipping($cart);
 		Framework::bench('refreshShipping');
-	
+		
 		$this->refreshModifiers($cart);
 		Framework::bench('refreshModifiers');
+		
+		$this->refreshTax($cart);
+		Framework::bench('refreshTax');
 		
 		$this->refreshCreditNote($cart);
 		Framework::bench('refreshCreditNote');
@@ -420,6 +423,14 @@ class order_CartService extends BaseService
 	{
 		$cartLines = $cart->getCartLineArray();
 		$shop = $cart->getShop();
+		if ($shop)
+		{
+			$cart->setTaxZone(catalog_TaxService::getInstance()->getCurrentTaxZone($shop, $cart));
+		}
+		else
+		{
+			$cart->setTaxZone(null);
+		}
 		$customer = $cart->getCustomer();
 		foreach ($cartLines as $cartLine)
 		{
@@ -478,6 +489,75 @@ class order_CartService extends BaseService
 		order_CartmodifierService::getInstance()->refreshModifiersForCart($cart);
 	}
 
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	protected function refreshTax($cart)
+	{
+		$result = array();
+		$valueWithTax = 0.0;
+		
+		foreach ($cart->getCartLineArray() as $cartLineInfo) 
+		{
+			$value = $cartLineInfo->getTotalValueWithTax() - $cartLineInfo->getTotalValueWithoutTax();
+			if ($value > 0)
+			{
+				$rateKey = $cartLineInfo->getFormattedTaxCode();
+				$valueWithTax += $cartLineInfo->getTotalValueWithTax();
+				if (isset($result[$rateKey]))
+				{
+					$result[$rateKey] += $value;
+				}
+				else
+				{
+					$result[$rateKey] = $value;
+				}
+			}
+		}
+		
+		foreach ($cart->getFeesArray() as $fees)
+		{
+			$value = $fees->getValueWithTax() - $fees->getValueWithoutTax();
+			if ($value > 0)
+			{
+				$rateKey = $fees->getFormattedTaxCode();
+				$valueWithTax += $fees->getValueWithTax();
+				
+				if (isset($result[$rateKey]))
+				{
+					$result[$rateKey] += $value;
+				}
+				else
+				{
+					$result[$rateKey] = $value;
+				}
+			}			
+		}
+		
+		$totalTax = array_sum($result);
+		$valueWithoutTax = $valueWithTax - $totalTax;
+		
+		if ($valueWithoutTax > 0)
+		{
+			$globalTaxRate = ($valueWithTax / $valueWithoutTax) - 1;
+			foreach ($cart->getDiscountArray() as $discountInfo) 
+			{
+				$value = $discountInfo->getValueWithTax();
+				if ($value > 0)
+				{
+					$taxe = $value * $globalTaxRate;
+					$discountInfo->setValueWithoutTax($value - $taxe);
+					foreach ($result as $rateKey => $rateValue) 
+					{
+						$result[$rateKey] += ($taxe / $totalTax) * $rateValue;
+					}
+					$totalTax = array_sum($result);
+				}
+			}
+		}
+		$cart->setTaxRates($result);
+	}	
+	
 	/**
 	 * @param order_CartInfo $cart
 	 */

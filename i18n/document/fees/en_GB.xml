@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.document.fees" lcid="en_GB">
+  <include id="m.order.document.cartmodifier"/>
+  <key id="document-name">fees</key>
+  <key id="query">[TO TRANSLATE] query</key>
+  <key id="query-help">[TO TRANSLATE] query-help</key>
+  <key id="applicationstrategy">[TO TRANSLATE] applicationstrategy</key>
+  <key id="applicationstrategy-help">[TO TRANSLATE] applicationstrategy-help</key>
+</i18n>

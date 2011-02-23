@@ -3,4 +3,6 @@
   <key id="messages">messagerie</key>
   <key id="financial">paiement</key>
   <key id="shipping">livraison</key>
+  
+  <key id="strategy">stratégie</key>
 </i18n>

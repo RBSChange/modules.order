@@ -127,26 +127,32 @@
 			<dt>${php:cart.formatPrice(cart.getSubTotalWithTax())}</dt>
 		</tal:block>
 	
+		<!-- Mode d'envoi -->
+		<tal:block tal:condition="cart/getShippingMode">			
+			<dd>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</dd>
+			<dt>${cart/getShippingMode/getLabelAsHtml}</dt>
+		</tal:block>
+					
+		<!-- fees -->
+		<tal:block tal:repeat="fees cart/getFeesDataArrayForDisplay">	
+				<dd>${fees/label}</dd>
+				<dt class="discount">${fees/valueWithTax}</dt>
+		</tal:block>
+			
+		<!-- discount -->
+		<tal:block tal:repeat="discount cart/getDiscountDataArrayForDisplay">	
+				<dd>${discount/label}</dd>
+				<dt class="discount">${discount/valueWithTax}</dt>
+		</tal:block>
+		
+		
 		<!-- Montants par taxe -->
 		<tal:block tal:repeat="PriceByTax cart/getFormattedSubTotalTaxByRate">
 			<dd>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</dd>
 			<dt>${PriceByTax/formattedTaxAmount}</dt>
 		</tal:block>
 		
-		<!-- discount -->
-		<tal:block tal:repeat="discount cart/getDiscountDataArrayForDisplay">	
-				<dd>${discount/label}</dd>
-				<dt class="discount">${discount/valueWithTax}</dt>
-		</tal:block>
-			
-		<tal:block tal:condition="php: cart.getShippingModeId()">
-			<!-- shipping -->
-			<dd>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</dd>
-			<dt>${cart/getShippingLabel}</dt>
-			<dd>${trans:m.order.frontoffice.shipping-fees,ucf,lab}</dd>
-			<dt>${php:cart.formatPrice(cart.getShippingPriceWithTax())}</dt>
-		</tal:block>
-		
+
 		<tal:block tal:condition="not:cart/hasCreditNote">	
 			<dd class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</dd>
 			<dt class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</dt>
@@ -202,15 +208,14 @@
 					<h4 change:h="">${trans:m.order.document.shippingstepbean.evaluateShipping-results,ucf}</h4>
 					<ul>
 						<li tal:repeat="modeFilter shippingModes">
+							${php:modeFilter.evaluateValue(cart)}
 							<tal:block tal:define="mode modeFilter/getMode">
 								${mode/getLabel} - 
 								<strong>
 									<tal:block tal:condition="modeFilter/getValueWithTax"> 
 										<tal:block tal:replace="modeFilter/getFormattedValueWithTax" />
 									</tal:block>
-									<tal:block tal:condition="not: modeFilter/getValueWithTax">
-										${trans:m.order.frontoffice.freeShipping,ucf}
-									</tal:block>
+									<tal:block tal:condition="not: modeFilter/getValueWithTax">${trans:m.order.frontoffice.freeshipping,ucf}</tal:block>
 								</strong>
 							</tal:block>
 						</li>

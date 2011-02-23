@@ -57,10 +57,14 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 	 */
 	public function refreshModifiersForCart($cart)
 	{
-		$oldDiscountInfoArray = array();				
-		foreach ($cart->getDiscountArray() as $discountInfo) 
+		$oldModifierInfoArray = array();				
+		foreach ($cart->getDiscountArray() as $modifierInfo) 
 		{
-			$oldDiscountInfoArray[$discountInfo->getId()] = $discountInfo;
+			$oldModifierInfoArray[$modifierInfo->getId()] = $modifierInfo;
+		}
+		foreach ($cart->getFeesArray() as $feesInfo) 
+		{
+			$oldModifierInfoArray[$feesInfo->getId()] = $feesInfo;
 		}
 		
 		$newModifiers = array();				
@@ -69,13 +73,14 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 			->add(Restrictions::eq('exclusive', true));
 		foreach ($query->find() as $modifier)
 		{
+			
 			if ($modifier->getDocumentService()->validateForCart($modifier, $cart))
 			{
 				if ($modifier->applyToCart($cart))
 				{
-					if (isset($oldDiscountInfoArray[$modifier->getId()]))
+					if (isset($oldModifierInfoArray[$modifier->getId()]))
 					{
-						unset($oldDiscountInfoArray[$modifier->getId()]);
+						unset($oldModifierInfoArray[$modifier->getId()]);
 					}
 					$newModifiers[$modifier->getId()] = $modifier;
 				}
@@ -84,7 +89,7 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 		
 		if (count($newModifiers) == 0)
 		{
-			$exludeDiscount = array();
+			$exludeModifier = array();
 			$query = $this->createQuery()->add(Restrictions::published())
 				->add(Restrictions::eq('shop', $cart->getShop()))
 				->add(Restrictions::eq('exclusive', false))
@@ -97,11 +102,11 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 					{
 						foreach ($modifier->getExcludeModifierArray() as $toExclude) 
 						{
-							$exludeDiscount[] = $toExclude->getId();
+							$exludeModifier[] = $toExclude->getId();
 						}
-						if (isset($oldDiscountInfoArray[$modifier->getId()]))
+						if (isset($oldModifierInfoArray[$modifier->getId()]))
 						{
-							unset($oldDiscountInfoArray[$modifier->getId()]);
+							unset($oldModifierInfoArray[$modifier->getId()]);
 						}
 						$newModifiers[$modifier->getId()] = $modifier;
 					}
@@ -112,9 +117,9 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 				->add(Restrictions::eq('shop', $cart->getShop()))
 				->add(Restrictions::eq('exclusive', false))
 				->add(Restrictions::isEmpty('excludeModifier'));
-			if (count($exludeDiscount) > 0)
+			if (count($exludeModifier) > 0)
 			{
-				$query->add(Restrictions::notin('id', $exludeDiscount));
+				$query->add(Restrictions::notin('id', $exludeModifier));
 			}			
 			foreach ($query->find() as $modifier)
 			{
@@ -122,9 +127,9 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 				{
 					if ($modifier->applyToCart($cart))
 					{
-						if (isset($oldDiscountInfoArray[$modifier->getId()]))
+						if (isset($oldModifierInfoArray[$modifier->getId()]))
 						{
-							unset($oldDiscountInfoArray[$modifier->getId()]);
+							unset($oldModifierInfoArray[$modifier->getId()]);
 						}
 						$newModifiers[$modifier->getId()] = $modifier;
 					}
@@ -132,9 +137,9 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 			}			
 		}
 		
-		foreach ($oldDiscountInfoArray as $discountInfo) 
+		foreach ($oldModifierInfoArray as $modifierInfo) 
 		{
-			$modifier = order_persistentdocument_cartmodifier::getInstanceById($discountInfo->getId());
+			$modifier = order_persistentdocument_cartmodifier::getInstanceById($modifierInfo->getId());
 			$modifier->removeFromCart($cart);
 		}
 	}

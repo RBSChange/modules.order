@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<script>
+	<binding fileName="modules/list/persistentdocument/import/list_binding.xml" />
+	<systemfolder module="list" relatedmodule="order">	
+		<staticlist listid="modules_order/feesstrategy" label="Strategie d'application de frais">
+			<staticitem value="order_DefaultShippingStrategy" label="&amp;modules.order.document.fees.Strategy-default-shipping;" />
+			<staticitem value="order_CartPriceShippingStrategy" label="&amp;modules.order.document.fees.Strategy-cart-price-shipping;" />
+		</staticlist>	
+	</systemfolder>
+</script>
