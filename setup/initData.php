@@ -38,7 +38,7 @@ class order_Setup extends object_InitDataSetup
 		}
 		f_permission_PermissionService::getInstance()->addImportInRight('catalog', 'order', 'catalog.rights');
 		
-		$this->executeModuleScript('order', 'listfeesstrategy.xml');
+		$this->executeModuleScript('listfeesstrategy.xml', 'order');
 	}
 	
 	private $resourceDir = null;
