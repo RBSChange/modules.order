@@ -208,7 +208,6 @@
 					<h4 change:h="">${trans:m.order.document.shippingstepbean.evaluateShipping-results,ucf}</h4>
 					<ul>
 						<li tal:repeat="modeFilter shippingModes">
-							${php:modeFilter.evaluateValue(cart)}
 							<tal:block tal:define="mode modeFilter/getMode">
 								${mode/getLabel} - 
 								<strong>

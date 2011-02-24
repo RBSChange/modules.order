@@ -1618,9 +1618,29 @@ class order_CartInfo
 	{
 		if ($this->canSelectShippingModeId())
 		{
-			return catalog_ShippingfilterService::getInstance()->getCurrentShippingModes($this);
+			$results = catalog_ShippingfilterService::getInstance()->getCurrentShippingModes($this);
+			foreach ($results as $shippingFilter) 
+			{
+				$shippingFilter->evaluateValue($this);
+			}
+			usort($results, array($this, 'comprareShippingFilterValue'));
+			return $results;
 		}
 		return array();
+	}
+	
+	/**
+	 * @param catalog_persistentdocument_shippingfilter $a
+	 * @param catalog_persistentdocument_shippingfilter $b
+	 * @return integer
+	 */
+	protected function comprareShippingFilterValue($a, $b)
+	{
+		if ($a === $b || intval($a->getValueWithoutTax()) === intval($b->getValueWithoutTax()))
+		{
+			return 0;
+		}
+		return (intval($a->getValueWithoutTax()) < intval($b->getValueWithoutTax())) ? -1 : 1;
 	}
 	
 	/**
@@ -1635,7 +1655,9 @@ class order_CartInfo
 			{
 				if ($shippingModeId != 0 && isset($value['filter']))
 				{
-					$result[] = DocumentHelper::getDocumentInstance($value['filter']['id']);
+					$shippingFilter = DocumentHelper::getDocumentInstance($value['filter']['id']);
+					$shippingFilter->evaluateValue($this);
+					$result[] = $shippingFilter;
 				}
 			}
 		}

@@ -86,7 +86,7 @@
 			tal:define="shippingModes cart/getRequiredShippingModes">
 				<h3 change:h="">${trans:m.order.document.shippingstepbean.fixed-shipping-mode,ucf}</h3>
 				<ol>
-					<li tal:repeat="modeFilter shippingModes">${php:modeFilter.evaluateValue(cart)}
+					<li tal:repeat="modeFilter shippingModes">
 						<span tal:define="mode modeFilter/getMode">
 						<label class="nocmx">
 							<tal:block tal:replace="mode/getLabel" />
@@ -115,7 +115,7 @@
 			<p>${trans:m.order.document.shippingstepbean.choose-delivery-text,ucf}</p>
 			<br />
 			<ol>
-				<li tal:repeat="modeFilter shippingModes">${php:modeFilter.evaluateValue(cart)}
+				<li tal:repeat="modeFilter shippingModes">
 					<span tal:define="mode modeFilter/getMode">
 					<label class="nocmx" for="mode_${modeFilter/getId}">
 					<input tal:condition="php:shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" checked="checked" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
