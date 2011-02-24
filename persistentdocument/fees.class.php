@@ -60,4 +60,28 @@ class order_persistentdocument_fees extends order_persistentdocument_feesbase
 	{
 		return $this->setS18sProperty($name, $value);
 	}
+	
+	/**
+	 * @param string $json
+	 */
+	public function setImportStrategyParameters($json)
+	{
+		if (f_util_StringUtils::isNotEmpty($json))
+		{
+			$datas = JsonService::getInstance()->decode($json);
+			foreach ($datas as $key => $value) 
+			{
+				$this->setStrategyParam($key, $value);
+			}
+		}
+	}
+	
+	/**
+	 * @param string
+	 */
+	public function getImportStrategyParameters()
+	{
+		$params = $this->unserializeS18s();
+		return JsonService::getInstance()->encode($params);
+	}	
 }
