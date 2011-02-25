@@ -4,7 +4,7 @@
     <field name="orderNumber" type="text" disabled="true" labeli18n="m.order.document.creditnote.ordernumber" />
     <field name="customer" disabled="true" />
     <field name="label" required="false" />
-    <field name="amount" type="price">
+    <field name="amount" type="double">
     	<constraint name="min" parameter="0" />
     </field>
   </section>
