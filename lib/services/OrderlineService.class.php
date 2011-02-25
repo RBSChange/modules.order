@@ -87,7 +87,7 @@ class order_OrderlineService extends f_persistentdocument_DocumentService
 		$orderLine->setTaxAmount($cartLine->getTotalTax());
 		
 		$cartLineProperties = $cartLine->getPropertiesArray();
-		$product->getDocumentService()->updateOrderLineProperties($product, $cartLineProperties);
+		$product->getDocumentService()->updateOrderLineProperties($product, $cartLineProperties, $orderLine, $order);
 		
 		// Properties.
 		$orderLine->mergeGlobalProperties($cartLineProperties);
