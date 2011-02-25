@@ -92,7 +92,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 				->addOrder(Order::asc('document_label'));
 		return $query->find();
 	}
-
+	
 	/**
 	 * @param order_persistentdocument_expedition $expedition
 	 * @return order_persistentdocument_expeditionline[]
@@ -469,6 +469,24 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			$this->tm->rollBack($e);
 			throw $e;
 		}		
+	}
+	
+	/**
+	 * @see order_OrderService::cancelOrder()
+	 * @param order_persistentdocument_order $order
+	 */
+	public function cancelPrepareByOrder($order)
+	{
+		$query = $this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::eq('status', self::PREPARE));
+		foreach ($query->find() as $expedition)
+		{
+			$backendUser = users_UserService::getInstance()->getCurrentBackEndUser();
+			$message = 'Cancel by :' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN');
+			$expedition->setShippingDate(null);
+			$expedition->setStatus(self::CANCELED);
+			$expedition->setTrackingText($message);
+			$this->save($expedition);
+		}
 	}
 	
 	/**

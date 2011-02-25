@@ -29,7 +29,7 @@ class order_UpdateCartAction extends f_action_BaseAction
 					$quantity = array_key_exists('quantity', $cartLine) ? $cartLine['quantity'] : null;
 					if (!is_numeric($quantity) || $quantity != intval($quantity) || $quantity <= 0)
 					{
-						$cart->addWarningMessage(f_Locale::translate('&modules.order.frontoffice.Invalid-quantity;', array('quantity' => $quantity)));
+						$cart->addTransientErrorMessage(LocaleService::getInstance()->transFO('m.order.frontoffice.invalid-quantity', array('ucf'), array('quantity' => $quantity)));
 						continue;
 					}
 					$quantity = intval($quantity);
@@ -37,7 +37,7 @@ class order_UpdateCartAction extends f_action_BaseAction
 					$productId = array_key_exists('productId', $cartLine) ? $cartLine['productId'] : null;
 					if ($productId !== null)
 					{	
-						$product = DocumentHelper::getDocumentInstance($productId);
+						$product = catalog_persistentdocument_product::getInstanceById($productId);
 						$cartService->updateLine($cart, $index, $product, $quantity);
 					}
 				}

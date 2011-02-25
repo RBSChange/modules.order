@@ -261,24 +261,50 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param order_persistentdocument_order $order
+	 * @param double $amount
+	 * @return double the remaining amount
 	 */
-	public function removeFromCart($order)
+	public function removeFromOrder($order, $amount)
 	{
-		if (Framework::isInfoEnabled())
+		Framework::info(__METHOD__);
+		$creditNoteDataArray = $order->getCreditNoteDataArray();
+		$creditNotes = $order->getUsecreditnoteArray();
+		foreach ($creditNotes as $creditNote) 
 		{
-			Framework::info(__METHOD__);
-		}
-		
-		$oldCreditNoteDataArray = $order->getCreditNoteDataArray();
-		$oldCreditnotes = $order->getUsecreditnoteArray();
-		foreach ($oldCreditnotes as $creditNote) 
-		{
-			$amount = $oldCreditNoteDataArray[$creditNote->getId()];
-			$creditNote->setAmountNotApplied($creditNote->getAmountNotApplied() + $amount);
+			$anAmount = $creditNoteDataArray[$creditNote->getId()];
+			if ($anAmount < $amount)
+			{
+				$amount -= $anAmount;
+				$creditNote->setAmountNotApplied($creditNote->getAmountNotApplied() + $anAmount);
+				unset($creditNoteDataArray[$creditNote->getId()]);
+				$order->removeUsecreditnote($creditNote);
+			}
+			else
+			{
+				$creditNoteDataArray[$creditNote->getId()] -= $amount;
+				$creditNote->setAmountNotApplied($creditNote->getAmountNotApplied() + $amount);
+				$amount = 0;
+			}
 			$creditNote->save();
+			if ($amount == 0)
+			{
+				break;
+			}
 		}
-		$order->setCreditNoteDataArray(null);
-		$order->removeAllUsecreditnote();
+		$order->setCreditNoteDataArray($creditNoteDataArray);
+		return $amount;
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @param double $amount
+	 */
+	public function createForOrder($order, $amount)
+	{
+		$creditNote = $this->getNewDocumentInstance();
+		$creditNote->setOrder($order);
+		$creditNote->setAmount($amount);
+		$creditNote->save();
 	}
 	
 	/**

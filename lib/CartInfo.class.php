@@ -426,8 +426,7 @@ class order_CartInfo
 	public function setAddressInfo($addressInfo)
 	{
 		$this->addressInfo = $addressInfo;
-	}	
-	
+	}
 	
 	//Shipping mode
 	
@@ -523,11 +522,11 @@ class order_CartInfo
 		}
 		else
 		{
-			$this->shippingArray[$shippingModeId]['filter'] = 
-				array('id' => $filter->getId(), 
-				      'modeId' => $filter->getMode()->getId(),
-					  'feesId' => $filter->getFeesId()
-				);
+			$this->shippingArray[$shippingModeId]['filter'] = array(
+				'id' => $filter->getId(), 
+			    'modeId' => $filter->getMode()->getId(),
+				'feesId' => $filter->getFeesId()
+			);
 		}	
 	}
 
@@ -1326,49 +1325,22 @@ class order_CartInfo
 	/**
 	 * @var Array<String>
 	 */
-	private $successMessage = array();
+	private $successMessages = array();
 
 	/**
 	 * @return Array<String>
 	 */
-	public function getSuccessMessageArray()
+	public function getSuccessMessages()
 	{
-		return $this->successMessage;
+		return $this->successMessages;
 	}
 
 	/**
 	 * @param Array<String> $successMessage
 	 */
-	public function setSuccessMessageArray($successMessage)
+	public function setSuccessMessages($message)
 	{
-		$this->successMessage = $successMessage;
-	}
-
-	/**
-	 * @param unknown_type $key
-	 * @return Boolean
-	 */
-	public function hasSuccessMessage($key)
-	{
-		return isset($this->successMessage[$key]);
-	}
-
-	/**
-	 * @param unknown_type $key
-	 * @return String
-	 */
-	public function getSuccessMessage($key)
-	{
-		return $this->successMessage[$key];
-	}
-
-	/**
-	 * @param unknown_type $key
-	 * @param String $value
-	 */
-	public function setSuccessMessage($key, $value)
-	{
-		$this->successMessage[$key] = $value;
+		$this->successMessages = $message;
 	}
 
 	/**
@@ -1376,13 +1348,13 @@ class order_CartInfo
 	 */
 	public function addSuccessMessage($message)
 	{
-		if (!is_array($this->successMessage))
+		if (!is_array($this->successMessages))
 		{
-			$this->successMessage = array();
+			$this->successMessages = array();
 		}
-		if (!in_array($message, $this->successMessage))
+		if (!in_array($message, $this->successMessages))
 		{
-			$this->successMessage[] = $message;
+			$this->successMessages[] = $message;
 		}
 	}
 
@@ -1391,150 +1363,97 @@ class order_CartInfo
 	 */
 	public function clearSuccessMessages()
 	{
-		$this->successMessage = array();
+		$this->successMessages = array();
 	}
-	
-    /**
-	 * @var Array<String>
-	 */
-	private $warningMessage = array();
-
-	/**
-	 * @return Array<String>
-	 */
-	public function getWarningMessageArray()
-	{
-		return $this->warningMessage;
-	}
-
-	/**
-	 * @param Array<String> $warningMessage
-	 */
-	public function setWarningMessageArray($warningMessage)
-	{
-		$this->warningMessage = $warningMessage;
-	}
-
-	/**
-	 * @param unknown_type $key
-	 * @return Boolean
-	 */
-	public function hasWarningMessage($key)
-	{
-		return isset($this->warningMessage[$key]);
-	}
-
-	/**
-	 * @param unknown_type $key
-	 * @return String
-	 */
-	public function getWarningMessage($key)
-	{
-		return $this->warningMessage[$key];
-	}
-
-	/**
-	 * @param unknown_type $key
-	 * @param String $value
-	 */
-	public function setWarningMessage($key, $value)
-	{
-		$this->warningMessage[$key] = $value;
-	}
-
-	/**
-	 * @param String $message
-	 */
-	public function addWarningMessage($message)
-	{
-		if (!is_array($this->warningMessage))
-		{
-			$this->warningMessage = array();
-		}
-		if (!in_array($message, $this->warningMessage))
-		{
-			$this->warningMessage[] = $message;
-		}
-	}
-
-	/**
-	 * @return void
-	 */
-	public function clearWarningMessages()
-	{
-		$this->warningMessage = array();
-	}
-	
+		
 	/**
 	 * @var Array<String>
 	 */
-	private $errorMessage = array();
-
+	private $persistentErrorMessages = array();
+	
 	/**
 	 * @return Array<String>
 	 */
-	public function getErrorMessageArray()
+	public function getPersistentErrorMessages()
 	{
-		return $this->errorMessage;
+		return $this->persistentErrorMessages;
 	}
 
 	/**
-	 * @param Array<String> $errorMessages
+	 * @param Array<String> $messages
 	 */
-	public function setErrorMessageArray($errorMessages)
+	public function setPersistentErrorMessages($messages)
 	{
-		$this->errorMessage = $errorMessages;
-	}
-
-	/**
-	 * @param Integer $key
-	 * @return Boolean
-	 */
-	public function hasErrorMessage($key)
-	{
-		return isset($this->errorMessage[$key]);
-	}
-
-	/**
-	 * @param Integer $key
-	 * @return String
-	 */
-	public function getErrorMessage($key)
-	{
-		return $this->errorMessage[$key];
-	}
-
-	/**
-	 * @param Integer $key
-	 * @param String $value
-	 */
-	public function setErrorMessage($key, $value)
-	{
-		$this->errorMessage[$key] = $value;
+		$this->persistentErrorMessages = $messages;
 	}
 	
 	/**
 	 * @param String $message
 	 * @return void
 	 */
-	public function addErrorMessage($message)
+	public function addPersistentErrorMessage($message)
 	{
-		if (!is_array($this->errorMessage))
+		if (!is_array($this->persistentErrorMessages))
 		{
-			$this->errorMessage = array();
+			$this->persistentErrorMessages = array();
 		}
-		if (!in_array($message, $this->errorMessage))
+		if (!in_array($message, $this->persistentErrorMessages))
 		{
-			$this->errorMessage[] = $message;
+			$this->persistentErrorMessages[] = $message;
 		}
 	}
 	
 	/**
 	 * @return void
 	 */
-	public function clearErrorMessages()
+	public function clearPersistentErrorMessages()
 	{
-		$this->errorMessage = array();
+		$this->persistentErrorMessages = array();
+	}
+	
+	/**
+	 * @var Array<String>
+	 */
+	private $transientErrorMessages = array();
+	
+	/**
+	 * @return Array<String>
+	 */
+	public function getTransientErrorMessages()
+	{
+		return $this->transientErrorMessages;
+	}
+
+	/**
+	 * @param Array<String> $messages
+	 */
+	public function setTransientErrorMessages($messages)
+	{
+		$this->transientErrorMessages = $messages;
+	}
+	
+	/**
+	 * @param String $message
+	 * @return void
+	 */
+	public function addTransientErrorMessage($message)
+	{
+		if (!is_array($this->transientErrorMessages))
+		{
+			$this->transientErrorMessages = array();
+		}
+		if (!in_array($message, $this->transientErrorMessages))
+		{
+			$this->transientErrorMessages[] = $message;
+		}
+	}
+	
+	/**
+	 * @return void
+	 */
+	public function clearTransientErrorMessages()
+	{
+		$this->transientErrorMessages = array();
 	}
 	
 	/**
@@ -1542,7 +1461,7 @@ class order_CartInfo
 	 */
 	public function isValid()
 	{
-		return count($this->getErrorMessageArray()) == 0;
+		return count($this->getPersistentErrorMessages()) == 0;
 	}
 	
 	// CUSTOM PROPERTIES MANIPULATION
@@ -1708,7 +1627,7 @@ class order_CartInfo
 		return true;
 	}
 	
-	// Deprecated
+	// Deprecated.
 
 	/**
 	 * @deprecated
@@ -1757,5 +1676,117 @@ class order_CartInfo
 	function getFormatedShippingPriceWithoutTax()
 	{
 		return $this->getFormattedShippingPriceWithoutTax();
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0) use getPersistentErrorMessages
+	 */
+	public function getErrorMessageArray()
+	{
+		return $this->getPersistentErrorMessages();
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) use setPersistentErrorMessages
+	 */
+	public function setErrorMessageArray($messages)
+	{
+		$this->setPersistentErrorMessages($messages);
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function hasErrorMessage($key)
+	{
+		return isset($this->persistentErrorMessages[$key]);
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function getErrorMessage($key)
+	{
+		return $this->persistentErrorMessages[$key];
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function setErrorMessage($key, $value)
+	{
+		$this->persistentErrorMessages[$key] = $value;
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0) use addPersistentErrorMessage
+	 */
+	public function addErrorMessage($message)
+	{
+		$this->addPersistentErrorMessage($message);
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0) use clearPersistentErrorMessages
+	 */
+	public function clearErrorMessages()
+	{
+		$this->clearPersistentErrorMessages();
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) use getTransientErrorMessages
+	 */
+	public function getWarningMessageArray()
+	{
+		return $this->getTransientErrorMessages();
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) use setTransientErrorMessages
+	 */
+	public function setWarningMessageArray($messages)
+	{
+		$this->setTransientErrorMessages($messages);
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function hasWarningMessage($key)
+	{
+		return isset($this->transientErrorMessages[$key]);
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function getWarningMessage($key)
+	{
+		return $this->transientErrorMessages[$key];
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement 
+	 */
+	public function setWarningMessage($key, $value)
+	{
+		$this->transientErrorMessages[$key] = $value;
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) use addTransientErrorMessage
+	 */
+	public function addWarningMessage($message)
+	{
+		$this->addTransientErrorMessage($message);
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) use clearTransientErrorMessages
+	 */
+	public function clearWarningMessages()
+	{
+		$this->clearTransientErrorMessages();
 	}
 }

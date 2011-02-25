@@ -261,7 +261,18 @@ class order_BillService extends f_persistentdocument_DocumentService
 				->addOrder(Order::asc('document_id'));
 		return $query->find();
 	}
-		
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return double
+	 */
+	public function getNotPaidAmountByOrder($order)
+	{
+		$query = order_BillService::getInstance()->createQuery()->add(Restrictions::eq('order', $order));
+		$query->add(Restrictions::ne('status', self::SUCCESS))->setProjection(Projections::sum('amount', 'amount'));
+		return f_util_ArrayUtils::firstElement($query->findColumn('amount'));
+	}
+	
 	/**
 	 * @param order_persistentdocument_bill $bill
 	 * @param order_persistentdocument_order $order
@@ -356,6 +367,14 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$order = $bill->getOrder();	
 		order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_failed', $order, $bill);
 		$order->getDocumentService()->cancelOrder($order, false);
+		$this->cancelBill($bill);
+	}
+	
+	/**
+	 * @param order_persistentdocument_bill $bill
+	 */
+	protected function cancelBill($bill)
+	{
 		if ($bill->getTransactionId())
 		{
 			$bill->setPublicationstatus('FILED');
@@ -364,6 +383,28 @@ class order_BillService extends f_persistentdocument_DocumentService
 		else
 		{
 			$this->delete($bill);
+		}
+	}
+	
+	/**
+	 * @see order_OrderService::cancelOrder()
+	 * @param order_persistentdocument_order $order
+	 */
+	public function cancelWaitingByOrder($order)
+	{
+		$query = $this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::eq('status', self::WAITING));
+		foreach ($query->find() as $bill)
+		{
+			$bill->setTransactionDate(null);
+			$bill->setStatus(self::FAILED);			
+			$backendUser = users_UserService::getInstance()->getCurrentBackEndUser();
+			if (f_util_StringUtils::isEmpty($bill->getTransactionId()))
+			{
+				$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ?  $backendUser->getId() : 'UNKNOWN'));
+			}
+			$bill->setTransactionText(LocaleService::getInstance()->transBO('m.order.bo.general.canceled-by', array('ucf', 'labl')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
+			$this->save($bill);
+			$this->cancelBill($bill);
 		}
 	}
 	

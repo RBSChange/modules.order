@@ -30,12 +30,16 @@ class order_AddToCartAction extends f_action_BaseAction
 		unset($paramsToRedirect['module']);
 		unset($paramsToRedirect['action']);
 		unset($paramsToRedirect['lang']);
-		$cs->checkAddToCart($cart, $shop, array($product), array($product->getId() => $quantity), true, $paramsToRedirect);
-
-		// Add.
-		if ($cs->addProductToCart($cart, $product, $quantity, $shop))
+		$products = array($product);
+		$quantities = array($product->getId() => $quantity);
+		if ($cs->checkAddToCart($cart, $shop, $products, $quantities, true, $paramsToRedirect))
 		{
-			$cart->addSuccessMessage(LocaleService::getInstance()->transFO('m.order.fo.product-added', array('ucf')));
+			// Add.
+			if ($cs->addProductToCart($cart, $product, $quantity, $shop))
+			{
+				$cart->addSuccessMessage(LocaleService::getInstance()->transFO('m.order.fo.product-added', array('ucf')));
+				$cart->refresh();
+			}
 		}
 		
 		// Redirect.

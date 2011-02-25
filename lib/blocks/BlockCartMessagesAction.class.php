@@ -20,8 +20,8 @@ class order_BlockCartMessagesAction extends website_BlockAction
 		$cs = order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();
 		
-		// Errors.
-		$errorMessages = $cart->getErrorMessageArray();
+		// Transient error messages.
+		$errorMessages = $cart->getTransientErrorMessages();
 		if (count($errorMessages) > 0)
 		{
 			foreach ($errorMessages as $msg)
@@ -33,16 +33,16 @@ class order_BlockCartMessagesAction extends website_BlockAction
 				$request->setAttribute('showCantOrderMessage', true);
 			}
 		}
-		$cart->clearErrorMessages();
+		$cart->clearTransientErrorMessages();
 		
-		// Warnings.
-		foreach ($cart->getWarningMessageArray() as $msg)
+		// Persistent error messages.
+		foreach ($cart->getPersistentErrorMessages() as $msg)
 		{
 			$this->addError($msg);
 		}
 		
-		// Successes.
-		foreach ($cart->getSuccessMessageArray() as $msg)
+		// Success messages.
+		foreach ($cart->getSuccessMessages() as $msg)
 		{
 			$this->addMessage($msg);
 		}

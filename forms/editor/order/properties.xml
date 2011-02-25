@@ -36,7 +36,7 @@
 		<javascript>
 			<constructor><![CDATA[
 				// Cancel order button.
-				this.mCancelOrderButton = this.addActionButton('&modules.order.bo.actions.Cancel-order;', wToolkit.getIcon('reject', 'small'));
+				this.mCancelOrderButton = this.addActionButton("${transui:m.order.bo.actions.cancel-order,ucf}", wToolkit.getIcon('reject', 'small'));
 				var me = this;
 				this.mCancelOrderButton.addEventListener('command', function(event) {me.onCancelOrder();}, true);			
 				this.extendMethod("updateCommandsUI", this.updateCancelOrderUI);
@@ -69,8 +69,11 @@
 				<parameter name="event" />
 				<body><![CDATA[
 					this.lockCommandsUI();
-					this.showTextMessage("&modules.order.bo.doceditor.Cancelation-in-progress;");
-					this.documentEditor.executeServerAction('properties', 'CancelOrder');
+					if (confirm("${transui:m.order.bo.doceditor.confirm-cancelation,ucf}"))
+					{
+						this.showTextMessage("${transui:m.order.bo.doceditor.cancelation-in-progress,ucf}");
+						this.documentEditor.executeServerAction('properties', 'CancelOrder');
+					}
 				]]></body>
 			</method>
 			

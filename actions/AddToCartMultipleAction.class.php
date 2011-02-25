@@ -30,28 +30,29 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 		unset($paramsToRedirect['module']);
 		unset($paramsToRedirect['action']);
 		unset($paramsToRedirect['lang']);
-		$cs->checkAddToCart($cart, $shop, $products, $quantities, true, $paramsToRedirect);
-
-		// Add products.
-		$productAdded = false;
-		foreach ($products as $product)
+		if ($cs->checkAddToCart($cart, $shop, $products, $quantities, true, $paramsToRedirect))
 		{
-			if ($cs->addProductToCart($cart, $product, $quantities[$product->getId()]))
+			// Add products.
+			$productAdded = false;
+			foreach ($products as $product)
 			{
-				$this->addedProductLabels[] = $product->getLabelAsHtml();
-				$productAdded = true;
+				if ($cs->addProductToCart($cart, $product, $quantities[$product->getId()]))
+				{
+					$this->addedProductLabels[] = $product->getLabelAsHtml();
+					$productAdded = true;
+				}
+				else
+				{
+					$this->notAddedProductLabels[] = $product->getLabelAsHtml();
+				}
 			}
-			else
+			
+			// Refresh the cart.
+			if ($productAdded)
 			{
-				$this->notAddedProductLabels[] = $product->getLabelAsHtml();
+				$cart->refresh();
+				$this->addMessagesToCart($cart);
 			}
-		}
-		
-		// Refresh the cart.
-		if ($productAdded)
-		{
-			$cart->refresh();
-			$this->addMessagesToCart($cart);
 		}
 		
 		// Redirect.
@@ -110,7 +111,7 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 	protected $notAddedProductLabels = array();
 	
 	/**
-	 * @param order_CartInfos $cart
+	 * @param order_CartInfo $cart
 	 */
 	protected function addMessagesToCart($cart)
 	{
@@ -123,7 +124,7 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 		$message = $this->getMessage($this->notAddedProductLabels, 'not-added');
 		if ($message !== null)
 		{
-			$cart->addWarningMessage($message);
+			$cart->addTransientErrorMessage($message);
 		}
 		$this->notAddedProductLabels = null;
 	}
@@ -135,18 +136,19 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 	 */
 	private function getMessage($labels, $eventname)
 	{
+		$ls = LocaleService::getInstance();
 		switch (count($labels))
 		{
 			case 0 :
 				$message = null;
 				break;
 			case 1 :
-				$message = LocaleService::getInstance()->transFO('m.order.fo.product-label-'.$eventname, array('ucf'), array('label' => f_util_ArrayUtils::firstElement($labels)));
+				$message = $ls->transFO('m.order.fo.product-label-'.$eventname, array('ucf'), array('label' => f_util_ArrayUtils::firstElement($labels)));
 				break;
 			default :
 				$lastLabel = array_pop($labels);
 				$firstLabels = implode(', ', $labels);
-				$message = LocaleService::getInstance()->transFO('m.order.fo.product-labels-'.$eventname, array('ucf'), array('firstLabels' => $firstLabels, 'lastLabel' => $lastLabel));
+				$message = $ls->transFO('m.order.fo.product-labels-'.$eventname, array('ucf'), array('firstLabels' => $firstLabels, 'lastLabel' => $lastLabel));
 				break;
 		}
 		return $message;

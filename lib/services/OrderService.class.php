@@ -634,7 +634,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		}
 		catch (Exception $e)
 		{
-			$cartInfo->addErrorMessage(LocaleService::getInstance()->transFO('m.order.fo.cant-create-order'));
+			$cartInfo->addTransientErrorMessage(LocaleService::getInstance()->transFO('m.order.fo.cant-create-order'));
 			$this->tm->rollBack($e);
 			$orderDocument = null;	
 			$this->finalizeOrderAndCart($orderDocument, $cartInfo);		
@@ -817,18 +817,90 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		if ($order->getOrderStatus() != self::CANCELED)
 		{
 			Framework::info(__METHOD__ . ' '. $order->__toString());
-			$order->setOrderStatus(self::CANCELED);
-			if ($order->hasCreditNote())
+			try
 			{
-				order_CreditnoteService::getInstance()->removeFromCart($order);
+				$this->tm->beginTransaction();
+				$order->setOrderStatus(self::CANCELED);
+				
+				// Cancel waiting bills.
+				order_BillService::getInstance()->cancelWaitingByOrder($order);
+							
+				// Get amount to recredit.
+				$amount = $this->getAmountToRecredit($order);
+				
+				// Recredit used credit notes.
+				$cns = order_CreditnoteService::getInstance();		
+				if ($order->hasCreditNote())
+				{
+					$amount = $cns->removeFromOrder($order, $amount);
+				}
+				
+				// Create new credit note.
+				if ($amount > 0)
+				{
+					$cns->createForOrder($order, $amount);
+				}
+
+				// Cancel waiting expeditions.
+				order_ExpeditionService::getInstance()->cancelPrepareByOrder($order);
+				
+				$this->save($order);
+				$this->tm->commit();
+			}
+			catch (Exception $e)
+			{
+				$this->tm->rollBack($e);
+				throw $e;
 			}
 			
-			$this->save($order);
 			if ($sendNotification)
 			{
 				order_ModuleService::getInstance()->sendCustomerNotification('modules_order/order_canceled', $order);
-			}		
+			}
 			f_event_EventManager::dispatchEvent(self::ORDER_STATUS_MODIFIED_EVENT, $this, array('document' => $order));
+		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return double
+	 */
+	protected function getAmountToRecredit($order)
+	{
+		$notPaidAmount = order_BillService::getInstance()->getNotPaidAmountByOrder($order);
+		$shippedExpeditions = order_ExpeditionService::getInstance()->getShippedByOrder($order);
+		if (!count($shippedExpeditions))
+		{
+			return $order->getTotalAmountWithTax() + $order->getTotalCreditNoteAmount() - $notPaidAmount;
+		}
+		else
+		{
+			$shippedQuantities = array();
+			foreach ($shippedExpeditions as $expedition)
+			{
+				foreach ($expedition->getLineArray() as $line)
+				{
+					$id = $line->getOrderlineid();
+					if (isset($shippedQuantities[$id]))
+					{
+						$shippedQuantities[$id] = 0;
+					}
+					$shippedQuantities[$id] += $line->getQuantity();
+				}
+			}
+			
+			$amount = 0;
+			foreach ($order->getLineArray() as $line)
+			{
+				$id = $line->getId();
+				$quantity = $line->getQuantity();
+				if (isset($shippedQuantities[$id]))
+				{
+					$quantity -= $shippedQuantities[$id];
+				}
+				$amount += $line->getUnitPriceWithTax() * $quantity;
+			}
+			return $amount - $notPaidAmount;
 		}
 	}
 	
