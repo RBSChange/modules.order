@@ -5,8 +5,6 @@
  */
 class order_persistentdocument_creditnote extends order_persistentdocument_creditnotebase 
 {	
-	
-
 	/**
 	 * @var double
 	 */

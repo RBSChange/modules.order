@@ -558,11 +558,16 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	 * @param array $allowedSections
 	 * @return array
 	 */
-//	public function getResume($document, $forModuleName, $allowedSections = null)
-//	{
-//		$resume = parent::getResume($document, $forModuleName, $allowedSections);
-//		return $resume;
-//	}
+	public function getResume($document, $forModuleName, $allowedSections = null)
+	{
+		$resume = parent::getResume($document, $forModuleName, $allowedSections);
+		
+		$order = $document->getOrder();
+		$resume['properties']['amount'] = $order->formatPrice($document->getAmount());
+		$resume['properties']['amountNotApplied'] = $order->formatPrice($document->getAmountNotApplied());
+		
+		return $resume;
+	}
 
 	/**
 	 * @param order_persistentdocument_creditnote $document
