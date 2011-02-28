@@ -84,25 +84,25 @@ class order_CartFilter extends order_LinesCartFilterBase
 			case 'coupon':
 				return ($value->hasCoupon()) ? array($value->getCoupon()->getId()) : array();
 			case 'totalAmount':
-				return $value->getTotalAmount();
+				return catalog_PriceFormatter::getInstance()->round($value->getTotalAmount());
 			case 'totalAmountWithTax':
-				return $value->getTotalWithTax();
+				return catalog_PriceFormatter::getInstance()->round($value->getTotalWithTax());
 			case 'totalAmountWithoutTax':
-				return $value->getTotalWithoutTax();
+				return catalog_PriceFormatter::getInstance()->round($value->getTotalWithoutTax());
 			case 'linesAmountWithTax':
 				$count = 0.0;
 				foreach ($this->getLines($value) as $cartLineInfo) 
 				{
 					$count += $cartLineInfo->getTotalValueWithTax();
 				}
-				return $count;
+				return catalog_PriceFormatter::getInstance()->round($count);
 			case 'linesAmountWithoutTax':
 				$count = 0.0;
 				foreach ($this->getLines($value) as $cartLineInfo) 
 				{
 					$count += $cartLineInfo->getTotalValueWithoutTax();
 				}
-				return $count;
+				return catalog_PriceFormatter::getInstance()->round($count);
 			case 'lineCount':
 				return count($this->getLines($value));
 			case 'productCount':
