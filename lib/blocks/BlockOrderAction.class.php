@@ -4,15 +4,12 @@
  */
 class order_BlockOrderAction extends website_TaggerBlockAction
 {
-	
 	/**
-	 * @see website_BlockAction::execute()
-	 *
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @return String
 	 */
-	function execute($request, $response)
+	public function execute($request, $response)
 	{
 		if ($this->isInBackoffice())
 		{
@@ -56,16 +53,10 @@ class order_BlockOrderAction extends website_TaggerBlockAction
 	 * @param f_mvc_Response $response
 	 * @return String
 	 */
-	function executeAddToCart($request, $response)
+	public function executeAddToCart($request, $response)
 	{
-
 		$order = $this->getCurrentOrder();
 		order_OrderService::getInstance()->appendOrderToCart($order);
-		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
-		$tagService = TagService::getInstance();
-		$page = $tagService->getDocumentByContextualTag('contextual_website_website_modules_order_cart', $website);
-		$url = LinkHelper::getDocumentUrl($page, RequestContext::getInstance()->getLang());
-		HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 		return website_BlockView::NONE;
 	}
 	

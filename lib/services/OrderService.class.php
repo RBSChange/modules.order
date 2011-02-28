@@ -648,19 +648,26 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function appendOrderToCart($order)
 	{
-		$cartService = order_CartService::getInstance();
-		$cartInfo = $cartService->getDocumentInstanceFromSession();
+		$parameters = array();
+		$parameters['shopId'] = $order->getShopId();
+		
+		$productIds = array();
+		$quantities = array();
 		foreach ($order->getLineArray() as $line)
 		{
-			$product = $line->getProduct();
-			if (!is_null($product))
-			{
-				$properties = $line->getGlobalPropertyArray();
-				$product->getDocumentService()->updateProductFromCartProperties($product, $properties);
-				$cartService->addProductToCart($cartInfo, $product, $line->getQuantity(), $properties);
-			}
+			$productId = $line->getProductId();
+			$productIds[] = $productId;
+			$quantities[$productId] = $line->getQuantity();
 		}
-		$cartInfo->refresh();
+		$parameters['productIds'] = $productIds;
+		$parameters['quantities'] = $quantities;
+		
+		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		$page = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart', $website);
+		$url = str_replace('&amp;', '&', LinkHelper::getDocumentUrl($page, RequestContext::getInstance()->getLang()));
+		$parameters['backUrl'] = $url;
+		
+		HttpController::getInstance()->redirectToUrl(LinkHelper::getActionUrl('order', 'AddToCartMultiple', $parameters));
 	}
 	
 	/**
