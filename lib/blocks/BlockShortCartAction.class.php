@@ -28,19 +28,10 @@ class order_BlockShortCartAction extends website_BlockAction
 		{
 			// Set the url only if it is not the current page.
 			$opURL = $op->getOrderProcessURL();
-			if (strpos($opURL, '?') !== false)
-			{
-				list($urlToCheck, ) = explode('?', $opURL);
-			}
-			else
-			{
-				$urlToCheck = $opURL;
-			}
-			
-			if ($urlToCheck != $_SERVER['SCRIPT_URI'])
+			if ($this->removeVars($opURL) != $this->removeVars(LinkHelper::getCurrentUrlComplete()))
 			{
 				$request->setAttribute('processUrl', $opURL);
-			}	
+			}
 			return 'Process';
 		}
 		else
@@ -55,5 +46,22 @@ class order_BlockShortCartAction extends website_BlockAction
 			}
 			return 'Cart';
 		}		
+	}
+	
+	/**
+	 * @param string $opURL
+	 * @return string
+	 */
+	private function removeVars($url)
+	{
+		if (strpos($url, '?') !== false)
+		{
+			list($url, ) = explode('?', $url);
+		}
+		if (strpos($url, '#') !== false)
+		{
+			list($url, ) = explode('#', $url);
+		}
+		return $url;
 	}
 }
