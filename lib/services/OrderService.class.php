@@ -178,6 +178,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			}
 		}
 		$informations['tvaAmounts'] = implode(', ', $tvaAmounts);
+		$usedCreditNote = array_sum($order->getCreditNoteDataArray());
+		$informations['usedCreditNote'] = ($usedCreditNote) ? $order->formatPrice($usedCreditNote) : null;
 		$informations['totalAmount'] = $order->formatPrice($order->getTotalAmountWithTax());
 		
 		$result['informations'] = $informations;
@@ -350,7 +352,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	protected function prepareCartForOrder($cartInfo)
 	{
-		//Prepare cart for order generation
+		// Prepare cart for order generation.
 	}
 	
 	/**
@@ -359,14 +361,14 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */	
 	protected function finalizeOrderAndCart($orderDocument, $cartInfo)
 	{
-		//Nettoyage du panier et de la commande
+		//N ettoyage du panier et de la commande.
 		if ($orderDocument === null)
 		{
-			//La commande n'a pas pu etre créer
+			// La commande n'a pas pu être créée.
 		}
 		else
 		{
-			//Tous c'est bien passé
+			// Tout s'est bien passé.
 		}
 	}
 	
@@ -1296,6 +1298,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$data['properties']['customerFullName'] = $billingAddress->getDocumentService()->getFullName($billingAddress);
 			$data['properties']['customerCode'] = $document->getCustomer()->getUser()->getEmail();
 			
+			$usedCreditNote = array_sum($document->getCreditNoteDataArray());
+			$data['financial']['usedCreditNote'] = ($usedCreditNote) ? $document->formatPrice($usedCreditNote) : null;
 			$data['financial']['totalAmount'] = $document->formatPrice($document->getTotalAmountWithTax());			
 			$obs = order_BillService::getInstance();
 			$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
@@ -1310,6 +1314,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 					$data['financial']['paymentStatus'] .= ' '	. date_DateFormat::format($bill->getUITransactionDate(), $dateTimeFormat);
 				}
 			}
+			
 			
 			$expeditions = order_ExpeditionService::getInstance()->getByOrder($document);
 			if (count($expeditions))
@@ -1575,7 +1580,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			{
 				$nodeAttributes['date'] = date_DateFormat::format($document->getUICreationdate());
 				$nodeAttributes['orderStatusLabel'] = $document->getBoOrderStatusLabel();
-				$nodeAttributes['formattedTotalAmountWithTax'] = $document->formatPrice($document->getTotalAmountWithTax());
+				$nodeAttributes['formattedTotalAmountWithTax'] = $document->formatPrice($document->getTotalAmountWithTax()+array_sum($document->getCreditNoteDataArray()));
 				$user = $document->getCustomer()->getUser();
 				$nodeAttributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
 				$nodeAttributes['canBeCanceled'] = $document->canBeCanceled();
