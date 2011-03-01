@@ -29,6 +29,7 @@
 		<sectionrow labeli18n="modules.order.bo.general.Billing-mode" id="billingMode" />
 		<sectionrow labeli18n="modules.order.bo.general.Billing-fees" id="billingFees" />
 		<sectionrow labeli18n="modules.order.bo.doceditor.panel.carts.Tva-amounts" id="tvaAmounts" />
+		<sectionrow labeli18n="modules.order.bo.doceditor.property.Used-credit-note" id="usedCreditNote" />
 		<sectionrow labeli18n="modules.order.bo.general.Total-to-pay" id="totalAmount" />
 	</section>
 
@@ -45,9 +46,8 @@
 			]]></constructor>
 			
 			<field name="mPropIds">["website", "reference", "creationdate",
-				"subTotal", "couponName", "shippingFees",
-				"billingMode", "billingFees",
-				"tvaAmounts", "discountTotal", "totalAmount",
+				"subTotal", "couponName", "shippingFees", "billingMode", "billingFees",
+				"tvaAmounts", "discountTotal", "usedCreditNote", "totalAmount",
 				"couponSectionName", "couponSectionCode"]</field>
 			
 			<field name="mCancelOrderButton">null</field>

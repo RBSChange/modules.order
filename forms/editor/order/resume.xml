@@ -11,6 +11,7 @@
 		
 	<section name="financial" linkedtab="financial" actiontexti18n="modules.uixul.bo.doceditor.section.action.View"
 		labeli18n="modules.order.bo.doceditor.tab.Financial" image="{IconsBase}/small/price.png">
+		<property name="usedCreditNote" labeli18n="modules.order.bo.doceditor.property.Used-credit-note" />
 		<property name="totalAmount" labeli18n="modules.order.bo.doceditor.property.Total-amount" />
 		<property name="paymentStatus" labeli18n="modules.order.bo.doceditor.property.Payment-status" />
 	</section>		
