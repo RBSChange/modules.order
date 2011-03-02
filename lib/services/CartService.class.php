@@ -286,7 +286,7 @@ class order_CartService extends BaseService
 		}
 		
 		$replacements = array('articleLabel' => $product->getLabelAsHtml());
-		$cart->addTransientErrorMessage($ls->transFO('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
+		$cart->addTransientErrorMessage(LocaleService::getInstance()->transFO('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
 		return false;
 	}
 	
