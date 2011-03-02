@@ -7,13 +7,12 @@ class order_CancelOrderAction extends f_action_BaseJSONAction
 	 */
 	public function _execute($context, $request)
 	{
-		$os = order_OrderService::getInstance();
 		$labels = array("");
 		foreach ($this->getDocumentInstanceArrayFromRequest($request) as $order)
 		{
 			if ($order instanceof order_persistentdocument_order)
 			{
-				$os->cancelOrder($order);
+				$order->getDocumentService()->cancelOrder($order);
 				$this->logAction($order);
 				$labels[] = $order->getOrderNumber();
 			}

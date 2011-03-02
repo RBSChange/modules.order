@@ -298,6 +298,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @param double $amount
+	 * @return order_persistentdocument_creditnote
 	 */
 	public function createForOrder($order, $amount)
 	{
@@ -305,6 +306,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		$creditNote->setOrder($order);
 		$creditNote->setAmount($amount);
 		$creditNote->save();
+		return $creditNote;
 	}
 	
 	/**

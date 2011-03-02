@@ -847,7 +847,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				// Create new credit note.
 				if ($amount > 0)
 				{
-					$cns->createForOrder($order, $amount);
+					$creditNote = $cns->createForOrder($order, $amount);
+					$this->handleNewCreditNoteAfterCancel($creditNote);
 				}
 
 				// Cancel waiting expeditions.
@@ -868,6 +869,14 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			}
 			f_event_EventManager::dispatchEvent(self::ORDER_STATUS_MODIFIED_EVENT, $this, array('document' => $order));
 		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_creditnote $creditNote
+	 */
+	protected function handleNewCreditNoteAfterCancel($creditNote)
+	{
+		// Nothing to do by default.
 	}
 	
 	/**

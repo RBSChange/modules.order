@@ -13,7 +13,7 @@ class order_CancelOrderJSONAction extends f_action_BaseJSONAction
 		$order = $this->getDocumentInstanceFromRequest($request);
 		if ($order instanceof order_persistentdocument_order)
 		{
-			order_OrderService::getInstance()->cancelOrder($order);
+			$order->getDocumentService()->cancelOrder($order);
 			$this->logAction($order);
 			$propertiesNames = explode(',', $request->getParameter('documentproperties', ''));
 			$propertiesNames[] = 'documentversion';
