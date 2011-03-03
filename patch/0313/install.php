@@ -40,6 +40,7 @@ class order_patch_0313 extends patch_BasePatch
 			$notif->setTemplate("default");
 			$notif->save($sysfolderId);
 		}
+		$this->execChangeCommand("compile-locales");
 	}
 
 	/**

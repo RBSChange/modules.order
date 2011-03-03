@@ -27,6 +27,17 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 				$user = $this->getCustomer()->getUser();
 				$nodeAttributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
 				$nodeAttributes['canBeCanceled'] = $this->canBeCanceled();
+				$messages = order_MessageService::getInstance()->getByOrder($this);
+				if (count($messages) > 0)
+				{
+					$message = f_util_ArrayUtils::firstElement($messages);
+					$nodeAttributes['lastMessageDate'] = date_DateFormat::format($message->getUICreationdate());
+				}
+				else
+				{
+					$nodeAttributes['lastMessageDate'] = "N.A";
+				}
+				
 			}
 		}
 	}
@@ -463,6 +474,10 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function getExpeditionsJSON()
 	{
+		if ($this->getOrderStatus() == order_OrderService::IN_PROGRESS)
+		{
+			order_ModuleService::getInstance()->checkOrderProcessing($this);
+		}
 		$expeditions = order_ExpeditionService::getInstance()->getBoList($this);
 		return JsonService::getInstance()->encode($expeditions);
 	}

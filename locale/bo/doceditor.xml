@@ -76,6 +76,17 @@
 		<locale lang="fr">envoyer</locale>
 		<locale lang="en">send</locale>
 	</entity>
+        <entity id="panel.messages.markAsAnswered">
+		<locale lang="fr">Marquer comme traité</locale>
+		<locale lang="en">mark as answered</locale>
+	</entity>
+        
+
+        <entity id="panel.messages.success-markAsAnswered-message">
+		<locale lang="fr">le message est marqué comme traité</locale>
+		<locale lang="en">the message has been marked has answered</locale>
+	</entity>
+
 	<entity id="panel.messages.error-no-message-to-send">
 		<locale lang="fr">vous devez saisir un contenu à envoyer</locale>
 		<locale lang="en">you must set a content to send.</locale>

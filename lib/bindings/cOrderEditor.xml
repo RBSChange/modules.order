@@ -100,7 +100,11 @@
 						<xul:caption label="&amp;modules.order.bo.doceditor.panel.messages.Title;" />
 						<vbox>
 							<xul:cfield name="messageContent" anonid="field_messageContent" fieldtype="longtext" cols="100" hidehelp="true" />
-							<hbox><xul:button anonid="sendMessageButton" label="&amp;modules.order.bo.doceditor.panel.messages.Send;" image="{IconsBase}/small//mail.png" /></hbox>
+							<hbox>
+                                                              <xul:button anonid="sendMessageButton" label="&amp;modules.order.bo.doceditor.panel.messages.Send;" image="{IconsBase}/small//mail.png" />
+                                                              <xul:button anonid="markAsAnswered" label="&amp;modules.order.bo.doceditor.panel.messages.MarkAsAnswered;" image="{IconsBase}/small/check.png" />
+
+                                                        </hbox>
 						</vbox>
 					</xul:groupbox>
 					<xul:vbox anonid="messages" />
@@ -113,6 +117,8 @@
 				var _this = this;
 				var node = document.getAnonymousElementByAttribute(this, 'anonid', 'sendMessageButton');
 				node.addEventListener('command', function () { _this.sendNewMessage(); }, true);
+                                var node = document.getAnonymousElementByAttribute(this, 'anonid', 'markAsAnswered');
+				node.addEventListener('command', function () { _this.markAsAnswered(); }, true);
 			]]></constructor>
 		
 			<method name="getInitializeParameters">
@@ -204,6 +210,24 @@
 					}
 				]]></body>
 			</method>
+                        
+                        <method name="markAsAnswered">
+				<body><![CDATA[
+                                        var result = wCore.executeJSON('order', 'MarkAsAnswered', {cmpref: this.documentEditor.documentid}, null, true);
+                                        if (result.status != 'OK')
+                                        {
+                                                this.showErrorMessage(result.contents.errorMessage);
+                                        }
+                                        else
+                                        {
+                                                this.showTextMessage("&amp;modules.order.bo.doceditor.panel.messages.Success-markAsAnswered-message;");
+                                                this.fireInitializeComplete(result);
+                                                node.value = '';
+                                                this.documentEditor.refresh();
+                                        }
+				]]></body>
+			</method>
+
 		</implementation>
 	</binding>	
 

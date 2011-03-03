@@ -38,6 +38,7 @@
 				<column name="orderStatusLabel" flex="2" label="OrderStatus" />
 				<column name="customer" flex="4" label="Customer" />
 				<column name="date" flex="1" label="Date" />
+                                <column name="lastMessageDate" flex="1" label="LastMessageDate" />
 			</columns>
 			<contextactions>
 				<contextaction name="edit" />
