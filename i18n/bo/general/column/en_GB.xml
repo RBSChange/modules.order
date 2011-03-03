@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.general.column" lcid="en_GB">
-  <key id="date">date</key>
-  <key id="reference">reference</key>
-  <key id="orderstatus">status</key>
-  <key id="totalamountwithtax">amount with tax</key>
-  <key id="customer">customer</key>
-  <key id="email">e-mail</key>
+	<key id="date">date</key>
+	<key id="reference">reference</key>
+	<key id="orderstatus">status</key>
+	<key id="totalamountwithtax">amount with tax</key>
+	<key id="customer">customer</key>
+	<key id="email">e-mail</key>
+	<key id="lastmessagedate">last message date</key>
 </i18n>

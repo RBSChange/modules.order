@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.doceditor.panel.messages" lcid="fr_FR">
-  <key id="title">envoyer un nouveau message pour cette commande</key>
-  <key id="send">envoyer</key>
-  <key id="error-no-message-to-send">vous devez saisir un contenu à envoyer</key>
-  <key id="success-sending-message">le message a bien été envoyé.</key>
+	<key id="title">envoyer un nouveau message pour cette commande</key>
+	<key id="send">envoyer</key>
+	<key id="error-no-message-to-send">Vous devez saisir un contenu à envoyer.</key>
+	<key id="success-sending-message">Le message a bien été envoyé.</key>
+	<key id="markasanswered">marquer comme traité</key>
+	<key id="success-markasanswered-message">Le message est marqué comme traité.</key>
 </i18n>

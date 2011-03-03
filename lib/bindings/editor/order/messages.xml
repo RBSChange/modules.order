@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl"
-	xmlns:html="http://www.w3.org/1999/xhtml"
+<bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl" xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-	
+
 	<binding id="order_messages" extends="layout.cDocumentEditor#cDocumentEditorPanel">
 		<resources>
 			<stylesheet src="modules.uixul.cFieldsGroup" />
@@ -13,15 +12,19 @@
 				<xul:cmessageinfo anonid="message" />
 				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
 					<xul:groupbox class="messageForm">
-						<xul:caption label="&amp;modules.order.bo.doceditor.panel.messages.Title;" />
-						<vbox>
+						<xul:caption label="${transui: m.order.bo.doceditor.panel.messages.title,ucf,attr}" />
+						<xul:vbox>
 							<xul:cfield name="messageContent" anonid="field_messageContent" fieldtype="longtext" cols="100" hidehelp="true" />
-							<hbox><xul:button anonid="sendMessageButton" label="&amp;modules.order.bo.doceditor.panel.messages.Send;" image="{IconsBase}/small//mail.png" /></hbox>
-						</vbox>
+							<xul:hbox>
+								<xul:button anonid="sendMessageButton" label="${transui: m.order.bo.doceditor.panel.messages.send,ucf,attr}" image="{IconsBase}/small//mail.png" />
+								<xul:button anonid="markAsAnswered" label="${transui: m.order.bo.doceditor.panel.messages.markasanswered,ucf,attr}"
+									image="{IconsBase}/small/check.png" />
+							</xul:hbox>
+						</xul:vbox>
 					</xul:groupbox>
 					<xul:vbox anonid="messages" />
 					<xul:spacer flex="1" />
-				</xul:scrollbox>					
+				</xul:scrollbox>
 			</xul:vbox>
 		</content>
 		<implementation>
@@ -29,8 +32,10 @@
 				var _this = this;
 				var node = document.getAnonymousElementByAttribute(this, 'anonid', 'sendMessageButton');
 				node.addEventListener('command', function () { _this.sendNewMessage(); }, true);
+				var node = document.getAnonymousElementByAttribute(this, 'anonid', 'markAsAnswered');
+				node.addEventListener('command', function () { _this.markAsAnswered(); }, true);
 			]]></constructor>
-		
+
 			<method name="getInitializeParameters">
 				<body><![CDATA[
 					return {
@@ -40,7 +45,7 @@
 					};
 				]]></body>
 			</method>
-									
+
 			<method name="fireInitializeComplete">
 				<parameter name="result" />
 				<body><![CDATA[
@@ -95,7 +100,7 @@
 					this.gotoTop();
 				]]></body>
 			</method>
-			
+
 			<method name="sendNewMessage">
 				<body><![CDATA[
 					var node = document.getAnonymousElementByAttribute(this, 'anonid', 'field_messageContent');
@@ -108,7 +113,7 @@
 						}
 						else
 						{
-							this.showTextMessage("&amp;modules.order.bo.doceditor.panel.messages.Success-sending-message;");
+							this.showTextMessage("${transui: m.order.bo.doceditor.panel.messages.success-sending-message,ucf,js}");
 							this.fireInitializeComplete(result);
 							node.value = '';
 							this.documentEditor.refresh();
@@ -116,9 +121,26 @@
 					}
 					else
 					{
-						this.showErrorMessage("&amp;modules.order.bo.doceditor.panel.messages.Error-no-message-to-send;");
+						this.showErrorMessage("${transui: m.order.bo.doceditor.panel.messages.error-no-message-to-send,ucf,js}");
 					}
 				]]></body>
+			</method>
+
+			<method name="markAsAnswered">
+				<body><![CDATA[
+					var result = wCore.executeJSON('order', 'MarkAsAnswered', {cmpref: this.documentEditor.documentid}, null, true);
+					if (result.status != 'OK')
+					{
+						this.showErrorMessage(result.contents.errorMessage);
+ 					}
+					else
+					{
+						this.showTextMessage("${transui: m.order.bo.doceditor.panel.messages.success-markasanswered-message,ucf,js}");
+						this.fireInitializeComplete(result);
+						node.value = '';
+						this.documentEditor.refresh();
+					}
+               ]]></body>
 			</method>
 		</implementation>
 	</binding>

@@ -14,6 +14,10 @@ section[messageType="toCustomer"] groupbox{
 	-moz-border-radius: 5px!important;
 	background-color: #eef!important;
 }
+section[messageType="toCustomer"] groupbox div,
+section[messageType="fromCustomer"] groupbox div{
+	white-space: pre-wrap;
+}
 groupbox.messageForm{
 	border: 1px solid #bbb!important;
 	-moz-border-radius: 5px!important;
