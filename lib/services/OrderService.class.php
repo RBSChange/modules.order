@@ -1593,6 +1593,16 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$user = $document->getCustomer()->getUser();
 				$nodeAttributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
 				$nodeAttributes['canBeCanceled'] = $document->canBeCanceled();
+				$messages = order_MessageService::getInstance()->getByOrder($document);
+				if (count($messages) > 0)
+				{
+					$message = f_util_ArrayUtils::firstElement($messages);
+					$nodeAttributes['lastMessageDate'] = date_DateFormat::format($message->getUICreationdate());
+				}
+				else
+				{
+					$nodeAttributes['lastMessageDate'] = LocaleService::getInstance()->transBO('m.order.bo.general.na', array('ucf'));
+				}
 			}
 		}
 	}

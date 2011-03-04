@@ -86,7 +86,7 @@ class order_MessageService extends f_persistentdocument_DocumentService
 			if ($includeDetails)
 			{
 				$messageInfo = array();
-				$messageInfo['date'] = date_DateFormat::format($message->getCreationdate(), $dateTimeFormat);
+				$messageInfo['date'] = date_DateFormat::format($message->getUICreationdate(), $dateTimeFormat);
 				$messageInfo['content'] = $message->getContentAsHtml();
 				if ($message->isSentByCustomer())
 				{
