@@ -134,10 +134,10 @@
 				<dd class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</dd>
 				<dt class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithTax() + order.getTotalCreditNoteAmount())}</dt>
 				
-				<dd>Montant de l'avoir</dd>
+				<dd>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</dd>
 				<dt>${php:order.formatPrice(order.getTotalCreditNoteAmount())}</dt>
 				
-				<dd class="pricetotal">Reste à payer</dd>
+				<dd class="pricetotal">${trans:m.order.frontoffice.creditnote-total,ucf,lab}</dd>
 				<dt class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithTax())}</dt>
 			</tal:block>	
 
