@@ -269,7 +269,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	public function getNotPaidAmountByOrder($order)
 	{
 		$query = order_BillService::getInstance()->createQuery()->add(Restrictions::eq('order', $order));
-		$query->add(Restrictions::ne('status', self::SUCCESS))->setProjection(Projections::sum('amount', 'amount'));
+		$query->add(Restrictions::orExp(Restrictions::isNull('status'), Restrictions::ne('status', self::SUCCESS)))->setProjection(Projections::sum('amount', 'amount'));
 		return f_util_ArrayUtils::firstElement($query->findColumn('amount'));
 	}
 	
