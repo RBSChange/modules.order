@@ -3,7 +3,7 @@
 	<include id="m.order.document.cartmodifier"/>
   	<key id="document-name">frais</key>
 	<key id="query">conditions</key>
-	<key id="applicationstrategy">Action de des frais</key>
+	<key id="applicationstrategy">Action des frais</key>
 	<key id="applicationstrategy-help">Indique la facon dont les frais àgissent sur le panier</key>
   
   	<key id="strategy-default-shipping">frais de livraison fixe</key>

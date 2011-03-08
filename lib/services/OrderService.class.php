@@ -178,7 +178,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			}
 		}
 		$informations['tvaAmounts'] = implode(', ', $tvaAmounts);
-		$usedCreditNote = array_sum($order->getCreditNoteDataArray());
+		$usedCreditNote = $order->getTotalCreditNoteAmount();
 		$informations['usedCreditNote'] = ($usedCreditNote) ? $order->formatPrice($usedCreditNote) : null;
 		$informations['totalAmount'] = $order->formatPrice($order->getTotalAmountWithTax());
 		
@@ -1307,7 +1307,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$data['properties']['customerFullName'] = $billingAddress->getDocumentService()->getFullName($billingAddress);
 			$data['properties']['customerCode'] = $document->getCustomer()->getUser()->getEmail();
 			
-			$usedCreditNote = array_sum($document->getCreditNoteDataArray());
+			$usedCreditNote = $document->getTotalCreditNoteAmount();
 			$data['financial']['usedCreditNote'] = ($usedCreditNote) ? $document->formatPrice($usedCreditNote) : null;
 			$data['financial']['totalAmount'] = $document->formatPrice($document->getTotalAmountWithTax());			
 			$obs = order_BillService::getInstance();
@@ -1323,7 +1323,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 					$data['financial']['paymentStatus'] .= ' '	. date_DateFormat::format($bill->getUITransactionDate(), $dateTimeFormat);
 				}
 			}
-			
 			
 			$expeditions = order_ExpeditionService::getInstance()->getByOrder($document);
 			if (count($expeditions))
@@ -1589,7 +1588,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			{
 				$nodeAttributes['date'] = date_DateFormat::format($document->getUICreationdate());
 				$nodeAttributes['orderStatusLabel'] = $document->getBoOrderStatusLabel();
-				$nodeAttributes['formattedTotalAmountWithTax'] = $document->formatPrice($document->getTotalAmountWithTax()+array_sum($document->getCreditNoteDataArray()));
+				$nodeAttributes['formattedTotalAmountWithTax'] = $document->formatPrice($document->getTotalAmountWithTaxAndCreditNotes());
 				$user = $document->getCustomer()->getUser();
 				$nodeAttributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
 				$nodeAttributes['canBeCanceled'] = $document->canBeCanceled();

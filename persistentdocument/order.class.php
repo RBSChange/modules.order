@@ -563,6 +563,14 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		return array_sum($this->getCreditNoteDataArray());
 	}
 	
+	/**
+	 * @return double
+	 */
+	public function getTotalAmountWithTaxAndCreditNotes()
+	{
+		return $this->getTotalAmountWithTax() + $this->getTotalCreditNoteAmount();
+	}
+	
 	//DEPRECTAED FUNCTIONS
 
 	/**
