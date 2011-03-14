@@ -831,8 +831,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$this->tm->beginTransaction();
 				$order->setOrderStatus(self::CANCELED);
 				
-				// Cancel waiting bills.
-				order_BillService::getInstance()->cancelWaitingByOrder($order);
+				// Cancel waiting bills and destroy null bills.
+				order_BillService::getInstance()->cleanByOrder($order);
 							
 				// Get amount to recredit.
 				$amount = $this->getAmountToRecredit($order);
@@ -885,41 +885,20 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	protected function getAmountToRecredit($order)
 	{
-		$notPaidAmount = order_BillService::getInstance()->getNotPaidAmountByOrder($order);
-		$shippedExpeditions = order_ExpeditionService::getInstance()->getShippedByOrder($order);
-		if (!count($shippedExpeditions))
+		// Récupération du montant des factures payées par un "vrai" mode de paiement (i.e. hors avoir)
+		$paidAmount = order_BillService::getInstance()->getPaidAmountByOrder($order);
+
+		// Ajout des avoir
+		$paidAmount += $order->getTotalCreditNoteAmount();
+		$shippedAmount = 0;
+		foreach (order_ExpeditionService::getInstance()->getShippedByOrder($order) as $expedition)
 		{
-			return $order->getTotalAmountWithTax() + $order->getTotalCreditNoteAmount() - $notPaidAmount;
-		}
-		else
-		{
-			$shippedQuantities = array();
-			foreach ($shippedExpeditions as $expedition)
+			foreach ($expedition->getLineArray() as $line)
 			{
-				foreach ($expedition->getLineArray() as $line)
-				{
-					$id = $line->getOrderlineid();
-					if (isset($shippedQuantities[$id]))
-					{
-						$shippedQuantities[$id] = 0;
-					}
-					$shippedQuantities[$id] += $line->getQuantity();
-				}
+				$shippedAmount += $line->getQuantity() *  $line->getUnitPriceWithTax() ;
 			}
-			
-			$amount = 0;
-			foreach ($order->getLineArray() as $line)
-			{
-				$id = $line->getId();
-				$quantity = $line->getQuantity();
-				if (isset($shippedQuantities[$id]))
-				{
-					$quantity -= $shippedQuantities[$id];
-				}
-				$amount += $line->getUnitPriceWithTax() * $quantity;
-			}
-			return $amount - $notPaidAmount;
 		}
+		return $paidAmount - $shippedAmount;
 	}
 	
 	/**

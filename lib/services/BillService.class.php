@@ -272,6 +272,17 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$query->add(Restrictions::orExp(Restrictions::isNull('status'), Restrictions::ne('status', self::SUCCESS)))->setProjection(Projections::sum('amount', 'amount'));
 		return f_util_ArrayUtils::firstElement($query->findColumn('amount'));
 	}
+
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return double
+	 */
+	public function getPaidAmountByOrder($order)
+	{
+		$query = order_BillService::getInstance()->createQuery()->add(Restrictions::eq('order', $order));
+		$query->add(Restrictions::eq('status', self::SUCCESS))->setProjection(Projections::sum('amount', 'amount'));
+		return f_util_ArrayUtils::firstElement($query->findColumn('amount'));
+	}
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
@@ -390,7 +401,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 * @see order_OrderService::cancelOrder()
 	 * @param order_persistentdocument_order $order
 	 */
-	public function cancelWaitingByOrder($order)
+	public function cleanByOrder($order)
 	{
 		$query = $this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::eq('status', self::WAITING));
 		foreach ($query->find() as $bill)
@@ -406,6 +417,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$this->save($bill);
 			$this->cancelBill($bill);
 		}
+
+		$this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::isNull('status'))->delete();
 	}
 	
 	/**
