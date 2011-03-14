@@ -70,6 +70,7 @@ class order_AddressBean
 	/**
 	 * @var String
 	 * @required
+	 * @constraints(email:true)
 	 */
 	public $Email;
 
@@ -82,8 +83,7 @@ class order_AddressBean
 	 * @var String
 	 */
 	public $Fax;
-	
-	
+		
 	/**
 	 * @param customer_persistentdocument_address $persistentAddress
 	 */
