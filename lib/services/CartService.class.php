@@ -27,30 +27,33 @@ class order_CartService extends BaseService
 	}
 	
 	/**
+	 * @return boolean
+	 */
+	public function hasCartInSession()
+	{
+		$session = Controller::getInstance()->getContext()->getUser();
+		$key = $this->getSessionKey('CartInfo');
+		$ns = self::CART_SESSION_NAMESPACE;
+		return ($session->hasAttribute($key, $ns) && $session->getAttribute($key, $ns) instanceof order_CartInfo);
+	}
+	
+	/**
 	 * @return order_CartInfo
 	 */
 	public function getDocumentInstanceFromSession()
 	{	
-		$cart = null;
-		$user = Controller::getInstance()->getContext()->getUser();
-		if ($user->hasAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE))
+		if ($this->hasCartInSession())
 		{
-			if (Framework::isDebugEnabled())
-			{
-				Framework::debug(__METHOD__ ." (FROM SESSION)");
-			}
-			$cart = $user->getAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE);
+			$session = Controller::getInstance()->getContext()->getUser();
+			$cart = $session->getAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE);
+			$this->clearCartIfNeeded($cart);
 		}
-		
-		if (!($cart instanceof order_CartInfo))
+		else
 		{
 			$cart = $this->initNewCart();
 			$this->saveToSession($cart);
 		}
-		else
-		{
-			$this->clearCartIfNeeded($cart);
-		}
+		
 		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
 		$user = users_UserService::getInstance()->getCurrentFrontEndUser();
 		if ($customer !== null && $user != null)
@@ -67,10 +70,6 @@ class order_CartService extends BaseService
 	 */
 	protected function clearCartIfNeeded(&$cart)
 	{
-		if (Framework::isInfoEnabled())
-		{
-			Framework::info(__METHOD__. '  ' . $cart->getCartLineCount());
-		}
 		$orderId = $cart->getOrderId();
 		if (intval($orderId) > 0 && order_BillService::getInstance()->hasBillInTransactionByOrderId($orderId))
 		{
@@ -152,11 +151,7 @@ class order_CartService extends BaseService
 		{
 			$this->resetCartOrder($cart);
 		}
-		
-		if (Framework::isDebugEnabled())
-		{
-			Framework::debug(__METHOD__);
-		}
+
 		$user = Controller::getInstance()->getContext()->getUser();
 		$user->setAttribute($this->getSessionKey('CartInfo'), $cart, self::CART_SESSION_NAMESPACE);
 		
@@ -173,10 +168,6 @@ class order_CartService extends BaseService
 	 */
 	private function saveToDatabase($customer, $cart)
 	{
-		if (Framework::isDebugEnabled())
-		{
-			Framework::debug(__METHOD__);
-		}
 		$tm = f_persistentdocument_TransactionManager::getInstance();
 		try
 		{
@@ -413,8 +404,6 @@ class order_CartService extends BaseService
 		
 		Framework::endBench(__METHOD__);
 	}
-	
-	
 	
 	/**
 	 * @param order_CartInfo $cart
