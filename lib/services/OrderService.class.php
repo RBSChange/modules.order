@@ -152,6 +152,13 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$result['lines'][] = $lineInfo;
 			}
 		}
+		
+		// Expedition message.
+		if ($order->getOrderStatus() == self::IN_PROGRESS && order_BillService::getInstance()->hasPublishedBill($order))
+		{
+			$result['showExpeditionMessage'] = true;
+		}
+		
 		return $result;
 	}
 

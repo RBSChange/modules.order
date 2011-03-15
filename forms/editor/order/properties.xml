@@ -12,7 +12,7 @@
 	</section>
 	<section labeli18n="modules.order.bo.doceditor.Expeditions">
 		<fieldinput name="expeditionsJSON" type="namedgridlist" flex="1" />
-		<label value="&amp;modules.order.document.expedition.Generating;" anonid="expedition-generating" collapsed="true" />
+		<label value="&amp;modules.order.document.expedition.Generating;" anonid="expedition-message" collapsed="true" />
 	</section>
 	<section labeli18n="modules.order.bo.general.Customer">
 		<section class="customer" />
@@ -253,17 +253,24 @@
 					}
 					
 					// Message when there is no expedition.
-					var node1 = this.getElementByAnonId('expedition-generating');
-					var node2 = this.getElementByAnonId('field_expeditionsJSON');
+					var nodeMessage = this.getElementByAnonId('expedition-message');
+					var nodeGrid = this.getElementByAnonId('field_expeditionsJSON');
 					if (!('expeditionsJSON' in result.contents) || result.contents.expeditionsJSON == '[]')
 					{
-						node1.removeAttribute('collapsed');
-						node2.setAttribute('collapsed', 'true');
+						if ('showExpeditionMessage' in result.contents && result.contents.showExpeditionMessage)
+						{
+							nodeMessage.removeAttribute('collapsed');
+						}
+						else
+						{
+							nodeMessage.setAttribute('collapsed', 'true');
+						}
+						nodeGrid.setAttribute('collapsed', 'true');
 					}
 					else
 					{
-						node1.setAttribute('collapsed', 'true');
-						node2.removeAttribute('collapsed');
+						nodeMessage.setAttribute('collapsed', 'true');
+						nodeGrid.removeAttribute('collapsed');
 					}
 					
 					this.modified = false;
