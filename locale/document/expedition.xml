@@ -31,4 +31,7 @@
 	<entity id="shippingDate">
 		<locale lang="fr">Date d'expédition</locale>
 	</entity>
+	<entity id="generating">
+		<locale lang="fr">Expédition en cours de génération...</locale>
+	</entity>
 </localization>

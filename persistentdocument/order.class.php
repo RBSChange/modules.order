@@ -474,10 +474,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function getExpeditionsJSON()
 	{
-		if ($this->getOrderStatus() == order_OrderService::IN_PROGRESS)
-		{
-			order_ModuleService::getInstance()->checkOrderProcessing($this);
-		}
 		$expeditions = order_ExpeditionService::getInstance()->getBoList($this);
 		return JsonService::getInstance()->encode($expeditions);
 	}
