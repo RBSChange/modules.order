@@ -341,12 +341,20 @@ class order_ModuleService extends ModuleBaseService
 	}
 	
 	/**
+	 * @return boolean
+	 */
+	public function isDefaultExpeditionGenerationEnabled()
+	{
+		return Framework::getConfigurationValue('modules/order/generateDefaultExpedition', 'true') == 'true';
+	}
+	
+	/**
 	 * @param order_persistentdocument_order $order
 	 * @param integer $maxAge in minutes
 	 */	
 	public function checkOrderProcessing($order)
 	{
-		$generateDefaultExpedition = Framework::getConfigurationValue('modules/order/generateDefaultExpedition', 'true') == 'true';
+		$generateDefaultExpedition = $this->isDefaultExpeditionGenerationEnabled();
 		$maxAge = intval(Framework::getConfigurationValue('modules/order/maxDraftBillAge', '60'));
 		
 		$orderStatus = $order->getOrderStatus();

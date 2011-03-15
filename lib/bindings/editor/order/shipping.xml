@@ -13,7 +13,12 @@
 					<xul:cfieldsgroup class="customeraddress" label="${transui:m.order.bo.general.shipping-address,ucf,attr}"/>
 					
 					<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.expeditions,ucf,attr}">
-						<xul:cfieldsgroup class="orderexpeditions" />
+						<xul:cfieldsgroup class="orderexpeditions" anonid="expedition-grid" />
+						<xul:hbox anonid="expedition-message" collapsed="true" align="center">
+							<xul:label value="${transui:m.order.document.expedition.generating,ucf,attr}" />
+							<xul:button anonid="generate-default-expedition" oncommand="generateDefaultExpedition()"
+								label="${transui:m.order.bo.actions.generate-default-expedition,ucf,attr}" collapsed="true" image="{IconsBase}/small/add.png" />
+						</xul:hbox>
 					</xul:cfieldsgroup>
 					
 					<xul:cfieldsgroup anonid="orderreturns" label="${transui:m.order.bo.doceditor.returns,ucf,attr}">
@@ -46,22 +51,46 @@
 			<method name="onCreateReturn">
 				<parameter name="event" />
 				<body><![CDATA[
-				var id = this.documentEditor.documentid;	
-				var uri = ['productreturns', 'createReturnForOrder', 'modules_productreturns_return', id].join(',');
-				var from = ['order', 'openDocument', 'modules_order_order', id, 'shipping'].join(',');
-				openActionUri(uri, from);
+					var id = this.documentEditor.documentid;	
+					var uri = ['productreturns', 'createReturnForOrder', 'modules_productreturns_return', id].join(',');
+					var from = ['order', 'openDocument', 'modules_order_order', id, 'shipping'].join(',');
+					openActionUri(uri, from);
 				]]></body>
 			</method>
 	
 			<method name="onCreateNPAIReturn">
 				<parameter name="event" />
 				<body><![CDATA[
-				var id = this.documentEditor.documentid;	
-				var uri = ['productreturns', 'createNPAIReturnForOrder', 'modules_productreturns_npaireturn', id].join(',');
-				var from = ['order', 'openDocument', 'modules_order_order', id, 'shipping'].join(',');
-				openActionUri(uri, from);
+					var id = this.documentEditor.documentid;	
+					var uri = ['productreturns', 'createNPAIReturnForOrder', 'modules_productreturns_npaireturn', id].join(',');
+					var from = ['order', 'openDocument', 'modules_order_order', id, 'shipping'].join(',');
+					openActionUri(uri, from);
 				]]></body>
 			</method>
+	
+			<method name="generateDefaultExpedition">
+				<body><![CDATA[
+					this.showTextMessage("${transui:m.order.bo.actions.generating-default-expedition,ucf,js}");
+					this.documentEditor.executeServerAction('shipping', 'GenerateDefaultExpedition');
+				]]></body>
+			</method>
+			
+			<method name="getGenerateDefaultExpeditionParameters">
+				<body><![CDATA[
+					return {
+						action: 'GenerateDefaultExpedition',
+						cmpref: this.documentEditor.documentid, 
+						lang : this.documentEditor.documentInfos.vo
+					};
+				]]></body>
+			</method>
+												
+			<method name="fireGenerateDefaultExpeditionComplete">
+				<parameter name="result" />
+				<body><![CDATA[
+					this.fireInitializeComplete(result);
+				]]></body>
+			</method>		
 	
 			<method name="onGridInitialised">
 				<parameter name="event" />
@@ -135,11 +164,43 @@
 						return;
 					}
 					
+					// Expeditions.
+					var nodeMessage = this.getElementByAnonId('expedition-message');
+					var nodeGrid = this.getElementByAnonId('expedition-grid');
 					this.mInitData = result.contents;
-					if (this.mOrderExpeditions)
+					if ('expeditionArray' in this.mInitData && this.mInitData.expeditionArray.length > 0)
 					{
-						this.mOrderExpeditions.initJSONDataset(this.mInitData.expeditionArray);
+						nodeGrid.removeAttribute('collapsed');
+						nodeMessage.setAttribute('collapsed', 'true');
+						if (this.mOrderExpeditions)
+						{
+							this.mOrderExpeditions.initJSONDataset(this.mInitData.expeditionArray);
+						}
+					}	
+					else
+					{
+						nodeGrid.setAttribute('collapsed', 'true');
+						if ('showExpeditionMessage' in this.mInitData && this.mInitData.showExpeditionMessage)
+						{
+							nodeMessage.removeAttribute('collapsed');
+							
+							var nodeButton = this.getElementByAnonId('generate-default-expedition');
+							if ('allowCreatedefaultExpedition' in this.mInitData && this.mInitData.allowCreatedefaultExpedition)
+							{
+								nodeButton.removeAttribute('collapsed');
+							}
+							else
+							{
+								nodeButton.setAttribute('collapsed', 'true');
+							}
+						}
+						else
+						{
+							nodeMessage.setAttribute('collapsed', 'true');
+						}
 					}
+					
+					// Returns.					
 					if ("returnsArray" in this.mInitData)
 					{
 						if (this.mOrderReturns)
@@ -151,10 +212,13 @@
 					{
 						this.getElementByAnonId('orderreturns').setAttribute('hidden', 'true');
 					}
+					
+					// Address.
 					if (this.mAddress)
 					{
 						this.mAddress.initJSONDataset(this.mInitData.address);
-					}														
+					}
+																	
 					this.collapseContentZone(false);
 					this.mInitialized = true;
 					this.fireEvent("panelInitializeComplete");

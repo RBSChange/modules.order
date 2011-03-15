@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.actions" lcid="fr_FR">
-  <key id="create_">créer</key>
-  <key id="create2_">créer</key>
-  <key id="create-shippingmode">créer un mode de livraison</key>
-  <key id="create-order">Create order</key>
-  <key id="create-orderline">Create orderline</key>
-  <key id="cancelorder">annuler</key>
-  <key id="cancel-order">annuler cette commande</key>
-  <key id="cancel-order-success">Commande(s) annulée(s) : {OrderNumbers}</key>
-  <key id="cancel-multiple-orders-confirm-message">L'annulation d'une commande entraîne l'envoi d'une notification d'annulation de commande au client. Souhaitez-vous réellement annuler les {count} commandes sélectionnées ?</key>
-  <key id="cancel-order-confirm-message">L'annulation d'une commande entraîne l'envoi d'une notification d'annulation de commande au client. Souhaitez-vous réellement annuler la commande n° {order} de {customer} passée le {date} ?</key>
-  <key id="create-billingmode">Create billingmode</key>
-  <key id="create-discountorderline">Create discountorderline</key>
-  <key id="create-condition">Create condition</key>
-  <key id="create-coupon">Créer un coupon</key>
-  <key id="create-smartfolder">Créer un dossier intelligent</key>
-  <key id="generatingbill">Facture en cours de génération...</key>
-  <key id="generatingbilldone">Facture générée!</key>
-  <key id="generatebill">Générer la facture</key>
-  <key id="cannotgeneratebillmsg">La commande n'est ni payée, ni expédiée : la génération de la facture est donc impossible.</key>
-  <key id="downloadbill">Télécharger la facture</key>
-  <key id="unable-to-generate-pdf-bill">Une erreur est survenue pendant la génération de la facture. Si le problème persiste, contactez votre administrateur.</key>
-  <key id="createcreditnote">Créer un avoir</key>
-  
-  <key id="createfees">Créer des frais</key>
+	<key id="create_">créer</key>
+	<key id="create2_">créer</key>
+	<key id="create-shippingmode">créer un mode de livraison</key>
+	<key id="create-order">Create order</key>
+	<key id="create-orderline">Create orderline</key>
+	<key id="cancelorder">annuler</key>
+	<key id="cancel-order">annuler cette commande</key>
+	<key id="cancel-order-success">Commande(s) annulée(s) : {OrderNumbers}</key>
+	<key id="cancel-multiple-orders-confirm-message">L'annulation d'une commande entraîne l'envoi d'une notification d'annulation de commande au client. Souhaitez-vous réellement annuler les {count} commandes sélectionnées ?</key>
+	<key id="cancel-order-confirm-message">L'annulation d'une commande entraîne l'envoi d'une notification d'annulation de commande au client. Souhaitez-vous réellement annuler la commande n° {order} de {customer} passée le {date} ?</key>
+	<key id="create-billingmode">Create billingmode</key>
+	<key id="create-discountorderline">Create discountorderline</key>
+	<key id="create-condition">Create condition</key>
+	<key id="create-coupon">Créer un coupon</key>
+	<key id="create-smartfolder">Créer un dossier intelligent</key>
+	<key id="generatingbill">Facture en cours de génération...</key>
+	<key id="generatingbilldone">Facture générée!</key>
+	<key id="generatebill">Générer la facture</key>
+	<key id="cannotgeneratebillmsg">La commande n'est ni payée, ni expédiée : la génération de la facture est donc impossible.</key>
+	<key id="downloadbill">Télécharger la facture</key>
+	<key id="unable-to-generate-pdf-bill">Une erreur est survenue pendant la génération de la facture. Si le problème persiste, contactez votre administrateur.</key>
+	<key id="createcreditnote">Créer un avoir</key>
+	<key id="createfees">Créer des frais</key>
+	<key id="generate-default-expedition">générer l'expédition</key>
+	<key id="generating-default-expedition">Génération de l'expédition en cours.</key>
 </i18n>
