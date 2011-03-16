@@ -546,7 +546,6 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function validateBillFromBo($bill, $transactionDate, $transactionId, $transactionText)
 	{
-		
 		if ($bill->getStatus() == self::WAITING 
 			&& f_util_StringUtils::isNotEmpty($transactionDate)
 			&& f_util_StringUtils::isNotEmpty($transactionId)
@@ -575,9 +574,6 @@ class order_BillService extends f_persistentdocument_DocumentService
 		{
 			throw new Exception('Error on bill validation');
 		}
-		
-		//Generate the default expedition
-		order_ExpeditionService::getInstance()->createForOrder($bill->getOrder(), $bill);
 		return $this->buildBoRow($bill);
 	}
 	

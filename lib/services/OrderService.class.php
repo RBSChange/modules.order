@@ -98,6 +98,19 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$result['address'] = $address;
 		
 		$result['expeditionArray'] = order_ExpeditionService::getInstance()->getBoList($order);
+		if (f_util_ArrayUtils::isEmpty($result['expeditionArray']))
+		{
+			$status = $order->getOrderStatus();
+			if ($status == order_OrderService::IN_PROGRESS && order_BillService::getInstance()->hasPublishedBill($order))
+			{
+				$result['showExpeditionMessage'] = true;
+				if (order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
+				{
+					$result['allowCreatedefaultExpedition'] = true;
+				}
+			}
+		}
+		
 		if (ModuleService::getInstance()->moduleExists('productreturns'))
 		{
 			$result['returnsArray'] = productreturns_BasereturnService::getInstance()->getBoList($order);

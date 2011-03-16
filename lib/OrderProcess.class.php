@@ -1,5 +1,5 @@
 <?php
-class order_OrderProcess extends BaseService 
+class order_OrderProcess
 {
 	/**
 	 * @var string
@@ -158,10 +158,10 @@ class order_OrderProcess extends BaseService
 	}
 	
 	/**
-	 * @deprecated use rder_OrderProcessService::getInstance()->loadFromSession()
+	 * @deprecated use order_OrderProcessService::getInstance()->loadFromSession()
 	 */
 	public static function getInstance()
 	{
-		order_OrderProcessService::getInstance()->loadFromSession();
+		return order_OrderProcessService::getInstance()->loadFromSession();
 	}
 }

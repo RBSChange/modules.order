@@ -175,7 +175,7 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 	 */
 	function validateCreateAccountInput($request, $identifyStep)
 	{
-		$securityLevel = ModuleService::getInstance()->getPreferenceValue('customer', 'securitylevel');
+		$securityLevel = ModuleService::getInstance()->getPreferenceValue('users', 'securitylevel');
 		
 		$validationRules = array(
 			'newemail{blank:false;email:true}',
