@@ -11,12 +11,14 @@
 	
 	<systemfolder module="list" relatedmodule="order">	
 		<staticlist listid="modules_order/orderstatuses" label="&amp;modules.order.frontoffice.list.Order-statuses;">
+			<staticitem label="&amp;modules.order.frontoffice.status.Initiated;" value="initiated" />
 			<staticitem label="&amp;modules.order.frontoffice.status.In_progress;" value="in_progress" />
 			<staticitem label="&amp;modules.order.frontoffice.status.Canceled;" value="canceled" />
 			<staticitem label="&amp;modules.order.frontoffice.status.Complete;" value="complete" />
 		</staticlist>
 		
 		<staticlist listid="modules_order/billstatuses" label="&amp;modules.order.frontoffice.list.Bill-statuses;">
+			<staticitem label="&amp;modules.order.frontoffice.status.bill.Initiated;" value="initiated" />
 			<staticitem label="&amp;modules.order.frontoffice.status.bill.Waiting;" value="waiting" />
 			<staticitem label="&amp;modules.order.frontoffice.status.bill.Success;" value="success" />
 			<staticitem label="&amp;modules.order.frontoffice.status.bill.Failed;" value="failed" />

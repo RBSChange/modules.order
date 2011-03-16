@@ -3,4 +3,5 @@
   <key id="success">paiement validé</key>
   <key id="waiting">en attente de paiement</key>
   <key id="failed">paiement echoué</key>
+  <key id="initiated">initié</key>
 </i18n>

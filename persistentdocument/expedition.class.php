@@ -38,8 +38,7 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 	 */
 	public function getStatusLabel()
 	{
-		$key = '&modules.order.frontoffice.status.expedition.' . ucfirst($this->getStatus()) . ';';
-		return f_Locale::translate($key);
+		return LocaleService::getInstance()->transFO('m.order.frontoffice.status.expedition.' . $this->getStatus(), array('ucf', 'html'));
 	}
 	
 	/**
@@ -47,8 +46,7 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 	 */
 	public function getBoStatusLabel()
 	{
-		$key = '&modules.order.frontoffice.status.expedition.' . ucfirst($this->getStatus()) . ';';
-		return f_Locale::translateUI($key);
+		return LocaleService::getInstance()->transBO('m.order.frontoffice.status.expedition.' . $this->getStatus(), array('ucf', 'html'));
 	}
 	
 	/**

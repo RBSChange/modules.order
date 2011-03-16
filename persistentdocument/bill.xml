@@ -11,7 +11,7 @@
 		<add name="connectorId" type="Integer" />
 		<add name="transactionId" type="String" />
 		<add name="transactionDate" type="DateTime" />
-		<add name="status" type="String" />
+		<add name="status" type="String" default-value="initiated" />
 		<add name="archive" type="modules_media/securemedia" />
 		<add name="paidByCustomerId" type="Integer" />
 	</properties>

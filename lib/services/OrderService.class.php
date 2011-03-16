@@ -5,6 +5,7 @@
  */
 class order_OrderService extends f_persistentdocument_DocumentService
 {
+	const INITIATED = "initiated";
 	const IN_PROGRESS = "in_progress";
 	const CANCELED = "canceled";
 	const COMPLETE = "complete";
@@ -514,7 +515,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$this->populateOrderAddresses($orderDocument, $cartInfo);
 			$this->populateOrderLines($orderDocument, $cartInfo);
 			
-			$orderDocument->setOrderStatus(null);
+			$orderDocument->setOrderStatus(self::INITIATED);
 			
 			$shop = $cartInfo->getShop();
 			$orderDocument->setCurrencyCode($shop->getCurrencyCode());
@@ -772,7 +773,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	public function getByCustomer($customer)
 	{
 		$query = $this->createQuery();
-		$query->add(Restrictions::isNotNull('orderStatus'));
+		$query->add(Restrictions::ne('orderStatus', self::INITIATED));
 		$query->add(Restrictions::eq('customer.id', $customer->getId()));
 		$query->addOrder(Order::desc('document_creationdate'));
 		return $query->find();
@@ -1430,7 +1431,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$query->add(Restrictions::eq('shopId', $shop->getId()));
 		if ($orderStatues === null)
 		{
-			$query->add(Restrictions::ne('orderStatus', 'canceled'));
+			$query->add(Restrictions::ne('orderStatus', self::CANCELED));
 		}
 		else 
 		{
@@ -1657,8 +1658,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function getStatusLabel($orderStatus)
 	{
-		$key = '&modules.order.frontoffice.status.' . ucfirst($orderStatus) . ';';
-		return f_Locale::translate($key);
+		return LocaleService::getInstance()->transFO('m.order.frontoffice.status.' . $orderStatus, array('ucf', 'html'));
 	}
 	
 	/**
@@ -1666,7 +1666,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function getBoStatusLabel($orderStatus)
 	{
-		$key = '&modules.order.frontoffice.status.' . ucfirst($orderStatus) . ';';
-		return f_Locale::translateUI($key);
+		return LocaleService::getInstance()->transBO('m.order.frontoffice.status.' . $orderStatus, array('ucf', 'html'));
 	}
 }

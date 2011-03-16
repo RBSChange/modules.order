@@ -10,8 +10,7 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	 */
 	public function getStatusLabel()
 	{
-		$key = '&modules.order.frontoffice.status.bill.' . ucfirst($this->getStatus()) . ';';
-		return f_Locale::translate($key);
+		return LocaleService::getInstance()->transFO('m.order.frontoffice.status.bill.' . $this->getStatus(), array('ucf', 'html'));
 	}
 	
 	/**
@@ -19,8 +18,7 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	 */
 	public function getBoStatusLabel()
 	{
-		$key = '&modules.order.frontoffice.status.bill.' . ucfirst($this->getStatus()) . ';';
-		return f_Locale::translateUI($key);
+		return LocaleService::getInstance()->transBO('m.order.frontoffice.status.bill.' . $this->getStatus(), array('ucf', 'html'));
 	}
 	
 	/**

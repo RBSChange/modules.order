@@ -2,7 +2,7 @@
 <i18n baseKey="m.order.bo.general.column" lcid="fr_FR">
 	<key id="date">Date</key>
 	<key id="reference">référence</key>
-	<key id="orderstatus">statut</key>
+	<key id="orderstatus">état</key>
 	<key id="totalamountwithtax">montant TTC</key>
 	<key id="customer">client</key>
 	<key id="email">e-mail</key>

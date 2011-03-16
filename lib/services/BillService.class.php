@@ -5,6 +5,7 @@
  */
 class order_BillService extends f_persistentdocument_DocumentService
 {
+	const INITIATED = "initiated";
 	const WAITING = "waiting";
 	const SUCCESS = "success";
 	const FAILED = "failed";
@@ -269,7 +270,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 	public function getNotPaidAmountByOrder($order)
 	{
 		$query = order_BillService::getInstance()->createQuery()->add(Restrictions::eq('order', $order));
-		$query->add(Restrictions::orExp(Restrictions::isNull('status'), Restrictions::ne('status', self::SUCCESS)))->setProjection(Projections::sum('amount', 'amount'));
+		$query->add(Restrictions::ne('status', self::SUCCESS))
+			->setProjection(Projections::sum('amount', 'amount'));
 		return f_util_ArrayUtils::firstElement($query->findColumn('amount'));
 	}
 
@@ -403,7 +405,9 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function cleanByOrder($order)
 	{
-		$query = $this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::eq('status', self::WAITING));
+		$query = $this->createQuery()
+			->add(Restrictions::eq('order', $order))
+			->add(Restrictions::eq('status', self::WAITING));
 		foreach ($query->find() as $bill)
 		{
 			$bill->setTransactionDate(null);
@@ -418,7 +422,9 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$this->cancelBill($bill);
 		}
 
-		$this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::isNull('status'))->delete();
+		$this->createQuery()
+			->add(Restrictions::eq('order', $order))
+			->add(Restrictions::eq('status', self::INITIATED))->delete();
 	}
 	
 	/**
@@ -452,7 +458,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	protected function validatePayment($bill)
 	{
 		$order = $bill->getOrder();
-		if ($order->getOrderStatus() == null)
+		if ($order->getOrderStatus() == order_OrderService::INITIATED)
 		{
 			$order->getDocumentService()->updateStock($order);
 			$order->getDocumentService()->processOrder($order);

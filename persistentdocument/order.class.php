@@ -10,9 +10,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function getBoOrderStatusLabel()
 	{
-		$status = (!$this->getOrderStatus()) ? 'Unknown' : ucfirst($this->getOrderStatus());
-		$key = '&modules.order.frontoffice.status.' . $status . ';';
-		return f_Locale::translateUI($key);
+		return LocaleService::getInstance()->transBO('m.order.frontoffice.status.' . $this->getOrderStatus(), array('ucf', 'html'));
 	}
 
 	/**
@@ -20,9 +18,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function getFoOrderStatusLabel()
 	{
-		$status = (!$this->getOrderStatus()) ? 'Unknown' : ucfirst($this->getOrderStatus());
-		$key = '&modules.order.frontoffice.status.' . $status . ';';
-		return f_Locale::translate($key);
+		return LocaleService::getInstance()->transFO('m.order.frontoffice.status.' . $this->getOrderStatus(), array('ucf', 'html'));
 	}
 		
 	/**
@@ -329,6 +325,19 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		foreach ($this->getFeesDataArray() as $fees)
 		{
 			$value += $fees['valueWithTax'];
+		}
+		return $value;
+	}
+
+	/**
+	 * @return double
+	 */
+	public function getFeesTotalWithoutTax()
+	{
+		$value = 0.0;
+		foreach ($this->getFeesDataArray() as $fees)
+		{
+			$value += $fees['valueWithoutTax'];
 		}
 		return $value;
 	}

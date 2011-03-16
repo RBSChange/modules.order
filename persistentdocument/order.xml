@@ -4,7 +4,7 @@
     <add name="orderNumber" type="String" min-occurs="1">
       <constraints>unique:true</constraints>
     </add>
-    <add name="orderStatus" type="String" from-list="modules_order/orderstatuses" default-value="in_progress" preserve-old-value="true"/>
+    <add name="orderStatus" type="String" from-list="modules_order/orderstatuses" default-value="initiated" preserve-old-value="true"/>
     <add name="customer" type="modules_customer/customer" inverse="true" min-occurs="1"/>
     <add name="shopId" type="Integer" min-occurs="1"/>
     <add name="websiteId" type="Integer" min-occurs="1"/>

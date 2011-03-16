@@ -29,7 +29,7 @@ class order_BackgroundOrderCheck extends task_SimpleSystemTask
 	{
 		return order_OrderService::getInstance()
 			->createQuery()
-			->add(Restrictions::orExp(Restrictions::isNull('orderStatus'), Restrictions::notin('orderStatus', array(order_OrderService::COMPLETE, order_OrderService::CANCELED))))
+			->add(Restrictions::notin('orderStatus', array(order_OrderService::COMPLETE, order_OrderService::CANCELED)))
 			->setProjection(Projections::property('id', 'id'))->findColumn('id');
 	}
 }

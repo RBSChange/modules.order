@@ -378,7 +378,7 @@ class order_ModuleService extends ModuleBaseService
 				}
 			}
 		}
-		else if ($orderStatus == null)
+		else if ($orderStatus == order_OrderService::INITIATED)
 		{
 			//Payment interompu en cours de processus
 			$orderDate = $order->getCreationdate();

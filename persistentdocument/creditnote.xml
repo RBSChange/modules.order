@@ -2,7 +2,7 @@
 <document xmlns="http://www.rbs.fr/schema/change-document/1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd"
-	model-version="1.0" has-url="false" publish-on-day-change="false" icon="creditnote">
+	model-version="1.0" has-url="false" publish-on-day-change="true" icon="creditnote" backoffice-indexable="false">
 	<properties>
 		<add name="label" type="String" /><!-- Use for credit note number storage -->
 		<add name="order" type="modules_order/order" min-occurs="1" inverse="true" />
@@ -16,7 +16,9 @@
 		
 		<add name="amountNotApplied" type="Double" />
 	</properties>
-	<statuses default="DRAFT" />
+	
+	<statuses default="ACTIVE" />
+	
 	<serializedproperties>
 		<add name="transactionData" type="LongString" />
 		<add name="transactionText" type="LongString" />
