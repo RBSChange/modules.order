@@ -829,6 +829,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			try
 			{
 				$this->tm->beginTransaction();
+				$this->preCancelOrder($order);
 				$order->setOrderStatus(self::CANCELED);
 				
 				// Cancel waiting bills and destroy null bills.
@@ -855,6 +856,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				order_ExpeditionService::getInstance()->cancelPrepareByOrder($order);
 				
 				$this->save($order);
+				$this->postCancelOrder($order);
 				$this->tm->commit();
 			}
 			catch (Exception $e)
@@ -869,6 +871,22 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			}
 			f_event_EventManager::dispatchEvent(self::ORDER_STATUS_MODIFIED_EVENT, $this, array('document' => $order));
 		}
+	}
+
+	/**
+	 * @param order_persistentdocument_order $order
+	 */
+	protected function preCancelOrder($order)
+	{
+
+	}
+
+	/**
+	 * @param order_persistentdocument_order $order
+	 */
+	protected function postCancelOrder($order)
+	{
+
 	}
 	
 	/**
