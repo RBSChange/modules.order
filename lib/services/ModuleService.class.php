@@ -360,6 +360,11 @@ class order_ModuleService extends ModuleBaseService
 		$orderStatus = $order->getOrderStatus();
 		if ($orderStatus == order_OrderService::IN_PROGRESS)
 		{
+			foreach ($this->getDraftBills($order) as $bill) 
+			{
+				$this->clearDraftBill($bill);
+			}
+			
 			if ($generateDefaultExpedition && order_BillService::getInstance()->hasPublishedBill($order))
 			{
 				$result = order_ExpeditionService::getInstance()->createQuery()
@@ -387,34 +392,17 @@ class order_ModuleService extends ModuleBaseService
 			if ($orderDate < $limitDate)
 			{
 				$cancel = true;
-				$user = users_BackenduserService::getInstance()->getCurrentBackEndUser();
-				if ($user === null)
+									
+				foreach ($this->getDraftBills($order) as $bill) 
 				{
-					$rootUsers = users_BackenduserService::getInstance()->getRootUsers();
-					$user = $rootUsers[0];
-				}
-						
-				foreach ($order->getBillArrayInverse() as $bill) 
-				{
-					if ($bill->getPublicationstatus() == 'DRAFT' && $bill->getCreationdate() > $limitDate)
+					if ($bill->getCreationdate() > $limitDate)
 					{
 						$cancel = false;
 						break;
 					}
 					else
 					{
-						
-						if ($bill->getTransactionId())
-						{
-							UserActionLoggerService::getInstance()->getInstance()->addUserDocumentEntry($user, 'filed.bill', $order, array('orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
-							$bill->setPublicationstatus('FILED');
-							$bill->save();
-						}
-						else
-						{
-							UserActionLoggerService::getInstance()->getInstance()->addUserDocumentEntry($user, 'purge.bill', $order, array('orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
-							$bill->delete();
-						}
+						$this->clearDraftBill($bill);
 					}
 				}
 				
@@ -426,6 +414,42 @@ class order_ModuleService extends ModuleBaseService
 		}
 	}
 	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return order_persistentdocument_bill[]
+	 */
+	protected function getDraftBills($order)
+	{
+		return order_BillService::getInstance()->createQuery()
+				->add(Restrictions::eq('publicationstatus', 'DRAFT'))
+				->add(Restrictions::eq('order', $order))
+				->find();
+	}
+	
+	/**
+	 * @param order_persistentdocument_bill $bill
+	 */
+	protected function clearDraftBill($bill)
+	{
+		$order = $bill->getOrder();
+		$user = users_BackenduserService::getInstance()->getCurrentBackEndUser();
+		
+		if ($bill->getTransactionId())
+		{
+			Framework::info(__METHOD__ . ' FILED ' . $order->getOrderNumber() . ' / ' .$bill->getId());
+			UserActionLoggerService::getInstance()->getInstance()->addUserDocumentEntry($user, 'filed.bill', $order, 
+					array('orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
+			$bill->setPublicationstatus('FILED');
+			$bill->save();
+		}
+		else
+		{
+			Framework::info(__METHOD__ . ' DELETE ' . $order->getOrderNumber() . ' / ' .$bill->getId());
+			UserActionLoggerService::getInstance()->getInstance()->addUserDocumentEntry($user, 'purge.bill', $order, 
+					array('orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
+			$bill->delete();
+		}		
+	}
 	
 	/**
 	 * @deprecated
