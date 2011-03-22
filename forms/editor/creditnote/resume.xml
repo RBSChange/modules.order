@@ -6,6 +6,9 @@
     <property name="creationdate" labeli18n="modules.uixul.bo.doceditor.property.Creationdate"/>
     <property name="amount" labeli18n="m.order.document.creditnote.amount"/>
     <property name="amountNotApplied" labeli18n="m.order.document.creditnote.amountnotapplied"/>
+    <property name="transactionId" labeli18n="m.order.document.creditnote.transactionid"/>
+    <property name="transactionDate" labeli18n="m.order.document.creditnote.transactiondate"/>
+    <property name="transactionText" labeli18n="m.order.document.creditnote.transactiontext"/>
   </section>
   <section name="publication" linkedtab="publication" labeli18n="modules.uixul.bo.doceditor.section.Status" image="{IconsBase}/small/status.png">
     <property name="status" labeli18n="modules.uixul.bo.doceditor.property.Status"/>

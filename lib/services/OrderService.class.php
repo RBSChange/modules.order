@@ -1549,13 +1549,12 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	
 	
 	/**
-	 * @param f_persistentdocument_PersistentDocument $document
+	 * @param order_persistentdocument_order $document
 	 * @param String[] $propertiesName
 	 * @param Array $datas
 	 */
 	public function addFormProperties($document, $propertiesNames, &$datas)
 	{
-		Framework::info(__METHOD__ . ' ' . implode(', ', $propertiesNames));
 		if (in_array('financial', $propertiesNames))
 		{
 			$infos = $this->getFinancialInfos($document);
@@ -1584,7 +1583,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 
 	/**
-	 * @param f_persistentdocument_PersistentDocument $document
+	 * @param order_persistentdocument_order $document
 	 * @param string $moduleName
 	 * @param string $treeType
 	 * @param array<string, string> $nodeAttributes
@@ -1599,7 +1598,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			{
 				$nodeAttributes['date'] = date_DateFormat::format($document->getUICreationdate());
 				$nodeAttributes['orderStatusLabel'] = $document->getBoOrderStatusLabel();
-				$nodeAttributes['formattedTotalAmountWithTax'] = $document->formatPrice($document->getTotalAmountWithTaxAndCreditNotes());
+				$nodeAttributes['formattedTotalAmountWithTax'] = $document->formatPrice($document->getTotalAmountWithTax());
 				$user = $document->getCustomer()->getUser();
 				$nodeAttributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
 				$nodeAttributes['canBeCanceled'] = $document->canBeCanceled();

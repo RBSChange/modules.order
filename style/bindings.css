@@ -21,6 +21,10 @@ cdocumenteditor#edt_order_order cfieldsgroup.ordercreditnotes{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cCreditNotesSoratbleGrid);
 }
 
+wdialog[template="ReCreditNote"]{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cReCreditNoteDialog);
+}
+
 cdocumenteditor#edt_order_order cfieldsgroup.orderexpeditions{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionsSoratbleGrid);
 }

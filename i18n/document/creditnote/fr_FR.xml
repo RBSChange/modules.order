@@ -13,4 +13,11 @@
   <key id="customer-help">Client</key>
   <key id="amountnotapplied">Montant non réstitué</key>
   <key id="amountnotapplied-help">Montant de l'avoir non encore restitué au client</key>
+  
+  <key id="manual-recredit">remboursement manuel</key>
+  <key id="recredit-dialog-title">remboursement</key>
+  <key id="transactionid">Identifiant du remboursement</key>
+  <key id="transactiondate">date du remboursement</key>
+  <key id="transactiontext">détail du remboursement</key>
+  <key id="recredit-action">marquer remboursé</key>
 </i18n>

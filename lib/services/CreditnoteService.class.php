@@ -145,7 +145,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	 * @param order_persistentdocument_creditnote $creditNote
 	 * @return array
 	 */
-	private function buildBoRow($creditNote)
+	protected function buildBoRow($creditNote)
 	{
 		$result = array(
 			'id' => $creditNote->getId(),
@@ -154,6 +154,8 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 			'label' => $creditNote->getLabel(),
 			'amount' => $creditNote->getAmountFormated(),
 			'amountNotApplied' => $creditNote->getAmountNotAppliedFormated(),
+			'canReCreditNote' => ($creditNote->getAmountNotApplied() > 0.1),
+			'actionrow' => true
 		);		
 		return $result;
 	}
@@ -232,9 +234,11 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		$totalAmountWithTax = $cart->getTotalWithTax();
 		$order->setTotalAmountWithoutTax(catalog_PriceHelper::roundPrice($cart->getTotalWithoutTax()));
 		
+
 		$newCreditNoteDataArray = array();
 		foreach ($cart->getCreditNoteArray() as $creditNoteId => $creditNoteAmount) 
 		{
+
 			$creditNote = DocumentHelper::getDocumentInstance($creditNoteId, 'modules_order/creditnote');
 			$newamount = $creditNote->getAmountNotApplied() - $creditNoteAmount;
 			if ($newamount >= 0)
@@ -245,7 +249,17 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 				$creditNote->save();
 				$totalAmountWithTax -= $creditNoteAmount;
 			}
+			else
+			{
+				Framework::fatal(__METHOD__ . " -> NEGATIVE CREDIT NOT $creditNoteId => $creditNoteAmount / $newamount Adjust to 0");
+				$creditNote->setAmountNotApplied(0);
+				$newCreditNoteDataArray[$creditNote->getId()] = $creditNoteAmount;
+				$order->addUsecreditnote($creditNote);
+				$creditNote->save();
+				$totalAmountWithTax -= $creditNoteAmount;
+			}
 		}
+
 		$order->setCreditNoteDataArray($newCreditNoteDataArray);
 		
 		//Save removed credit note
@@ -339,8 +353,36 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		$order = $document->getOrder();
 		$resume['properties']['amount'] = $order->formatPrice($document->getAmount());
 		$resume['properties']['amountNotApplied'] = $order->formatPrice($document->getAmountNotApplied());
-		
+		if ($document->getTransactionDate())
+		{
+			$resume['properties']['transactionDate'] = $document->getUITransactionDate();
+		}
+		if ($document->getTransactionId())
+		{
+			$resume['properties']['transactionId'] = $document->getTransactionId();
+		}
+		if ($document->getTransactionText())
+		{
+			$resume['properties']['transactionText'] = $document->getTransactionTextAsHtml();
+		}
 		return $resume;
+	}
+	
+	/**
+	 * @param order_persistentdocument_creditnote $document
+	 * @param string $transactionDate
+	 * @param string $transactionText
+	 */
+	public function reCreditNote($document, $transactionDate = null, $transactionText = null)
+	{
+		$document->setTransactionDate(date_Calendar::getInstance($transactionDate)->toString());
+		$document->setTransactionText($transactionText);
+		$document->setAmountNotApplied(0);
+		if ($document->getPublicationstatus() === f_persistentdocument_PersistentDocument::STATUS_DRAFT)
+		{
+			$document->setPublicationstatus(f_persistentdocument_PersistentDocument::STATUS_ACTIVE);
+		}
+		$this->save($document);
 	}
 
 	/**

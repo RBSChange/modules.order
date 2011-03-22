@@ -973,7 +973,53 @@
 					var uri = ['order', 'openDocument', rowData.type, rowData.id].join(',');
 					openActionUri(uri);
 				]]></body>
-			</method>									
+			</method>
+			
+			<method name="execute_manualrecredit">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
+				<body><![CDATA[
+					if (!rowData.canReCreditNote) {return;}
+					try
+					{
+						var me = this;
+						getController().openModalDialog(this, 'ReCreditNote', {
+							cmpref: rowData.id, 
+							lang: rowData.lang,
+							rowData: rowData,
+							callBack : function() {
+								me.refreshUI(me.buildDataset());
+							}
+						});
+					}
+					catch (e)
+					{
+						wCore.error('cCreditNotesSoratbleGrid.manualrecredit', [], e);
+					}
+				]]></body>
+			</method>
+
+			<method name="setCellValue">
+				<parameter name="cell" />
+				<parameter name="name" />
+				<parameter name="dataRow" />
+				<body><![CDATA[
+					if (name == 'actionrow')
+					{		
+						cell.childNodes[1].setAttribute('disabled', dataRow.canReCreditNote ? 'false' : 'true');
+						return;
+					}			
+					if ('value' in cell)
+					{
+						cell.value = dataRow[name];
+					}
+					else
+					{
+						cell.setAttribute('value', dataRow[name]);
+					}
+				]]></body>
+			</method>
+															
 		</implementation>
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
@@ -998,8 +1044,120 @@
 				<xul:label value="" />
 				<xul:toolbar class="actions">
 					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="&amp;modules.uixul.bo.actions.Edit;" />
+					<xul:toolbarbutton action="manualrecredit" image="{IconsBase}/small/cheque.png" tooltiptext="&amp;modules.order.document.creditnote.Manual-recredit;" />
 				</xul:toolbar>
 			</xul:row>				
 		</content>
+	</binding>
+	
+	<binding id="cReCreditNoteDialog" extends="core.wDialog#wDialog">
+		<implementation>
+			<constructor><![CDATA[
+				wCore.debug('cReCreditNoteDialog.constructor');	
+			]]></constructor>
+	
+		
+			<method name="onInitialize">
+				<body><![CDATA[
+					this.autoResize(500, 200);
+					document.getAnonymousElementByAttribute(this, 'anonid', 'number')
+						.setAttribute('value', this.parameters.rowData.label);
+						
+					document.getAnonymousElementByAttribute(this, 'anonid', 'amount')
+						.setAttribute('value', this.parameters.rowData.amountNotApplied);
+					
+					if (this.parameters.rowData.canReCreditNote)
+					{
+						document.getAnonymousElementByAttribute(this, 'anonid', 'ok').disabled = false;
+					}
+					else
+					{
+						document.getAnonymousElementByAttribute(this, 'anonid', 'ok').disabled = true;
+					}
+				]]></body>
+			</method>
+			
+			<method name="onCancel">
+				<body><![CDATA[
+					this.controller.closeModalDialog();
+				]]></body>
+			</method>
+			
+			<property name="transactionText" readonly="true">
+				<getter><![CDATA[
+					return document.getAnonymousElementByAttribute(this, 'anonid', 'transactiontext').value;
+				]]></getter>
+			</property>
+			
+			<property name="transactionDate" readonly="true">
+				<getter><![CDATA[
+					return document.getAnonymousElementByAttribute(this, 'anonid', 'transactiondate').value;
+				]]></getter>
+			</property>
+			
+			<method name="onOk">
+				<body><![CDATA[
+					var rowData = this.parameters.rowData;
+					var parameters = {cmpref: rowData.id, lang: rowData.lang, 
+						transactiontext: this.transactionText, transactiondate: this.transactionDate};
+					var result = wCore.executeJSON("order", "ReCreditNote", parameters, null , true); 	
+					if (result.status === 'OK')
+					{
+						this.parameters.rowData.canReCreditNote = result.contents.canReCreditNote;
+						this.parameters.rowData.amountNotApplied = result.contents.amountNotApplied;
+						if (this.parameters.callBack)
+						{
+							this.parameters.callBack();
+						}
+						this.controller.closeModalDialog();
+					}
+					else
+					{
+						alert(result.contents.errorMessage);
+					}						
+				]]></body>
+			</method>
+		</implementation>
+		<xbl:content>
+			<xul:vbox flex="1">
+				<xul:hbox class="dialog-header">
+					<xul:label value="&amp;modules.order.document.creditnote.Recredit-dialog-title;" class="dialog-title" />
+					<xul:spacer flex="1" />
+					<xul:vbox pack="center">
+						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" 
+							tooltiptexts="&amp;modules.uixul.bo.dialog.Cancel;" />
+					</xul:vbox>
+				</xul:hbox>
+				<xul:grid flex="1">
+					<xul:columns>	
+						<xul:column />
+						<xul:column flex="1" />						
+					</xul:columns>
+					<xul:rows>
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.creditnote.Label;" />
+							<xul:label anonid="number" value="-" />
+						</xul:row>	
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.creditnote.Amount;" />
+							<xul:label anonid="amount" value="-" />
+						</xul:row>	
+						<xul:row>
+							<xul:label value="&amp;modules.order.document.creditnote.Transactiondate;" />
+							<xul:cfield name="transactiondate" anonid="transactiondate" hidehelp="true" fieldtype="datetime" initialvalue="" timeoffset="30"/>
+						</xul:row>						
+						<xul:row>
+							<xul:label  value="&amp;modules.order.document.creditnote.Transactiontext;" />
+							<xul:textbox anonid="transactiontext" value="" multiline="true" maxlength="512" cols="40" rows="5" />
+						</xul:row>																		
+					</xul:rows>
+				</xul:grid>
+				<xul:hbox pack="center" style="height: 32px">
+					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" 
+						label="&amp;modules.order.document.creditnote.Recredit-action;" />
+					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="&amp;modules.uixul.bo.dialog.Close;" />
+				</xul:hbox>
+			</xul:vbox>
+		</xbl:content>
 	</binding>
 </bindings>
