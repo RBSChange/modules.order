@@ -503,10 +503,12 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function getNotificationParameters($bill)
 	{
-		return array('billnumber' => $bill->getLabel(), 
-					 'billdate' => $bill->getUITransactionDate(),
-					 'billtransaction' => $bill->getTransactionTextAsHtml()
+		$params = array(
+			'billnumber' => $bill->getLabelAsHtml(), 
+			'billdate' => $bill->getUITransactionDate(),
+			'billtransaction' => $bill->getTransactionTextAsHtml()
 		);
+		return $params;
 	}
 	
 	/**
