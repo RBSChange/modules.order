@@ -198,7 +198,7 @@ class order_ModuleService extends ModuleBaseService
 	{
 		$this->setCurrentWebsiteIfNeeded($order);
 		$ns = notification_NotificationService::getInstance();	
-		$notif = $ns->getNotificationByCodeName($notifCodeName);
+		$notif = $ns->getByCodeName($notifCodeName);
 		if ($notif)
 		{
 			$recipents = $this->getMessageRecipients($order);
@@ -249,7 +249,7 @@ class order_ModuleService extends ModuleBaseService
 	{
 		$this->setCurrentWebsiteIfNeeded($order);
 		$ns = notification_NotificationService::getInstance();
-		$notif = $ns->getNotificationByCodeName($notifCodeName);
+		$notif = $ns->getByCodeName($notifCodeName);
 		if ($notif)
 		{
 			$recipents = $this->getAdminRecipients();
@@ -267,7 +267,7 @@ class order_ModuleService extends ModuleBaseService
 				
 				if (Framework::isInfoEnabled())
 				{
-					Framework::info(__METHOD__ . ' ' . $notifCodeName . ' '. var_export($parameters, true));
+					Framework::info(__METHOD__ . ' ' . $notifCodeName . ' ' . var_export($parameters, true));
 				}			
 				$ns->setMessageService(MailService::getInstance());		
 				return $ns->send($notif, $recipents, $parameters, 'order');				

@@ -62,4 +62,6 @@
 	<key id="creditnote-nocreditnote">n'ont pas d'avoir</key>
 	<key id="firstordercartfilter-label">première commande</key>
 	<key id="firstordercartfilter-text">première commande du client</key>
+	<key id="payedordersfilter-label">les commandes ayant au moins une facture payée</key>
+        <key id="payedordersfilter-text">les commandes ayant au moins une facture payée</key>
 </i18n>

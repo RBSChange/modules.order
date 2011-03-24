@@ -1091,7 +1091,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$notificationService = notification_NotificationService::getInstance();
 		$notificationService->setMessageService(MailService::getInstance());
-		$notification = $notificationService->getNotificationByCodeName($notificationCode);
+		$notification = $notificationService->getByCodeName($notificationCode);
 		$parameters = array_merge($this->getNotificationParameters($order), array('content' => $content));
 		if ($notificationService->send($notification, $recipients, $parameters, 'order'))
 		{
@@ -1370,7 +1370,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$codeName = 'modules_order/comment-reminder';
 		foreach ($this->getOrdersToRemind() as $order)
 		{
-			$notification = $ns->getNotificationByCodeName($codeName, $order->getWebsiteId());
+			$notification = $ns->getByCodeName($codeName, $order->getWebsiteId());
 			if ($notification)
 			{
 				$recipients = order_ModuleService::getInstance()->getMessageRecipients($order);

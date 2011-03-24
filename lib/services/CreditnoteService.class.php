@@ -375,6 +375,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	 */
 	public function reCreditNote($document, $transactionDate = null, $transactionText = null)
 	{
+		$reCreditedAmount = $document->getAmountNotApplied();
 		$document->setTransactionDate(date_Calendar::getInstance($transactionDate)->toString());
 		$document->setTransactionText($transactionText);
 		$document->setAmountNotApplied(0);
@@ -383,6 +384,52 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 			$document->setPublicationstatus(f_persistentdocument_PersistentDocument::STATUS_ACTIVE);
 		}
 		$this->save($document);
+		
+		// Send the notification.
+		$order = $document->getOrder();
+		$wms = website_WebsiteModuleService::getInstance();
+		$currentWebsite = $wms->getCurrentWebsite();
+		$wms->setCurrentWebsite($order->getWebsite());
+		$rc = RequestContext::getInstance();
+		try 
+		{
+			$rc->beginI18nWork($order->getLang());
+			
+			$user = $order->getCustomer()->getUser();
+			$replacements = $this->getNotificationParameter($document);
+			$replacements['repaymentAmount'] = $order->formatPrice($reCreditedAmount);
+			users_UserService::getInstance()->sendNotificationToUser($user, 'modules_order/reCreditNote', $replacements, 'order');
+			
+			$wms->setCurrentWebsite($currentWebsite);
+			$rc->endI18nWork();
+		}
+		catch (Exception $e)
+		{
+			$wms->setCurrentWebsite($currentWebsite);
+			$rc->endI18nWork($e);
+		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_creditnote $creditNote
+	 */
+	public function getNotificationParameter($creditNote)
+	{
+		$params = array(
+			'creditNoteLabel' => $creditNote->getLabelAsHtml(),
+			'creditNoteAmountNotApplied' => $creditNote->getAmountNotAppliedFormated()
+		);
+		$format = date_DateFormat::getDateTimeFormat();
+		if ($creditNote->getAmountNotApplied() > 0.1)
+		{
+			$params['creditNoteEndDate'] = date_DateFormat::format($creditNote->getUIEndpublicationdate(), $format);
+		}
+		if ($creditNote->getTransactionDate())
+		{
+			$params['creditNoteTransactionDate'] = date_DateFormat::format($creditNote->getUITransactionDate(), $format);
+			$params['creditNoteTransactionText'] = $creditNote->getTransactionTextAsHtml();
+		}
+		return $params;
 	}
 	
 	/**

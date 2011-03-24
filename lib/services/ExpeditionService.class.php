@@ -149,7 +149,8 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	public function getNotificationParameters($expedition)
 	{
 		$trackingNumber = $expedition->getTrackingNumber();
-		if (!is_null($trackingUrl = $expedition->getTrackingURL()))
+		$trackingUrl = $expedition->getTrackingURL();
+		if ($trackingUrl !== null)
 		{
 			$trackingNumber = '<a href="' . $trackingUrl . '">' . $trackingNumber . '</a>';
 		}
@@ -158,11 +159,19 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			->setDirectory('templates/mails')->load('Order-Inc-ExpeditionLines');
 		$template->setAttribute('expedition', $expedition);
 		
-		return array(
+		$params = array(
 			'packageNumber' => $trackingNumber,
-			'trackingNumber' => $expedition->getTrackingNumber(),
+			'trackingNumber' => $expedition->getTrackingNumberAsHtml(),
 			'expeditionDetail' => $template->execute()
 		);
+		
+		$shippingMode = $expedition->getShippingMode();
+		if ($shippingMode instanceof shipping_persistentdocument_mode)
+		{
+			$params = array_merge($params, $shippingMode->getDocumentService()->getNotificationParameters($expedition));
+		}
+		
+		return $params;
 	}
 	
 	/**
@@ -525,7 +534,6 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	public function shipExpedition($expedition, $shippingDate, $trackingNumber, $message = null)
 	{
-		
 		if ($expedition->getStatus() == self::PREPARE)
 		{
 			if (empty($shippingDate))
@@ -542,8 +550,14 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 				$expedition->setShippingDate($shippingDate);
 				$this->save($expedition);	
 				$order = $expedition->getOrder();
-				order_ModuleService::getInstance()->sendCustomerNotification('modules_order/expedition_shipped', $order, $expedition->getBill(), $expedition);
 				
+				// Handle notifications by shipping mode.
+				$codeName = 'modules_order/expedition_shipped_' . $expedition->getTransporteur();
+				if (notification_NotificationService::getInstance()->getByCodeName($codeName) === null)
+				{
+					$codeName = 'modules_order/expedition_shipped';
+				}
+				order_ModuleService::getInstance()->sendCustomerNotification($codeName, $order, $expedition->getBill(), $expedition);
 				$nextExpedition = $this->createForOrder($order);
 				if ($nextExpedition === null)
 				{
