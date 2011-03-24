@@ -193,4 +193,11 @@
 	<entity id="waitingresponseorderfilter-text">
 		<locale lang="fr">commandes sur lesquelles le client est en attente d'une réponse</locale>
 	</entity>
+	
+	<entity id="payedordersfilter-label">
+		<locale lang="fr">les commandes ayant au moins une facture payée</locale>
+	</entity>
+	<entity id="payedordersfilter-text">
+		<locale lang="fr">les commandes ayant au moins une facture payée</locale>
+	</entity>
 </localization>
