@@ -975,4 +975,55 @@
 			</xul:row>				
 		</content>
 	</binding>
+	
+	<binding id="cOrderTransactionInfo" extends="layout.cDocumentEditor#cProperty">
+		<content>
+			<xul:vbox anonid="infos">
+			</xul:vbox>
+		</content>
+		<implementation>
+			<method name="setValue">
+				<parameter name="infos" />
+				<body><![CDATA[
+					wCore.debug("cOrderTransactionInfo.setValue "+infos);
+					var infosElem = document.getAnonymousElementByAttribute(this, "anonid", "infos");
+					while (infosElem.hasChildNodes())
+					{
+						infosElem.removeChild(infosElem.childNodes.item(0));
+					}
+					if (infos === null || infos.length == 0)
+					{
+						this.setAttribute('hidden', 'true');
+						return;
+					}
+					this.removeAttribute('hidden');
+					for (var i = 0; i < infos.length; i++)
+					{
+						var info = infos[i];
+						var hbox = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:hbox');
+						
+						var label = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:label');
+						label.setAttribute("value", info.label);
+						label.setAttribute("class", "label");
+						hbox.appendChild(label);
+						
+						var sep = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:label');
+						sep.setAttribute("value", ":");
+						sep.setAttribute("class", "label separator");
+						hbox.appendChild(sep);
+						
+						var value = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:label');
+						value.setAttribute("class", "value allow-text-selection");
+						value.appendChild(document.createTextNode(info.value));
+						hbox.appendChild(value);
+						
+						infosElem.appendChild(hbox);
+					}
+				]]></body>
+			</method>
+			<constructor><![CDATA[
+				this.section.registerProperty(this, this.name);	
+			]]></constructor>
+		</implementation>
+	</binding>
 </bindings>

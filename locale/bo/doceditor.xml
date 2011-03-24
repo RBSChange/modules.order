@@ -133,6 +133,10 @@
 	<entity id="bills">
 		<locale lang="fr">factures</locale>
 	</entity>
+	
+	<entity id="bill.transaction-infos">
+		<locale lang="fr">Détails transaction</locale>
+	</entity>
 
 	<entity id="expeditions">
 		<locale lang="fr">expeditions</locale>

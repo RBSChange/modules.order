@@ -555,15 +555,34 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$data['properties']['status'] = $document->getBoStatusLabel();
 		if ($document->getTransactionId())
 		{
-			$data['properties']['transactionId'] = $document->getTransactionId();
+			$transactionId = $document->getTransactionId();
+			$data['transaction']['transactionId'] = $transactionId;
+			// This one is deprecated
+			$data['properties']['transactionId'] = $transactionId; 
 		}
 		
 		if ($document->getTransactionDate())
 		{
 			$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
-			$data['properties']['transactionDate'] = date_DateFormat::format($document->getUITransactionDate(), $dateTimeFormat);
+			$dateTimeFormatted = date_DateFormat::format($document->getUITransactionDate(), $dateTimeFormat);
+			
+			$data['transaction']['transactionDate'] = $dateTimeFormatted;
+			// This one is deprecated
+			$data['properties']['transactionDate'] = $dateTimeFormatted;
 		}
 		$order = $document->getOrder();
+		
+		$connector = $document->getPaymentConnector();
+		if ($connector)
+		{
+			$infos = array();
+			foreach ($connector->getDocumentService()->parsePaymentResponse($document) as $label => $value)
+			{
+				$infos[] = array("label" => $label, "value" => $value);
+			}
+			$data['transaction']['transactionInfo'] = $infos;
+		}
+		$data['properties']['amount'] = $document->getAmountFormated();
 		
 		$data['links']['customer'] = $order->getCustomer()->getLabel();
 		$data['links']['order'] = $order->getOrderNumber();
