@@ -1,0 +1,22 @@
+<h2 change:h="" change:translate="modules.order.frontoffice.Repayments-title" />
+<p tal:condition="not: repayments" change:translate="modules.order.frontoffice.Repayments-empty" />
+<div tal:condition="repayments">
+	<table border="0" class="normal" >
+		<thead>
+			<tr>		
+				<th change:translate="modules.order.frontoffice.Repayments-repayment" />
+				<th change:translate="modules.order.frontoffice.Repayments-date" />
+				<th change:translate="modules.order.frontoffice.Repayments-total-amount" />
+				<th change:translate="modules.order.frontoffice.Repayments-order" />
+			</tr>
+		</thead>
+		<tbody>
+			<tr tal:repeat="repayment repayments" class="row-${repeat/repayment/odd}">	
+				<td>${repayment/getLabelAsHtml}</td>
+				<td><tal:block change:datetime="repayment/getTransactionDate" /></td>
+				<td class="pricettc">${repayment/getAmountFormated}</td>
+				<td><a change:link="document repayment/getOrder">${repayment/getOrderNumber}</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>					

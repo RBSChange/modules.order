@@ -384,6 +384,36 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		}
 		$this->save($document);
 	}
+	
+	/**
+	 * 
+	 * @param customer_persistentdocument_customer $customer
+	 * @param Boolean $includeRepayments
+	 */
+	public function getByCustomer($customer, $includeRepayments = false, $includeUsedCreditNotes = false)
+	{
+		$query = $this->createQuery()->add(Restrictions::published())->add(Restrictions::eq('customer', $customer));
+		if(!$includeUsedCreditNotes)
+		{
+			$query->add(Restrictions::lt('amountNotApplied', 0.000001));
+		}
+		if(!$includeRepayments)
+		{
+			$query->add(Restrictions::isNull('transactionId'));
+		}
+		return $query->find();
+	}
+	
+	/**
+	 * @param customer_persistentdocument_customer $customer
+	 */
+	public function getRepaymentsByCustomer($customer)
+	{
+		$query = $this->createQuery()->add(Restrictions::published())
+					->add(Restrictions::eq('customer', $customer))
+					->add(Restrictions::isNotNull('transactionId'));
+		return $query->find();
+	}
 
 	/**
 	 * @param order_persistentdocument_creditnote $document

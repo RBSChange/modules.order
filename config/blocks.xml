@@ -1,36 +1,43 @@
 <?xml version="1.0"?>
 <blocks>
-	<block type="modules_order_orderlist" icon="list-block" label="&amp;modules.order.bo.blocks.Order-list;" />
-	<block type="modules_order_order" icon="order" label="&amp;modules.order.bo.blocks.Order;" />
-	<block type="modules_order_messages" icon="mail" label="&amp;modules.order.bo.blocks.Messages;" />
-	<block type="modules_order_Cart" icon="cart" label="&amp;modules.order.bo.blocks.cart.Title;">
-		<parameters>
-			<parameter name="showTotalWithFees" type="Boolean" default-value="true" />
-			<parameter name="showEvaluateShipping" type="Boolean" default-value="true" />
-			<parameter name="showInstructions" type="Boolean" default-value="false" />
-			<parameter name="useCartEmptyPage" type="Boolean" default-value="true" />
-		</parameters>
-	</block>
-	<block type="modules_order_ShortCart" icon="cart" afterAll="true" label="&amp;modules.order.bo.blocks.shortcart.Title;">
-		<parameters>
-			<parameter name="showTotalWithFees" type="Boolean" default-value="true" />
-		</parameters>
-	</block>
-	<block type="modules_order_IdentifyStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Identify-Step;">
-		<parameters>
-			<parameter name="alwaysaskforpassword" type="Boolean" default-value="false" />
-		</parameters>
-	</block>
-	<block type="modules_order_ShippingStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Shipping-Step;" />
-	<block type="modules_order_BillingStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Billing-Step;" />
-	<block type="modules_order_ConfirmStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Confirm-Step;" />
-	<block type="modules_order_PaymentStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Payment-Step;" />
-	<block type="modules_order_DashboardGeneralStatistics" display="" icon="statistics" dashboard="true" label="&amp;modules.order.bo.blocks.DashboardGeneralStatistics.Title;">
-		<parameters>
-			<parameter name="shop" type="modules_catalog/shop" min-occurs="1" />
-			<parameter name="usecharts" type="Boolean" default-value="true" />
-			<parameter name="columns" type="String" default-value="orders,amount" max-occurs="-1" from-list="modules_order/dashboardshopstatisticscolums" fieldtype="checklist" />
-		</parameters>
-	</block>
-	<block type="modules_order_CartMessages" icon="cart" label="&amp;modules.order.bo.blocks.cartmessages.Title;" />
+  <block type="modules_order_orderlist" icon="list-block" label="&amp;modules.order.bo.blocks.Order-list;"/>
+  <block type="modules_order_order" icon="order" label="&amp;modules.order.bo.blocks.Order;"/>
+  <block type="modules_order_messages" icon="mail" label="&amp;modules.order.bo.blocks.Messages;"/>
+  <block type="modules_order_Cart" icon="cart" label="&amp;modules.order.bo.blocks.cart.Title;">
+    <parameters>
+      <parameter name="showTotalWithFees" type="Boolean" default-value="true"/>
+      <parameter name="showEvaluateShipping" type="Boolean" default-value="true"/>
+      <parameter name="showInstructions" type="Boolean" default-value="false"/>
+      <parameter name="useCartEmptyPage" type="Boolean" default-value="true"/>
+    </parameters>
+  </block>
+  <block type="modules_order_ShortCart" icon="cart" afterAll="true" label="&amp;modules.order.bo.blocks.shortcart.Title;">
+    <parameters>
+      <parameter name="showTotalWithFees" type="Boolean" default-value="true"/>
+    </parameters>
+  </block>
+  <block type="modules_order_IdentifyStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Identify-Step;">
+    <parameters>
+      <parameter name="alwaysaskforpassword" type="Boolean" default-value="false"/>
+    </parameters>
+  </block>
+  <block type="modules_order_ShippingStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Shipping-Step;"/>
+  <block type="modules_order_BillingStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Billing-Step;"/>
+  <block type="modules_order_ConfirmStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Confirm-Step;"/>
+  <block type="modules_order_PaymentStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Payment-Step;"/>
+  <block type="modules_order_DashboardGeneralStatistics" display="" icon="statistics" dashboard="true" label="&amp;modules.order.bo.blocks.DashboardGeneralStatistics.Title;">
+    <parameters>
+      <parameter name="shop" type="modules_catalog/shop" min-occurs="1"/>
+      <parameter name="usecharts" type="Boolean" default-value="true"/>
+      <parameter name="columns" type="String" default-value="orders,amount" max-occurs="-1" from-list="modules_order/dashboardshopstatisticscolums" fieldtype="checklist"/>
+    </parameters>
+  </block>
+  <block type="modules_order_CartMessages" icon="cart" label="&amp;modules.order.bo.blocks.cartmessages.Title;"/>
+  <block type="modules_order_Creditnotes" icon="list-block">
+ 	 <parameters>
+      <parameter name="includeRepayments" type="Boolean" default-value="false"/>
+      <parameter name="includeUsedCreditNotes" type="Boolean" default-value="false" />
+    </parameters>
+  </block>
+  <block type="modules_order_Repayments" icon="list-block"/>
 </blocks>

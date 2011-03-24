@@ -163,4 +163,17 @@
   <key id="freeshipping">offert</key>
   <key id="creditnote-amount">Montant de l'avoir</key>
   <key id="creditnote-total">Reste à payer</key>
+  <key id="creditnotes-title">mes avoirs</key>  
+  <key id="creditnotes-creditnote">avoir</key>
+  <key id="creditnotes-date">date</key>
+  <key id="creditnotes-total-amount">montant total</key>
+  <key id="creditnotes-amount-not-applied">montant restant</key>
+  <key id="creditnotes-order">commande</key>  
+  <key id="creditnotes-empty">aucun avoir à afficher</key>  
+  <key id="repayments-title">mes remboursements</key>  
+  <key id="repayments-repayment">remboursement</key>
+  <key id="repayments-date">date</key>
+  <key id="repayments-total-amount">montant total</key>
+  <key id="repayments-order">commande</key>  
+  <key id="repayments-empty">aucun remboursement à afficher</key>   
 </i18n>
