@@ -767,16 +767,29 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function sendMessageFromCustomer($order, $content)
 	{
-		$recipients = order_ModuleService::getInstance()->getAdminRecipients();
-		if (!$recipients)
+		$this->setCurrentWebsiteIfNeeded($order);
+		$rc = RequestContext::getInstance();
+		try
 		{
-			Framework::warn(__METHOD__ . ' There is no admin recipient defined in order preferences.');
+			$rc->beginI18nWork($rc->getUILang());
+			$recipients = order_ModuleService::getInstance()->getAdminRecipients();
+			if (!$recipients)
+			{
+				Framework::warn(__METHOD__ . ' There is no admin recipient defined in order preferences.');
+			}
+			else if ($order->getCustomer() && $order->getCustomer()->getUser())
+			{
+				$res = $this->execSendMessage($order, $content, self::MESSAGE_FROM_USER, $recipients, $order->getCustomer()->getUser());
+				$rc->endI18nWork();
+				return $res;
+			}
+			$rc->endI18nWork();
+			return false;
 		}
-		else if ($order->getCustomer() && $order->getCustomer()->getUser())
+		catch (Exception $e)
 		{
-			return $this->execSendMessage($order, $content, self::MESSAGE_FROM_USER, $recipients, $order->getCustomer()->getUser());
+			$rc->endI18nWork($e);
 		}
-		return false;
 	}
 
 	/**
@@ -786,12 +799,41 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function sendMessageToCustomer($order, $content, $sender)
 	{
-		$recipients = order_ModuleService::getInstance()->getMessageRecipients($order);
-		if ($recipients)
+		$this->setCurrentWebsiteIfNeeded($order);
+		$rc = RequestContext::getInstance();
+		try
 		{
-			return $this->execSendMessage($order, $content, self::MESSAGE_TO_USER, $recipients, $sender);
+			$rc->beginI18nWork($order->getLang());
+			$recipients = order_ModuleService::getInstance()->getMessageRecipients($order);
+			if ($recipients)
+			{
+				$res = $this->execSendMessage($order, $content, self::MESSAGE_TO_USER, $recipients, $sender);
+				$rc->endI18nWork();
+				return $res;
+			}
+			$rc->endI18nWork();
+			return false;
 		}
-		return false;
+		catch (Exception $e)
+		{
+			$rc->endI18nWork($e);
+		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return website_persistentdocument_website
+	 */
+	private function setCurrentWebsiteIfNeeded($order)
+	{
+		$website = $order->getWebsite();
+		$websiteModule = website_WebsiteModuleService::getInstance();
+		$currentWebsite = $websiteModule->getCurrentWebsite();
+		if ($currentWebsite !== $website)
+		{
+			$websiteModule->setCurrentWebsite($website);
+		}
+		return $currentWebsite;
 	}
 
 	/**
@@ -1082,26 +1124,37 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$ns = notification_NotificationService::getInstance();
 		$ns->setMessageService($this->getMessageService());
 		$codeName = 'modules_order/comment-reminder';
+		$rc = RequestContext::getInstance();
 		foreach ($this->getOrdersToRemind() as $order)
 		{
-			$notification = $ns->getNotificationByCodeName($codeName, $order->getWebsiteId());
-			if ($notification)
+			$this->setCurrentWebsiteIfNeeded($order);
+			try
 			{
-				$recipients = order_ModuleService::getInstance()->getMessageRecipients($order);
-				if ($recipients)
+				$rc->beginI18nWork($order->getLang());
+				$notification = $ns->getNotificationByCodeName($codeName, $order->getWebsiteId());
+				if ($notification)
 				{
-					$user = $order->getCustomer()->getUser();
-					$products = $this->getNotCommentedProducts($order, $user);
-					if (count($products) > 0)
+					$recipients = order_ModuleService::getInstance()->getMessageRecipients($order);
+					if ($recipients)
 					{
-						$products = $this->filterProductsForCommentReminder($products);	
-						$parameters = $this->getNotificationParameters($order);
-						$parameters['reminderProductBlock'] = $this->renderReminderProductBlock($products);
-						$ns->send($notification, $recipients, $parameters, 'order');
+						$user = $order->getCustomer()->getUser();
+						$products = $this->getNotCommentedProducts($order, $user);
+						if (count($products) > 0)
+						{
+							$products = $this->filterProductsForCommentReminder($products);	
+							$parameters = $this->getNotificationParameters($order);
+							$parameters['reminderProductBlock'] = $this->renderReminderProductBlock($products);
+							$ns->send($notification, $recipients, $parameters, 'order');
+						}
+						$order->setLastCommentReminder(date_calendar::getInstance()->toString());
+						$order->save();
 					}
-					$order->setLastCommentReminder(date_calendar::getInstance()->toString());
-					$order->save();
 				}
+				$rc->endI18nWork();
+			}
+			catch (Exception $e)
+			{
+				$rc->endI18nWork($e);
 			}
 		}
 	}

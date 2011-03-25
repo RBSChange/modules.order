@@ -197,45 +197,57 @@ class order_ModuleService extends ModuleBaseService
 	public function sendCustomerNotification($notifCodeName, $order, $bill = null, $expedition = null)
 	{
 		$this->setCurrentWebsiteIfNeeded($order);
-		$ns = notification_NotificationService::getInstance();	
-		$notif = $ns->getNotificationByCodeName($notifCodeName);
-		if ($notif)
+		$rc = RequestContext::getInstance();
+		try
 		{
-			$recipents = $this->getMessageRecipients($order);
-			if ($recipents)
+			$rc->beginI18nWork($order->getLang());
+			$ns = notification_NotificationService::getInstance();	
+			$notif = $ns->getNotificationByCodeName($notifCodeName);
+			if ($notif)
 			{
-				$parameters = $order->getDocumentService()->getNotificationParameters($order);
-				if ($bill instanceof order_persistentdocument_bill)
+				$recipents = $this->getMessageRecipients($order);
+				if ($recipents)
 				{
-					$parameters = array_merge($parameters, $bill->getDocumentService()->getNotificationParameters($bill));
+					$parameters = $order->getDocumentService()->getNotificationParameters($order);
+					if ($bill instanceof order_persistentdocument_bill)
+					{
+						$parameters = array_merge($parameters, $bill->getDocumentService()->getNotificationParameters($bill));
+					}
+					if ($expedition instanceof order_persistentdocument_expedition)
+					{
+						$parameters = array_merge($parameters, $expedition->getDocumentService()->getNotificationParameters($expedition));
+					}
+					if (Framework::isInfoEnabled())
+					{
+						Framework::info(__METHOD__ . ' ' . $notifCodeName);
+					}
+					$ns->setMessageService(MailService::getInstance());
+					$res = $ns->send($notif, $recipents, $parameters, 'order');
+					$rc->endI18nWork();
+					return $res;
 				}
-				if ($expedition instanceof order_persistentdocument_expedition)
+				else
 				{
-					$parameters = array_merge($parameters, $expedition->getDocumentService()->getNotificationParameters($expedition));
+					if (Framework::isInfoEnabled())
+					{
+						Framework::info(__METHOD__ . " $notifCodeName has no customer email");
+					}				
 				}
-				if (Framework::isInfoEnabled())
-				{
-					Framework::info(__METHOD__ . ' ' . $notifCodeName);
-				}
-				$ns->setMessageService(MailService::getInstance());		
-				return $ns->send($notif, $recipents, $parameters, 'order');
 			}
 			else
 			{
 				if (Framework::isInfoEnabled())
 				{
-					Framework::info(__METHOD__ . " $notifCodeName has no customer email");
-				}				
+					Framework::info(__METHOD__ . " $notifCodeName not found");
+				}
 			}
+			$rc->endI18nWork();
+			return true;
 		}
-		else
+		catch (Exception $e)
 		{
-			if (Framework::isInfoEnabled())
-			{
-				Framework::info(__METHOD__ . " $notifCodeName not found");
-			}
+			$rc->endI18nWork($e);
 		}
-		return true;
 	}
 
 	/**
@@ -248,46 +260,59 @@ class order_ModuleService extends ModuleBaseService
 	public function sendAdminNotification($notifCodeName, $order, $bill = null, $expedition = null)
 	{
 		$this->setCurrentWebsiteIfNeeded($order);
-		$ns = notification_NotificationService::getInstance();
-		$notif = $ns->getNotificationByCodeName($notifCodeName);
-		if ($notif)
+		$rc = RequestContext::getInstance();
+		try
 		{
-			$recipents = $this->getAdminRecipients();
-			if ($recipents !== null)
+			$rc->beginI18nWork($rc->getUILang());
+			$ns = notification_NotificationService::getInstance();
+			$notif = $ns->getNotificationByCodeName($notifCodeName);
+			if ($notif)
 			{
-				$parameters = $order->getDocumentService()->getNotificationParameters($order);
-				if ($bill instanceof order_persistentdocument_bill)
+				$recipents = $this->getAdminRecipients();
+				if ($recipents !== null)
 				{
-					$parameters = array_merge($parameters, $bill->getDocumentService()->getNotificationParameters($bill));
+					$parameters = $order->getDocumentService()->getNotificationParameters($order);
+					if ($bill instanceof order_persistentdocument_bill)
+					{
+						$parameters = array_merge($parameters, $bill->getDocumentService()->getNotificationParameters($bill));
+					}
+					if ($expedition instanceof order_persistentdocument_expedition)
+					{
+						$parameters = array_merge($parameters, $expedition->getDocumentService()->getNotificationParameters($expedition));
+					}
+					
+					if (Framework::isInfoEnabled())
+					{
+						Framework::info(__METHOD__ . ' ' . $notifCodeName . ' '. var_export($parameters, true));
+					}			
+					$ns->setMessageService(MailService::getInstance());		
+					$res =  $ns->send($notif, $recipents, $parameters, 'order');
+					$rc->endI18nWork();
+					return $res;				
 				}
-				if ($expedition instanceof order_persistentdocument_expedition)
+				else
 				{
-					$parameters = array_merge($parameters, $expedition->getDocumentService()->getNotificationParameters($expedition));
+					if (Framework::isInfoEnabled())
+					{
+						Framework::info(__METHOD__ . " $notifCodeName has no admin recipient");
+					}
 				}
-				
-				if (Framework::isInfoEnabled())
-				{
-					Framework::info(__METHOD__ . ' ' . $notifCodeName . ' '. var_export($parameters, true));
-				}			
-				$ns->setMessageService(MailService::getInstance());		
-				return $ns->send($notif, $recipents, $parameters, 'order');				
 			}
 			else
 			{
 				if (Framework::isInfoEnabled())
 				{
-					Framework::info(__METHOD__ . " $notifCodeName has no admin recipient");
+					Framework::info(__METHOD__ . " $notifCodeName not found");
 				}
-			}
+			}	
+					
+			$rc->endI18nWork();
+			return true;
 		}
-		else
+		catch (Exception $e)
 		{
-			if (Framework::isInfoEnabled())
-			{
-				Framework::info(__METHOD__ . " $notifCodeName not found");
-			}
+			$rc->endI18nWork($e);
 		}	
-		return true;			
 	}	
 	
 	
