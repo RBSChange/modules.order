@@ -446,7 +446,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		}
 		if(!$includeRepayments)
 		{
-			$query->add(Restrictions::isNull('transactionId'));
+			$query->add(Restrictions::isNull('transactionDate'));
 		}
 		return $query->find();
 	}
@@ -458,7 +458,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	{
 		$query = $this->createQuery()->add(Restrictions::published())
 					->add(Restrictions::eq('customer', $customer))
-					->add(Restrictions::isNotNull('transactionId'));
+					->add(Restrictions::isNotNull('transactionDate'));
 		return $query->find();
 	}
 

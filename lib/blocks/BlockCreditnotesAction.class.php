@@ -18,7 +18,6 @@ class order_BlockCreditnotesAction extends website_BlockAction
 		{
 			return website_BlockView::NONE;
 		}
-	
 		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
 		$includeRepayments = $this->getConfigurationParameter('includeRepayments');
 		$includeUsedCreditnotes = $this->getConfigurationParameter('includeUsedCreditNotes');
