@@ -36,7 +36,7 @@
   <block type="modules_order_Creditnotes" icon="list-block">
  	 <parameters>
       <parameter name="includeRepayments" type="Boolean" default-value="false"/>
-      <parameter name="includeUsedCreditNotes" type="Boolean" default-value="false" />
+      <parameter name="includeUsedCreditNotes" type="Boolean" default-value="true" />
     </parameters>
   </block>
   <block type="modules_order_Repayments" icon="list-block"/>

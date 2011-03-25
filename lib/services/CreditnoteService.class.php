@@ -437,12 +437,12 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	 * @param customer_persistentdocument_customer $customer
 	 * @param Boolean $includeRepayments
 	 */
-	public function getByCustomer($customer, $includeRepayments = false, $includeUsedCreditNotes = false)
+	public function getByCustomer($customer, $includeRepayments = false, $includeUsedCreditNotes = true)
 	{
 		$query = $this->createQuery()->add(Restrictions::published())->add(Restrictions::eq('customer', $customer));
 		if(!$includeUsedCreditNotes)
 		{
-			$query->add(Restrictions::lt('amountNotApplied', 0.000001));
+			$query->add(Restrictions::gt('amountNotApplied', 0.000001));
 		}
 		if(!$includeRepayments)
 		{
