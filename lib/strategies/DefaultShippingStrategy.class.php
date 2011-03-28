@@ -7,8 +7,6 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 	 */
 	function applyToCart($cart)
 	{
-		
-
 		$value = $this->getValueWithoutTax();		
 		if ($value > 0)
 		{
@@ -93,8 +91,7 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 			$this->setBoValueJSON($parameters['boValueJSON']);
 		}
 	}
-	
-	
+		
 	/**
 	 * @return string
 	 */
@@ -168,6 +165,9 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 		return JsonService::getInstance()->encode($array);
 	}
 	
+	/**
+	 * @param string $value
+	 */
 	public function setBoValueJSON($value)
 	{
 		$parts = explode(',', $value);

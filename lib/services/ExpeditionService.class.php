@@ -168,7 +168,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		$shippingMode = $expedition->getShippingMode();
 		if ($shippingMode instanceof shipping_persistentdocument_mode)
 		{
-			$params = array_merge($params, $shippingMode->getDocumentService()->getNotificationParameters($expedition));
+			$params = array_merge($params, $shippingMode->getDocumentService()->getNotificationParameters($shippingMode, $expedition));
 		}
 		
 		return $params;
