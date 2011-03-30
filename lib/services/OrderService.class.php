@@ -863,7 +863,11 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				if ($amount > 0)
 				{
 					$creditNote = $cns->createForOrder($order, $amount);
-					$this->handleNewCreditNoteAfterCancel($creditNote);
+					if ($creditNote)
+					{
+						$this->handleNewCreditNoteAfterCancel($creditNote);
+					}
+					
 				}
 
 				// Cancel waiting expeditions.
