@@ -877,7 +877,31 @@ class order_CartService extends BaseService
 			}
 			$paramsToRedirect['website_BlockAction_submit']['cart']['confirmClear'] = true;
 			$paramsToRedirect['message'] = $ls->transFO('m.order.fo.confirm-incompatible-shop', array('ucf'));
-			$url = LinkHelper::getTagUrl('contextual_website_website_modules_order_cart', null, array('orderParam' => $paramsToRedirect));
+			
+			// Get the page tag to redirect.
+			if (isset($paramsToRedirect['confirmPageTag']))
+			{
+				$tag = $paramsToRedirect['confirmPageTag'];
+				unset($paramsToRedirect['confirmPageTag']);
+			}
+			else 
+			{
+				$tag = 'contextual_website_website_modules_order_cart';
+			}
+			
+			// Generate the URL to redirect.
+			if (isset($paramsToRedirect['confirmPagePopin']) && $paramsToRedirect['confirmPagePopin'] == 'true')
+			{
+				$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+				$page = TagService::getInstance()->getDocumentByContextualTag($tag, $website);
+				$url = LinkHelper::getActionUrl('website', 'PopIn', array('pageref' => $page->getId(), 'orderParam' => $paramsToRedirect));
+			}
+			else
+			{
+				$url = LinkHelper::getTagUrl($tag, null, array('orderParam' => $paramsToRedirect));
+			}
+			unset($paramsToRedirect['confirmPagePopin']);
+			
 			HttpController::getInstance()->redirectToUrl($url);
 		}
 		return true;
