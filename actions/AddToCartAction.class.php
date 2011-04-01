@@ -25,8 +25,9 @@ class order_AddToCartAction extends f_action_BaseAction
 		
 		// Check.
 		$paramsToRedirect = $request->getParameters();
-		$paramsToRedirect['addToCartModule'] = $this->getModuleName();
-		$paramsToRedirect['addToCartAction'] = $this->getActionName();
+		list($module, $action) = explode('_', get_class($this)); // $this->getModuleName() does not always return the good value.
+		$paramsToRedirect['addToCartModule'] = $module;
+		$paramsToRedirect['addToCartAction'] = substr($action, 0, -6);
 		unset($paramsToRedirect['module']);
 		unset($paramsToRedirect['action']);
 		unset($paramsToRedirect['lang']);
