@@ -49,6 +49,27 @@ class order_CartInfo
 		}
 		return $checkSum;
 	}
+
+	/**
+	 * @var string
+	 */
+	private $uid;
+	
+	/**
+	 * @return string
+	 */
+	public function getUid()
+	{
+		return $this->uid;
+	}
+	
+	/**
+	 * @param string $uid
+	 */
+	public function setUid($uid)
+	{
+		$this->uid = $uid;
+	}	
 	
 	//SHOP INFORMATION
 	
@@ -62,6 +83,9 @@ class order_CartInfo
 	 * @var string
 	 */
 	private $taxZone;
+	
+	
+	
 	
 	/**
 	 * @return string $taxZone
