@@ -53,15 +53,7 @@ class order_CartService extends BaseService
 			$cart = $this->initNewCart();
 			$this->saveToSession($cart);
 		}
-		
-		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
-		$user = users_UserService::getInstance()->getCurrentFrontEndUser();
-		if ($customer !== null && $user != null)
-		{
-			$cart->setCustomerId($customer->getId());
-			$cart->setUserId($user->getId());
-		}
-
+		$this->initContextCartInfo($cart);
 		return $cart;
 	}
 	
@@ -90,14 +82,15 @@ class order_CartService extends BaseService
 		try 
 		{
 			$this->getTransactionManager()->beginTransaction();
-			
 			// The order process is ended, so clear lastAbandonedOrderDate.
 			$customer = $cart->getCustomer();
 			if ($customer !== null)
 			{
 				$customer->setLastAbandonedOrderDate(null);
 			}
+			
 			$cart = $this->initNewCart();
+			$this->initContextCartInfo($cart);
 			$this->saveToSession($cart);
 			$this->getTransactionManager()->commit();
 		}
@@ -118,18 +111,25 @@ class order_CartService extends BaseService
 			Framework::info(__METHOD__);
 		}
 		$cartInfo = new order_CartInfo();
-		
-		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
-		if ($customer !== null)
-		{
-			$cartInfo->setCustomerId($customer->getId());
-		}
-
 		$cartInfo->setShop(null);
-		$cartInfo->setOrderId(null);
+		$cartInfo->setOrderId(null);	
+		$cartInfo->setUid(session_id());	
 		return $cartInfo;	
 	}
 	
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	protected function initContextCartInfo($cart)
+	{
+		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
+		if ($customer !== null)
+		{
+			$cart->setCustomerId($customer->getId());
+			$cart->setUserId($customer->getUser()->getId());
+		}		
+	}
+
 	/**
 	 * @param order_CartInfo $cart
 	 */
