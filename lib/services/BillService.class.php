@@ -379,8 +379,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 	{
 		$order = $bill->getOrder();	
 		order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_failed', $order, $bill);
-		$order->getDocumentService()->cancelOrder($order, false);
 		$this->cancelBill($bill);
+		$order->getDocumentService()->cancelOrder($order, false);
 	}
 	
 	/**
