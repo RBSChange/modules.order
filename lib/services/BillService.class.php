@@ -648,16 +648,22 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$data['properties']['transactionDate'] = $dateTimeFormatted;
 		}
 		$order = $document->getOrder();
-		
-		$connector = $document->getPaymentConnector();
-		if ($connector)
+		try 
 		{
-			$infos = array();
-			foreach ($connector->getDocumentService()->parsePaymentResponse($document) as $label => $value)
+			$connector = $document->getPaymentConnector();
+			if ($connector)
 			{
-				$infos[] = array("label" => $label, "value" => $value);
+				$infos = array();
+				foreach ($connector->getDocumentService()->parsePaymentResponse($document) as $label => $value)
+				{
+					$infos[] = array("label" => $label, "value" => $value);
+				}
+				$data['transaction']['transactionInfo'] = $infos;
 			}
-			$data['transaction']['transactionInfo'] = $infos;
+		}
+		catch (Exception $e)
+		{
+			Framework::warn(__METHOD__ . " Connector not found:" . $document->getConnectorId());
 		}
 		$data['properties']['amount'] = $document->getAmountFormated();
 		
