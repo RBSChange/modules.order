@@ -1330,11 +1330,16 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$bills = $obs->getByOrder($document);
 			if (count($bills))
 			{
-				$bill = f_util_ArrayUtils::lastElement($bills);
+				foreach ($bills as $bill) 
+				{
+					if ($bill->getStatus() == order_BillService::SUCCESS || $bill->getStatus() == order_BillService::WAITING)
+					{
+						break;
+					}
+				}				
 				$data['financial']['paymentStatus'] = $bill->getBoStatusLabel();
 				if ($bill->getTransactionDate())
 				{
-					
 					$data['financial']['paymentStatus'] .= ' '	. date_DateFormat::format($bill->getUITransactionDate(), $dateTimeFormat);
 				}
 			}

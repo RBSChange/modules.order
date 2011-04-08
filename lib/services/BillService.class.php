@@ -234,7 +234,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	{
 		$query = $this->createQuery()->add(Restrictions::eq('order', $order))
 				->add(Restrictions::ne('publicationstatus', 'DRAFT'))
-				->addOrder(Order::asc('document_label'));
+				->addOrder(Order::asc('id'));
 		return $query->find();
 	}
 
@@ -248,7 +248,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 				->add(Restrictions::ne('publicationstatus', 'DRAFT'))
 				->add(Restrictions::in('status', array(self::WAITING, self::SUCCESS)))
 				->addOrder(Order::asc('status'))
-				->addOrder(Order::asc('document_label'));
+				->addOrder(Order::asc('id'));
 		return $query->find();
 	}
 		
