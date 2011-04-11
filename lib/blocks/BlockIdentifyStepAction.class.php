@@ -22,6 +22,11 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 		{
 			$this->redirectToEmptyCart();
 		}
+		else if (!$cartInfo->isValid())
+		{
+			$this->redirectToCart();
+		}
+
 		$this->setCurrentStep('Identify');
 		$identifyStep = new order_IdentifyStepBean();
 		$user = users_UserService::getInstance()->getCurrentFrontEndUser();

@@ -28,6 +28,10 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 		{
 			$this->redirectToEmptyCart();
 		}
+		else if (!$cartInfo->isValid())
+		{
+			$this->redirectToCart();
+		}
 
 		$tm = f_persistentdocument_TransactionManager::getInstance();
 		try 

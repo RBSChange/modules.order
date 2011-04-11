@@ -89,24 +89,28 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 	}
 	
 	/**
-	 * Redirect to proper page when there's nothing to buy
+	 * Redirect to proper page when there's nothing to buy.
 	 */
 	protected function redirectToEmptyCart()
 	{
-		try
+		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		$page = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart-empty', $website, false);
+		if ($page !== null)
 		{
-			$emptyCartPage = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart-empty', website_WebsiteModuleService::getInstance()->getCurrentWebsite());
-			$url = LinkHelper::getDocumentUrl($emptyCartPage);
+			$url = LinkHelper::getDocumentUrl($page);
 			HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
-		}
-		catch ( TagException $e )
-		{
-			if (Framework::isWarnEnabled())
-			{
-				Framework::warn($e->getMessage());
-			}
-		}
-		$url = LinkHelper::getDocumentUrl($emptyCartPage);
+		}		
+		$this->redirectToCart();
+	}
+	
+	/**
+	 * Redirect to cart page.
+	 */
+	protected function redirectToCart()
+	{
+		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		$page = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart', $website, true);
+		$url = LinkHelper::getDocumentUrl($page);
 		HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 	}
 	

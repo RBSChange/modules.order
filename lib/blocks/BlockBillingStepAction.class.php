@@ -26,6 +26,11 @@ class order_BlockBillingStepAction extends order_BlockAbstractProcessStepAction
 		{
 			$this->redirectToEmptyCart();
 		}
+		else if (!$cartInfo->isValid())
+		{
+			$this->redirectToCart();
+		}
+
 		$this->setCurrentStep('Billing');
 		$billingStep = $this->generateBillingStepBean($cartInfo);
 		$request->setAttribute('billingStep', $billingStep);		

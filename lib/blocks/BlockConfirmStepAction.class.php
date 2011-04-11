@@ -27,6 +27,11 @@ class order_BlockConfirmStepAction extends order_BlockAbstractProcessStepAction
 		{
 			$this->redirectToEmptyCart();
 		}
+		else if (!$cartInfo->isValid())
+		{
+			$this->redirectToCart();
+		}
+
 		$order = $cartInfo->getOrder();
 		$bill = order_BillService::getInstance()->initializeByOrderForPayment($order);		
 		$request->setAttribute('order', $order);
