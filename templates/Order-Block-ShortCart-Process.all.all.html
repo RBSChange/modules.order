@@ -1,10 +1,6 @@
 <div class="ecom-block">
 	<h3 change:h="">
-		<strong change:translate="modules.order.frontoffice.My-order"></strong>
+		<a class="link" tal:attributes="href processUrl" change:translate="modules.order.frontoffice.Continue-my-order">${trans:m.order.frontoffice.my-order,ucf}</a>
 	</h3>
-	<div class="content">
-		<div tal:condition="processUrl" class="cartsummary-link">
-			<a class="link" tal:attributes="href processUrl" change:translate="modules.order.frontoffice.Continue-my-order"></a>
-		</div>
-	</div>
+	
 </div>

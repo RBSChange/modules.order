@@ -8,13 +8,10 @@
  */
 class PHPTAL_Php_Attribute_CHANGE_addtocartbutton extends ChangeTalAttribute 
 {
-	/**
-	 * @see ChangeTalAttribute::getEvaluatedParameters()
-	 * @return array
-	 */
-	public function getEvaluatedParameters()
+	
+	protected function evaluateAll()
 	{
-		return array('shop', 'product', 'quantity', 'backurl');
+		return true;
 	}
 
 	/**
@@ -46,7 +43,15 @@ class PHPTAL_Php_Attribute_CHANGE_addtocartbutton extends ChangeTalAttribute
 		$html .= '<input type="hidden" value="' . $backurl . '" name="backurl" />';
 			
 		$addToCart = $ls->transFO('m.order.fo.add-to-cart', array('ucf'));
-		$html .= '<input type="submit" class="button" value="' . $addToCart . '" title="' . $addToCart . '" />';
+		if (isset($params['class']))
+		{
+			$class = $params['class'];
+		}
+		else
+		{
+			$class = "button";
+		}
+		$html .= '<input type="submit" class="' . $class . '" value="' . $addToCart . '" title="' . $addToCart . '" />';
 		
 		return $html;
 	}
