@@ -89,8 +89,11 @@ class order_CartService extends BaseService
 				$customer->setLastAbandonedOrderDate(null);
 			}
 			
+			$cartId = $cart->getUid();
 			$cart = $this->initNewCart();
 			$this->initContextCartInfo($cart);
+			$cart->setUid($cartId);
+			
 			$this->saveToSession($cart);
 			$this->getTransactionManager()->commit();
 		}
@@ -593,6 +596,8 @@ class order_CartService extends BaseService
 		// If there are lines, clean them.
 		$cartLines = $cart->getCartLineArray();
 		$removeCartLineIndex = array();
+		$stockService = catalog_StockService::getInstance();
+		
 		$globalProductsArray = array();
 		
 		foreach ($cartLines as $index => $cartLine)
@@ -606,10 +611,14 @@ class order_CartService extends BaseService
 					continue;
 				}
 				
-				if (!$this->validateCartLine($cartLine, $cart, $globalProductsArray))
+				if (!$this->validateCartLine($cartLine, $cart))
 				{
 					$removeCartLineIndex[] = $index;
 					continue;
+				}
+				else
+				{
+					$stockService->buildCartProductList($cart, $cartLine, $globalProductsArray);	
 				}
 	
 				// Merge equivalent lines.
@@ -625,7 +634,7 @@ class order_CartService extends BaseService
 			}
 		}
 		
-		$unavailableProducts = catalog_StockService::getInstance()->validCartQuantities($globalProductsArray, $cart);
+		$unavailableProducts = $stockService->validCartQuantities($globalProductsArray, $cart);
 		foreach ($unavailableProducts as $productInfo)
 		{
 			$product = $productInfo[0];
@@ -652,10 +661,9 @@ class order_CartService extends BaseService
 	/**
 	 * @param order_CartLineInfo $cartLine
 	 * @param order_CartInfo $cart
-	 * @param array $globalProductsArray
 	 * @return Boolean
 	 */
-	protected function validateCartLine($cartLine, $cart, &$globalProductsArray)
+	protected function validateCartLine($cartLine, $cart)
 	{
 		$ls = LocaleService::getInstance();
 		try 
@@ -664,26 +672,12 @@ class order_CartService extends BaseService
 			if ($product !== null && $product->isPublished())
 			{
 				$shop = $cart->getShop();
-				$compiledProduct = $product->getDocumentService()->getPrimaryCompiledProductForWebsite($product, $shop->getWebsite());
-				if ($compiledProduct === null || !$compiledProduct->isPublished())
+				$compiledProduct = $product->getDocumentService()->getPrimaryCompiledProductForShop($product, $shop);
+				if ($compiledProduct === null || ((!$compiledProduct->isPublished()) && ($compiledProduct->getPublicationCode() != 5)))
 				{
 					$replacements = array('articleLabel' => $product->getLabelAsHtml());
 					$cart->addTransientErrorMessage($ls->transFO('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
 					return false;
-				}
-			
-				if ($product instanceof catalog_BundleProduct)
-				{
-					 foreach ($product->getBundledProducts() as $bundledProduct)
-					 {
-					 	 $productQty = $bundledProduct->getQuantity() * $cartLine->getQuantity();
-					 	 $this->addProductToGlobalProductsArray($bundledProduct->getProduct(), $productQty, $globalProductsArray);
-					 }
-				}
-				else
-				{
-					 $productQty = $cartLine->getQuantity();
-					 $this->addProductToGlobalProductsArray($product, $productQty, $globalProductsArray);
 				}
 				return true;
 			}
@@ -692,7 +686,7 @@ class order_CartService extends BaseService
 		{
 			Framework::exception($e);
 		}
-		
+
 		if ($product !== null)
 		{
 			$replacements = array('articleLabel' => $product->getLabelAsHtml());
@@ -700,25 +694,7 @@ class order_CartService extends BaseService
 		}
 		return false;
 	}
-	
-	/**
-	 * @param catalog_persistentdocument_product $product
-	 * @param double $productQty
-	 * @param array $globalProductsArray
-	 */
-	protected function addProductToGlobalProductsArray($product, $productQty, &$globalProductsArray)
-	{
-		 $productId = $product->getId();
-		 if (!isset($globalProductsArray[$productId]))
-		 {
-		 	$globalProductsArray[$productId] = array($product, $productQty);
-		 }
-		 else
-		 {
-		 	 $globalProductsArray[$productId][1] += $productQty;
-		 }
-	}
-	
+		
 	/**
 	 * @return Integer
 	 */
@@ -823,7 +799,7 @@ class order_CartService extends BaseService
 	 */
 	public function canOrder($cart)
 	{
-		return ($cart !== null && !$cart->isEmpty() && count($cart->getPersistentErrorMessages()) === 0);
+		return ($cart !== null && !$cart->isEmpty() && $cart->isValid());
 	}
 	
 	/**

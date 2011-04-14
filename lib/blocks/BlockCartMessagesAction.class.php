@@ -21,24 +21,25 @@ class order_BlockCartMessagesAction extends website_BlockAction
 		$cart = $cs->getDocumentInstanceFromSession();
 		
 		// Transient error messages.
-		$errorMessages = $cart->getTransientErrorMessages();
-		if (count($errorMessages) > 0)
+		foreach ($cart->getTransientErrorMessages() as $msg)
 		{
-			foreach ($errorMessages as $msg)
-			{
-				$this->addError($msg);
-			}
-			if ($request->getParameter('handleCantOrderMessage') == 'true')
-			{
-				$request->setAttribute('showCantOrderMessage', true);
-			}
+			$this->addError($msg);
 		}
 		$cart->clearTransientErrorMessages();
 		
 		// Persistent error messages.
-		foreach ($cart->getPersistentErrorMessages() as $msg)
+		$errorMessages = $cart->getPersistentErrorMessages();
+		if (count($errorMessages))
 		{
-			$this->addError($msg);
+			if ($request->getParameter('handleCantOrderMessage') == 'true')
+			{
+				$request->setAttribute('showCantOrderMessage', true);
+			}
+				
+			foreach ($errorMessages as $msg)
+			{
+				$this->addError($msg);
+			}
 		}
 		
 		// Success messages.

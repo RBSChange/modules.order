@@ -251,7 +251,6 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 			}
 			else
 			{
-				Framework::fatal(__METHOD__ . " -> NEGATIVE CREDIT NOT $creditNoteId => $creditNoteAmount / $newamount Adjust to 0");
 				$creditNote->setAmountNotApplied(0);
 				$newCreditNoteDataArray[$creditNote->getId()] = $creditNoteAmount;
 				$order->addUsecreditnote($creditNote);
