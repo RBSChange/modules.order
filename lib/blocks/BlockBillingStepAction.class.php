@@ -108,17 +108,19 @@ class order_BlockBillingStepAction extends order_BlockAbstractProcessStepAction
 		{
 			$cart = $this->getCurrentCart();
 			$cart->setBillingMode($billingStep->getPaymentFilter()->getConnector());
-			$order = order_CartService::getInstance()->createOrder($cart);
-			$cart->save();
-			$save = false;
-			if ($order !== null)
-			{	
-				$this->redirectToNextStep();
+			$cs = $cart->getCartService();
+			$cs->refresh($cart, false);
+			if ($cs->canOrder($cart))
+			{
+				$order = $cs->createOrder($cart);
+				if ($order !== null)
+				{	
+					$this->redirectToNextStep();
+					return website_BlockView::NONE;	
+				}
 			}
-		}
-		if ($save)
-		{
-				$cart->save();
+			$this->redirectToCart();
+			return website_BlockView::NONE;		
 		}
 		$request->setAttribute('billingStep', $billingStep);
 		return $this->getInputViewName();	

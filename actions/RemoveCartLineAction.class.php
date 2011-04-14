@@ -11,25 +11,22 @@ class order_RemoveCartLineAction extends f_action_BaseAction
 		$cart = $cartService->getDocumentInstanceFromSession();
 		$cartLineIndex = $request->getParameter('cartLineIndex');
 
-		if (!f_util_StringUtils::isEmpty($cartLineIndex) && !is_null($cart))
+		if (!f_util_StringUtils::isEmpty($cartLineIndex))
 		{
 			$cartService->removeLine($cart, $cartLineIndex);
-			$cartService->refresh($cart);
 		}
-
-		$pageId = $request->getParameter('pageref', null);
+		$cart->save();
 		
+		$pageId = $request->getParameter('pageref', null);
 		if (is_numeric($pageId))
 		{
 			$url = LinkHelper::getDocumentUrl(DocumentHelper::getDocumentInstance($pageId, 'modules_website/page'));
+			$context->getController()->redirectToUrl(str_replace('&amp;', '&', $url));
+			return View::NONE;	
 		}	
-		else 
-		{
-			$url = $_SERVER['HTTP_REFERER'];
-		}	
-		$context->getController()->redirectToUrl(str_replace('&amp;', '&', $url));
-
-		return View::NONE;
+		
+		$context->getController()->forward('website', 'Error404');
+		return View::NONE;		
 	}
 
 	/**

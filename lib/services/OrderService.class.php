@@ -644,6 +644,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			}
 
 			$cartInfo->setOrderId($orderDocument->getId());
+			catalog_StockService::getInstance()->orderInitializedFromCart($cartInfo, $orderDocument);
 			
 			$this->finalizeOrderAndCart($orderDocument, $cartInfo);
 			$this->tm->commit();			
@@ -837,7 +838,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function cancelOrder($order, $sendNotification = true)
 	{
-		if ($order->getOrderStatus() != self::CANCELED)
+		$oldStatus = $order->getOrderStatus();
+		if ($oldStatus != self::CANCELED)
 		{
 			Framework::info(__METHOD__ . ' '. $order->__toString());
 			try
@@ -874,6 +876,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				order_ExpeditionService::getInstance()->cancelPrepareByOrder($order);
 				
 				$this->save($order);
+				catalog_StockService::getInstance()->orderStatusChanged($order, $oldStatus);
+				
 				$this->postCancelOrder($order);
 				$this->tm->commit();
 			}
@@ -943,11 +947,14 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function processOrder($order, $sendNotification = true)
 	{
-		if ($order->getOrderStatus() != self::IN_PROGRESS)
+		$oldStatus = $order->getOrderStatus();
+		if ($oldStatus != self::IN_PROGRESS)
 		{
 			Framework::info(__METHOD__ . ' '. $order->__toString());
 			$order->setOrderStatus(self::IN_PROGRESS);
 			$this->save($order);
+			
+			catalog_StockService::getInstance()->orderStatusChanged($order, $oldStatus);
 			if ($sendNotification)
 			{
 				order_ModuleService::getInstance()->sendCustomerNotification('modules_order/order_in_progress', $order);
@@ -962,15 +969,17 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function completeOrder($order, $sendNotification = true)
 	{
-		if ($order->getOrderStatus() != self::COMPLETE)
+		$oldStatus = $order->getOrderStatus();
+		if ($oldStatus != self::COMPLETE)
 		{
 			Framework::info(__METHOD__ . ' '. $order->__toString());
 			$order->setOrderStatus(self::COMPLETE);
+			$this->save($order);
+			catalog_StockService::getInstance()->orderStatusChanged($order, $oldStatus);
 			if ($sendNotification)
 			{
 				order_ModuleService::getInstance()->sendCustomerNotification('modules_order/order_complete', $order);
 			}
-			$this->save($order);
 			f_event_EventManager::dispatchEvent(self::ORDER_STATUS_MODIFIED_EVENT, $this, array('document' => $order));
 		}
 	}
@@ -1527,32 +1536,12 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
+	 * @deprecated 
 	 * @param order_persistentdocument_order $order
 	 */
 	public function updateStock($order)
 	{
-		if (Framework::isInfoEnabled())
-		{
-			Framework::info(__METHOD__);
-		}
-		foreach ($order->getLineArray() as $line) 
-		{
-			try 
-			{
-				$product = $line->getProduct();
-				if (!is_null($product))
-				{
-					$properties = $line->getGlobalPropertyArray();
-					$product->getDocumentService()->updateProductFromCartProperties($product, $properties);
-					catalog_StockService::getInstance()->decreaseQuantity($product, $line->getQuantity(), $order->getId());
 
-				}
-			}
-			catch (Exception $e)
-			{
-				Framework::exception($e);
-			}
-		}
 	}
 	
 	

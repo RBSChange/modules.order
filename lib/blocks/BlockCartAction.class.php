@@ -15,6 +15,10 @@ class order_BlockCartAction extends website_BlockAction
 		
 		$cs =  order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();
+
+		// Any cart validation error.
+		$cs->refresh($cart);
+		
 		$shop = $cart->getShop();
 		$pageId = $this->getContext()->getId();
 
@@ -62,9 +66,6 @@ class order_BlockCartAction extends website_BlockAction
 			'message' => $ms->getProcessClosedMessage()
 		));
 
-		// Any cart validation error.
-		$cs->refresh($cart);
-		
 		// Backlink.
 		$user = $this->getContext()->getUser();
 		if (!$user->hasAttribute('cartBackLink'))
@@ -95,9 +96,16 @@ class order_BlockCartAction extends website_BlockAction
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
 		if ($cgv)
 		{
-			HttpController::getInstance()->redirectToUrl($cart->getOrderProcessURL());
+			$cart->refresh();
+			if ($cart->isValid())
+			{
+				HttpController::getInstance()->redirectToUrl($cart->getOrderProcessURL());
+			}
 		}
-		$this->addError(f_Locale::translate("&modules.order.frontoffice.Must-agree-with-general-sales-conditions-error;"));
+		else
+		{
+			$this->addError(f_Locale::translate("&modules.order.frontoffice.Must-agree-with-general-sales-conditions-error;"));
+		}
 		return $this->execute($request, $response);
 	}
 	
