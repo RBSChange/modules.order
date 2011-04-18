@@ -862,7 +862,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				}
 				
 				// Create new credit note.
-				if ($amount > 0)
+				if ($amount >= 0.01)
 				{
 					$creditNote = $cns->createForOrder($order, $amount);
 					if ($creditNote)
