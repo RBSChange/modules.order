@@ -1,33 +1,17 @@
 .modules-order a.button{
-	color: #696a12/*@var orderbuttonfgcolor*/;
-	border-color: #ccc/*@var orderbuttonbdcolor*/;
-	background-color: #b9c101/*@var orderbuttonbgcolor*/;
+	color: #696a12;
+	border-color: #ccc;
+	background-color: #b9c101;
 	text-align: center;
 }
 .modules-order a.button:hover{
 	text-decoration: none;
 }
-ol.steps li dl{
-	color: #6e6a12/*@var orderstepfgcolor*/;
-}
-ol.steps li dl dd{
-	border-color: #ccc/*@var orderstepbdcolor*/;
-	background-color: #b9c101/*@var orderstepbgcolor*/;
-}
-ol.steps li dl dd.current{
-	background-image: url(/media/frontoffice/cart.gif) /*@var ordercurrentstepbgimage*/;
-	background-color: #6e6a12/*@var ordercurrentstepbgcolor*/;
-	border-color: #ccc/*@var ordercurrentstepbdcolor*/;
-	color: #fff/*@var ordercurrentstepfgcolor*/;
-}
-.pricetotal{
-	font-size: 1.2em/*@var orderpricetotalsize*/;
-	background-color: #b9c101/*@var orderpricetotalbgcolor*/;
-	color: #fff/*@var orderpricetotalfgcolor*/;
-}
-p.bottom-buttons{
-	text-align: center;
-	margin-top: 18px;
+
+.modules-order .pricetotal{
+	font-size: 1.2em;
+	background-color: #b9c101;
+	color: #fff;
 }
 .modules-order .column-one{
 	float: left;
@@ -39,24 +23,27 @@ p.bottom-buttons{
 	display: block;
 	width: 49%;
 }
-ol.steps{
+.modules-order ol.steps{
 	width: 37.5em;
 	margin: 0 auto;
 }
-ol.steps li{
+
+.modules-order ol.steps li{
 	width: 6.5em;
 	float: left;
 	margin-right: 1em;
 	text-align: center;
 }
-ol.steps li.last{
+
+.modules-order ol.steps li.last{
 	margin-right: 0;
 }
-ol.steps li dl{
+.modules-order ol.steps li dl{
 	display: block;
 	height: 6em;
+	color: #6e6a12;
 }
-ol.steps li dl dd{
+.modules-order ol.steps li dl dd{
 	text-decoration: none;
 	font-size: 1.6em;
 	font-weight: bold;
@@ -64,41 +51,50 @@ ol.steps li dl dd{
 	display: block;
 	border-width: 1px;
 	border-style: solid;
+	border-color: #ccc;
+	background-color: #b9c101;
 }
-ol.steps li dl dd.current{
+.modules-order ol.steps li dl dd.current{
+	background-image: url(/media/frontoffice/cart.gif) ;
+	background-color: #6e6a12;
+	border-color: #ccc;
+	color: #fff;
 	background-repeat: no-repeat;
 	background-position: bottom right;
 	border-width: 1px;
 	border-style: solid;
 }
-ol.steps li dl dt{
+.modules-order ol.steps li dl dt{
 	padding-top: 2px;
 }
-ol.delivery{
+.modules-order ol.delivery{
 	float: left;
 	display: block;
 	width: 100%;
 }
-ol.delivery li{
+.modules-order ol.delivery li{
 	margin-bottom: 10px;
 }
-ol.delivery li label{
+.modules-order ol.delivery li label{
 	display: block;
 	width: 100%;
 	font-weight: bold;
 }
-ol.delivery li form{
+.modules-order ol.delivery li form{
 	margin-top: 10px;
 }
-ol.delivery ul li{
+.modules-order ol.delivery ul li{
 	margin: 0px;
 }
-.order-recap-information{
+.modules-order .order-recap-information{
 	display: block;
 	width: 100%;
 	margin-bottom: 20px;
 }
-.payment-information-block,.block-shipping-mode,.block-payment-mode,.block-confirm-order{
+.payment-information-block,
+.block-shipping-mode,
+.block-payment-mode,
+.block-confirm-order{
 	float: left;
 	display: block;
 	width: 100%;
@@ -109,7 +105,12 @@ ol.delivery ul li{
 	float: right;
 	margin-top: 10px;
 }
-.payment-information-block dd,.payment-information-block dt,.shipping-mode-block dd,.payment-mode-block dd,.shipping-mode-block dt,.payment-mode-block dt{
+.payment-information-block dd,
+.payment-information-block dt,
+.shipping-mode-block dd,
+.payment-mode-block dd,
+.shipping-mode-block dt,
+.payment-mode-block dt{
 	width: 50%;
 	font-weight: bold;
 	text-align: right;
@@ -118,7 +119,8 @@ ol.delivery ul li{
 .payment-information-block dt{
 	float: right;
 }
-.payment-information-block dd.total,.payment-information-block dt.total{
+.payment-information-block dd.total,
+.payment-information-block dt.total{
 	padding: 10px;
 	font-size: 1.4em;
 }
@@ -126,22 +128,25 @@ ol.delivery ul li{
 	white-space: nowrap;
 	font-weight: bold;
 }
-.modules-order .column-one h3.title,.modules-order .column-two h3.title,.modules-order .column-one h4.title{
+.modules-order .column-one h3.title,
+.modules-order .column-two h3.title,
+.modules-order .column-one h4.title{
 	margin-bottom: 6px;
 }
-.modules-order-ShortCart .ecom-block .content,.modules-order-Cartsummary .ecom-block .content{
+.modules-order-ShortCart .ecom-block .content,
+.modules-order-Cartsummary .ecom-block .content{
 	text-align: center;
 }
-ul.cartsummary{
+.modules-order ul.cartsummary{
 	width: 100%;
 }
-ul.cartsummary li{
+.modules-order ul.cartsummary li{
 	display: inline;
 }
 .modules-order-Cart table.normal select{
 	max-width: 86%;
 }
-.messages-form{
+.modules-order .messages-form{
 	margin-bottom: 40px;
 }
 .modules-order li.on1col{
