@@ -13,7 +13,7 @@
 		<a change:link="document returnsListPage; productreturnsParam[cmpref] order/getId">${trans: m.productreturns.fo.returns-list-for-this-order,ucf}</a>
 	</li>
 </ul>
-
+<div class="cleaner"></div>
 <table border="0" class="normal" change:i18nattr="summary &modules.order.frontoffice.Address;">
 <thead>
 		<tr>
@@ -24,7 +24,7 @@
 <tbody>
 	<tr>
 		<td>
-			<ol tal:define="address order/getShippingAddress">
+			<ol class="address" tal:define="address order/getShippingAddress">
 				<li>${address/getTitle/getLabelAsHtml} ${address/getFirstnameAsHtml} ${address/getLastnameAsHtml}</li>
 				<li>${address/getAddressLine1AsHtml}</li>
 				<li tal:condition="address/getAddressLine2">${address/getAddressLine2AsHtml}</li>
@@ -37,7 +37,7 @@
 			</ol>
 		</td>
 		<td>
-			<ol tal:define="address order/getBillingAddress">
+			<ol class="address" tal:define="address order/getBillingAddress">
 				<li>${address/getTitle/getLabelAsHtml} ${address/getFirstnameAsHtml} ${address/getLastnameAsHtml}</li>
 				<li>${address/getAddressLine1AsHtml}</li>
 				<li tal:condition="address/getAddressLine2">${address/getAddressLine2AsHtml}</li>

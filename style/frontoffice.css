@@ -1,7 +1,6 @@
 .modules-order a.button{
 	color: #696a12;
 	border-color: #ccc;
-	background-color: #b9c101;
 	text-align: center;
 }
 .modules-order a.button:hover{
@@ -10,8 +9,6 @@
 
 .modules-order .pricetotal{
 	font-size: 1.2em;
-	background-color: #b9c101;
-	color: #fff;
 }
 .modules-order .column-one{
 	float: left;
@@ -26,6 +23,7 @@
 .modules-order ol.steps{
 	width: 37.5em;
 	margin: 0 auto;
+	list-style-type: none;
 }
 
 .modules-order ol.steps li{
@@ -41,7 +39,7 @@
 .modules-order ol.steps li dl{
 	display: block;
 	height: 6em;
-	color: #6e6a12;
+	color: #aaa;
 }
 .modules-order ol.steps li dl dd{
 	text-decoration: none;
@@ -52,18 +50,20 @@
 	border-width: 1px;
 	border-style: solid;
 	border-color: #ccc;
-	background-color: #b9c101;
 }
 .modules-order ol.steps li dl dd.current{
 	background-image: url(/media/frontoffice/cart.gif) ;
-	background-color: #6e6a12;
 	border-color: #ccc;
-	color: #fff;
+	color: #000;
 	background-repeat: no-repeat;
 	background-position: bottom right;
 	border-width: 1px;
 	border-style: solid;
 }
+.modules-order ol.steps li dl dt.current{
+	color: #000;
+}
+
 .modules-order ol.steps li dl dt{
 	padding-top: 2px;
 }
@@ -99,6 +99,10 @@
 	display: block;
 	width: 100%;
 	margin-bottom: 20px;
+}
+
+.modules-order ul.mini-navigation {
+	list-style-type: none;
 }
 .block-confirm-order ul.mini-navigation li .button{
 	display: block;
@@ -143,9 +147,28 @@
 .modules-order ul.cartsummary li{
 	display: inline;
 }
+
+
+
+.modules-order-ConfirmStep table,
+.modules-order-order table,
+.modules-order-orderlist table,
+.modules-order-Cart table{
+	width: 100%;
+}
+
 .modules-order-Cart table.normal select{
 	max-width: 86%;
 }
+
+.modules-order ul.messages, 
+.modules-order ol.messages,
+.modules-order ul.errors,
+.modules-order ol.errors,
+.modules-order ol.address{
+	list-style-type: none;
+}
+
 .modules-order .messages-form{
 	margin-bottom: 40px;
 }

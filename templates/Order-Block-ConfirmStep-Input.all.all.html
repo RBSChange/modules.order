@@ -2,7 +2,7 @@
 	<tal:block change:include="module 'order'; template 'Order-Inc-Process-NavigationTop'; type 'html';process cart/getOrderProcess" />
 
 <h3>${trans:m.order.frontoffice.orderlist-order,ucf,lab} ${order/getOrderNumber}</h3>
-<table border="0" class="normal" summary="${trans:m.order.frontoffice.address,ucf,attr}">
+<table border="0" summary="${trans:m.order.frontoffice.address,ucf,attr}">
 <thead>
 		<tr>
 			<th>${trans:m.order.frontoffice.shippingaddress,ucf}</th>
@@ -16,7 +16,7 @@
 	</tr>
 	<tr>
 		<td>
-			<ol tal:define="address order/getShippingAddress">
+			<ol class="address" tal:define="address order/getShippingAddress">
 					<li>${address/getTitle/getLabel} ${address/getFirstname} ${address/getLastname}</li>
 					<li>${address/getAddressLine1}</li>
 					<li tal:condition="address/getAddressLine2">${address/getAddressLine2}</li>
@@ -29,7 +29,7 @@
 			</ol>
 		</td>
 		<td>
-			<ol tal:define="address order/getBillingAddress">
+			<ol class="address" tal:define="address order/getBillingAddress">
 					<li>${address/getTitle/getLabel} ${address/getFirstname} ${address/getLastname}</li>
 					<li>${address/getAddressLine1}</li>
 					<li tal:condition="address/getAddressLine2">${address/getAddressLine2}</li>

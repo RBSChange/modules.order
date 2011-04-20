@@ -10,13 +10,12 @@
 		<a change:link="module order; action ContinueShopping; cmpref cart/getShopId">${trans:m.order.frontoffice.continue-shopping,ucf}</a>
 	</li>
 </ul>
-
 <tal:block change:block="" module="order" name="CartMessages" handleCantOrderMessage="true" />
-
+<div class="cleaner"></div>
 <form class="" method="post" tal:attributes="action updateActionUrl">
 	<input name="orderParam[shopId]" type="hidden" tal:attributes="value cart/getShopId" />
 	<p class="normal">
-		<input change:submit="name Refresh" class="button" label="${trans:m.order.frontoffice.update-button,ucf,attr}" />
+		<input change:submit="name Refresh" class="button cmxform" label="${trans:m.order.frontoffice.update-button,ucf,attr}" />
 	</p>
 	<table class="normal" border="0" summary="${trans:m.order.frontoffice.cart-table-summary,ucf,attr}">
 		<thead>
@@ -206,7 +205,7 @@
 				<tal:block tal:condition="cart/canSelectShippingModeId" tal:define="shippingModes cart/getShippingModes" > 		
 					<tal:block tal:condition="shippingModes/0">
 					<h4 change:h="">${trans:m.order.document.shippingstepbean.evaluateShipping-results,ucf}</h4>
-					<ul>
+					<ul class="messages">
 						<li tal:repeat="modeFilter shippingModes">
 							<tal:block tal:define="mode modeFilter/getMode">
 								${mode/getLabel} - 
