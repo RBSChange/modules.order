@@ -8,6 +8,8 @@ class order_BackgroundOrderCheck extends task_SimpleSystemTask
 	protected function execute()
 	{		
 		$documentsArray = array_chunk($this->getDocumentIdsToProcess(), 10);
+		f_persistentdocument_PersistentProvider::getInstance()->closeConnection();
+        f_persistentdocument_PersistentProvider::clearInstance();
 		$script = 'modules/order/lib/task/orderCheckChunk.php';
 		foreach ($documentsArray as $chunk)
 		{
@@ -30,6 +32,7 @@ class order_BackgroundOrderCheck extends task_SimpleSystemTask
 		return order_OrderService::getInstance()
 			->createQuery()
 			->add(Restrictions::notin('orderStatus', array(order_OrderService::COMPLETE, order_OrderService::CANCELED)))
-			->setProjection(Projections::property('id', 'id'))->findColumn('id');
+			->add(Order::desc('id'))
+				->setProjection(Projections::property('id', 'id'))->findColumn('id');
 	}
 }
