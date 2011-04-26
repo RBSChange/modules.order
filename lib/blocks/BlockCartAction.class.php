@@ -99,7 +99,11 @@ class order_BlockCartAction extends website_BlockAction
 			$cart->refresh();
 			if ($cart->isValid())
 			{
-				HttpController::getInstance()->redirectToUrl($cart->getOrderProcessURL());
+				$url = order_OrderProcessService::getInstance()->startOrderProcess($cart);
+				if ($url)
+				{
+					HttpController::getInstance()->redirectToUrl($url);
+				}
 			}
 		}
 		else

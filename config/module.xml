@@ -32,6 +32,10 @@
 		
 		<!-- Durrée maximum en minutes d'une facture en publicationstatus DRAFT avant son annulation --> 
 		<entry name="maxDraftBillAge">60</entry>
+		
+		<orderProcess>
+			<entry name="default">order_OrderProcess</entry>
+		</orderProcess>
 	</project>
 		
 	<modules>
