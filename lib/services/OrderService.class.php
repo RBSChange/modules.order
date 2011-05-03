@@ -740,14 +740,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 
 	/**
-	 * @return MailService
-	 */
-	protected function getMessageService()
-	{
-		return MailService::getInstance();
-	}
-
-	/**
 	 * @param customer_persistentdocument_customer $customer
 	 * @return Integer
 	 */
@@ -1065,16 +1057,9 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function sendMessageFromCustomer($order, $content)
 	{
-		$recipients = order_ModuleService::getInstance()->getAdminRecipients();
-		if (!$recipients)
-		{
-			Framework::warn(__METHOD__ . ' There is no admin recipient defined in order preferences.');
-		}
-		else if ($order->getCustomer() && $order->getCustomer()->getUser())
-		{
-			return $this->execSendMessage($order, $content, self::MESSAGE_FROM_USER, $recipients, $order->getCustomer()->getUser());
-		}
-		return false;
+		$this->execSendMessage($order, $content, $order->getCustomer()->getUser());
+		$params = array('content' => $content);
+		return order_ModuleService::getInstance()->sendAdminNotification(self::MESSAGE_FROM_USER, $order, null, null, $params);
 	}
 
 	/**
@@ -1084,40 +1069,25 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function sendMessageToCustomer($order, $content, $sender)
 	{
-		$recipients = order_ModuleService::getInstance()->getMessageRecipients($order);
-		if ($recipients)
-		{
-			return $this->execSendMessage($order, $content, self::MESSAGE_TO_USER, $recipients, $sender);
-		}
-		return false;
+		$this->execSendMessage($order, $content, $sender);
+		$params = array('content' => $content);
+		return order_ModuleService::getInstance()->sendCustomerNotification(self::MESSAGE_TO_USER, $order, null, null, $params);
 	}
 
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @param String $content
-	 * @param String $notificationCode
-	 * @param mail_MessageRecipients $recipients
 	 * @param user_persistentdocument_user $sender
-	 * @return Boolean
 	 */
-	protected function execSendMessage($order, $content, $notificationCode, $recipients, $sender)
+	protected function execSendMessage($order, $content, $sender)
 	{
-		$notificationService = notification_NotificationService::getInstance();
-		$notificationService->setMessageService(MailService::getInstance());
-		$notification = $notificationService->getByCodeName($notificationCode);
-		$parameters = array_merge($this->getNotificationParameters($order), array('content' => $content));
-		if ($notificationService->send($notification, $recipients, $parameters, 'order'))
-		{
-			$date = date_DateFormat::format(date_Calendar::getInstance(), 'd/m/Y');
-			$message = order_MessageService::getInstance()->getNewDocumentInstance();
-			$message->setLabel(f_Locale::translate('&modules.order.mail.Message-label;', array('orderId' => $order->getId(), 'date' => $date)));
-			$message->setSender($sender);
-			$message->setContent($content);
-			$message->setOrder($order);
-			$message->save();
-			return true;
-		}
-		return false;
+		$date = date_DateFormat::format(date_Calendar::getInstance(), 'd/m/Y');
+		$message = order_MessageService::getInstance()->getNewDocumentInstance();
+		$message->setLabel(f_Locale::translate('&modules.order.mail.Message-label;', array('orderId' => $order->getId(), 'date' => $date)));
+		$message->setSender($sender);
+		$message->setContent($content);
+		$message->setOrder($order);
+		$message->save();
 	}
 
 	/**
@@ -1383,30 +1353,20 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function sendCommentReminders()
 	{
-		$ns = notification_NotificationService::getInstance();
-		$ns->setMessageService($this->getMessageService());
 		$codeName = 'modules_order/comment-reminder';
 		foreach ($this->getOrdersToRemind() as $order)
 		{
-			$notification = $ns->getByCodeName($codeName, $order->getWebsiteId());
-			if ($notification)
+			$user = $order->getCustomer()->getUser();
+			$products = $this->getNotCommentedProducts($order, $user);
+			if (count($products) > 0)
 			{
-				$recipients = order_ModuleService::getInstance()->getMessageRecipients($order);
-				if ($recipients)
-				{
-					$user = $order->getCustomer()->getUser();
-					$products = $this->getNotCommentedProducts($order, $user);
-					if (count($products) > 0)
-					{
-						$products = $this->filterProductsForCommentReminder($products);	
-						$parameters = $this->getNotificationParameters($order);
-						$parameters['reminderProductBlock'] = $this->renderReminderProductBlock($products);
-						$ns->send($notification, $recipients, $parameters, 'order');
-					}
-					$order->setLastCommentReminder(date_calendar::getInstance()->toString());
-					$order->save();
-				}
+				$products = $this->filterProductsForCommentReminder($products);	
+				$params = $this->getNotificationParameters($order);
+				$params['reminderProductBlock'] = $this->renderReminderProductBlock($products);
+				order_ModuleService::getInstance()->sendCustomerNotification($codeName, $order, null, null, $params);
 			}
+			$order->setLastCommentReminder(date_calendar::getInstance()->toString());
+			$order->save();
 		}
 	}
 
@@ -1534,18 +1494,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$template->setAttribute('products', $products);
 		return $template->execute();
 	}
-	
-	/**
-	 * @deprecated 
-	 * @param order_persistentdocument_order $order
-	 */
-	public function updateStock($order)
-	{
-
-	}
-	
-	
-	
+		
 	/**
 	 * @param order_persistentdocument_order $document
 	 * @param String[] $propertiesName
@@ -1648,6 +1597,13 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$billArray = $order->getBillArrayInverse();
 		order_BillService::getInstance()->createBill($billArray[0]);
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0)
+	 */
+	public function updateStock($order)
+	{
 	}
 	
 	/**

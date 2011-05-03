@@ -552,12 +552,10 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 				$order = $expedition->getOrder();
 				
 				// Handle notifications by shipping mode.
-				$codeName = 'modules_order/expedition_shipped_' . $expedition->getTransporteur();
-				if (notification_NotificationService::getInstance()->getByCodeName($codeName) === null)
-				{
-					$codeName = 'modules_order/expedition_shipped';
-				}
-				order_ModuleService::getInstance()->sendCustomerNotification($codeName, $order, $expedition->getBill(), $expedition);
+				$ms = order_ModuleService::getInstance();
+				$codeName = 'modules_order/expedition_shipped';
+				$suffix = $expedition->getTransporteur();
+				$ms->sendCustomerSuffixedNotification($codeName, $suffix, $order, $expedition->getBill(), $expedition);
 				$nextExpedition = $this->createForOrder($order);
 				if ($nextExpedition === null)
 				{

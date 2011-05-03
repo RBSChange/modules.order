@@ -192,48 +192,53 @@ class order_ModuleService extends ModuleBaseService
 	 * @param order_persistentdocument_order $order
 	 * @param order_persistentdocument_bill $bill
 	 * @param order_persistentdocument_expedition $expedition
+	 * @param array $specificParams
  	 * @return boolean
 	 */
-	public function sendCustomerNotification($notifCodeName, $order, $bill = null, $expedition = null)
+	public function sendCustomerNotification($notifCodeName, $order, $bill = null, $expedition = null, $specificParams = null)
 	{
-		$this->setCurrentWebsiteIfNeeded($order);
-		$ns = notification_NotificationService::getInstance();	
-		$notif = $ns->getByCodeName($notifCodeName);
-		if ($notif)
+		$ns = notification_NotificationService::getInstance();
+		$configuredNotif = $ns->getConfiguredByCodeName($notifCodeName, $order->getWebsiteId(), $order->getLang());
+		return $this->doSendCustomerNotification($configuredNotif, $order, $bill, $expedition, $specificParams);
+	}
+		
+	/**
+	 * @param string $notifCodeName
+	 * @param string $suffix
+	 * @param order_persistentdocument_order $order
+	 * @param order_persistentdocument_bill $bill
+	 * @param order_persistentdocument_expedition $expedition
+	 * @param array $specificParams
+ 	 * @return boolean
+	 */
+	public function sendCustomerSuffixedNotification($notifCodeName, $suffix, $order, $bill = null, $expedition = null, $specificParams = null)
+	{
+		$ns = notification_NotificationService::getInstance();
+		$configuredNotif = $ns->getConfiguredByCodeNameAndSuffix($notifCodeName, $suffix, $order->getWebsiteId(), $order->getLang());
+		return $this->doSendCustomerNotification($configuredNotif, $order, $bill, $expedition, $specificParams);
+	}
+		
+	/**
+	 * @param notification_persistentdocument_notification $configuredNotif
+	 * @param order_persistentdocument_order $order
+	 * @param order_persistentdocument_bill $bill
+	 * @param order_persistentdocument_expedition $expedition
+	 * @param array $specificParams
+ 	 * @return boolean
+	 */
+	protected function doSendCustomerNotification($configuredNotif, $order, $bill, $expedition, $specificParams)
+	{
+		if ($configuredNotif instanceof notification_persistentdocument_notification)
 		{
-			$recipents = $this->getMessageRecipients($order);
-			if ($recipents)
-			{
-				$parameters = $order->getDocumentService()->getNotificationParameters($order);
-				if ($bill instanceof order_persistentdocument_bill)
-				{
-					$parameters = array_merge($parameters, $bill->getDocumentService()->getNotificationParameters($bill));
-				}
-				if ($expedition instanceof order_persistentdocument_expedition)
-				{
-					$parameters = array_merge($parameters, $expedition->getDocumentService()->getNotificationParameters($expedition));
-				}
-				if (Framework::isInfoEnabled())
-				{
-					Framework::info(__METHOD__ . ' ' . $notifCodeName);
-				}
-				$ns->setMessageService(MailService::getInstance());		
-				return $ns->send($notif, $recipents, $parameters, 'order');
-			}
-			else
-			{
-				if (Framework::isInfoEnabled())
-				{
-					Framework::info(__METHOD__ . " $notifCodeName has no customer email");
-				}				
-			}
+			$configuredNotif->setSendingModuleName('order');
+			$callback = array($this, 'getNotificationParameters');
+			$params = array('order' => $order, 'bill' => $bill, 'expedition' => $expedition, 'specificParams' => $specificParams);
+			$user = $order->getCustomer()->getUser();
+			return $user->getDocumentService()->sendNotificationToUserCallback($configuredNotif, $user, $callback, $params);
 		}
-		else
+		else if (Framework::isInfoEnabled())
 		{
-			if (Framework::isInfoEnabled())
-			{
-				Framework::info(__METHOD__ . " $notifCodeName not found");
-			}
+			Framework::info(__METHOD__ . " No notification found");
 		}
 		return true;
 	}
@@ -243,101 +248,84 @@ class order_ModuleService extends ModuleBaseService
 	 * @param order_persistentdocument_order $order
 	 * @param order_persistentdocument_bill $bill
 	 * @param order_persistentdocument_expedition $expedition
+	 * @param array $specificParams
 	 * @return boolean
 	 */
-	public function sendAdminNotification($notifCodeName, $order, $bill = null, $expedition = null)
+	public function sendAdminNotification($notifCodeName, $order, $bill = null, $expedition = null, $specificParams = null)
 	{
-		$this->setCurrentWebsiteIfNeeded($order);
 		$ns = notification_NotificationService::getInstance();
-		$notif = $ns->getByCodeName($notifCodeName);
-		if ($notif)
-		{
-			$recipents = $this->getAdminRecipients();
-			if ($recipents !== null)
-			{
-				$parameters = $order->getDocumentService()->getNotificationParameters($order);
-				if ($bill instanceof order_persistentdocument_bill)
-				{
-					$parameters = array_merge($parameters, $bill->getDocumentService()->getNotificationParameters($bill));
-				}
-				if ($expedition instanceof order_persistentdocument_expedition)
-				{
-					$parameters = array_merge($parameters, $expedition->getDocumentService()->getNotificationParameters($expedition));
-				}
-				
-				if (Framework::isInfoEnabled())
-				{
-					Framework::info(__METHOD__ . ' ' . $notifCodeName . ' ' . var_export($parameters, true));
-				}			
-				$ns->setMessageService(MailService::getInstance());		
-				return $ns->send($notif, $recipents, $parameters, 'order');				
-			}
-			else
-			{
-				if (Framework::isInfoEnabled())
-				{
-					Framework::info(__METHOD__ . " $notifCodeName has no admin recipient");
-				}
-			}
-		}
-		else
-		{
-			if (Framework::isInfoEnabled())
-			{
-				Framework::info(__METHOD__ . " $notifCodeName not found");
-			}
-		}	
-		return true;			
-	}	
-	
-	
-	/**
-	 * @param order_persistentdocument_order $order
-	 * @return mail_MessageRecipients
-	 */
-	public function getMessageRecipients($order)
-	{
-		if ($order->getCustomer() && $order->getCustomer()->getUser())
-		{
-			$recipients = new mail_MessageRecipients();
-			$recipients->setTo($order->getCustomer()->getUser()->getEmail());
-			return $recipients;
-		}
-		return null;
+		$configuredNotif = $ns->getConfiguredByCodeName($notifCodeName, $order->getWebsiteId(), $order->getLang());
+		return $this->doSendAdminNotification($configuredNotif, $order, $bill, $expedition, $specificParams);
 	}
-	
-	/**
-	 * @return mail_MessageRecipients
-	 */
-	public function getAdminRecipients()
-	{
-		$recipients = new mail_MessageRecipients();
-		$emails = array();
-		$admins = $this->getOrderConfirmedNotificationUserPreference();
-		foreach ($admins as $admin)
-		{
-			$emails[] = $admin->getEmail();
-		}
 
-		if (count($emails))
+	/**
+	 * @param string $notifCodeName
+	 * @param string $suffix
+	 * @param order_persistentdocument_order $order
+	 * @param order_persistentdocument_bill $bill
+	 * @param order_persistentdocument_expedition $expedition
+	 * @param array $specificParams
+	 * @return boolean
+	 */
+	public function sendAdminSuffixedNotification($notifCodeName, $suffix, $order, $bill = null, $expedition = null, $specificParams = null)
+	{
+		$ns = notification_NotificationService::getInstance();
+		$configuredNotif = $ns->getConfiguredByCodeNameAndSuffix($notifCodeName, $suffix, $order->getWebsiteId(), $order->getLang());
+		return $this->doSendAdminNotification($configuredNotif, $order, $bill, $expedition, $specificParams);
+	}
+
+	/**
+	 * @param notification_persistentdocument_notification $configuredNotif
+	 * @param order_persistentdocument_order $order
+	 * @param order_persistentdocument_bill $bill
+	 * @param order_persistentdocument_expedition $expedition
+	 * @param array $specificParams
+	 * @return boolean
+	 */
+	protected function doSendAdminNotification($configuredNotif, $order, $bill, $expedition, $specificParams)
+	{
+		if ($configuredNotif instanceof notification_persistentdocument_notification)
 		{
-			$recipients->setTo($emails);
-			return $recipients;
+			$configuredNotif->setSendingModuleName('order');
+			$callback = array($this, 'getNotificationParameters');
+			$params = array('order' => $order, 'bill' => $bill, 'expedition' => $expedition, 'specificParams' => $specificParams);
+			$result = true;
+			foreach ($this->getOrderConfirmedNotificationUserPreference() as $user)
+			{
+				$result = $result && $user->getDocumentService()->sendNotificationToUserCallback($configuredNotif, $user, $callback, $params);
+			}
+			return $result;
 		}
-		return null;
+		else if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__ . " No notification found");
+		}
+		return true;			
 	}
 	
 	/**
-	 * @param order_persistentdocument_order $order
+	 * @param array $params an array containing the keys 'order', 'bill', 'expedition' and 'specificParams'
+	 * @return array
 	 */
-	private function setCurrentWebsiteIfNeeded($order)
+	public function getNotificationParameters($params)
 	{
-		$website = $order->getWebsite();
-		$websiteModule = website_WebsiteModuleService::getInstance();
-		if ($websiteModule->getCurrentWebsite() !== $website)
+		$order = $params['order'];
+		$parameters = $order->getDocumentService()->getNotificationParameters($order);
+		if (isset($params['bill']) && $params['bill'] instanceof order_persistentdocument_bill)
 		{
-			$websiteModule->setCurrentWebsite($website);
+			$bill = $params['bill'];
+			$parameters = array_merge($parameters, $bill->getDocumentService()->getNotificationParameters($bill));
 		}
+		if (isset($params['expedition']) && $params['expedition'] instanceof order_persistentdocument_expedition)
+		{
+			$expedition = $params['expedition'];
+			$parameters = array_merge($parameters, $expedition->getDocumentService()->getNotificationParameters($expedition));
+		}
+		if (isset($params['specificParams']) && is_array($params['specificParams']))
+		{
+			$parameters = array_merge($parameters, $params['specificParams']);
+		}
+		return $parameters;
 	}
 	
 	/**
@@ -563,5 +551,40 @@ class order_ModuleService extends ModuleBaseService
 	public final function setCurrentOrderId($orderId)
 	{
 			
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function getMessageRecipients($order)
+	{
+		if ($order->getCustomer() && $order->getCustomer()->getUser())
+		{
+			$recipients = new mail_MessageRecipients();
+			$recipients->setTo($order->getCustomer()->getUser()->getEmail());
+			return $recipients;
+		}
+		return null;
+	}
+		
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function getAdminRecipients()
+	{
+		$recipients = new mail_MessageRecipients();
+		$emails = array();
+		$admins = $this->getOrderConfirmedNotificationUserPreference();
+		foreach ($admins as $admin)
+		{
+			$emails[] = $admin->getEmail();
+		}
+
+		if (count($emails))
+		{
+			$recipients->setTo($emails);
+			return $recipients;
+		}
+		return null;
 	}
 }
