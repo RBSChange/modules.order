@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.blocks.identifystep" lcid="fr_FR">
   <key id="alwaysaskforpassword">toujours demander le mot de passe à la première étape</key>
+  <key id="confirmEmail">Confirmation e-mail</key>
+  <key id="confirmEmail-help">Demander la confirmation de l'e-mail</key>
 </i18n>

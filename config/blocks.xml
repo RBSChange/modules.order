@@ -19,6 +19,7 @@
   <block type="modules_order_IdentifyStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Identify-Step;">
     <parameters>
       <parameter name="alwaysaskforpassword" type="Boolean" default-value="false"/>
+      <parameter name="confirmEmail" type="Boolean" default-value="false" />
     </parameters>
   </block>
   <block type="modules_order_ShippingStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Shipping-Step;"/>

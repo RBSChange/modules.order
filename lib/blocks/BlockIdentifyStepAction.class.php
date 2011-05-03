@@ -190,6 +190,12 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 			'newpassword{password:' . $securityLevel . '}',
 			'newpasswordconfirm{blank:false}',
 		);
+		
+		$cfg = $this->getConfiguration();
+		if ($cfg->getConfirmEmail())
+		{
+			$validationRules[] = "propEq:newemail,newemailconfirm";
+		}
 
 		$ok = $this->processValidationRules($validationRules, $request, $identifyStep);
 		$accountExists = users_WebsitefrontenduserService::getInstance()->getFrontendUserByLogin($identifyStep->newemail, website_WebsiteModuleService::getInstance()->getCurrentWebsite()->getId()) !== null;

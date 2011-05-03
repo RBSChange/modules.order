@@ -18,6 +18,11 @@ class order_IdentifyStepBean
 	 * @var String
 	 */	
 	public $newemail;
+	
+	/**
+	 * @var String
+	 */	
+	public $newemailconfirm;
 
 	/**
 	 * @var String
