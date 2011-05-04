@@ -7,13 +7,7 @@
 		<ol>
 			<li><input required="true" change:field="name newemail" size="30"/></li>
 			<tal:block tal:condition="configuration/getConfirmEmail"> 
-			<li><input change:field="name newemailconfirm; id order_identitfystep_newemailconfirm" /></li>
-			<script change:javascript="head 'modules.website.lib.js.preventCopyPaste'" />
-			<script type="text/javascript">
-			jQuery(document).ready(function() {
-				website_PreventCopyPaste('order_identitfystep_newemailconfirm');
-			});
-			</script>
+			<li><input required="true" change:field="name newemailconfirm; id order_identitfystep_newemailconfirm" /></li>
 			</tal:block>
 			<li><input required="true" change:field="name firstname" size="30" /></li>
 			<li><input required="true" change:field="name lastname"  size="30"/></li>
