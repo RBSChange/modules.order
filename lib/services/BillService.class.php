@@ -386,7 +386,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	/**
 	 * @param order_persistentdocument_bill $bill
 	 */
-	protected function cancelBill($bill)
+	public function cancelBill($bill)
 	{
 		if ($bill->getTransactionId())
 		{
