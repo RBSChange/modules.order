@@ -23,7 +23,14 @@ class order_RemoveCartLineAction extends f_action_BaseAction
 			$url = LinkHelper::getDocumentUrl(DocumentHelper::getDocumentInstance($pageId, 'modules_website/page'));
 			$context->getController()->redirectToUrl(str_replace('&amp;', '&', $url));
 			return View::NONE;	
-		}	
+		}
+			
+		$backUrl = $request->getParameter('backurl', null);
+		if ($backUrl !== null)
+		{
+			$context->getController()->redirectToUrl($backUrl);
+			return View::NONE;	
+		}
 		
 		$context->getController()->forward('website', 'Error404');
 		return View::NONE;		
