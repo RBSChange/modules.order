@@ -1,13 +1,13 @@
-<h2 change:h="" change:translate="modules.order.frontoffice.Repayments-title" />
-<p tal:condition="not: repayments" change:translate="modules.order.frontoffice.Repayments-empty" />
+<h2 change:h="">${trans:m.order.frontoffice.repayments-title,ucf}</h2>
+<p tal:condition="not: repayments">${trans:m.order.frontoffice.repayments-empty,ucf}</p>
 <div tal:condition="repayments">
-	<table border="0" class="normal" >
+	<table border="0" class="normal">
 		<thead>
 			<tr>		
-				<th change:translate="modules.order.frontoffice.Repayments-repayment" />
-				<th change:translate="modules.order.frontoffice.Repayments-date" />
-				<th change:translate="modules.order.frontoffice.Repayments-total-amount" />
-				<th change:translate="modules.order.frontoffice.Repayments-order" />
+				<th>${trans:m.order.frontoffice.repayments-repayment,ucf}</th>
+				<th>${trans:m.order.frontoffice.repayments-date,ucf}</th>
+				<th>${trans:m.order.frontoffice.repayments-total-amount,ucf}</th>
+				<th>${trans:m.order.frontoffice.repayments-order,ucf}</th>
 			</tr>
 		</thead>
 		<tbody>
