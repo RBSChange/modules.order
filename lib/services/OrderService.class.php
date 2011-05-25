@@ -405,7 +405,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * @param order_persistentdocument_order orderDocument
+	 * @param order_persistentdocument_order $orderDocument
 	 * @param order_CartInfo $cartInfo
 	 */
 	protected function populateOrderLines($orderDocument, $cartInfo)
@@ -430,9 +430,11 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			} 
 			else if ($currentOrderLine > $cartLineCount)
 			{
-				for($i = $cartLineCount; $i< $currentOrderLine; $i++)
+				$lines = $orderDocument->getLineArray();
+				$orderDocument->setLineArray(array_slice($lines, 0, $cartLineCount));
+				foreach (array_slice($lines, $cartLineCount) as $line) 
 				{
-					$orderDocument->removeLineByIndex($i);
+					$line->delete();
 				}					
 			}
 		}
@@ -1274,6 +1276,19 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	public function getWebsiteId($document)
 	{
 		return $document->getWebsiteId();
+	}
+	
+	/**
+	 * @param website_persistentdocument_website $website
+	 * @param string $lang
+	 * @param string $modelName
+	 * @param integer $offset
+	 * @param integer $chunkSize
+	 * @return order_persistentdocument_order[]
+	 */
+	public function getDocumentForSitemap($website, $lang, $modelName, $offset, $chunkSize)
+	{
+		return array();
 	}
 
 	/**
