@@ -358,6 +358,7 @@ class order_CartService extends BaseService
 	public function removeLine($cart, $cartLineIndex)
 	{
 		$cart->removeCartLine($cartLineIndex);
+		$this->resetCartOrder($cart);
 	}
 	
 	/**
