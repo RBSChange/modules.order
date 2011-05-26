@@ -278,9 +278,11 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			} 
 			else if ($currentOrderLine > $cartLineCount)
 			{
-				for($i = $cartLineCount; $i< $currentOrderLine; $i++)
+				$lines = $orderDocument->getLineArray();
+				$orderDocument->setLineArray(array_slice($lines, 0, $cartLineCount));
+				foreach (array_slice($lines, $cartLineCount) as $line)
 				{
-					$orderDocument->removeLineByIndex($i);
+					$line->delete();
 				}					
 			}
 		}
