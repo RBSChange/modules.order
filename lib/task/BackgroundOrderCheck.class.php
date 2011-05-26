@@ -8,19 +8,23 @@ class order_BackgroundOrderCheck extends task_SimpleSystemTask
 	protected function execute()
 	{		
 		$documentsArray = array_chunk($this->getDocumentIdsToProcess(), 10);
-		f_persistentdocument_PersistentProvider::getInstance()->closeConnection();
-        f_persistentdocument_PersistentProvider::clearInstance();
 		$script = 'modules/order/lib/task/orderCheckChunk.php';
+		$errors = array();
+		
 		foreach ($documentsArray as $chunk)
 		{
+			$this->plannedTask->ping();
 			$result = f_util_System::execHTTPScript($script, $chunk);
-			// Log fatal errors...
 			if ($result != 'OK')
 			{
-				Framework::error(__METHOD__ . ' ' . $script . ' unexpected result: "' . $result . '"');
+				$errors[] = $result;
 			}
 		}
 		
+		if (count($errors))
+		{
+			throw new Exception(implode("\n", $errors));
+		}
 		$this->plannedTask->reSchedule(date_Calendar::getInstance()->add(date_Calendar::MINUTE, +30));
 	}
 	
