@@ -27,6 +27,12 @@
 			</versions>
 		</dependency>
 		<dependency>
+			<name>change-module/filter</name>
+			<versions>
+				<version>3.5.0</version>
+			</versions>
+		</dependency>
+		<dependency>
 			<name>change-module/zone</name>
 			<versions>
 				<version>3.5.0</version>
