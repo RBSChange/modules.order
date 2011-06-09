@@ -189,6 +189,14 @@ class order_BillService extends f_persistentdocument_DocumentService
 		try
 		{
 			$this->getTransactionManager()->beginTransaction();
+			
+			if ($order->getOrderStatus() === order_OrderService::CANCELED)
+			{
+				$order->setOrderStatus(order_OrderService::INITIATED);
+				$order->setLabel(date_Calendar::now()->toString());
+				$this->pp->updateDocument($order);
+			}			
+			
 			$bill = $this->createQuery()->add(Restrictions::eq('publicationstatus', 'DRAFT'))
 				->add(Restrictions::eq('order', $order))
 				->findUnique();
@@ -198,12 +206,14 @@ class order_BillService extends f_persistentdocument_DocumentService
 				$bill = $this->getNewDocumentInstance();
 			}
 			
-			
+	
+							
 			$this->fillBillByOrder($bill, $order);
 			$connector = $bill->getPaymentConnector();
-			$connector->getDocumentService()->initializePayment($bill);
-			
+			$connector->getDocumentService()->initializePayment($bill);			
 			$bill->save();
+			
+
 			
 			$this->getTransactionManager()->commit();
 		}
