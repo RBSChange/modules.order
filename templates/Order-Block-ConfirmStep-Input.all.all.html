@@ -126,5 +126,5 @@
 </div>
 <div class="cleaner"></div>
 	<tal:block change:block="" name="payment" module="payment" billid="${bill/getId}" />
-	<a class="link" change:actionlink="" block="order_billingStep"><tal:block change:translate="modules.order.frontoffice.Back-to-previous-step" /></a>
+	<a class="link" change:actionlink="" block="${cart/getOrderProcess/getPreviousBlockType}"><tal:block change:translate="modules.order.frontoffice.Back-to-previous-step" /></a>
 </div>

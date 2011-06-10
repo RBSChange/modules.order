@@ -16,5 +16,5 @@
 			<input class="button" change:submit="name CreateAccount" label="&modules.order.document.identifystepbean.CreateAccount;" />
 		</p>
 	</form>
-	<a class="link" change:actionlink="" block="order_identifyStep" change:translate="&modules.order.frontoffice.Back-to-previous-step;"></a>	
+	<a class="link" change:actionlink="" block="${cart/getOrderProcess/getPreviousBlockType}" change:translate="&modules.order.frontoffice.Back-to-previous-step;"></a>	
 </div>

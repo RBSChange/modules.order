@@ -86,6 +86,22 @@ class order_OrderProcess extends BaseService
 	}
 	
 	/**
+	 * @return string
+	 */
+	public function getPreviousBlockType()
+	{
+		$cs = $this->getCurrentStep();
+		foreach ($this->config as $step => $value) 
+		{
+			if ($value['nextStep'] === $cs)
+			{
+				return $this->getBlockTypeForStep($step);
+			}
+		}
+		return $this->getBlockTypeForStep($this->getFirstStep());
+	}	
+	
+	/**
 	 * @param string $step
 	 */
 	public function setCurrentStep($step)
