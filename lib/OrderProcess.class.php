@@ -83,6 +83,23 @@ class order_OrderProcess
 	{
 		return $this->getBlockTypeForStep($this->getCurrentStep());
 	}
+	
+	/**
+	 * @return string
+	 */
+	public function getPreviousBlockType()
+	{
+		$cs = $this->getCurrentStep();
+		foreach ($this->config as $step => $value) 
+		{
+			if ($value['nextStep'] === $cs)
+			{
+				return $this->getBlockTypeForStep($step);
+			}
+		}
+		return $this->getBlockTypeForStep($this->getFirstStep());
+	}	
+	
 
 	/**
 	 * @param string $step
