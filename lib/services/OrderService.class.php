@@ -1558,7 +1558,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$nodeAttributes['orderStatus'] = $document->getOrderStatus();
 			if ($treeType === 'wlist')
 			{
-				$nodeAttributes['date'] = date_DateFormat::format($document->getUICreationdate());
+				$nodeAttributes['date'] =  date_Formatter::toDefaultDateTimeBO($document->getUICreationdate());
 				$nodeAttributes['orderStatusLabel'] = $document->getBoOrderStatusLabel();
 				$nodeAttributes['formattedTotalAmountWithTax'] = $document->formatPrice($document->getTotalAmountWithTax());
 				$user = $document->getCustomer()->getUser();
@@ -1568,7 +1568,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				if (count($messages) > 0)
 				{
 					$message = f_util_ArrayUtils::firstElement($messages);
-					$nodeAttributes['lastMessageDate'] = date_DateFormat::format($message->getUICreationdate());
+					$nodeAttributes['lastMessageDate'] = date_Formatter::toDefaultDateTimeBO($message->getUICreationdate());
 				}
 				else
 				{
