@@ -15,13 +15,14 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	protected function addTreeAttributes($moduleName, $treeType, &$nodeAttributes)
 	{
 		$nodeAttributes['label'] = $this->getOrderNumber();
+		$uiLang = RequestContext::getInstance()->getUILang();
 		
 		if ($treeType === 'wtree' || $treeType === 'wlist')
 		{
 			$nodeAttributes['orderStatus'] = $this->getOrderStatus();
 			if ($treeType === 'wlist')
 			{
-				$nodeAttributes['date'] = date_DateFormat::format($this->getUICreationdate());
+				$nodeAttributes['date'] = date_DateFormat::format($this->getUICreationdate(), null, $uiLang);
 				$nodeAttributes['orderStatusLabel'] = $this->getBoOrderStatusLabel();
 				$nodeAttributes['formattedTotalAmountWithTax'] = $this->formatPrice($this->getTotalAmountWithTax());
 				$user = $this->getCustomer()->getUser();
@@ -31,7 +32,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 				if (count($messages) > 0)
 				{
 					$message = f_util_ArrayUtils::firstElement($messages);
-					$nodeAttributes['lastMessageDate'] = date_DateFormat::format($message->getUICreationdate());
+					$nodeAttributes['lastMessageDate'] = date_DateFormat::format($message->getUICreationdate(), null, $uiLang);
 				}
 				else
 				{
