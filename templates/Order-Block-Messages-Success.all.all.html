@@ -4,7 +4,7 @@
 	<li><a change:link="tag contextual_website_website_modules_order_order-list; orderParam[cmpref] order/getId" change:translate="&modules.customer.frontoffice.Back-to-order;" /></li>
 </ul>
 
-<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Write-messages-for-order; orderId order/getId" /> <span change:datetime="order/getOrderDate" /></h3>
+<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Write-messages-for-order; orderId order/getId" /> <span change:datetime="order/getCreationdate" /></h3>
 
 <div class="messages-form">
 	<ul change:messages="" />
@@ -26,16 +26,16 @@
 	</form>
 </div>
 <br />
-<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Messages-for-order; orderId order/getId" /> <span change:datetime="order/getOrderDate" /></h3>
+<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Messages-for-order; orderId order/getId" /> <span change:datetime="order/getCreationdate" /></h3>
 
 <ul tal:condition="messages" class="messagecustomer">
 	<tal:block tal:repeat="message messages">
 		<li class="fromcustomer" tal:condition="message/isSentByCustomer">
-			<p><strong><tal:block change:translate="&modules.customer.frontoffice.Message-sent-by-customer; companyName companyName" /> <span change:datetime="message/getMessageDate" /></strong></p>
+			<p><strong><tal:block change:translate="&modules.customer.frontoffice.Message-sent-by-customer; companyName companyName" /> <span change:datetime="message/getCreationdate" /></strong></p>
 			<blockquote tal:content="message/getContent" />
 		</li>
 		<li class="tocustomer" tal:condition="not: message/isSentByCustomer">
-			<p><strong><tal:block change:translate="&modules.customer.frontoffice.Message-sent-by-company; companyName companyName" /> <span change:datetime="message/getMessageDate" /></strong></p>
+			<p><strong><tal:block change:translate="&modules.customer.frontoffice.Message-sent-by-company; companyName companyName" /> <span change:datetime="message/getCreationdate" /></strong></p>
 			<blockquote tal:content="message/getContent" />
 		</li>	
 	</tal:block>
