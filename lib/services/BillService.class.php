@@ -175,7 +175,18 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$data['customerCode'] = $customer->getCode(); 
 		
 		$odt2pdf = new Odtphp2PDFClient(Framework::getConfigurationValue("modules/order/odtphp2pdfURL"));
-		$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate.odt");
+		
+		$ref = $shop->getCodeReference();
+		$lang = $bill->getLang();
+		$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate-".$ref."-".$lang.".odt");
+		if ($billTemplate === null)
+		{
+			$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate-".$ref.".odt");
+			if ($billTemplate === null)
+			{
+				$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate.odt");	
+			}
+		}
 		
 		return $odt2pdf->getPdf($billTemplate, $data);
 	}
