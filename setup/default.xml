@@ -84,39 +84,7 @@
 					<changeblock type="modules_order_messages" />
 				</changecontent>
 			</page>
-		</topic>
-		
-		<topic byLabel="Processus de commande" template="webfactory/tplOne">
-			<page byTag="contextual_website_website_modules_order_stdaddressstep" 
-				label="Commande - Adresse" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
-				<changecontent for="content-block">
-					<changeblock type="modules_order_StdAddressStep" />			
-				</changecontent>
-			</page>			
-			<page byTag="contextual_website_website_modules_order_stdshippingstep" 
-				label="Commande - Livraison" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
-				<changecontent for="content-block">
-					<changeblock type="modules_order_StdShippingStep" />
-				</changecontent>
-			</page>
-			<page byTag="contextual_website_website_modules_order_stdbillingstep" 
-				label="Commande - Paiement" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
-				<changecontent for="content-block">
-					<changeblock type="modules_order_StdBillingStep" />
-				</changecontent>
-			</page>
-			<page byTag="contextual_website_website_modules_order_stdresultstep" 
-				label="Commande - Confirmation" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
-				<changecontent for="content-block">
-					<changeblock type="modules_order_StdResultStep" />
-				</changecontent>
-			</page>
-		</topic>
-				
+		</topic>		
 		<menus>
 			<menu byTag="contextual_website_website_menu-main">
 				<menuitempage pageid="DetailPanier" />
@@ -126,4 +94,6 @@
 			</menu>
 		</menus>
 	</website>
+	
+	<binding fileName="modules/order/setup/standardProccess.xml" />
 </script>

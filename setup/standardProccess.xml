@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<script>
+	<binding fileName="modules/website/persistentdocument/import/website_binding.xml" />
+	<binding fileName="modules/order/persistentdocument/import/order_binding.xml" />
+
+	<website byTag="default_modules_website_default-website" template="webfactory/tplOne">
+		<topic byLabel="Processus de commande" template="webfactory/tplOne">
+			<page byTag="contextual_website_website_modules_order_stdaddressstep" 
+				label="Commande - Adresse" navigationVisibility="hidden" 
+				indexingstatus="false" robotsmeta="noindex,nofollow">
+				<changecontent for="content-block">
+					<changeblock type="modules_order_StdAddressStep" />			
+				</changecontent>
+			</page>			
+			<page byTag="contextual_website_website_modules_order_stdshippingstep" 
+				label="Commande - Livraison" navigationVisibility="hidden" 
+				indexingstatus="false" robotsmeta="noindex,nofollow">
+				<changecontent for="content-block">
+					<changeblock type="modules_order_StdShippingStep" />
+				</changecontent>
+			</page>
+			<page byTag="contextual_website_website_modules_order_stdbillingstep" 
+				label="Commande - Paiement" navigationVisibility="hidden" 
+				indexingstatus="false" robotsmeta="noindex,nofollow">
+				<changecontent for="content-block">
+					<changeblock type="modules_order_StdBillingStep" />
+				</changecontent>
+			</page>
+			<page byTag="contextual_website_website_modules_order_stdresultstep" 
+				label="Commande - Confirmation" navigationVisibility="hidden" 
+				indexingstatus="false" robotsmeta="noindex,nofollow">
+				<changecontent for="content-block">
+					<changeblock type="modules_order_StdResultStep" />
+				</changecontent>
+			</page>
+		</topic>
+	</website>
+</script>
