@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.fo.blocks.stdaddressstep" lcid="fr_FR">
+  <key id="email">e-mail</key>
+  <key id="password">mot de passe</key>
+  <key id="password-validate">confimer le mot de passe</key>
+  
+  <key id="billing-civility">civilité</key>
+  <key id="billing-firstname">prenom</key>
+  <key id="billing-lastname">nom</key>
+  <key id="billing-addressline1">Adresse 1</key>
+  <key id="billing-addressline2">Adresse 2</key>
+  <key id="billing-addressline3">Adresse 3</key>
+  <key id="billing-zipcode">code postal</key>
+  <key id="billing-city">ville</key>
+  <key id="billing-province">etat</key>
+  <key id="billing-country">pays</key>
+  <key id="billing-phone">téléphone</key>
+  
+  <key id="shipping-civility">civilité</key>
+  <key id="shipping-firstname">prenom</key>
+  <key id="shipping-lastname">nom</key>
+  <key id="shipping-addressline1">Adresse 1</key>
+  <key id="shipping-addressline2">Adresse 2</key>
+  <key id="shipping-addressline3">Adresse 3</key>
+  <key id="shipping-zipcode">code postal</key>
+  <key id="shipping-city">ville</key>
+  <key id="shipping-province">etat</key>
+  <key id="shipping-country">pays</key>
+  <key id="shipping-phone">téléphone</key>
+</i18n>

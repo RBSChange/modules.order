@@ -144,14 +144,12 @@
 				<dt class="discount">${discount/valueWithTax}</dt>
 		</tal:block>
 		
-		
 		<!-- Montants par taxe -->
 		<tal:block tal:repeat="PriceByTax cart/getFormattedSubTotalTaxByRate">
 			<dd>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</dd>
 			<dt>${PriceByTax/formattedTaxAmount}</dt>
 		</tal:block>
 		
-
 		<tal:block tal:condition="not:cart/hasCreditNote">	
 			<dd class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</dd>
 			<dt class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</dt>
@@ -185,10 +183,23 @@
 
 <div class="column-one">
 	<div class="productcart-information-block">
+		<form change:form="" tal:condition="cart/useCoupon">
+			<h3 change:h="">${trans:m.order.frontoffice.coupon-name,ucf}</h3>
+			<ul change:errors="relKey coupon"></ul>
+			<ol>
+				<li tal:condition="not: cart/hasCoupon">
+					<input change:textinput="name coupon" size="10" id="billing-coupon-code" labeli18n="m.order.frontoffice.coupon-code"/>
+					<input change:submit="name UpdateCoupon" label="${trans:m.order.frontoffice.coupon-use,ucf,attr}" />
+				 </li>
+				<li tal:condition="cart/hasCoupon">
+					<label class="nocmx" for="billing-coupon-code">${trans:m.order.frontoffice.coupon-code,ucf,attr,lab} ${cart/getCoupon/getLabel}</label>
+					<input change:submit="name UpdateCoupon" label="${trans:m.order.frontoffice.coupon-remove,ucf,attr}" id=" billing-coupon-code"/>
+				</li>
+			</ol>		
+		</form>
+		
 		<tal:block tal:condition="configuration/getShowEvaluateShipping">
 			<form change:form="beanClass order_ShippingStepBean; beanName addressInfo" id="evaluateshippingform">
-				<ul change:errors=""></ul>
-				
 				<h3 change:h="">${trans:m.order.document.shippingstepbean.evaluateShipping,ucf}</h3>
 				<p>${trans:m.order.document.shippingstepbean.evaluateShipping-text,ucf}</p>
 				<ol>
@@ -201,6 +212,7 @@
 					<input class="button" change:submit="name Evaluateshipping" label="${trans:m.order.document.shippingstepbean.evaluateShipping-button,ucf,attr}" />
 				</p>
 			</form>
+			
 			<tal:block tal:condition="evaluateshipping">
 				<tal:block tal:condition="cart/canSelectShippingModeId" tal:define="shippingModes cart/getShippingModes" > 		
 					<tal:block tal:condition="shippingModes/0">
@@ -252,14 +264,12 @@
 </p>
 <tal:block tal:condition="orderProcess/open">
 	<tal:block tal:condition="cart/isValid">
-		<ul change:errors="" class="normal"></ul>
-	
+		<ul change:errors="relKey cgv"></ul>	
 		<p> 
 			<tal:block change:translate="modules.order.frontoffice.orderProcess.Pre-read-general-sales-conditions" />
 			<a change:link="tag ctx_order_cgv" change:translate="modules.order.frontoffice.orderProcess.read-general-sales-conditions"></a>
 			<tal:block change:translate="modules.order.frontoffice.orderProcess.post-read-general-sales-conditions" />
 		</p>
-	
 		<form change:form="">
 			<input required="true" change:checkboxinput="" class="nocmx" name="cgv" value="true" label="&modules.order.frontoffice.OrderProcess.Agree-with-general-sales-conditions;" />
 			<p class="buttons"><input change:submit="name Order"  class="button" label="&modules.order.frontoffice.Order-button;" /></p>

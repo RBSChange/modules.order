@@ -244,17 +244,19 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @return array<'label' => string, valueWithTax => string>
+	 * @return array<'label' => string, valueWithTax => string, valueWithoutTax => string>
 	 */
 	public function getDiscountDataArrayForDisplay()
 	{
 		$result = array();
 		foreach ($this->getDiscountDataArray() as $discount) 
 		{
-			if (f_util_StringUtils::isNotEmpty($discount['label']) && $discount['valueWithTax'] > 0)
+			if (f_util_StringUtils::isNotEmpty($discount['label']) && (abs($discount['valueWithTax']) > 0.01))
 			{
 				$result[] = array('label' => $discount['label'],  
-					'valueWithTax' => '-' . $this->formatPrice($discount['valueWithTax']));
+					'valueWithTax' => $this->formatPrice(-$discount['valueWithTax']),
+					'valueWithoutTax' => $this->formatPrice(-$discount['valueWithoutTax'])
+				);
 			}
 		}
 		return $result;
@@ -343,17 +345,18 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @return array<'label' => string, valueWithTax => string>
+	 * @return array<'label' => string, valueWithTax => string, valueWithoutTax => string>
 	 */
 	public function getFeesDataArrayForDisplay()
 	{
 		$result = array();
 		foreach ($this->getFeesDataArray() as $fees) 
 		{
-			if (f_util_StringUtils::isNotEmpty($fees['label']) && $fees['valueWithTax'] > 0)
+			if (f_util_StringUtils::isNotEmpty($fees['label']) && abs($fees['valueWithTax']) > 0.01)
 			{
 				$result[] = array('label' => $fees['label'],  
-					'valueWithTax' => $this->formatPrice($fees['valueWithTax']));
+					'valueWithTax' => $this->formatPrice($fees['valueWithTax']),
+					'valueWithoutTax' => $this->formatPrice($fees['valueWithoutTax']));
 			}
 		}
 		return $result;
@@ -399,6 +402,16 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function setShippingDataArray($shippingArray)
 	{
+		if (is_array($shippingArray) && count($shippingArray) > 0)
+		{
+			$modeIds = array_keys($shippingArray);
+			$modes = shipping_ModeService::getInstance()->createQuery()->add(Restrictions::in('id', $modeIds))->find();
+			foreach ($modes as $mode) 
+			{
+				$shippingArray[$mode->getId()]['mode'] = array('label' => $mode->getLabel(), 'code' => $mode->getCode(), 'id' => $mode->getId());
+			}
+		}
+		
 		$this->setGlobalProperty('__shipping', $shippingArray);
 	}	
 	
@@ -407,7 +420,109 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function setShippingModeDocument($shippingMode)
 	{
-		$this->setShippingModeId($shippingMode->getId());
+		if ($shippingMode instanceof shipping_persistentdocument_mode)
+		{
+			$this->setShippingModeId($shippingMode->getId());
+			$this->setOrderProperty('shippingModeLabel', $shippingMode->getLabel());
+			$this->setOrderProperty('shippingModeCode', $shippingMode->getCode());
+		}
+		else 
+		{
+			$this->setShippingModeId(null);
+			$this->setOrderProperty('shippingModeLabel', null);
+			$this->setOrderProperty('shippingModeCode', null);
+		}
+	}
+	
+	/**
+	 * @return shipping_persistentdocument_mode || null
+	 */
+	protected function getShippingModeDocument()
+	{
+		if (intval($this->getShippingModeId()) > 0)
+		{
+			return shipping_ModeService::getInstance()->createQuery()->add(Restrictions::eq('id', $this->getShippingModeId()))->findUnique();
+		}
+		return null;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getShippingModeLabel()
+	{
+		$result = array();
+		$label = $this->getOrderProperty('shippingModeLabel');
+		if ($label !== null)
+		{
+			$result[] = $label;
+		}
+		elseif (intval($this->getShippingModeId()) > 0)
+		{
+			$shippingMode = shipping_ModeService::getInstance()->createQuery()->add(Restrictions::eq('id', $this->getShippingModeId()))->findUnique();
+			if ($shippingMode) {$result[] = $shippingMode->getLabel();}
+		}
+
+		$shippingDataArray = $this->getShippingDataArray();
+		if (is_array($shippingDataArray))
+		{
+			foreach ($shippingDataArray as $shippingModeId => $data) 
+			{
+				if ($shippingModeId > 0)
+				{
+					if (isset($data['mode']))
+					{
+						$result[] = $data['mode']['label'];
+					}
+					else
+					{
+						$shippingMode = shipping_ModeService::getInstance()->createQuery()->add(Restrictions::eq('id', $shippingModeId))->findUnique();
+						if ($shippingMode) {$result[] = $shippingMode->getLabel();}
+					}
+				}
+			}
+		} 
+		return implode(', ', $result);		
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getShippingModeCode()
+	{
+		$result = array();
+		$label = $this->getOrderProperty('shippingModeCode');
+		if ($label !== null)
+		{
+			$result[] = $label;
+		}
+		elseif (intval($this->getShippingModeId()) > 0)
+		{
+			$shippingMode = shipping_ModeService::getInstance()->createQuery()->add(Restrictions::eq('id', $this->getShippingModeId()))->findUnique();
+			if ($shippingMode) {$result[] = $shippingMode->getCode();}
+		}
+
+		
+		$shippingDataArray = $this->getShippingDataArray();
+		if (is_array($shippingDataArray))
+		{
+			foreach ($shippingDataArray as $shippingModeId => $data) 
+			{
+				if ($shippingModeId > 0)
+				{
+					if (isset($data['mode']))
+					{
+						$result[] = $data['mode']['code'];
+					}
+					else
+					{
+						$shippingMode = shipping_ModeService::getInstance()->createQuery()->add(Restrictions::eq('id', $shippingModeId))->findUnique();
+						if ($shippingMode) {$result[] = $shippingMode->getCode();}
+					}
+				}
+			}
+		} 
+		return implode(', ', $result);
 	}
 	
 	/**
@@ -415,7 +530,58 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function setBillingModeDocument($billingMode)
 	{
-		$this->setBillingModeId($billingMode->getId());
+		if ($billingMode instanceof payment_persistentdocument_connector)
+		{
+			$this->setBillingModeId($billingMode->getId());
+			$this->setOrderProperty('paymentConnectorLabel', $billingMode->getLabel());
+			$this->setOrderProperty('paymentConnectorCode', $billingMode->getCode());
+		}
+		else
+		{
+			$this->setBillingModeId(null);
+			$this->setOrderProperty('paymentConnectorLabel', null);
+			$this->setOrderProperty('paymentConnectorCode', null);			
+		}
+	}
+	
+	/**
+	 * @return payment_persistentdocument_connector || null
+	 */
+	protected function getBillingModeDocument()
+	{
+		if (intval($this->getBillingModeId()) > 0)
+		{
+			return payment_ConnectorService::getInstance()->createQuery()->add(Restrictions::eq('id', $this->getBillingModeId()))->findUnique();
+		}
+		return null;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getPaymentConnectorLabel()
+	{
+		$label = $this->getOrderProperty('paymentConnectorLabel');
+		if ($label !== null)
+		{
+			return $label;
+		}
+		$connector = $this->getBillingModeDocument();
+		return ($connector !== null) ? $connector->getLabel() : null;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPaymentConnectorCode()
+	{
+		$label = $this->getOrderProperty('paymentConnectorCode');
+		if ($label !== null)
+		{
+			return $label;
+		}
+		$connector = $this->getBillingModeDocument();
+		return ($connector !== null) ? $connector->getCode() : null;
 	}
 	
 	/**
@@ -503,33 +669,8 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			->find();
 	}
 	
-	/**
-	 * @return string
-	 */
-	public function getShippingMode()
-	{
-		$result = array();
-		if (intval($this->getShippingModeId()) > 0)
-		{
-			$sm = DocumentHelper::getDocumentInstance($this->getShippingModeId(), 'modules_shipping/mode');
-			$result[] = $sm->getLabel();
-		} 
+
 		
-		$shippingDataArray = $this->getShippingDataArray();
-		if (is_array($shippingDataArray))
-		{
-			foreach (array_keys($shippingDataArray) as $shippingModeId) 
-			{
-				if ($shippingModeId > 0)
-				{
-					$sm = DocumentHelper::getDocumentInstance($shippingModeId);
-					$result[] = $sm->getLabel();
-				}
-			}
-		} 
-		return implode(', ', $result);
-	}
-	
 	/**
 	 * @example array<creditNoteId => amount>
 	 */
@@ -620,48 +761,25 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		}
 		return $this->currentBill;
 	}
-		
+			
 	/**
-	 * @deprecated 
-	 * @return payment_persistentdocument_connector
-	 */
-	protected function getBillingModeDocument()
-	{
-		return DocumentHelper::getDocumentInstance($this->getBillingModeId(), 'modules_payment/connector');
-	}
-	
-	/**
-	 * @deprecated 
+	 * @deprecated  use getPaymentConnectorLabel
 	 * @return String
 	 */
 	public function getBillingMode()
 	{
-		
-		return $this->getBillingModeDocument()->getLabel();
+		return $this->getPaymentConnectorLabel();
 	}
 	
 	/**
-	 * @deprecated 
+	 * @deprecated use getPaymentConnectorCode
 	 * @return String
 	 */
 	public function getBillingModeCodeReference()
 	{
-		return $this->getBillingModeDocument()->getCode();
+		return $this->getPaymentConnectorCode();
 	}
-		
-	/**
-	 * @deprecated 
-	 * @return shipping_persistentdocument_mode
-	 */
-	private function getShippingModeDocument()
-	{
-		if (intval($this->getShippingModeId()) > 0)
-		{
-			return DocumentHelper::getDocumentInstance($this->getShippingModeId(), 'modules_shipping/mode');
-		}
-		return null;
-	}
-	
+			
 	/**
 	 * @var order_persistentdocument_expedition
 	 */
@@ -706,6 +824,14 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	{
 		$exp = $this->getCurrentExpedition();
 		return $exp ? $exp->getTrackingURL() : null;
+	}
+	
+	/**
+	 * @deprecated use getShippingModeLabel
+	 */
+	public function getShippingMode()
+	{
+		return $this->getShippingModeLabel();
 	}
 	
 	/**

@@ -56,6 +56,33 @@ class order_CartService extends BaseService
 		$this->initContextCartInfo($cart);
 		return $cart;
 	}
+
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	public function getCartUrl($cart)
+	{
+		if ($cart->getShopId())
+		{
+			$website = $cart->getShop()->getWebsite();
+		}
+		else
+		{
+			$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		}
+		
+		$page = null;
+		if ($cart->isEmpty())
+		{
+			$page = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart-empty', $website, false);
+		}
+		if ($page === null)
+		{
+			$page = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart', $website, true);
+		}
+		
+		return LinkHelper::getDocumentUrl($page === null ? $website : $page);
+	}
 	
 	/**
 	 * @param order_CartInfo $cart
@@ -373,6 +400,11 @@ class order_CartService extends BaseService
 	 */
 	public function refresh($cart, $resetSessionOrderProcess = true)
 	{
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__ . ' uid: '. $cart->getUid() . ' resetSession:' . $resetSessionOrderProcess);
+		}
+		
 		Framework::startBench();
 			
 		// Validate the cart.
@@ -882,7 +914,73 @@ class order_CartService extends BaseService
 		}
 		return true;
 	}
+	
+	/**
+	 * 
+	 * @param order_CartInfo $sessionCart
+	 * @param order_CartInfo $cart
+	 * @param customer_persistentdocument_customer $customer
+	 */
+	public function mergeCustomerCart($sessionCart, $cart, $customer)
+	{
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__);
+		}
+		$shopId = intval($cart->getShopId());
+		$shop = catalog_ShopService::getInstance()->createQuery()->add(Restrictions::eq('id', $shopId))->findUnique();
+		if ($shop === null)
+		{
+			Framework::warn(__METHOD__ . ' Invalid cart ' . $shopId .' cleaned');
+			$customer->setCart(null);
+			$customer->save();
+			return;
+		}	
+
+		$sessionCart->setMergeWithUserCart(false);
+		$recup = $sessionCart->isEmpty();				
+		$products = array();
+		$quantities = array();
+		foreach ($cart->getCartLineArray() as $line)
+		{
+			try 
+			{
+				$product = $line->getProduct();
+				if ($product !== null)
+				{
+					$products[] = $product;
+					$quantities[] = $line->getQuantity();
+				}
+			}
+			catch (Exception $e)
+			{
+				Framework::warn(__METHOD__ . ' ' . $e->getMessage());
+			}
+		}
 		
+		// Add products.
+		
+		if ($this->checkAddToCart($sessionCart, $shop, $products, $quantities, false))
+		{
+			$added = false;
+			foreach ($products as $key => $product)
+			{
+				if ($this->addProductToCart($sessionCart, $product, $quantities[$key]))
+				{
+					$added = true;
+				}
+			}
+			
+			if ($added)
+			{
+				$key = ($recup) ? 'm.order.frontoffice.cart-recup' : 'm.order.frontoffice.cart-fusion';
+				$sessionCart->addSuccessMessage(LocaleService::getInstance()->transBO($key, array('ucf')));
+			}
+		}
+		
+		$this->refresh($sessionCart);
+	}
+	
 	// Deprecated
 	
 	/**

@@ -1,6 +1,9 @@
 <?php
 class order_OrderProcess
 {
+	
+	protected $name = 'process';
+	
 	/**
 	 * @var string
 	 */
@@ -144,7 +147,7 @@ class order_OrderProcess
 		$ls = LocaleService::getInstance();
 		while ($name !== null)
 		{
-			$result[$name] = array('name' => $name, 'step' => $step, 'current'=> false, 'label' => $ls->transFO('m.order.process.' . $name, array('ucf')));
+			$result[$name] = array('name' => $name, 'step' => $step, 'current'=> false, 'label' => $ls->transFO('m.order.' .$this->name . '.' . $name, array('ucf')));
 			if ($name == $this->getCurrentStep())
 			{
 				$result[$name]['current'] = true;

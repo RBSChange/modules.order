@@ -108,7 +108,7 @@ class order_BlockCartAction extends website_BlockAction
 		}
 		else
 		{
-			$this->addError(f_Locale::translate("&modules.order.frontoffice.Must-agree-with-general-sales-conditions-error;"));
+			$this->addError(LocaleService::getInstance()->transFO("m.order.frontoffice.must-agree-with-general-sales-conditions-error", array('ucf')), 'cgv');
 		}
 		return $this->execute($request, $response);
 	}
@@ -120,10 +120,7 @@ class order_BlockCartAction extends website_BlockAction
 	 */
 	function executeRefresh($request, $response)
 	{
-		$cs =  order_CartService::getInstance();
-		$cart = $cs->getDocumentInstanceFromSession();
-		$cs->refresh($cart);
-		return website_BlockView::SUCCESS;
+		return $this->execute($request, $response);
 	}	
 	
 	/**
@@ -136,8 +133,49 @@ class order_BlockCartAction extends website_BlockAction
 	{
 		$cs =  order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();
-		$cart->setAddressInfo($bean);
-		$cs->refresh($cart);
+		$addressInfo = $cart->getAddressInfo();
+		if ($addressInfo === null)
+		{
+			$cart->setAddressInfo($bean);
+		}
+		else
+		{
+			$addressInfo->shippingAddress->Zipcode = $bean->shippingAddress->Zipcode;
+			$addressInfo->shippingAddress->City = $bean->shippingAddress->City;
+			$addressInfo->shippingAddress->CountryId = $bean->shippingAddress->CountryId;
+		}
+		return $this->execute($request, $response);
+	}
+	
+	/**
+	 * @see website_BlockAction::execute()
+	 * @param f_mvc_Request $request
+	 * @param f_mvc_Response $response
+	 * @return String
+	 */	
+	public function executeUpdateCoupon($request, $response)
+	{
+		$cs = order_CartService::getInstance();
+		$cart = $cs->getDocumentInstanceFromSession();
+		if ($cart->hasCoupon())
+		{
+			$cs->setCoupon($cart, null);
+		} 
+		else
+		{
+			$couponCode = trim(strval($request->getParameter('coupon')));
+			if (f_util_StringUtils::isNotEmpty($couponCode))
+			{
+				$coupon = customer_CouponService::getInstance()->getByCode($couponCode);
+				$currentCoupon = $cs->setCoupon($cart, $coupon);
+				if ($currentCoupon === null)
+				{		
+					$request->setAttribute('coupon', '');
+					$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-coupon', array('ucf'), array('code' => $couponCode)), 
+						'coupon');
+				}
+			}
+		}
 		return $this->execute($request, $response);
 	}
 	

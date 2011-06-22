@@ -193,6 +193,7 @@
 	margin-right: 0;
 }
 
+@import url(/modules/order/style/strandardprocess.css);
 @import url(/modules/order/style/frontoffice.!trident.5.css);
 @import url(/modules/order/style/frontoffice.trident.4.css);
 @import url(/modules/order/style/frontoffice.trident.5.css);

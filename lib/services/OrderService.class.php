@@ -542,8 +542,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$this->fillOrderShippingAddress($orderDocument, $cartInfo);
 			
 			// Frais de livraison.
-			$shippingModeId = intval($cartInfo->getShippingModeId()) > 0 ? intval($cartInfo->getShippingModeId()) : -1;
-			$orderDocument->setShippingModeId($shippingModeId);
+			$shippingMode = $cartInfo->getShippingMode();
+			$orderDocument->setShippingModeDocument($shippingMode);
 
 			$orderDocument->setShippingFeesWithTax(catalog_PriceHelper::roundPrice($cartInfo->getFeesTotalWithTax()));
 			$orderDocument->setShippingFeesWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getFeesTotalWithoutTax()));

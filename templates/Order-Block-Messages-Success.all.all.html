@@ -1,12 +1,11 @@
-<h2 change:h="" change:translate="modules.customer.frontoffice.Messages-for-order-title"></h2>
+<h2 change:h="">${trans:m.customer.frontoffice.messages-for-order-title,ucf}</h2>
 
 <ul class="mini-navigation">
 	<li>
-		<a change:link="tag ctx_order_order; orderParam[cmpref] order/getId" change:translate="modules.customer.frontoffice.Back-to-order"></a>
+		<a change:link="tag ctx_order_order; orderParam[cmpref] order/getId">${trans:m.customer.frontoffice.back-to-order,ucf}</a>
 	</li>
 </ul>
-
-<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Write-messages-for-order; orderId order/getOrderNumber" /> <tal:block change:datetime="order/getOrderDate" /></h3>
+<h3 change:h="">${trans:m.customer.frontoffice.write-messages-for-order,ucf,orderId=order/getOrderNumber} <tal:block change:datetime="order/getCreationdate;format null" /></h3>
 
 <div class="messages-form">
 	<ul change:messages=""></ul>
@@ -15,31 +14,31 @@
 	<form class="cmxform" method="POST">
 		<ol>
 			<li>
-				<label class="standard" for="comment" change:translate="modules.customer.frontoffice.Your-messageLabel"></label>
+				<label class="standard" for="comment">${trans:m.customer.frontoffice.your-message,ucf,lab}</label>
 				<textarea rows="10" cols="60" class="textfield" id="comment" name="orderParam[comment]">${comment}</textarea>	
 				<input type="hidden" name="{orderParam[cmpref]}" value="${order/getId}" />	
 			</li>
 			<li class="buttons">
 				<label>&nbsp;</label>
-				<input class="button" change:i18nattr="value &modules.customer.frontoffice.Cancel;" type="reset" />
-		  		<input class="button" change:i18nattr="value &modules.customer.frontoffice.Send;" type="submit" />
+				<input class="button" value="${trans:m.customer.frontoffice.cancel,ucf,attr}" type="reset" />
+		  		<input class="button" value="${trans:m.customer.frontoffice.send,ucf,attr}" type="submit" />
 			</li>
 		</ol>
 	</form>
 </div>
 <br />
-<h3 change:h=""><tal:block change:translate="&modules.customer.frontoffice.Messages-for-order; orderId order/getOrderNumber" /> <tal:block change:datetime="order/getOrderDate" /></h3>
+<h3 change:h="">${trans:m.customer.frontoffice.messages-for-order,ucf,orderId=order/getOrderNumber} <tal:block change:datetime="order/getCreationdate; format null" /></h3>
 
 <ul tal:condition="messages" class="messagecustomer">
 	<tal:block tal:repeat="message messages">
 		<li class="fromcustomer" tal:condition="message/isSentByCustomer">
-			<p><strong><tal:block change:translate="modules.customer.frontoffice.Message-sent-by-customer; companyName companyName" /> <tal:block change:datetime="message/getCreationdate" /></strong></p>
+			<p><strong>${trans:m.customer.frontoffice.message-sent-by-customer,ucf,companyName=companyName} <tal:block change:datetime="message/getCreationdate; format null" /></strong></p>
 			<blockquote>${message/getContentAsHtml}</blockquote>
 		</li>
 		<li class="tocustomer" tal:condition="not: message/isSentByCustomer">
-			<p><strong><tal:block change:translate="modules.customer.frontoffice.Message-sent-by-company; companyName companyName" /> <tal:block change:datetime="message/getCreationdate" /></strong></p>
+			<p><strong>${trans:m.customer.frontoffice.message-sent-by-company,ucf,companyName=companyName} <tal:block change:datetime="message/getCreationdate; format null" /></strong></p>
 			<blockquote>${message/getContentAsHtml}</blockquote>
 		</li>	
 	</tal:block>
 </ul>
-<p tal:condition="not: messages" change:translate="modules.customer.frontoffice.No-message-for-this-order"></p>
+<p tal:condition="not: messages">${trans:m.customer.frontoffice.no-message-for-this-order,ucf}</p>

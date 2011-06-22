@@ -140,5 +140,50 @@ class order_OrderProcessService extends BaseService
 		}
 		return new $orderProcessClassName();
 	}
+	
+	/**
+	 * @param website_persistentdocument_website $website
+	 * @param string $email
+	 * @param string $password
+	 * @param order_AddressBean $address
+	 * @return users_persistentdocument_websitefrontenduser
+	 */
+	public function createNewUser($website, $email, $password, $address)
+	{
+		$tm = $this->getTransactionManager();
+		try
+		{
+			$tm->beginTransaction();
+			$user = users_WebsitefrontenduserService::getInstance()->getNewDocumentInstance();
+			$user->setTitleid((intval($address->Title) > 0) ? intval($address->Title) : null);
+			$user->setFirstname($address->FirstName);
+			$user->setLastname($address->LastName);
+			$user->setLogin($email);
+			$user->setEmail($email);
+			if ($password !== null)
+			{
+				$user->setPassword($password);
+			}
+			else
+			{
+				$user->setGeneratepassword(true);
+			}
+	
+			$group = users_WebsitefrontendgroupService::getInstance()->getDefaultByWebsite($website);
+			$user->setWebsiteid($group->getWebsiteid());
+			$user->addGroups($group);
+			
+			// Save the user.
+			$user->save();
+			$user->activate();			
+			$tm->commit();
+		}
+		catch (Exception $e)
+		{
+			$tm->rollBack($e);
+			return null;
+		}
+		return $user;	
+	}
 
 }

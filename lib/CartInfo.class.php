@@ -85,8 +85,14 @@ class order_CartInfo
 	private $taxZone;
 	
 	
-	
-	
+	/**
+	 * @return string
+	 */
+	public function getCartUrl()
+	{
+		return $this->getCartService()->getCartUrl($this);
+	}
+
 	/**
 	 * @return string $taxZone
 	 */
@@ -536,12 +542,15 @@ class order_CartInfo
 	 */	
 	function setRequiredShippingFilter($shippingModeId, $filter)
 	{
-		
 		if ($filter === null)
 		{
 			if (isset($this->shippingArray[$shippingModeId]['filter']))
 			{
 				unset($this->shippingArray[$shippingModeId]['filter']);
+			}
+			if ($shippingModeId == 0 && $this->getAddressInfo())
+			{
+				$this->getAddressInfo()->shippingFilterId = null;
 			}
 		}
 		else
@@ -551,6 +560,10 @@ class order_CartInfo
 			    'modeId' => $filter->getMode()->getId(),
 				'feesId' => $filter->getFeesId()
 			);
+			if ($shippingModeId == 0 && $this->getAddressInfo())
+			{
+				$this->getAddressInfo()->shippingFilterId = $filter->getId();
+			}
 		}	
 	}
 
@@ -587,6 +600,19 @@ class order_CartInfo
 		if (isset($shippingArray[0]) && isset($shippingArray[0]['filter']))
 		{
 			return $shippingArray[0]['filter']['modeId'];
+		}
+		return null;
+	}
+	
+	/**
+	 * @return Integer
+	 */
+	public function getShippingFilterId()
+	{
+		$shippingArray = $this->getShippingArray();
+		if (isset($shippingArray[0]) && isset($shippingArray[0]['filter']))
+		{
+			return $shippingArray[0]['filter']['id'];
 		}
 		return null;
 	}

@@ -19,7 +19,7 @@
   <block type="modules_order_IdentifyStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Identify-Step;">
     <parameters>
       <parameter name="alwaysaskforpassword" type="Boolean" default-value="false"/>
-      <parameter name="confirmEmail" type="Boolean" default-value="false" />
+      <parameter name="confirmEmail" type="Boolean" default-value="false"/>
     </parameters>
   </block>
   <block type="modules_order_ShippingStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Shipping-Step;"/>
@@ -35,10 +35,15 @@
   </block>
   <block type="modules_order_CartMessages" icon="cart" label="&amp;modules.order.bo.blocks.cartmessages.Title;"/>
   <block type="modules_order_Creditnotes" icon="list-block">
- 	 <parameters>
+    <parameters>
       <parameter name="includeRepayments" type="Boolean" default-value="false"/>
-      <parameter name="includeUsedCreditNotes" type="Boolean" default-value="true" />
+      <parameter name="includeUsedCreditNotes" type="Boolean" default-value="true"/>
     </parameters>
   </block>
+  <block type="modules_order_expedition" hidden="true"/>
   <block type="modules_order_Repayments" icon="list-block"/>
+  <block type="modules_order_StdAddressStep" icon="arrow-right-blue" />
+  <block type="modules_order_StdShippingStep" icon="arrow-right-blue" />
+  <block type="modules_order_StdBillingStep" icon="arrow-right-blue" />
+  <block type="modules_order_StdResultStep" icon="arrow-right-blue" />
 </blocks>

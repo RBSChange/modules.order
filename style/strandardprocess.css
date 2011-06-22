@@ -1,0 +1,73 @@
+div.orderprocess {
+
+}
+
+div.orderprocess-header ol{
+	width: 37.5em;
+	margin: 0 auto;
+	list-style-type: none;
+}
+
+div.orderprocess-header li{
+	width: 6.5em;
+	float: left;
+	margin-right: 1em;
+	text-align: center;
+}
+
+div.orderprocess-header dl{
+	display: block;
+	height: 6em;
+	color: #aaa;
+}
+div.orderprocess-header dd{
+	text-decoration: none;
+	font-size: 1.6em;
+	font-weight: bold;
+	padding: 4px 0 4px 0;
+	display: block;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #ccc;
+}
+div.orderprocess-header li.current dd{
+	background-image: url(/media/frontoffice/cart.gif) ;
+	color: #000;
+	background-repeat: no-repeat;
+	background-position: bottom right;
+}
+
+div.orderprocess-header dt{
+	padding-top: 2px;
+}
+
+div.orderprocess-header li.current dt{
+	color: #000;
+}
+
+div.orderprocess div.main{
+	float: left;
+  	width: 80%;
+}
+
+div.orderprocess div.resume{
+	margin-left: 80%;
+	
+}
+
+div.orderprocess div.resume div.resume-section {
+	padding: 5px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #999;
+}
+
+div.orderprocess hr {
+  clear: both;
+  visibility: hidden;
+}
+
+div.orderprocess table td{
+	vertical-align: top;
+	padding-bottom: 15px;
+}

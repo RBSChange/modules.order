@@ -1,0 +1,25 @@
+<div class="orderprocess result">
+    <tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-NavigationTop'; type 'html';cart cart; orderProcess orderProcess" />
+    <tal:block tal:condition="not: order/getId">
+    	${trans:m.order.standardprocess.result-invalid-order,ucf}
+    </tal:block>
+ 	<tal:block tal:condition="order/getId">
+ 		<h3 change:h="">${trans:m.order.standardprocess.result-status-title,ucf,lab} ${order/getOrderNumber}</h3>
+ 		<ol>
+    		<li>${trans:m.order.standardprocess.result-status-date,ucf,lab} <span change:datetime="value order/getModificationdate; format null"/></li>
+    		<li>${trans:m.order.standardprocess.result-client-ref,ucf,lab} ${order/getCustomer/getCodeReference}</li>
+    	</ol>
+    	<br />
+    	<tal:block tal:condition="lastBill">
+    		<tal:block change:block="" name="payment" module="payment" billid="${lastBill/getId}" />
+    		<br />
+    		<ol tal:condition="lastBillSuccess">
+    			
+    			<li>${trans:m.order.standardprocess.result-order-number,ucf,lab} <a change:link="document order">${order/getOrderNumber}</a></li>
+    			<li>${trans:m.order.standardprocess.result-bill-number,ucf,lab} ${lastBill/getLabel} </li>
+    			<li tal:condition="lastBill/getPaymentTransactionId">${trans:m.order.standardprocess.result-transaction-id,ucf,lab} ${lastBill/getPaymentTransactionId}</li>
+    			<li>${trans:m.order.standardprocess.result-amount,ucf,lab} ${php:order.formatPrice(lastBill.getPaymentAmount())} </li>
+    		</ol>
+    	</tal:block>
+    </tal:block>
+</div>

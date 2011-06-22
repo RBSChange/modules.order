@@ -1,9 +1,14 @@
 <?xml version="1.0"?>
 <tags>
-	<tag label="&amp;modules.order.bo.general.tags.Cart;" icon="cart">contextual_website_website_modules_order_cart</tag>
-	<tag label="&amp;modules.order.bo.general.tags.Cart-empty;" icon="cart">contextual_website_website_modules_order_cart-empty</tag>
-	<tag label="&amp;modules.order.bo.general.tags.Cgv;" icon="page">contextual_website_website_modules_order_cgv</tag>
-	<tag label="&amp;modules.order.bo.general.tags.Order;" icon="order">contextual_website_website_modules_order_order</tag>
-	<tag label="&amp;modules.order.bo.general.tags.Order-list;" icon="list-block">contextual_website_website_modules_order_order-list</tag>
-	<tag label="&amp;modules.order.bo.general.tags.Order-messages;" icon="mail">contextual_website_website_modules_order_order-messages</tag>
+  <tag labeli18n="m.order.bo.general.tags.cart" icon="cart">contextual_website_website_modules_order_cart</tag>
+  <tag labeli18n="m.order.bo.general.tags.cart-empty" icon="cart">contextual_website_website_modules_order_cart-empty</tag>
+  <tag labeli18n="m.order.bo.general.tags.cgv" icon="page">contextual_website_website_modules_order_cgv</tag>
+  <tag labeli18n="m.order.bo.general.tags.order" icon="order">contextual_website_website_modules_order_order</tag>
+  <tag labeli18n="m.order.bo.general.tags.order-list" icon="list-block">contextual_website_website_modules_order_order-list</tag>
+  <tag labeli18n="m.order.bo.general.tags.order-messages" icon="mail">contextual_website_website_modules_order_order-messages</tag>
+
+  <tag labeli18n="m.order.bo.blocks.stdaddressstep.title" icon="">contextual_website_website_modules_order_stdaddressstep</tag>
+  <tag labeli18n="m.order.bo.blocks.stdshippingstep.title" icon="">contextual_website_website_modules_order_stdshippingstep</tag>
+  <tag labeli18n="m.order.bo.blocks.stdbillingstep.title" icon="">contextual_website_website_modules_order_stdbillingstep</tag>
+  <tag labeli18n="m.order.bo.blocks.stdresultstep.title" icon="">contextual_website_website_modules_order_stdresultstep</tag>
 </tags>

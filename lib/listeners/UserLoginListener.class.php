@@ -11,67 +11,33 @@ class order_UserLoginListener
 		{
 			// Cart merge has to be done only if the current user is a customer.
 			$customer = customer_CustomerService::getInstance()->getByUser($user);
-			if ($customer === null)
-			{
-				return;
-			}
-			$cart = $customer->getCart();
+			if ($customer === null) {return;}
 			
 			$cs = order_CartService::getInstance();
-			$sessionCart = $cs->getDocumentInstanceFromSession();
-			if (!$sessionCart->getMergeWithUserCart())
+			if ($cs->hasCartInSession())
 			{
-				return;
-			}
+				$sessionCart = $cs->getDocumentInstanceFromSession();
+				$sessionCart->setCustomer($customer);
 			
-			Framework::info(__METHOD__ . ' MergeWithUserCart');
-			$sessionCart->setCustomer($customer);
-			$sessionCart->setMergeWithUserCart(false);
-	
-			if ($cart !== null && !$cart->isEmpty())
-			{
-				$recup = $sessionCart->isEmpty();
+				if (!$sessionCart->getMergeWithUserCart()) {return;}
+
+				Framework::info(__METHOD__ . ' MergeWithUserCart');
 				
-				$products = array();
-				$quantities = array();
-				foreach ($cart->getCartLineArray() as $line)
+				$cart = $customer->getCart();
+				if ($cart !== null && !$cart->isEmpty())
 				{
-					try 
-					{
-						$product = $line->getProduct();
-						if ($product !== null)
-						{
-							$products[] = $product;
-							$quantities[] = $line->getQuantity();
-						}
-					}
-					catch (Exception $e)
-					{
-						Framework::warn(__METHOD__ . ' ' . $e->getMessage());
-					}
-				}
-				
-				// Add products.
-				$shop = $cart->getShop();
-				if ($cs->checkAddToCart($sessionCart, $shop, $products, $quantities, false))
-				{
-					$added = false;
-					foreach ($products as $key => $product)
-					{
-						if ($cs->addProductToCart($sessionCart, $product, $quantities[$key]))
-						{
-							$added = true;
-						}
-					}
-					
-					if ($added)
-					{
-						$key = ($recup) ? 'm.order.frontoffice.cart-recup' : 'm.order.frontoffice.cart-fusion';
-						$sessionCart->addSuccessMessage(LocaleService::getInstance()->transBO($key, array('ucf')));
-					}
+					$cs->mergeCustomerCart($sessionCart, $cart, $customer);
 				}
 			}
-			$cs->refresh($sessionCart);
+			else
+			{
+				$cart = $customer->getCart();
+				if ($cart !== null && !$cart->isEmpty())
+				{
+					$sessionCart = $cs->getDocumentInstanceFromSession();
+					$cs->mergeCustomerCart($sessionCart, $cart, $customer);
+				}
+			}
 		}
 	}
 }

@@ -1,0 +1,36 @@
+<div class="orderprocess-header" tal:condition="cart" tal:define="orderProcess cart/getOrderProcess">
+	<ol>
+		<tal:block tal:repeat="step orderProcess/getSteps">
+			<li tal:condition="step/current" class="${step/name} current">
+				<dl>
+					<dd>${step/step}</dd><dt>${step/label}</dt>
+				</dl>
+			</li>
+			<li tal:condition="not: step/current" class="${step/name}">
+				<dl tal:condition="step/url">
+					<dd><a href="${step/url}">${step/step}</a></dd><dt><a href="${step/url}">${step/label}</a></dt>
+				</dl>
+				<dl tal:condition="not: step/url">
+					<dd>${step/step}</dd><dt>${step/label}</dt>
+				</dl>
+			</li>
+		</tal:block>
+	</ol>
+</div>
+<div class="orderprocess-header" tal:condition="orderProcess">
+	<ol>
+		<tal:block tal:repeat="step orderProcess/getSteps">
+			<li tal:condition="step/current" class="${step/name} current">
+				<dl>
+					<dd>${step/step}</dd><dt>${step/label}</dt>
+				</dl>
+			</li>
+			<li tal:condition="not: step/current" class="${step/name}">
+				<dl>
+					<dd>${step/step}</dd><dt>${step/label}</dt>
+				</dl>
+			</li>
+		</tal:block>
+	</ol>
+</div>
+<hr />
