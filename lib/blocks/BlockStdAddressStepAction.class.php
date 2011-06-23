@@ -61,33 +61,44 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 		if ($valid)
 		{
 			$login = $request->getParameter('email');
+			$password = $request->getParameter('password', '');
+			$website = $this->getContext()->getWebsite();
+			
 			$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
 			$cart->setUserId(null);
 			$cart->setCustomerId(null);
-			$user = users_WebsitefrontenduserService::getInstance()->getFrontendUserByLogin($login, $this->getContext()->getWebsite()->getId());
-			if ($user)
+			$wfus = users_WebsitefrontenduserService::getInstance();
+			
+			$user = $wfus->getIdentifiedFrontendUser($login, $password, $website->getId());
+			if ($user === null)
 			{
-				if (users_UserService::getInstance()->checkIdentity($user, strval($request->getParameter('password', ''))))
+				$user = $wfus->getFrontendUserByLogin($login, $website->getId());
+				if ($user)
 				{
-					$cart->setUserId($user->getId());
-					$cart->setMergeWithUserCart(false);
-					$cart->setAddressInfo(new order_ShippingStepBean());
-					users_UserService::getInstance()->authenticateFrontEndUser($user);
+					if ($user->isPublished())
+					{
+						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.bad-password', array('ucf'));
+						$this->addError($error);
+						$this->addErrorForProperty('password', $error);
+						$valid = false;
+					}
+					else
+					{
+						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
+						$this->addError($error);
+						$this->addErrorForProperty('email', $error);
+						$valid = false;
+					}
+					$user = null;
 				}
-				else if ($user->isPublished())
-				{
-					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.bad-password', array('ucf'));
-					$this->addError($error);
-					$this->addErrorForProperty('password', $error);
-					$valid = false;
-				}
-				else
-				{
-					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
-					$this->addError($error);
-					$this->addErrorForProperty('email', $error);
-					$valid = false;
-				}
+			}
+			
+			if ($valid && $user)
+			{
+				$cart->setUserId($user->getId());
+				$cart->setMergeWithUserCart(false);
+				$cart->setAddressInfo(new order_ShippingStepBean());
+				$wfus->authenticateFrontEndUser($user);
 			}
 		}
 		
