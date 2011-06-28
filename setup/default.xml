@@ -6,7 +6,7 @@
 	<binding fileName="modules/website/persistentdocument/import/website_binding.xml" />
 	<binding fileName="modules/order/persistentdocument/import/order_binding.xml" />
 
-	<website byTag="default_modules_website_default-website" template="webfactory/tplTwo">
+	<website byTag="default_modules_website_default-website">
 		<topic byLabel="Commande">
 			<page label="Contenu de votre panier" id="DetailPanier" isIndexPage="true"
 				byTag="contextual_website_website_modules_order_cart" 

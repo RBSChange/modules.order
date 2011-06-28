@@ -19,6 +19,6 @@ class order_patch_0356 extends patch_BasePatch
 		$this->execChangeCommand('compile-tags');
 		
 		$this->log('Pour ajouter les pages d\'exemple du nouveau process, executer :');
-		$this->log('change.php import-data order standardProccess.xml');
+		$this->log(CHANGE_COMMAND . ' import-data order standardProccess.xml');
 	}
 }
