@@ -629,9 +629,7 @@ class order_CartService extends BaseService
 		$cartLines = $cart->getCartLineArray();
 		$removeCartLineIndex = array();
 		$stockService = catalog_StockService::getInstance();
-		
-		$globalProductsArray = array();
-		
+				
 		foreach ($cartLines as $index => $cartLine)
 		{
 			if (!in_array($index, $removeCartLineIndex))
@@ -648,10 +646,6 @@ class order_CartService extends BaseService
 					$removeCartLineIndex[] = $index;
 					continue;
 				}
-				else
-				{
-					$stockService->buildCartProductList($cart, $cartLine, $globalProductsArray);	
-				}
 	
 				// Merge equivalent lines.
 				$eqCartLines = $this->getEquivalentCartLine($cart, $cartLine);
@@ -665,8 +659,10 @@ class order_CartService extends BaseService
 				}
 			}
 		}
+		$cart->removeCartLines($removeCartLineIndex);
 		
-		$unavailableProducts = $stockService->validCartQuantities($globalProductsArray, $cart);
+		$unavailableProducts = $stockService->validateCart($cart);
+		
 		foreach ($unavailableProducts as $productInfo)
 		{
 			$product = $productInfo[0];
@@ -678,16 +674,7 @@ class order_CartService extends BaseService
 			$cart->addPersistentErrorMessage(LocaleService::getInstance()->transFO('m.order.frontoffice.cart-validation-error-unavailable-article-quantity', array('ucf'), $replacements));
 		}
 		
-		$cart->removeCartLines($removeCartLineIndex);
-		
-		if (count($cart->getPersistentErrorMessages()) > 0 || count($cart->getTransientErrorMessages()) > 0)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		return count($cart->getPersistentErrorMessages()) == 0 && count($cart->getTransientErrorMessages()) == 0;
 	}
 	
 	/**
