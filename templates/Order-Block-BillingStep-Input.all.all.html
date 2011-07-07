@@ -3,96 +3,98 @@
 	<form change:form="beanName billingStep">
 		<ul change:errors=""></ul>
 	
-		<p>${trans:m.order.document.billingstepbean.transaction-amount-overview-text,ucf}</p>
-		<br />
-		<div class="payment-information-block" id="payment" tal:define="shop cart/getShop">
-			<h4 change:h="">${trans:m.order.document.billingstepbean.transaction-amount-overview-head,ucf}</h4>
-			<dl>
-				<tal:block tal:condition="shop/getDisplayPriceWithoutTax">
-					<dd>${trans:m.order.frontoffice.sub-total-withouttax-abr,ucf,lab}</dd>
-					<dt>${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</dt>
-				</tal:block>
-				<tal:block tal:condition="shop/getDisplayPriceWithTax">
-					<dd>${trans:m.order.frontoffice.sub-total-withtax-abr,ucf,lab}</dd>
-					<dt>${php:cart.formatPrice(cart.getSubTotalWithTax())}</dt>
-				</tal:block>
+		<p class="normal">${trans:m.order.document.billingstepbean.transaction-amount-overview-text,ucf}</p>
+
+		<div id="payment" tal:define="shop cart/getShop">
+			<table class="normal payment-information" border="0">	
+				<caption>${trans:m.order.document.billingstepbean.transaction-amount-overview-head,ucf}</caption>
+				<tr tal:condition="shop/getDisplayPriceWithoutTax">
+					<td>${trans:m.order.frontoffice.sub-total-withouttax-abr,ucf,lab}</td>
+					<td>${cart/getFormattedSubTotalWithoutTax}</td>
+				</tr>
+				<tr tal:condition="shop/getDisplayPriceWithTax">
+					<td>${trans:m.order.frontoffice.sub-total-withtax-abr,ucf,lab}</td>
+					<td>${cart/getFormattedSubTotalWithTax}</td>
+				</tr>
 				
-				<tal:block tal:condition="billingStep/coupon">
-					<dd>${trans:m.order.frontoffice.coupon-name,ucf,lab}</dd>
-					<dt>${billingStep/coupon}
-						(<a class="link" change:actionlink="" block="order_billingStep" action="RemoveCoupon">${trans:m.order.document.billingstepbean.removecoupon,ucf}</a>)
-					</dt>
+				<!-- Coupon -->
+				<tal:block tal:condition="cart/useCoupon">
+					<tr tal:condition="not: billingStep/coupon">
+						<td>${trans:m.order.frontoffice.coupon-code,ucf,lab}</td>
+						<td>	
+							<input change:textinput="name coupon" size="10"/>
+							<input change:submit="name Refresh" labeli18n="m.order.document.billingstepbean.refresh" />
+						</td>		
+					</tr>
+					<tr tal:condition="billingStep/coupon">
+						<td>${trans:m.order.frontoffice.coupon-name,ucf,lab}</td>
+						<td>${billingStep/coupon} (<a change:actionlink="" block="order_billingStep" action="RemoveCoupon">${trans:m.order.document.billingstepbean.removeCoupon,ucf}</a>)</td>
+					</tr>
 				</tal:block>
 				
 				<!-- Mode d'envoi -->
-				<tal:block tal:condition="cart/getShippingMode">
-					<dd>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</dd>
-					<dt>${cart/getShippingMode/getLabelAsHtml}</dt>
-				</tal:block>
+				<tr tal:condition="cart/getShippingMode">	
+					<td>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</td>
+					<td>${cart/getShippingMode/getLabelAsHtml}</td>
+				</tr>	
+				<!-- Fees -->
+				<tr tal:repeat="fees cart/getFeesDataArrayForDisplay">	
+					<td>${fees/label} :</td>
+					<td>${fees/valueWithTax}</td>
+				</tr>
 				
-				<!-- fees -->
-				<tal:block tal:repeat="fees cart/getFeesDataArrayForDisplay">	
-						<dd>${fees/label}</dd>
-						<dt class="discount">${fees/valueWithTax}</dt>
-				</tal:block>
-		
 				<!-- discount -->
-				<tal:block tal:repeat="discount cart/getDiscountDataArrayForDisplay">	
-						<dd>${discount/label}</dd>
-						<dt class="discount">${discount/valueWithTax}</dt>
-				</tal:block>
+				<tr tal:repeat="discount cart/getDiscountDataArrayForDisplay">
+					<td>${discount/label} :</td>
+					<td class="discount">${discount/valueWithTax}</td>
+				</tr>					
 				
 				<!-- Montants par taxe -->
-				<tal:block tal:repeat="PriceByTax cart/getFormattedSubTotalTaxByRate">
-					<dd>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</dd>
-					<dt>${PriceByTax/formattedTaxAmount}</dt>
-				</tal:block>
-				
-				<tal:block tal:condition="not:cart/hasCreditNote">	
-					<dd class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</dd>
-					<dt class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</dt>
-				</tal:block>
+				<tr tal:repeat="PriceByTax cart/getFormattedSubTotalTaxByRate">
+					<td>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</td>
+					<td>${PriceByTax/formattedTaxAmount}</td>
+				</tr>
+			
+				<tr tal:condition="not:cart/hasCreditNote">	
+					<td class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</td>
+					<td class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</td>
+				</tr>
 		
 				<tal:block tal:condition="cart/hasCreditNote">	
-					<dd class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</dd>
-					<dt class="pricetotal">${php:cart.formatPrice(cart.getTotalWithTax())}</dt>
-					
-					<dd>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</dd>
-					<dt>${php:shop.formatPrice(cart.getTotalCreditNoteAmount())}</dt>
-						
-					<dd class="pricetotal">${trans:m.order.frontoffice.creditnote-total,ucf,lab}</dd>
-					<dt class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</dt>
-				</tal:block>	
-			</dl>
+					<tr>
+						<td class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</td>
+						<td class="pricetotal">${php:cart.formatPrice(cart.getTotalWithTax())}</td>
+					</tr>
+					<tr>
+						<td>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</td>
+						<td>${php:shop.formatPrice(cart.getTotalCreditNoteAmount())}</td>
+					</tr>
+					<tr>
+						<td class="pricetotal">${trans:m.order.frontoffice.creditnote-total,ucf,lab}</td>
+						<td class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</td>
+					</tr>
+				</tal:block>
+			</table>
 		</div>
-
-		<tal:block tal:condition="cart/useCoupon">
-			<dl tal:condition="not: billingStep/coupon">
-				<dd>${trans:m.order.frontoffice.coupon-code,ucf,lab}</dd>
-				<dt>	
-					<input change:textinput="name coupon" size="10"/>
-					<input class="button" change:submit="name Refresh" label="${trans:m.order.document.billingstepbean.refresh,ucf,attr}" />
-				</dt>		
-			</dl>
-		</tal:block>
-		<br />
 	
-		<h3 change:h="">${trans:m.order.document.billingstepbean.mops-legend,ucf}</h3>
-		<p class="error" tal:condition="not: cart/getPaymentConnectors/0">${trans:m.order.document.billingstepbean.no-valid-mop,ucf}</p>
-		<tal:block tal:condition="cart/getPaymentConnectors/0">
-			<ol id="paymentselector" style="clear: both">
-				<li tal:repeat="connectorFilter cart/getPaymentConnectors">
-					<input tal:condition="php:billingStep.selected(connectorFilter.getId(), repeat.connectorFilter.start)" checked="checked" id="mode_${connectorFilter/getId}" 
-						type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
-					<input tal:condition="php:!billingStep.selected(connectorFilter.getId(), repeat.connectorFilter.start)" id="mode_${connectorFilter/getId}" 
-						type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
-					<label class="nocmx" for="mode_${connectorFilter/getId}">${connectorFilter/getConnector/getSelectionAsHtml}</label>
-				</li>
-			</ol>			
+		<fieldset>
+			<legend>${trans:m.order.document.billingstepbean.mops-legend,ucf}</legend>
+			<p class="normal error" tal:condition="not: cart/getPaymentConnectors/0">${trans:m.order.document.billingstepbean.no-valid-mop,ucf}</p>
+			<tal:block tal:condition="cart/getPaymentConnectors/0">
+				<ol id="paymentselector" class="cleaner">
+					<li tal:repeat="connectorFilter cart/getPaymentConnectors">
+						<input tal:condition="php:billingStep.selected(connectorFilter.getId(), repeat.connectorFilter.start)" checked="checked" id="mode_${connectorFilter/getId}" 
+							type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
+						<input tal:condition="php:!billingStep.selected(connectorFilter.getId(), repeat.connectorFilter.start)" id="mode_${connectorFilter/getId}" 
+							type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
+						<label class="nocmx" for="mode_${connectorFilter/getId}">${connectorFilter/getConnector/getSelectionAsHtml}</label>
+					</li>
+				</ol>
+			</tal:block>			
 			<p class="buttons">
-				<input class="button" change:submit="name Select" label="${trans:m.order.document.billingstepbean.select,ucf,attr}" />				
+				<input change:submit="name Select" labeli18n="m.order.document.billingstepbean.select" />				
 			</p>
-		</tal:block>
+		</fieldset>
 	</form>
-	<a class="link" change:actionlink="" block="${cart/getOrderProcess/getPreviousBlockType}">${trans:m.order.frontoffice.back-to-previous-step,ucf}</a>
+	<p><a change:actionlink="" block="${cart/getOrderProcess/getPreviousBlockType}">${trans:m.order.frontoffice.back-to-previous-step,ucf}</a></p>
 </div>

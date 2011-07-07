@@ -1,199 +1,68 @@
-.modules-order a.button{
-	color: #696a12;
-	border-color: #ccc;
+/* Etapes du process de commande */
+.order-process-steps{
+	width: 100%;
+	float: left;
 	text-align: center;
+	margin: 40px 0;
 }
-.modules-order a.button:hover{
-	text-decoration: none;
+
+.modules-order ul.steps li{
+	border-width: 1px;
+	border-style: solid;
+	width: 120px;
+	padding: 10px 4px;
+	margin-right: 4px;
+	
+	display: inline-block;
+	zoom: 1;
+	* display: inline;
+}
+
+.modules-order ul.steps li:last-child{
+	margin-right: 0px;
+}
+
+.modules-order ul.steps li .step{
+	font-size: 1.6em;
+	font-weight: bold;
 }
 
 .modules-order .pricetotal{
-	font-size: 1.2em;
+	font-size: 1.4em;
+	font-weight:bold;
 }
+
 .modules-order .column-one{
 	float: left;
 	display: block;
 	width: 49%;
 }
+
 .modules-order .column-two{
 	float: right;
 	display: block;
 	width: 49%;
 }
-.modules-order ol.steps{
-	width: 37.5em;
-	margin: 0 auto;
-	list-style-type: none;
+
+.modules-order table.payment-information tr td{
+	border: none;
+	text-align: right;
+	border-top-width: 1px;
+	border-top-style: solid;
 }
 
-.modules-order ol.steps li{
-	width: 6.5em;
-	float: left;
-	margin-right: 1em;
-	text-align: center;
+.modules-order blockquote dl{
+	margin-left: 20px;
 }
 
-.modules-order ol.steps li.last{
-	margin-right: 0;
-}
-.modules-order ol.steps li dl{
-	display: block;
-	height: 6em;
-	color: #aaa;
-}
-.modules-order ol.steps li dl dd{
-	text-decoration: none;
-	font-size: 1.6em;
-	font-weight: bold;
-	padding: 4px 0 4px 0;
-	display: block;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #ccc;
-}
-.modules-order ol.steps li dl dd.current{
-	background-image: url(/media/frontoffice/cart.gif) ;
-	border-color: #ccc;
-	color: #000;
-	background-repeat: no-repeat;
-	background-position: bottom right;
-	border-width: 1px;
-	border-style: solid;
-}
-.modules-order ol.steps li dl dt.current{
-	color: #000;
-}
-
-.modules-order ol.steps li dl dt{
-	padding-top: 2px;
-}
-.modules-order ol.delivery{
-	float: left;
-	display: block;
-	width: 100%;
-}
-.modules-order ol.delivery li{
+.modules-order blockquote dd{
 	margin-bottom: 10px;
 }
-.modules-order ol.delivery li label{
-	display: block;
-	width: 100%;
-	font-weight: bold;
-}
-.modules-order ol.delivery li form{
-	margin-top: 10px;
-}
-.modules-order ol.delivery ul li{
-	margin: 0px;
-}
-.modules-order .order-recap-information{
-	display: block;
-	width: 100%;
-	margin-bottom: 20px;
-}
-.payment-information-block,
-.block-shipping-mode,
-.block-payment-mode,
-.block-confirm-order{
-	float: left;
-	display: block;
-	width: 100%;
-	margin-bottom: 20px;
+
+.modules-order-Cart label.option-label{
+	width: auto;
 }
 
-.modules-order ul.mini-navigation {
-	list-style-type: none;
+.modules-order .billing p.buttons input.button{
+	vertical-align: baseline;
 }
-.block-confirm-order ul.mini-navigation li .button{
-	display: block;
-	float: right;
-	margin-top: 10px;
-}
-.payment-information-block dd,
-.payment-information-block dt,
-.shipping-mode-block dd,
-.payment-mode-block dd,
-.shipping-mode-block dt,
-.payment-mode-block dt{
-	width: 50%;
-	font-weight: bold;
-	text-align: right;
-	float: left;
-}
-.payment-information-block dt{
-	float: right;
-}
-.payment-information-block dd.total,
-.payment-information-block dt.total{
-	padding: 10px;
-	font-size: 1.4em;
-}
-.pricetotal{
-	white-space: nowrap;
-	font-weight: bold;
-}
-.modules-order .column-one h3.title,
-.modules-order .column-two h3.title,
-.modules-order .column-one h4.title{
-	margin-bottom: 6px;
-}
-.modules-order-ShortCart .ecom-block .content,
-.modules-order-Cartsummary .ecom-block .content{
-	text-align: center;
-}
-.modules-order ul.cartsummary{
-	width: 100%;
-}
-.modules-order ul.cartsummary li{
-	display: inline;
-}
-
-
-
-.modules-order-ConfirmStep table,
-.modules-order-order table,
-.modules-order-orderlist table,
-.modules-order-Cart table{
-	width: 100%;
-}
-
-.modules-order-Cart table.normal select{
-	max-width: 86%;
-}
-
-.modules-order ul.messages, 
-.modules-order ol.messages,
-.modules-order ul.errors,
-.modules-order ol.errors,
-.modules-order ol.address{
-	list-style-type: none;
-}
-
-.modules-order .messages-form{
-	margin-bottom: 40px;
-}
-.modules-order li.on1col{
-	clear: both;
-	width: 100%;
-}
-.modules-order li.on2col{
-	float: left;
-	width: 49%;
-	margin-right: 2%;
-}
-.modules-order li.on3col{
-	float: left;
-	width: 32%;
-	margin-right: 2%;
-}
-.modules-order li.first{
-	clear: left;
-}
-.modules-order li.last{
-	margin-right: 0;
-}
-
-@import url(/modules/order/style/strandardprocess.css);
-@import url(/modules/order/style/frontoffice.!trident.5.css);
-@import url(/modules/order/style/frontoffice.trident.4.css);
-@import url(/modules/order/style/frontoffice.trident.5.css);

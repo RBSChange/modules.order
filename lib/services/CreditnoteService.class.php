@@ -54,16 +54,6 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param order_persistentdocument_creditnote $document
-	 * @param Integer $parentNodeId Parent node ID where to save the document (optionnal => can be null !).
-	 * @return void
-	 */
-//	protected function preSave($document, $parentNodeId)
-//	{
-//
-//	}
-
-	/**
-	 * @param order_persistentdocument_creditnote $document
 	 * @param Integer $parentNodeId Parent node ID where to save the document.
 	 * @return void
 	 */
@@ -460,14 +450,4 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 					->add(Restrictions::isNotNull('transactionDate'));
 		return $query->find();
 	}
-
-	/**
-	 * @param order_persistentdocument_creditnote $document
-	 * @param string $bockName
-	 * @return array with entries 'module' and 'template'. 
-	 */
-//	public function getSolrserachResultItemTemplate($document, $bockName)
-//	{
-//		return array('module' => 'order', 'template' => 'Order-Inc-CreditnoteResultDetail');
-//	}
 }

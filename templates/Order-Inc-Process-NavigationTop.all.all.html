@@ -1,13 +1,11 @@
 <div class="order-process-steps">
-	<ol class="steps">
+	<ul class="steps">
 		<tal:block tal:repeat="step process/getSteps">
-			<li tal:define="liClass php: repeat.step.end ? 'last' : '' ; itemClass php: step['current'] ? 'current' : ''" class="${liClass}">
-				<dl>
-					<dd class="${itemClass}">${step/step}</dd>
-					<dt class="${itemClass}">${step/label}</dt>
-				</dl>
+			<li class="${php: step['current'] ? 'current' : ''}">
+				<span class="step">${step/step}</span><br />
+				<span class="label">${step/label}</span>
 			</li>
 		</tal:block>
-	</ol>
-	<div class="cleaner"></div>
+	</ul>
 </div>
+<div class="cleaner"></div>

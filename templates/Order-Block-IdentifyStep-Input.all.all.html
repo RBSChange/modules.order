@@ -3,25 +3,23 @@
 	
 	<form change:form="beanName identifyStep">
 		<fieldset>
-		<legend change:translate="modules.order.document.identifystepbean.You-have-an-account-legend"></legend>
-		<p change:translate="modules.order.document.identifystepbean.You-have-an-account-text"></p>
-		<br />
-		<ul change:errors=""></ul>
-		<ol>
-			<li><input change:field="name email" size="30"/></li>
-			<li><input change:passwordinput="name password" value="" labeled="true" class="textfield passwordinput" size="30" /></li>
-		</ol>
-		<p class="buttons">
-			<input change:submit="name Login" class="button" label="&modules.order.document.identifystepbean.Login;" />
-			&nbsp;<a change:link="tag ctx_customer_password-lost" change:translate="modules.order.document.identifystepbean.Lost-password"></a>
-		</p>
+			<legend>${trans:m.order.document.identifystepbean.you-have-an-account-legend,ucf}</legend>
+			<p class="normal">${trans:m.order.document.identifystepbean.you-have-an-account-text,ucf}</p>
+			<ul change:errors=""></ul>
+			<ol>
+				<li><input change:field="name email" size="30" /></li>
+				<li><input change:passwordinput="name password" value="" labeled="true" class="textfield passwordinput" size="30" /></li>
+			</ol>
+			<p class="buttons">
+				<input change:submit="name Login" labeli18n="m.order.document.identifystepbean.login" />
+				&nbsp;<a class="button" change:link="tag ctx_customer_password-lost">${trans:m.order.document.identifystepbean.lost-password,ucf}</a>
+			</p>
 		</fieldset>		
 		<fieldset>
-			<legend change:translate="modules.order.document.identifystepbean.No-account-yet-legend"></legend>
-			<p change:translate="modules.order.document.identifystepbean.No-account-yet-text"></p>
-			<br />
+			<legend>${trans:m.order.document.identifystepbean.no-account-yet-legend,ucf}</legend>
+			<p class="normal">${trans:m.order.document.identifystepbean.no-account-yet-text,ucf}</p>
 			<p class="buttons">
-				<input change:submit="name NewAccount" class="button" label="&modules.order.document.identifystepbean.NewAccount;"/>
+				<input change:submit="name NewAccount" labeli18n="m.order.document.identifystepbean.newaccount" />
 			</p>
 		</fieldset>
 	</form>

@@ -1,23 +1,25 @@
 <div class="orderprocess identify">
 	<tal:block change:include="module 'order'; template 'Order-Inc-Process-NavigationTop'; type 'html';process cart/getOrderProcess" />
 	<form change:form="beanName identifyStep">
-		<h3 change:h="" change:translate="modules.order.document.identifystepbean.Your-login-details-legend"></h3>
-		<p change:translate="modules.order.document.identifystepbean.Your-login-details-text"></p>
-		<ul change:errors=""></ul>
-		<ol>
-			<li><input required="true" change:field="name newemail" size="30"/></li>
-			<tal:block tal:condition="configuration/getConfirmEmail"> 
-			<li><input required="true" change:field="name newemailconfirm; id order_identitfystep_newemailconfirm" /></li>
-			</tal:block>
-			<li><input required="true" change:field="name firstname" size="30" /></li>
-			<li><input required="true" change:field="name lastname"  size="30"/></li>
-			<li><input required="true" change:passwordinput="name newpassword" value="" labeled="true" class="textfield passwordinput" size="30" /></li>
-			<li><input required="true" change:passwordinput="name newpasswordconfirm" value="" labeled="true" class="textfield passwordinput" size="30" /></li>
-			<li></li>
-		</ol>	
-		<p class="buttons">
-			<input class="button" change:submit="name CreateAccount" label="&modules.order.document.identifystepbean.CreateAccount;" />
-		</p>
+		<fieldset>
+			<legend>${trans:m.order.document.identifystepbean.your-login-details-legend,ucf}</legend>
+			<p class="normal">${trans:m.order.document.identifystepbean.your-login-details-text,ucf}</p>
+			<ul change:errors=""></ul>
+			<ol>
+				<li><input required="true" change:field="name newemail" size="30"/></li>
+				<tal:block tal:condition="configuration/getConfirmEmail"> 
+				<li><input required="true" change:field="name newemailconfirm; id order_identitfystep_newemailconfirm" /></li>
+				</tal:block>
+				<li><input required="true" change:field="name firstname" size="30" /></li>
+				<li><input required="true" change:field="name lastname"  size="30"/></li>
+				<li><input required="true" change:passwordinput="name newpassword" value="" labeled="true" class="textfield passwordinput" size="30" /></li>
+				<li><input required="true" change:passwordinput="name newpasswordconfirm" value="" labeled="true" class="textfield passwordinput" size="30" /></li>
+				<li></li>
+			</ol>	
+			<p class="buttons">
+				<a class="button" change:actionlink="" block="${cart/getOrderProcess/getPreviousBlockType}">${trans:m.order.frontoffice.back-to-previous-step,ucf}</a>	
+				<input change:submit="name CreateAccount" labeli18n="m.order.document.identifystepbean.createaccount" />
+			</p>
+		</fieldset>
 	</form>
-	<a class="link" change:actionlink="" block="${cart/getOrderProcess/getPreviousBlockType}" change:translate="&modules.order.frontoffice.Back-to-previous-step;"></a>	
 </div>
