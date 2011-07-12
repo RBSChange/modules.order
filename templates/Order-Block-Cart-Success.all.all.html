@@ -66,7 +66,7 @@
 					<td class="sale">&#160;</td>
 				</tr>
 				
-				<tr tal:condition="not: cartLine/getDiscountId" class="row-${repeat/cartLine/odd}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
+				<tr tal:condition="not: cartLine/getDiscountId" class="${php: repeat.cartLine.odd ? 'odd' : 'even'}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
 					<!-- Visual -->
 					<td>
 						<a change:link="document product" tal:condition="product/getDefaultVisual">
@@ -261,22 +261,25 @@
 <!-- Fin : column-one -->
 <div class="cleaner"></div>
 
-<h2 change:h="">${trans:m.order.frontoffice.orderProcess.do-order,ucf}</h2>
-<p class="error" tal:condition="not: orderProcess/open">
-	<tal:block tal:condition="orderProcess/message">${orderProcess/message}</tal:block>
-	<tal:block tal:condition="not: orderProcess/message">${trans:m.order.frontoffice.orderProcess.closed-default-message}</tal:block>
-</p>
+<tal:block tal:condition="not: orderProcess/open">
+	<h2 change:h="">${trans:m.order.frontoffice.orderProcess.do-order,ucf}</h2>
+	<p class="error">
+		<tal:block tal:condition="orderProcess/message">${orderProcess/message}</tal:block>
+		<tal:block tal:condition="not: orderProcess/message">${trans:m.order.frontoffice.orderProcess.closed-default-message}</tal:block>
+	</p>
+</tal:block>
 <tal:block tal:condition="orderProcess/open">
 	<tal:block tal:condition="cart/isValid">
-		<ul change:errors="relKey cgv"></ul>	
-		<p class="normal"> 
-			${trans:m.order.frontoffice.orderProcess.pre-read-general-sales-conditions,ucf}
-			<a change:link="tag ctx_order_cgv">${trans:m.order.frontoffice.orderProcess.read-general-sales-conditions}</a>
-			${trans:m.order.frontoffice.orderProcess.post-read-general-sales-conditions}
-		</p>
 		<form change:form="">
+			<h2 change:h="">${trans:m.order.frontoffice.orderProcess.do-order,ucf}</h2>
+			<ul change:errors="relKey cgv"></ul>	
+			<p class="normal"> 
+				${trans:m.order.frontoffice.orderProcess.pre-read-general-sales-conditions,ucf}
+				<a change:link="tag ctx_order_cgv">${trans:m.order.frontoffice.orderProcess.read-general-sales-conditions}</a>
+				${trans:m.order.frontoffice.orderProcess.post-read-general-sales-conditions}
+			</p>		
 			<ol>
-				<li><input required="true" change:checkboxinput="" name="cgv" value="true" labeli18n="m.order.frontoffice.OrderProcess.agree-with-general-sales-conditions" /></li>
+				<li><input required="true" change:checkboxinput="" name="cgv" value="true" labeli18n="m.order.frontoffice.OrderProcess.agree-with-general-sales-conditions" class="field" /></li>
 			</ol>
 			<p class="buttons">
 				<input change:submit="name Order" labeli18n="m.order.frontoffice.order-button" />

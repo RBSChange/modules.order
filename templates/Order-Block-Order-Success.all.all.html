@@ -68,7 +68,7 @@
 	</thead>
 
 	<tbody>
-		<tr tal:repeat="line order/getLineArray" class="row-${repeat/line/odd}">
+		<tr tal:repeat="line order/getLineArray" class="${php: repeat.line.odd ? 'odd' : 'even'}">
 			<td change:include="module 'order'; template 'Order-Inc-OrderLine'; type 'html'; shop shop; order order; line line" />
 		</tr>
 	</tbody>

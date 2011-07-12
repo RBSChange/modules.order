@@ -4,22 +4,19 @@
     	${trans:m.order.standardprocess.result-invalid-order,ucf}
     </tal:block>
  	<tal:block tal:condition="order/getId">
- 		<h3 change:h="">${trans:m.order.standardprocess.result-status-title,ucf,lab} ${order/getOrderNumber}</h3>
- 		<ol>
-    		<li>${trans:m.order.standardprocess.result-status-date,ucf,lab} <span change:datetime="value order/getModificationdate; format null"/></li>
+ 		<h2 change:h="">${trans:m.order.standardprocess.result-status-title,ucf,lab} ${order/getOrderNumber}</h2>
+ 		<ul class="normal">
+    		<li>${trans:m.order.standardprocess.result-status-date,ucf,lab} ${datetime:order/getUIModificationdate}</li>
     		<li>${trans:m.order.standardprocess.result-client-ref,ucf,lab} ${order/getCustomer/getCodeReference}</li>
-    	</ol>
-    	<br />
+    	</ul>
     	<tal:block tal:condition="lastBill">
     		<tal:block change:block="" name="payment" module="payment" billid="${lastBill/getId}" />
-    		<br />
-    		<ol tal:condition="lastBillSuccess">
-    			
+    		<ul tal:condition="lastBillSuccess" class="normal">
     			<li>${trans:m.order.standardprocess.result-order-number,ucf,lab} <a change:link="document order">${order/getOrderNumber}</a></li>
-    			<li>${trans:m.order.standardprocess.result-bill-number,ucf,lab} ${lastBill/getLabel} </li>
+    			<li>${trans:m.order.standardprocess.result-bill-number,ucf,lab} ${lastBill/getLabel}</li>
     			<li tal:condition="lastBill/getPaymentTransactionId">${trans:m.order.standardprocess.result-transaction-id,ucf,lab} ${lastBill/getPaymentTransactionId}</li>
-    			<li>${trans:m.order.standardprocess.result-amount,ucf,lab} ${php:order.formatPrice(lastBill.getPaymentAmount())} </li>
-    		</ol>
+    			<li>${trans:m.order.standardprocess.result-amount,ucf,lab} ${php:order.formatPrice(lastBill.getPaymentAmount())}</li>
+    		</ul>
     	</tal:block>
     </tal:block>
 </div>

@@ -230,7 +230,7 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 			$result[] = $address->Zipcode . ' ' . $address->City;
 			if ($address->Province) {$result[] = $address->Province;};
 			if ($address->CountryId) {$result[] = DocumentHelper::getDocumentInstance($address->CountryId)->getLabel();};
-			return implode("<br />\n", $result);
+			return $result;
 		}
 		return null;
 	}
@@ -279,7 +279,7 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 			$result[] = $address->getZipCode() . ' ' . $address->getCity();
 			if ($address->getProvince()) {$result[] = $address->getProvince();};
 			if ($address->getCountryid()) {$result[] = $address->getCountryName();}
-			return implode("<br />\n", $result);
+			return $result;
 		}
 		return null;		
 	}

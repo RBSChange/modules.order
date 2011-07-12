@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.standardprocess" lcid="fr_FR">
+  <key id="authentication">identification</key>
   <key id="address">Adresse</key>
   <key id="shipping">Livraison</key>
   <key id="billing">Paiement</key>
@@ -12,6 +13,7 @@
   <key id="coupon">Code promotionnel</key>
   <key id="coupon-input">saisisser votre code</key>
   <key id="invalid-coupon">le code promotionel "{code}" n'est pas valide.</key>
+  <key id="code">code</key>
   
   <key id="default-address">adresse par défaut</key>
   <key id="address-lost-password">mot de passe perdu</key>

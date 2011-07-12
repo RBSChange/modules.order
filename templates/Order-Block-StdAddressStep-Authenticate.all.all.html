@@ -1,39 +1,55 @@
 <div class="orderprocess address">
     <tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-NavigationTop'; type 'html';cart cart" />
     <div class="main">	  
-	<form change:form="">
-		<ul change:errors=""></ul>
-		<ol>
-			<li>
-				<input change:textinput="name email" id="address-email" labeli18n="m.order.fo.blocks.stdaddressstep.email" required="true"/>
-			</li>
-			<li>
-				<input change:passwordinput="name password" id="address-password" labeli18n="m.order.fo.blocks.stdaddressstep.password"/>
-				<a change:link="tag ctx_customer_password-lost">${trans:m.order.standardprocess.address-lost-password,ucf}</a>
-			</li>
-		</ol>
-		<p class="buttons">
-			<input change:submit="name authenticate" class="button" label="${trans:m.order.standardprocess.validate,ucf}" />
-		</p>
-	</form>
+		<form change:form="">
+			<fieldset>
+				<legend>${trans:m.order.standardprocess.authentication,ucf}</legend>
+				<ul change:errors=""></ul>
+				<ol>
+					<li>
+						<input change:textinput="name email" id="address-email" labeli18n="m.order.fo.blocks.stdaddressstep.email" required="true"/>
+					</li>
+					<li>
+						<input change:passwordinput="name password" id="address-password" labeli18n="m.order.fo.blocks.stdaddressstep.password"/>
+						<a change:link="tag ctx_customer_password-lost">${trans:m.order.standardprocess.address-lost-password,ucf}</a>
+					</li>
+				</ol>
+				<p class="buttons">
+					<input change:submit="name authenticate" labeli18n="m.order.standardprocess.validate" />
+				</p>
+			</fieldset>
+		</form>
 	</div>
     <div class="resume">
-    	<div class="resume-section">
-    		<h4 change:h="">${trans:m.order.standardprocess.resume-order-title,ucf}</h4>
-    		<ol>
-    			<li>${trans:m.order.standardprocess.resume-lines-total,ucf,lab} ${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</li>
-    			<tal:block tal:condition="php:cart.getFeesTotalWithTax() GT 0">
-					<li>${trans:m.order.standardprocess.resume-fees,ucf,lab} ${php:cart.formatPrice(cart.getFeesTotalWithTax())}</li>
-    			</tal:block>
-    			<tal:block tal:condition="php:cart.getDiscountTotalWithTax() GT 0">
-					<li>${trans:m.order.standardprocess.resume-discount,ucf,lab} ${php:cart.formatPrice(-cart.getDiscountTotalWithTax())}</li>
-    			</tal:block>
-    			<tal:block tal:condition="php:cart.getTotalCreditNoteAmount() GT 0">
-					<li>${trans:m.order.standardprocess.resume-credit-note,ucf,lab} ${php:cart.formatPrice(-cart.getTotalCreditNoteAmount())}</li>
-    			</tal:block>
-    			<li class="pricetotal">${trans:m.order.standardprocess.resume-total-ttc,ucf,lab} ${php:cart.formatPrice(cart.getTotalAmount())}</li>
-    			<li><a href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify}</a></li>
-    		</ol>
-    	</div>  	
-    </div>
+		<div class="normal resume-section">
+			<h2 change:h="">${trans:m.order.standardprocess.resume-order-title,ucf}</h2>
+    		<div class="column-one">
+	    		<table class="normal payment-information" border="0">	
+					<caption>${trans:m.order.standardprocess.billing-amount-title,ucf}</caption>
+					<tr>
+						<td>${trans:m.order.standardprocess.resume-lines-total,ucf,lab}</td>
+						<td>${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</td>
+					</tr>
+					<tr tal:condition="php:cart.getFeesTotalWithTax() GT 0">
+						<td>${trans:m.order.standardprocess.resume-fees,ucf,lab}</td>
+						<td>${php:cart.formatPrice(cart.getFeesTotalWithTax())}</td>
+					</tr>
+					<tr tal:condition="php:cart.getDiscountTotalWithTax() GT 0">
+						<td>${trans:m.order.standardprocess.resume-discount,ucf,lab}</td>
+						<td>${php:cart.formatPrice(-cart.getDiscountTotalWithTax())}</td>
+					</tr>
+					<tr tal:condition="php:cart.getTotalCreditNoteAmount() GT 0">
+						<td>${trans:m.order.standardprocess.resume-credit-note,ucf,lab}</td>
+						<td>${php:cart.formatPrice(-cart.getTotalCreditNoteAmount())}</td>
+					</tr>
+					<tr>
+						<td class="pricetotal">${trans:m.order.standardprocess.resume-total-ttc,ucf,lab}</td>
+						<td class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</td>
+					</tr>
+				</table>
+				<p><a class="link" href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify}</a></p>
+			</div>
+			<div class="cleaner"></div>
+    	</div>
+	</div>
 </div>

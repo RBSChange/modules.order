@@ -1,9 +1,9 @@
 <div class="orderprocess billing">
     <tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-NavigationTop'; type 'html';cart cart" />
     <div class="main">
-    	<h3 change:h="">${trans:m.order.standardprocess.resume-order-title,ucf}</h3>
-    	<p>Détail de votre panier: <a href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify}</a></p>
-    	<table class="normal product-lines" border="0" summary="" >
+    	<h2 change:h="">${trans:m.order.standardprocess.resume-order-title,ucf}</h2>
+    	<p class="normal">Détail de votre panier: <a href="${cart/getCartUrl}" class="link">${trans:m.order.standardprocess.modify}</a></p>
+    	<table class="normal product-lines" border="0" summary="">
     		<thead>
 				<tr>
 					<th>${trans:m.order.standardprocess.order-product-qtt,ucf}</th>
@@ -18,7 +18,7 @@
 			</thead>
 			<tbody>
 				<tal:block tal:repeat="cartLine cart/getCartLineArray">
-					<tr class="row-${repeat/cartLine/odd}" tal:define="product cartLine/getProduct;">						
+					<tr class="${php: repeat.cartLine.odd ? 'odd' : 'even'}" tal:define="product cartLine/getProduct;">						
 						<td>${cartLine/getQuantity} </td>
 						<td><img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/cartdetailproduct'" /></td> 
 						<td>${product/getOrderLabel}</td>
@@ -35,99 +35,121 @@
 				</tal:block>
 			</tbody>
     	</table>
-    	
-    	<form change:form="" tal:condition="cart/useCoupon">
-			<h3 change:h="">${trans:m.order.standardprocess.coupon,ucf}</h3>
-			<ul change:errors="relKey coupon"></ul>
-			<ol>
-				<li tal:condition="not: cart/hasCoupon">
-					<label for="billing-coupon-code">${trans:m.order.standardprocess.coupon-input,ucf,lab}</label>
-					<input change:textinput="name coupon" size="10" id="billing-coupon-code"/>
-					<input change:submit="name UpdateCoupon" label="${trans:m.order.standardprocess.validate,ucf,attr}" />
-				 </li>
-				<li tal:condition="cart/hasCoupon">
-					<label for="billing-coupon-code">${trans:m.order.standardprocess.coupon,ucf,lab} ${cart/getCoupon/getLabel}</label>
-					<input change:submit="name UpdateCoupon" label="${trans:m.order.standardprocess.delete-coupon,ucf,attr}" id="billing-coupon-code"/>
-				</li>
-			</ol>		
-		</form>
 		
-		<div class="payment-information-block" tal:condition="showPrice">
-			<h3 change:h="">${trans:m.order.standardprocess.billing-amount-title,ucf}</h3>
-			<dl>
-				<tal:block tal:condition="showPriceWithoutTax">
-					<dd>${trans:m.order.frontoffice.sub-total-withouttax-abr,ucf,lab}</dd>
-					<dt>${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</dt>
-				</tal:block>
-				<tal:block tal:condition="showPriceWithTax">
-					<dd>${trans:m.order.frontoffice.sub-total-withtax-abr,ucf,lab}</dd>
-					<dt>${php:cart.formatPrice(cart.getSubTotalWithTax())}</dt>
-				</tal:block>		
-				<tal:block tal:repeat="fees cart/getFeesDataArrayForDisplay">	
-						<dd>${fees/label}</dd>
-						<dt tal:condition="not: showPriceWithTax" class="discount">${fees/valueWithoutTax}</dt>
-						<dt tal:condition="showPriceWithTax" class="discount">${fees/valueWithTax}</dt>
-				</tal:block>
-				<tal:block tal:repeat="discount cart/getDiscountDataArrayForDisplay">	
-						<dd>${discount/label}</dd>
-						<dt tal:condition="not: showPriceWithTax" class="discount">${discount/valueWithoutTax}</dt>
-						<dt tal:condition="showPriceWithTax" class="discount">${discount/valueWithTax}</dt>
-				</tal:block>
+		<div class="payment-information-block column-two" tal:condition="showPrice">
+			<table class="normal payment-information" border="0">	
+				<caption>${trans:m.order.standardprocess.billing-amount-title,ucf}</caption>
+				<tr tal:condition="shop/getDisplayPriceWithoutTax">
+					<td>${trans:m.order.frontoffice.sub-total-withouttax-abr,ucf,lab}</td>
+					<td>${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</td>
+				</tr>
+				<tr tal:condition="shop/getDisplayPriceWithTax">
+					<td>${trans:m.order.frontoffice.sub-total-withtax-abr,ucf,lab}</td>
+					<td>${php:cart.formatPrice(cart.getSubTotalWithTax())}</td>
+				</tr>
 				
-				<tal:block tal:condition="showPriceWithTax" tal:repeat="PriceByTax cart/getFormattedSubTotalTaxByRate">
-					<dd>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</dd>
-					<dt>${PriceByTax/formattedTaxAmount}</dt>
+				<tal:block tal:condition="cart/useCoupon">
+					<tr tal:condition="not: cart/hasCoupon">
+						<td><label for="billing-coupon-code">${trans:m.order.standardprocess.coupon-input,ucf,lab}</label></td>
+						<td>
+							<form change:form="">
+								<ul change:errors="relKey coupon"></ul>
+								<p>
+									<input change:textinput="name coupon" size="10" id="billing-coupon-code"/>
+									<input change:submit="name UpdateCoupon" labeli18n="m.order.standardprocess.validate" />
+								</p>
+							</form>
+						</td>		
+					</tr>
+					<tr tal:condition="cart/hasCoupon">
+						<td><label for="billing-coupon-code">${trans:m.order.standardprocess.coupon,ucf,lab}</label>	</td>
+						<td>
+							<form change:form="">
+								<ul change:errors="relKey coupon"></ul>
+								<p>
+									<span>${cart/getCoupon/getLabel}</span>
+									<input change:submit="name UpdateCoupon" labeli18n="m.order.standardprocess.delete-coupon" id="billing-coupon-code"/>
+								</p>
+							</form>
+						</td>
+					</tr>
 				</tal:block>
+	
+				<tr tal:repeat="fees cart/getFeesDataArrayForDisplay">	
+					<td>${fees/label} :</td>
+					<td tal:condition="not: showPriceWithTax">${fees/valueWithoutTax}</td>
+					<td tal:condition="showPriceWithTax">${fees/valueWithTax}</td>
+				</tr>
 				
-				<tal:block tal:condition="cart/hasCreditNote">
-					<dd>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</dd>
-					<dt>${php:cart.formatPrice(cart.getTotalCreditNoteAmount())}</dt>
-				</tal:block>
-			
-				<dd class="pricetotal">${trans:m.order.standardprocess.billing-total-amount,ucf,lab}</dd>
-				<dt class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</dt>
-			</dl>
-		</div>   	
+				<tr tal:repeat="discount cart/getDiscountDataArrayForDisplay">
+					<td>${discount/label} :</td>
+					<td tal:condition="not: showPriceWithTax" class="discount">${discount/valueWithoutTax}</td>
+					<td tal:condition="showPriceWithTax" class="discount">${discount/valueWithTax}</td>
+				</tr>					
+	
+				<tr tal:condition="showPriceWithTax" tal:repeat="PriceByTax cart/getFormattedSubTotalTaxByRate">
+					<td>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</td>
+					<td>${PriceByTax/formattedTaxAmount}</td>
+				</tr>
+				
+				<tr tal:condition="cart/hasCreditNote">
+					<td>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</td>
+					<td>${php:shop.formatPrice(cart.getTotalCreditNoteAmount())}</td>
+				</tr>
+				
+				<tr>
+					<td class="pricetotal">${trans:m.order.frontoffice.creditnote-total,ucf,lab}</td>
+					<td class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</td>
+				</tr>
+			</table>
+		</div>
+		<div class="cleaner"></div>
+
 	    <form change:form="">
-			<h3 change:h="">${trans:m.order.standardprocess.billing-title,ucf}</h3>
-			<ul change:errors="relKey paymentFilter"></ul>		
-			
-			<ol id="paymentselector" style="clear: both" tal:condition="paymentFilters">
-				<li tal:repeat="paymentFilter cart/getPaymentConnectors">
-					<input change:radioinput="name paymentFilterId" id="paymentFilter" value="${paymentFilter/getId}" />
-					<label class="nocmx" for="paymentFilter_${paymentFilter/getId}">${paymentFilter/getConnector/getSelectionAsHtml}</label>
-				</li>
-			</ol>
-			<p class="buttons" tal:condition="canContinue">
-				<input change:submit="name nextStep" class="button" label="${trans:m.order.standardprocess.next-step,ucf}" />
-			</p>	
-			<p class="buttons" tal:condition="not: canContinue">
-				<a class="link" change:actionlink="" block="${cart/getOrderProcess/getPreviousBlockType}">${trans:m.order.frontoffice.back-to-previous-step,ucf}</a>
-			</p>		   	
+			<fieldset>
+				<legend>${trans:m.order.standardprocess.billing-title,ucf}</legend>
+				<ul change:errors="relKey paymentFilter"></ul>		
+				<ol id="paymentselector" style="clear: both" tal:condition="paymentFilters">
+					<li tal:repeat="paymentFilter cart/getPaymentConnectors">
+						<input change:radioinput="name paymentFilterId" id="paymentFilter" value="${paymentFilter/getId}" />
+						<label class="nocmx" for="paymentFilter_${paymentFilter/getId}">${paymentFilter/getConnector/getSelectionAsHtml}</label>
+					</li>
+				</ol>
+				<p class="buttons" tal:condition="canContinue">
+					<input change:submit="name nextStep" label="${trans:m.order.standardprocess.next-step,ucf}" />
+				</p>	
+				<p class="buttons" tal:condition="not: canContinue">
+					<a change:actionlink="" block="${cart/getOrderProcess/getPreviousBlockType}">${trans:m.order.frontoffice.back-to-previous-step,ucf}</a>
+				</p>
+			</fieldset>		   	
 	    </form>
 	</div>
     <div class="resume">
-   		<div class="resume-section">
-    		<h4 change:h="">${trans:m.order.standardprocess.resume-address-shipping,ucf}</h4>
-    		<ol>
-    			<li>${shippingAddress}</li>
-    			<li><a href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify}</a></li>
-    		</ol>
-    	</div>
+    	<div class="normal resume-section">
+    		<h2 change:h="">${trans:m.order.standardprocess.resume-address-title,ucf}</h2>
+	    	<ol class="ecom-adresses">
+				<li class="even">
+					<dl>
+						<dt>${trans:m.order.standardprocess.resume-address-shipping,ucf}</dt>
+						<dd tal:repeat="line shippingAddress">${line}</dd>
+						<dd><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify}</a></dd>
+					</dl>
+				</li>
+				<li class="odd">
+					<dl>
+						<dt>${trans:m.order.standardprocess.resume-address-billing,ucf}</dt>
+						<dd tal:repeat="line billingAddress">${line}</dd>
+						<dd><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify}</a></dd>
+					</dl>
+				</li>
+			</ol>
+		</div>
     	
-   		<div tal:condition="cart/getShippingModeId"  class="resume-section">
-    		<h4 change:h="">${trans:m.order.standardprocess.shipping-title,ucf}</h4>
+   		<div tal:condition="cart/getShippingModeId" class="normal resume-section">
+    		<h2 change:h="">${trans:m.order.standardprocess.shipping-title,ucf}</h2>
     		<ol>
     			<li>${cart/getShippingMode/getLabelAsHtml}</li>
-    			<li><a href="${cart/getOrderProcess/getShippingStepUrl}">${trans:m.order.standardprocess.modify}</a></li>
-    		</ol>
-    	</div>
-
-   		<div class="resume-section">
-    		<h4 change:h="">${trans:m.order.standardprocess.resume-address-billing,ucf}</h4>
-    		<ol>
-    			<li>${billingAddress}</li>
-    			<li><a href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify}</a></li>
+    			<li><a class="link" href="${cart/getOrderProcess/getShippingStepUrl}">${trans:m.order.standardprocess.modify}</a></li>
     		</ol>
     	</div>
     </div>    

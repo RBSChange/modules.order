@@ -1,25 +1,7 @@
-<div class="orderprocess address">
-    <tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-NavigationTop'; type 'html';cart cart" />	
-    <div class="main">
-		<form change:form="" >
-		<ul change:errors=""></ul>
-		<ol tal:condition="not: cart/getUserId">
-			<li>
-				<input change:textinput="name email" id="address-email" labeli18n="m.order.fo.blocks.stdaddressstep.email" required="true"/>
-			</li>
-
-			<li>
-				<input change:checkboxinput="name password-generate" id="address-password-generate" value="1" labeli18n="m.order.standardprocess.address-generate-password" />
-			</li>
-			<li id="address-password-l1">
-				<input change:passwordinput="name password" id="address-password" labeli18n="m.order.fo.blocks.stdaddressstep.password" />
-			</li>
-			<li id="address-password-l2">
-				<input change:passwordinput="name password-validate" id="address-password-validate" labeli18n="m.order.fo.blocks.stdaddressstep.password-validate"/>
-			</li>
 <script type="text/javascript">
 // <![CDATA[
 	jQuery(document).ready(function() {
+		// Password.
 		var addressPass = function()
 		{
 			if (jQuery('#address-password-generate_1').attr('checked'))
@@ -33,27 +15,8 @@
 		};
 		jQuery('#address-password-generate_1').change(addressPass);
 		addressPass();
-	});
-//]]>
-</script>
-		</ol>
-		<ol tal:condition="cart/getUserId">
-			<li>
-				<label>${trans:m.order.fo.blocks.stdaddressstep.email,ucf,lab}</label>
-				<span>${cart/getUser/getLogin}</span>
-			</li>
-		</ol>
-		<div class="cleaner">&#160;</div>
-		<h3 change:h="">${trans:m.order.standardprocess.address-billing-address-legend,ucf}</h3>
-		<ol id="address-billing-container">
-			<li tal:condition="registeredAddressList">
-				<input change:selectinput="name billing-registered; list registeredAddressList" id="address-billing-registered" 
-					labeli18n="m.order.standardprocess.address-registered"/>
-				<input class="button" change:submit="name useRegistered" id="address-useregistered"
-					label="${trans:m.order.standardprocess.address-select,ucf,attr}" />
-<script type="text/javascript">
-// <![CDATA[
-	jQuery(document).ready(function() {
+
+		// Billing address.
 		var useregistered = function()
 		{
 			jQuery('#next-step').hide();
@@ -61,157 +24,208 @@
 		};
 		jQuery('#address-billing-registered').change(useregistered);
 		jQuery('#address-useregistered').hide();
-	});
-//]]>
-</script>
-			</li>
-									
-			<li>
-				<input change:selectinput="name billing-civility; listId modules_users/title" id="address-billing-civility"
-					labeli18n="m.order.fo.blocks.stdaddressstep.billing-civility"/>
-			</li>
-			<li>
-				<input change:textinput="name billing-firstname" id="address-billing-firstname"
-					labeli18n="m.order.fo.blocks.stdaddressstep.billing-firstname" required="true"/>
-			</li>
-			<li>
-				<input change:textinput="name billing-lastname" id="address-billing-lastname"
-					labeli18n="m.order.fo.blocks.stdaddressstep.billing-lastname" required="true"/>
-			</li>
-			<li>
-				<input change:textinput="name billing-addressline1" id="address-billing-addressline1"
-					labeli18n="m.order.fo.blocks.stdaddressstep.billing-addressline1" required="true"/>
-			</li>
-			<li>
-				<input change:textinput="name billing-addressline2" id="address-billing-addressline2"
-					labeli18n="m.order.fo.blocks.stdaddressstep.billing-addressline2"/>
-			</li>
-			<li>
-				<input change:textinput="name billing-addressline3" id="address-billing-addressline3"
-					labeli18n="m.order.fo.blocks.stdaddressstep.billing-addressline3"/>
-			</li>
-			<li>
-				<input change:textinput="name billing-zipcode" id="address-billing-zipcode"
-					labeli18n="m.order.fo.blocks.stdaddressstep.billing-zipcode" required="true"/>
-			</li>
-			<li>
-				<input change:textinput="name billing-city" id="address-billing-city"
-					labeli18n="m.order.fo.blocks.stdaddressstep.billing-city" required="true"/>
-			</li>
-			<li>
-				<input change:textinput="name billing-province" id="address-billing-province"
-					labeli18n="m.order.fo.blocks.stdaddressstep.billing-province"/>
-			</li>
-			<li>
-				<input change:selectinput="name billing-country" listId="modules_customer/shippingcountry" id="address-billing-country"
-					labeli18n="m.order.fo.blocks.stdaddressstep.billing-country" required="true"/>
-			</li>
-			<li>
-				<input change:textinput="name billing-phone" id="address-billing-phone"
-					labeli18n="m.order.fo.blocks.stdaddressstep.billing-phone"/>
-			</li>
-		</ol>
 		
-		<h3 change:h="">${trans:m.order.standardprocess.address-shipping-address-legend,ucf}</h3>
-		<ol>
-			<li>
-				<input change:radioinput="name shipping-usesameaddress" value="1" id="address-shipping-usesameaddress"
-					labeli18n="m.order.standardprocess.address-usesameaddress" />
-			</li>
-			<li>
-				<input change:radioinput="name shipping-usesameaddress" value="2" id="address-shipping-usesameaddress"
-					labeli18n="m.order.standardprocess.address-newaddress" />
-			</li>
-		</ol>
-<script type="text/javascript">
-// <![CDATA[
-	jQuery(document).ready(function() {
-		var addressShipping = function()
-		{
-			if (jQuery('#address-shipping-usesameaddress_1').attr('checked'))
+		// Shipping address.
+		jQuery(document).ready(function() {
+			var addressShipping = function()
 			{
-				jQuery('#address-shipping-container').hide();
-			}
-			else
-			{
-				jQuery('#address-shipping-container').show();
-			}
-		};
-		jQuery('#address-shipping-usesameaddress_1').change(addressShipping);
-		jQuery('#address-shipping-usesameaddress_2').change(addressShipping);
-		addressShipping();
+				if (jQuery('#address-shipping-usesameaddress_1').attr('checked'))
+				{
+					jQuery('#address-shipping-container').hide();
+				}
+				else
+				{
+					jQuery('#address-shipping-container').show();
+				}
+			};
+			jQuery('#address-shipping-usesameaddress_1').change(addressShipping);
+			jQuery('#address-shipping-usesameaddress_2').change(addressShipping);
+			addressShipping();
+		});
 	});
 //]]>
 </script>
-		<ol id="address-shipping-container">
-			<li>
-				<input change:selectinput="name shipping-civility; listId modules_users/title" id="address-shipping-civility"
-					labeli18n="m.order.fo.blocks.stdaddressstep.shipping-civility"/>
-			</li>
-			<li>
-				<input change:textinput="name shipping-firstname" id="address-shipping-firstname"
-					labeli18n="m.order.fo.blocks.stdaddressstep.shipping-firstname"/>
-			</li>
-			<li>
-				<input change:textinput="name shipping-lastname" id="address-shipping-lastname"
-					labeli18n="m.order.fo.blocks.stdaddressstep.shipping-lastname"/>
-			</li>
-			<li>
-				<input change:textinput="name shipping-addressline1" id="address-shipping-addressline1"
-					labeli18n="m.order.fo.blocks.stdaddressstep.shipping-addressline1"/>
-			</li>
-			<li>
-				<input change:textinput="name shipping-addressline2" id="address-shipping-addressline2"
-					labeli18n="m.order.fo.blocks.stdaddressstep.shipping-addressline2"/>
-			</li>
-			<li>
-				<input change:textinput="name shipping-addressline3" id="address-shipping-addressline3"
-					labeli18n="m.order.fo.blocks.stdaddressstep.shipping-addressline3"/>
-			</li>
-			<li>
-				<input change:textinput="name shipping-zipcode" id="address-shipping-zipcode"
-					labeli18n="m.order.fo.blocks.stdaddressstep.shipping-zipcode"/>
-			</li>
-			<li>
-				<input change:textinput="name shipping-city" id="address-shipping-city"
-					labeli18n="m.order.fo.blocks.stdaddressstep.shipping-city"/>
-			</li>
-			<li>
-				<input change:textinput="name shipping-province" id="address-shipping-province"
-					labeli18n="m.order.fo.blocks.stdaddressstep.shipping-province"/>
-			</li>
-			<li>
-				<input change:selectinput="name shipping-country" listId="modules_customer/shippingcountry" id="address-shipping-country"
-					labeli18n="m.order.fo.blocks.stdaddressstep.shipping-country"/>
-			</li>
-			<li>
-				<input change:textinput="name shipping-phone" id="address-shipping-phone"
-					labeli18n="m.order.fo.blocks.stdaddressstep.shipping-phone"/>
-			</li>			
-		</ol>
-		<p class="buttons">
-			<input change:submit="name nextStep" class="button"  id="next-step"  label="${trans:m.order.standardprocess.next-step,ucf}" />
-			<input change:hiddeninput="name submited" value="${cart/getUid}"/>
-		</p>
-	</form>
+
+<div class="orderprocess address">
+    <tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-NavigationTop'; type 'html';cart cart" />	
+    <div class="main">
+		<form change:form="">
+			<ul change:errors=""></ul>
+			<fieldset>
+				<legend>${trans:m.order.standardprocess.authentication,ucf}</legend>
+				<ol tal:condition="not: cart/getUserId">
+					<li>
+						<input change:textinput="name email" id="address-email" labeli18n="m.order.fo.blocks.stdaddressstep.email" required="true"/>
+					</li>
+					<li>
+						<input change:checkboxinput="name password-generate" class="field" id="address-password-generate" value="1" labeli18n="m.order.standardprocess.address-generate-password" />
+					</li>
+					<li id="address-password-l1">
+						<input change:passwordinput="name password" id="address-password" labeli18n="m.order.fo.blocks.stdaddressstep.password" />
+					</li>
+					<li id="address-password-l2">
+						<input change:passwordinput="name password-validate" id="address-password-validate" labeli18n="m.order.fo.blocks.stdaddressstep.password-validate"/>
+					</li>
+				</ol>
+				<ol tal:condition="cart/getUserId">
+					<li>
+						<label>${trans:m.order.fo.blocks.stdaddressstep.email,ucf,lab}</label>
+						<span>${cart/getUser/getLogin}</span>
+					</li>
+				</ol>
+			</fieldset>
+			<div class="cleaner"></div>
+			<fieldset>
+				<legend>${trans:m.order.standardprocess.address-billing-address-legend,ucf}</legend>
+				<ol id="address-billing-container">
+					<li tal:condition="registeredAddressList">
+						<input change:selectinput="name billing-registered; list registeredAddressList" id="address-billing-registered" 
+							labeli18n="m.order.standardprocess.address-registered"/>
+						<input class="button" change:submit="name useRegistered" id="address-useregistered"
+							label="${trans:m.order.standardprocess.address-select,ucf,attr}" />
+					</li>											
+					<li>
+						<input change:selectinput="name billing-civility; listId modules_users/title" id="address-billing-civility"
+							labeli18n="m.order.fo.blocks.stdaddressstep.billing-civility" />
+					</li>
+					<li>
+						<input change:textinput="name billing-firstname" id="address-billing-firstname"
+							labeli18n="m.order.fo.blocks.stdaddressstep.billing-firstname" required="true" />
+					</li>
+					<li>
+						<input change:textinput="name billing-lastname" id="address-billing-lastname"
+							labeli18n="m.order.fo.blocks.stdaddressstep.billing-lastname" required="true" />
+					</li>
+					<li>
+						<input change:textinput="name billing-addressline1" id="address-billing-addressline1"
+							labeli18n="m.order.fo.blocks.stdaddressstep.billing-addressline1" required="true" />
+					</li>
+					<li>
+						<input change:textinput="name billing-addressline2" id="address-billing-addressline2"
+							labeli18n="m.order.fo.blocks.stdaddressstep.billing-addressline2" />
+					</li>
+					<li>
+						<input change:textinput="name billing-addressline3" id="address-billing-addressline3"
+							labeli18n="m.order.fo.blocks.stdaddressstep.billing-addressline3" />
+					</li>
+					<li>
+						<input change:textinput="name billing-zipcode" id="address-billing-zipcode"
+							labeli18n="m.order.fo.blocks.stdaddressstep.billing-zipcode" required="true" />
+					</li>
+					<li>
+						<input change:textinput="name billing-city" id="address-billing-city"
+							labeli18n="m.order.fo.blocks.stdaddressstep.billing-city" required="true" />
+					</li>
+					<li>
+						<input change:textinput="name billing-province" id="address-billing-province"
+							labeli18n="m.order.fo.blocks.stdaddressstep.billing-province" />
+					</li>
+					<li>
+						<input change:selectinput="name billing-country" listId="modules_customer/shippingcountry" id="address-billing-country"
+							labeli18n="m.order.fo.blocks.stdaddressstep.billing-country" required="true" />
+					</li>
+					<li>
+						<input change:textinput="name billing-phone" id="address-billing-phone"
+							labeli18n="m.order.fo.blocks.stdaddressstep.billing-phone" />
+					</li>
+				</ol>
+			</fieldset>
+			<div class="cleaner"></div>
+			<fieldset>
+				<legend>${trans:m.order.standardprocess.address-shipping-address-legend,ucf}</legend>
+				<ol>
+					<li>
+						<input change:radioinput="name shipping-usesameaddress" class="field" value="1" id="address-shipping-usesameaddress"
+							labeli18n="m.order.standardprocess.address-usesameaddress" />
+					</li>
+					<li>
+						<input change:radioinput="name shipping-usesameaddress" class="field" value="2" id="address-shipping-usesameaddress"
+							labeli18n="m.order.standardprocess.address-newaddress" />
+					</li>
+				</ol>
+				<ol id="address-shipping-container">
+					<li>
+						<input change:selectinput="name shipping-civility; listId modules_users/title" id="address-shipping-civility"
+							labeli18n="m.order.fo.blocks.stdaddressstep.shipping-civility" />
+					</li>
+					<li>
+						<input change:textinput="name shipping-firstname" id="address-shipping-firstname"
+							labeli18n="m.order.fo.blocks.stdaddressstep.shipping-firstname" />
+					</li>
+					<li>
+						<input change:textinput="name shipping-lastname" id="address-shipping-lastname"
+							labeli18n="m.order.fo.blocks.stdaddressstep.shipping-lastname" />
+					</li>
+					<li>
+						<input change:textinput="name shipping-addressline1" id="address-shipping-addressline1"
+							labeli18n="m.order.fo.blocks.stdaddressstep.shipping-addressline1" />
+					</li>
+					<li>
+						<input change:textinput="name shipping-addressline2" id="address-shipping-addressline2"
+							labeli18n="m.order.fo.blocks.stdaddressstep.shipping-addressline2" />
+					</li>
+					<li>
+						<input change:textinput="name shipping-addressline3" id="address-shipping-addressline3"
+							labeli18n="m.order.fo.blocks.stdaddressstep.shipping-addressline3" />
+					</li>
+					<li>
+						<input change:textinput="name shipping-zipcode" id="address-shipping-zipcode"
+							labeli18n="m.order.fo.blocks.stdaddressstep.shipping-zipcode" />
+					</li>
+					<li>
+						<input change:textinput="name shipping-city" id="address-shipping-city"
+							labeli18n="m.order.fo.blocks.stdaddressstep.shipping-city" />
+					</li>
+					<li>
+						<input change:textinput="name shipping-province" id="address-shipping-province"
+							labeli18n="m.order.fo.blocks.stdaddressstep.shipping-province" />
+					</li>
+					<li>
+						<input change:selectinput="name shipping-country" listId="modules_customer/shippingcountry" id="address-shipping-country"
+							labeli18n="m.order.fo.blocks.stdaddressstep.shipping-country" />
+					</li>
+					<li>
+						<input change:textinput="name shipping-phone" id="address-shipping-phone"
+							labeli18n="m.order.fo.blocks.stdaddressstep.shipping-phone" />
+					</li>			
+				</ol>
+			</fieldset>
+			<p class="buttons">
+				<input change:submit="name nextStep" id="next-step" labeli18n="m.order.standardprocess.next-step" />
+				<input change:hiddeninput="name submited" value="${cart/getUid}"/>
+			</p>
+		</form>
 	</div>	
-    <div class="resume">
-    	<div class="resume-section">
-    		<h4 change:h="">${trans:m.order.standardprocess.resume-order-title,ucf}</h4>
-    		<ol>
-    			<li>${trans:m.order.standardprocess.resume-lines-total,ucf,lab} ${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</li>
-    			<tal:block tal:condition="php:cart.getFeesTotalWithTax() GT 0">
-					<li>${trans:m.order.standardprocess.resume-fees,ucf,lab} ${php:cart.formatPrice(cart.getFeesTotalWithTax())}</li>
-    			</tal:block>
-    			<tal:block tal:condition="php:cart.getDiscountTotalWithTax() GT 0">
-					<li>${trans:m.order.standardprocess.resume-discount,ucf,lab} ${php:cart.formatPrice(-cart.getDiscountTotalWithTax())}</li>
-    			</tal:block>
-    			<tal:block tal:condition="php:cart.getTotalCreditNoteAmount() GT 0">
-					<li>${trans:m.order.standardprocess.resume-credit-note,ucf,lab} ${php:cart.formatPrice(-cart.getTotalCreditNoteAmount())}</li>
-    			</tal:block>
-    			<li class="pricetotal">${trans:m.order.standardprocess.resume-total-ttc,ucf,lab} ${php:cart.formatPrice(cart.getTotalAmount())}</li>
-    			<li><a href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify}</a></li>
-    		</ol>
+	<div class="resume">
+		<div class="normal resume-section">
+			<h2 change:h="">${trans:m.order.standardprocess.resume-order-title,ucf}</h2>
+    		<div class="column-one">
+	    		<table class="normal payment-information" border="0">	
+					<caption>${trans:m.order.standardprocess.billing-amount-title,ucf}</caption>
+					<tr>
+						<td>${trans:m.order.standardprocess.resume-lines-total,ucf,lab}</td>
+						<td>${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</td>
+					</tr>
+					<tr tal:condition="php:cart.getFeesTotalWithTax() GT 0">
+						<td>${trans:m.order.standardprocess.resume-fees,ucf,lab}</td>
+						<td>${php:cart.formatPrice(cart.getFeesTotalWithTax())}</td>
+					</tr>
+					<tr tal:condition="php:cart.getDiscountTotalWithTax() GT 0">
+						<td>${trans:m.order.standardprocess.resume-discount,ucf,lab}</td>
+						<td>${php:cart.formatPrice(-cart.getDiscountTotalWithTax())}</td>
+					</tr>
+					<tr tal:condition="php:cart.getTotalCreditNoteAmount() GT 0">
+						<td>${trans:m.order.standardprocess.resume-credit-note,ucf,lab}</td>
+						<td>${php:cart.formatPrice(-cart.getTotalCreditNoteAmount())}</td>
+					</tr>
+					<tr>
+						<td class="pricetotal">${trans:m.order.standardprocess.resume-total-ttc,ucf,lab}</td>
+						<td class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</td>
+					</tr>
+				</table>
+				<p><a class="link" href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify}</a></p>
+			</div>
+			<div class="cleaner"></div>
     	</div>
-    </div>
+	</div>
 </div>

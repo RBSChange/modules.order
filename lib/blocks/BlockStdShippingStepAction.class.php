@@ -247,7 +247,7 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 			$result[] = $address->Zipcode . ' ' . $address->City;
 			if ($address->Province) {$result[] = $address->Province;};
 			if ($address->CountryId) {$result[] = DocumentHelper::getDocumentInstance($address->CountryId)->getLabel();};
-			return implode("<br />\n", $result);
+			return $result;
 		}
 		return null;
 	}
