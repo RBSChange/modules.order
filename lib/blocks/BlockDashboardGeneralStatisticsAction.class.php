@@ -3,8 +3,8 @@
  * order_BlockDashboardGeneralStatisticsAction
  * @package modules.order.lib.blocks
  */
-class order_BlockDashboardGeneralStatisticsAction extends dashboard_BlockDashboardAction 
-{	
+class order_BlockDashboardGeneralStatisticsAction extends dashboard_BlockDashboardAction
+{
 	/**
 	 * @see dashboard_BlockDashboardAction::setRequestContent()
 	 *
@@ -28,7 +28,7 @@ class order_BlockDashboardGeneralStatisticsAction extends dashboard_BlockDashboa
 			$shop = f_util_ArrayUtils::firstElement($shops);
 		}
 		if ($forEdition || !$shop) {return;}
-		
+
 		$shopId = $shop->getId();
 		if (!$this->getConfiguration()->getUsecharts())
 		{
@@ -44,27 +44,27 @@ class order_BlockDashboardGeneralStatisticsAction extends dashboard_BlockDashboa
 			foreach (explode(',', $this->getConfiguration()->getColumns()) as $columnName)
 			{
 				$columns[$columnName] = true;
-			}			
+			}
 			$request->setAttribute('columnsArray', $columns);
 			$request->setAttribute('widget', $widget);
 		}
 		else
 		{
-			$charts = array();			
+			$charts = array();
 			foreach (explode(',', $this->getConfiguration()->getColumns()) as $columnName)
 			{
 				$producer = new order_ShopBasicStatisticsProducer();
 				$chart = new f_chart_BarChart($producer->getDataTable(array('shopId' => $shopId, 'mode' => $columnName)));
 				$chart->setGrid(new f_chart_Grid(0, 20));
 				$charts[] = array('chart' => $chart, 'title' => f_Locale::translateUI("&modules.order.bo.blocks.dashboardgeneralstatistics.Column-$columnName;"));
-			}			
+			}
 			$request->setAttribute('charts', $charts);
 		}
 		$request->setAttribute('columns', $this->getConfiguration()->getColumns());
 		$request->setAttribute('shops', $shops);
 		$request->setAttribute('shopId', $shopId);
 	}
-	
+
 	/**
 	 * @param date_Calendar $fromDate
 	 * @param date_Calendar $toDate
@@ -73,7 +73,13 @@ class order_BlockDashboardGeneralStatisticsAction extends dashboard_BlockDashboa
 	{
 		$fromDate = date_Calendar::now()->sub(date_Calendar::MONTH, $monthCount);
 		$fromDate->setDay(1);
+		$fromDate->setSecond(0);
+		$fromDate->setMinute(0);
+		$fromDate->setHour(0);
 		$toDate = date_Calendar::now()->sub(date_Calendar::MONTH, $monthCount);
 		$toDate->setDay($toDate->getDaysInMonth());
+		$toDate->setSecond(59);
+		$toDate->setMinute(59);
+		$toDate->setHour(23);
 	}
 }
