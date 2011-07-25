@@ -6,7 +6,7 @@
 /**
  * @package order.lib.phptal
  */
-class PHPTAL_Php_Attribute_CHANGE_addtocartbutton extends ChangeTalAttribute 
+class PHPTAL_Php_Attribute_CHANGE_Addtocartbutton extends ChangeTalAttribute 
 {
 	
 	protected function evaluateAll()

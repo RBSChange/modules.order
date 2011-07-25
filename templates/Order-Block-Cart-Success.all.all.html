@@ -49,7 +49,7 @@
 					</td>
 	
 					<!-- Désignation / Article -->
-					<td>${cartLine/getDiscountDetail}<br />${product/getOrderLabelAsHtml}</td>
+					<td>${cartLine/getDiscountDetail}<br />${structure product/getOrderLabelAsHtml}</td>
 	
 					<!-- Disponibilite -->
 					<td>${product/getAvailability}</td>
@@ -76,9 +76,9 @@
 					</td>
 	
 					<!-- Désignation / Article -->
-					<td tal:condition="readonly">${product/getOrderLabelAsHtml}</td>
+					<td tal:condition="readonly">${structure product/getOrderLabelAsHtml}</td>
 					<td tal:condition="not: readonly">
-						${product/getOrderLabelAsHtml} <input type="hidden" tal:define="name string:orderParam[lines][${cartLineIndex}][productId]" tal:attributes="name name; value product/getId" />
+						${structure product/getOrderLabelAsHtml} <input type="hidden" tal:define="name string:orderParam[lines][${cartLineIndex}][productId]" tal:attributes="name name; value product/getId" />
 					</td>
 	
 					<!-- Disponibilite -->
@@ -101,7 +101,7 @@
 					<!-- Remove link -->
 					<td class="sale">
 						<a tal:condition="not: readonly" change:link="module order; action RemoveCartLine; cartLineIndex cartLineIndex; pageref pageref">
-							<img change:image="front/cross.gif" alt="${trans:m.order.frontoffice.delete-link,ucf,attr}" />
+							<img change:img="front/cross.gif" alt="${trans:m.order.frontoffice.delete-link,ucf,attr}" />
 						</a>
 						<tal:block tal:condition="readonly">&nbsp;</tal:block>
 					</td>
@@ -151,7 +151,7 @@
 		<!-- Total -->
 		<tal:block tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
 			<tr>
-				<td class="pricetotal" change:translate="modules.order.frontoffice.Total-withtax-withoutfees-abrLabel" />
+				<td class="pricetotal">${trans:m.order.frontoffice.total-withtax-withoutfees-abr,ucf,attr}</td>
 				<td class="pricetotal">${cart/getFormattedTotalExcludingFeesWithTax}</td>
 			</tr>
 		</tal:block>	
@@ -218,7 +218,6 @@
 		
 		<tal:block tal:condition="configuration/getShowEvaluateShipping">
 			<form change:form="beanClass order_ShippingStepBean; beanName addressInfo" id="evaluateshippingform">
-				<ul change:errors=""></ul>
 				<h2 change:h="">${trans:m.order.document.shippingstepbean.evaluateShipping,ucf}</h2>
 				<p class="normal">${trans:m.order.document.shippingstepbean.evaluateShipping-text,ucf}</p>
 				<ol>
