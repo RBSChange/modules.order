@@ -408,14 +408,13 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 			'creditNoteLabel' => $creditNote->getLabelAsHtml(),
 			'creditNoteAmountNotApplied' => $creditNote->getAmountNotAppliedFormated()
 		);
-		$format = date_DateFormat::getDateTimeFormat();
 		if ($creditNote->getAmountNotApplied() > 0.1)
 		{
-			$params['creditNoteEndDate'] = date_DateFormat::format($creditNote->getUIEndpublicationdate(), $format);
+			$params['creditNoteEndDate'] = date_Formatter::toDefaultDateTime($creditNote->getUIEndpublicationdate());
 		}
 		if ($creditNote->getTransactionDate())
 		{
-			$params['creditNoteTransactionDate'] = date_DateFormat::format($creditNote->getUITransactionDate(), $format);
+			$params['creditNoteTransactionDate'] = date_Formatter::toDefaultDateTime($creditNote->getUITransactionDate());
 			$params['creditNoteTransactionText'] = $creditNote->getTransactionTextAsHtml();
 		}
 		return $params;

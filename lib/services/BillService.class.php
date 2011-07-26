@@ -169,9 +169,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 			}			
 		}
 		$data["discounts"] = $discounts;
-		$lang = RequestContext::getInstance()->getLang();
-		$data['creationdate'] = date_DateFormat::format($bill->getUICreationdate(), date_DateFormat::getDateFormatForLang($lang));
-		$data['creationdatetime'] = date_DateFormat::format($bill->getUICreationdate(), date_DateFormat::getDateTimeFormatForLang($lang));
+		$data['creationdate'] = date_Formatter::toDefaultDate($bill->getUICreationdate());
+		$data['creationdatetime'] = date_Formatter::toDefaultDate($bill->getUICreationdate());
 		$data['customerCode'] = $customer->getCode(); 
 		
 		$odt2pdf = new Odtphp2PDFClient(Framework::getConfigurationValue("modules/order/odtphp2pdfURL"));
@@ -661,8 +660,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 		
 		if ($document->getTransactionDate())
 		{
-			$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
-			$dateTimeFormatted = date_DateFormat::format($document->getUITransactionDate(), $dateTimeFormat);
+			$dateTimeFormatted = date_Formatter::toDefaultDateTimeBO($document->getUITransactionDate());
 			
 			$data['transaction']['transactionDate'] = $dateTimeFormatted;
 			// This one is deprecated

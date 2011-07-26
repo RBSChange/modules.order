@@ -72,8 +72,7 @@ class order_MessageService extends f_persistentdocument_DocumentService
 	 */
 	public function getInfosByOrder($order, $includeDetails = false)
 	{
-		$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
-		
+		$ls = LocaleService::getInstance();
 		$infos = array('fromCustomerCount' => 0, 'toCustomerCount' => 0);
 		$messages = $this->getByOrder($order);
 		$infos['totalCount'] = strval(count($messages));
@@ -86,21 +85,21 @@ class order_MessageService extends f_persistentdocument_DocumentService
 			if ($includeDetails)
 			{
 				$messageInfo = array();
-				$messageInfo['date'] = date_DateFormat::format($message->getUICreationdate(), $dateTimeFormat);
+				$messageInfo['date'] = date_Formatter::toDefaultDateTimeBO($message->getUICreationdate());
 				$messageInfo['content'] = $message->getContentAsHtml();
 				if ($message->isSentByCustomer())
 				{
 					$infos['fromCustomerCount']++;
 					$messageInfo['messageType'] = 'fromCustomer';
 					$messageInfo['senderFullName'] = '';
-					$messageInfo['label'] = f_Locale::translateUI('&modules.order.bo.general.Message-sent-by-customer;');
+					$messageInfo['label'] = $ls->transBO('m.order.bo.general.message-sent-by-customer', array('ucf'));
 				}
 				else 
 				{
 					$infos['toCustomerCount']++;
 					$messageInfo['messageType'] = 'toCustomer';
 					$messageInfo['senderFullName'] = $message->getSender()->getFullname();
-					$messageInfo['label'] = f_Locale::translateUI('&modules.order.bo.general.Message-sent-to-customer;', array('sender' => $messageInfo['senderFullName']));
+					$messageInfo['label'] = $ls->transBO('m.order.bo.general.message-sent-to-customer', array('ucf'), array('sender' => $messageInfo['senderFullName']));
 				}
 				$infos['messages'][] = $messageInfo;
 			}

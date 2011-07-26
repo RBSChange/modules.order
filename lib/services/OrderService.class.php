@@ -130,8 +130,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				
 		$informations['canBeCanceled'] = $order->canBeCanceled();
 		$informations['reference'] = $order->getOrderNumber();
-		$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
-		$informations['creationdate'] = date_DateFormat::format($order->getUICreationdate(), $dateTimeFormat);
+		$informations['creationdate'] = date_Formatter::toDefaultDateTimeBO($order->getUICreationdate());
 		
 		try 
 		{
@@ -218,8 +217,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$customer = $order->getCustomer();
 		
-		$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
-
 		$result = array();
 		$result['packageTrackingNumber'] = $order->getPackageTrackingNumber();
 
@@ -256,7 +253,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$informations['website'] = $customer->getWebsite()->getLabel();
 		}
 		$informations['reference'] = $order->getOrderNumber();
-		$informations['creationdate'] = date_DateFormat::format($order->getUICreationdate(), $dateTimeFormat);
+		$informations['creationdate'] = date_Formatter::toDefaultDateTimeBO($order->getUICreationdate());
 		$informations['shippingMode'] = $order->getShippingMode();
 
 		$informations['subTotal'] =  $order->formatPrice($order->getLinesAmountWithTax());
@@ -327,7 +324,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$product = $line->getProduct();
 		if ($product === null)
 		{
-			$lineInfo['productLabel'] = f_Locale::translateUI('&module.customer.bo.doceditor.panel.carts.Unexisting-product;');
+			$lineInfo['productLabel'] = LocaleService::getInstance()->transBO('m.customer.bo.doceditor.panel.carts.unexisting-product', array('ucf'));
 		}
 		else
 		{
@@ -484,7 +481,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		{
 			$defaultAddress = customer_AddressService::getNewDocumentInstance();
 			$cartInfo->getAddressInfo()->exportShippingAddress($defaultAddress);
-			$defaultAddress->setLabel(f_Locale::translate('&modules.customer.frontoffice.Primary-address;'));
+			$defaultAddress->setLabel(LocaleService::getInstance()->transFO('m.customer.frontoffice.primary-address', array('ucf')));
 			$customer->addAddress($defaultAddress);
 			$customer->save();
 		}
@@ -700,13 +697,14 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$orderAmountWithTax = $shop->formatPrice($order->getTotalAmountWithTax());
 		$orderAmountWithoutTax = $shop->formatPrice($order->getTotalAmountWithoutTax());
 		
+		$ls = LocaleService::getInstance();
 		if ($shop->getDisplayPriceWithTax() || !$shop->getDisplayPriceWithoutTax())
 		{
-			$orderAmount = $orderAmountWithTax." ".f_Locale::translate("&modules.catalog.frontoffice.ttc;");	
+			$orderAmount = $orderAmountWithTax." ".$ls->transFO("m.catalog.frontoffice.ttc");	
 		}
 		elseif ($shop->getDisplayPriceWithoutTax())
 		{
-			$orderAmount = $orderAmountWithoutTax." ".f_Locale::translate("&modules.catalog.frontoffice.ht;");
+			$orderAmount = $orderAmountWithoutTax." ".$ls->transFO("m.catalog.frontoffice.ht");
 		}
 		
 		$shippingFeesWithTax = $shop->formatPrice($order->getShippingFeesWithTax());
@@ -737,7 +735,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			'shippingMode' => $order->getShippingMode(), 
 			'shippingFeesWithTax' => $shippingFeesWithTax, 
 			'shippingFeesWithoutTax' => $shippingFeesWithoutTax, 
-			'date' => date_DateFormat::format($order->getOrderDate(), f_Locale::translate('&framework.date.date.localized-user-time-format;'))
+			'date' => date_Formatter::toDefaultDateTime($order->getUICreationdate())
 		);
 	}
 
@@ -1083,9 +1081,9 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	protected function execSendMessage($order, $content, $sender)
 	{
-		$date = date_DateFormat::format(date_Calendar::getInstance(), 'd/m/Y');
+		$date = date_Formatter::toDefaultDate(date_Calendar::getUIInstance());
 		$message = order_MessageService::getInstance()->getNewDocumentInstance();
-		$message->setLabel(f_Locale::translate('&modules.order.mail.Message-label;', array('orderId' => $order->getId(), 'date' => $date)));
+		$message->setLabel(LocaleService::getInstance()->transFO('m.order.mail.message-label', array('ucf'), array('orderId' => $order->getId(), 'date' => $date)));
 		$message->setSender($sender);
 		$message->setContent($content);
 		$message->setOrder($order);
@@ -1320,7 +1318,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$data['financial']['usedCreditNote'] = ($usedCreditNote) ? $document->formatPrice($usedCreditNote) : null;
 			$data['financial']['totalAmount'] = $document->formatPrice($document->getTotalAmountWithTax());			
 			$obs = order_BillService::getInstance();
-			$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
 			$bills = $obs->getByOrder($document);
 			if (count($bills))
 			{
@@ -1334,7 +1331,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$data['financial']['paymentStatus'] = $bill->getBoStatusLabel();
 				if ($bill->getTransactionDate())
 				{
-					$data['financial']['paymentStatus'] .= ' '	. date_DateFormat::format($bill->getUITransactionDate(), $dateTimeFormat);
+					$data['financial']['paymentStatus'] .= ' '	. date_Formatter::toDefaultDateTimeBO($bill->getUITransactionDate());
 				}
 			}
 			
@@ -1345,13 +1342,13 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$data['shipping']['shippingStatus'] = $expedition->getBoStatusLabel();
 				if ($expedition->getShippingDate())
 				{
-					$data['shipping']['shippingStatus'] .= ' ' . date_DateFormat::format($expedition->getUIShippingDate(), $dateTimeFormat);
+					$data['shipping']['shippingStatus'] .= ' ' . date_Formatter::toDefaultDateTimeBO($expedition->getUIShippingDate());
 				}
 			}
 			
 			// Messages.
 			$data['messages'] = order_MessageService::getInstance()->getInfosByOrder($document);
-			$data['messages']['needsAnswer'] = f_Locale::translateUI('&modules.uixul.bo.general.' . ($document->getNeedsAnswer() ? 'Yes' : 'No') . ';');
+			$data['messages']['needsAnswer'] = LocaleService::getInstance()->transBO('m.uixul.bo.general.' . ($document->getNeedsAnswer() ? 'yes' : 'no'), array('ucf'));
 			
 			$rc->endI18nWork();
 		}
@@ -1395,8 +1392,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$totalAmount = $this->findProjectedTotal($shop, $fromDate, $toDate, Projections::sum('totalAmountWithTax', 'projection'));
 		return array(
-			'monthLabel' => ucfirst(date_DateFormat::format($fromDate, 'F Y')),
-			'monthShortLabel' => date_DateFormat::format($fromDate, 'm/Y'),
+			'monthLabel' => ucfirst(date_Formatter::format($fromDate, 'F Y')),
+			'monthShortLabel' => date_Formatter::format($fromDate, 'm/Y'),
 			'totalCount' => $this->findProjectedTotal($shop, $fromDate, $toDate, Projections::rowCount('projection')),
 			'totalAmount' => catalog_PriceHelper::roundPrice($totalAmount),
 			'totalAmountFormatted' => $shop->formatPrice($totalAmount),
@@ -1415,11 +1412,11 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	private function findProjectedTotal($shop, $fromDate, $toDate, $projection, $orderStatues = null)
 	{
-		$dbFormat = 'Y-m-d H:i:s';
+		$dbFormat = date_Formatter::SQL_DATE_FORMAT;
 		$query = $this->createQuery()->add(Restrictions::between(
 			'creationdate',
-			date_DateFormat::format($fromDate, $dbFormat),
-			date_DateFormat::format($toDate, $dbFormat)
+			date_Formatter::format($fromDate, $dbFormat),
+			date_Formatter::format($toDate, $dbFormat)
 		));
 		$query->add(Restrictions::eq('shopId', $shop->getId()));
 		if ($orderStatues === null)

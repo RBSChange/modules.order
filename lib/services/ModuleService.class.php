@@ -109,9 +109,8 @@ class order_ModuleService extends ModuleBaseService
 			{
 				return $pref->getOrderProcessClosedMessage();
 			}
-			$lang = RequestContext::getInstance()->getLang();
 			$message = $pref->getOrderProcessClosedDateMessage();
-			return str_replace(array('{beginDate}', '{endDate}'), array(date_DateFormat::format(date_Calendar::getInstance($pref->getOrderProcessClosedBeginDate()), date_DateFormat::getDateFormatForLang($lang)), date_DateFormat::format(date_Calendar::getInstance($pref->getOrderProcessClosedEndDate()), date_DateFormat::getDateFormatForLang($lang))), $message);
+			return str_replace(array('{beginDate}', '{endDate}'), array(date_Formatter::toDefaultDate($pref->getUIOrderProcessClosedBeginDate()), date_Formatter::toDefaultDate($pref->getUIOrderProcessClosedEndDate())), $message);
 		}
 		return null;
 	}
@@ -125,9 +124,7 @@ class order_ModuleService extends ModuleBaseService
 	{
 		return customer_CustomerService::getInstance()->getCurrentCustomer();
 	}	
-	
-
-	
+		
 	/**
 	 * @return Boolean
 	 */
