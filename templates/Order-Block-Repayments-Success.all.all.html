@@ -13,7 +13,7 @@
 		<tbody>
 			<tr tal:repeat="repayment repayments" class="row-${repeat/repayment/odd}">	
 				<td>${repayment/getLabelAsHtml}</td>
-				<td><tal:block change:datetime="repayment/getTransactionDate" /></td>
+				<td>${datetime:repayment/getUITransactionDate}</td>
 				<td class="pricettc">${repayment/getAmountFormated}</td>
 				<td><a change:link="document repayment/getOrder">${repayment/getOrderNumber}</a></td>
 			</tr>

@@ -1,12 +1,12 @@
 <!-- Désignation / référence -->
 <td tal:define="product line/getProduct">
-	${line/getLabelAsHtml}
+	${structure line/getLabelAsHtml}
 	<br/>
 	${line/getCodeReference}
 	<tal:block tal:condition="not:ignoreComments">
 		<tal:block tal:condition="line/showCommentLink">
 			<br/>
-			<a tal:condition="product" change:link="document product; anchor 'catalog_comments_comment-form'" change:translate="modules.catalog.frontoffice.Comment-this-product"></a>
+			<a tal:condition="product" change:link="document product; anchor 'catalog_comments_comment-form'" tal:content="trans:m.catalog.frontoffice.comment-this-product,ucf"></a>
 		</tal:block>
 	</tal:block>
 </td>

@@ -5,7 +5,7 @@
 		<a change:link="tag ctx_order_order; orderParam[cmpref] order/getId">${trans:m.customer.frontoffice.back-to-order,ucf}</a>
 	</li>
 </ul>
-<h3 change:h="">${trans:m.customer.frontoffice.write-messages-for-order,ucf,orderId=order/getOrderNumber} <tal:block change:datetime="order/getCreationdate;format null" /></h3>
+<h3 change:h="">${trans:m.customer.frontoffice.write-messages-for-order,ucf,orderId=order/getOrderNumber} ${datetime:order/getUICreationdate}</h3>
 
 <div class="messages-form">
 	<ul change:messages=""></ul>
@@ -27,17 +27,17 @@
 	</form>
 </div>
 <br />
-<h3 change:h="">${trans:m.customer.frontoffice.messages-for-order,ucf,orderId=order/getOrderNumber} <tal:block change:datetime="order/getCreationdate; format null" /></h3>
+<h3 change:h="">${trans:m.customer.frontoffice.messages-for-order,ucf,orderId=order/getOrderNumber} ${datetime:order/getUICreationdate}</h3>
 
 <ul tal:condition="messages" class="messagecustomer">
 	<tal:block tal:repeat="message messages">
 		<li class="fromcustomer" tal:condition="message/isSentByCustomer">
-			<p><strong>${trans:m.customer.frontoffice.message-sent-by-customer,ucf,companyName=companyName} <tal:block change:datetime="message/getCreationdate; format null" /></strong></p>
-			<blockquote>${message/getContentAsHtml}</blockquote>
+			<p><strong>${trans:m.customer.frontoffice.message-sent-by-customer,ucf,companyName=companyName} ${datetime:message/getUICreationdate}</strong></p>
+			<blockquote>${structure message/getContentAsHtml}</blockquote>
 		</li>
 		<li class="tocustomer" tal:condition="not: message/isSentByCustomer">
-			<p><strong>${trans:m.customer.frontoffice.message-sent-by-company,ucf,companyName=companyName} <tal:block change:datetime="message/getCreationdate; format null" /></strong></p>
-			<blockquote>${message/getContentAsHtml}</blockquote>
+			<p><strong>${trans:m.customer.frontoffice.message-sent-by-company,ucf,companyName=companyName} ${datetime:message/getUICreationdate}</strong></p>
+			<blockquote>${structure message/getContentAsHtml}</blockquote>
 		</li>	
 	</tal:block>
 </ul>

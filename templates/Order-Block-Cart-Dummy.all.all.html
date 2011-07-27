@@ -1,7 +1,7 @@
-<h2 change:h="" change:translate="modules.order.frontoffice.Cart-empty"></h2>
-<p change:translate="modules.order.frontoffice.Cart-empty-info1"></p>
+<h2 change:h="" tal:content="trans:m.order.frontoffice.cart-empty,ucf"></h2>
+<p tal:content="trans:m.order.frontoffice.cart-empty-info1,ucf"></p>
 <p>
-	<tal:block change:translate="modules.order.frontoffice.Cart-empty-info21" />
- 	<a tal:condition="shop" change:link="document shop"	change:i18nattr="title &modules.order.frontoffice.hrefCatalogTitle;"
- 		change:translate="modules.order.frontoffice.cart-empty-info22"></a>.
+	<tal:block tal:content="trans:m.order.frontoffice.cart-empty-info21,ucf" />
+ 	<a tal:condition="shop" change:link="document shop"	title="${trans:m.order.frontoffice.hrefcatalogtitle,attr}"
+ 		tal:content="trans:m.order.frontoffice.cart-empty-info22"></a>.
 </p>

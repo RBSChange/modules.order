@@ -87,7 +87,7 @@
 							type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
 						<input tal:condition="php:!billingStep.selected(connectorFilter.getId(), repeat.connectorFilter.start)" id="mode_${connectorFilter/getId}" 
 							type="radio" name="orderParam[paymentFilterId]" value="${connectorFilter/getId}" />
-						<label class="nocmx" for="mode_${connectorFilter/getId}">${connectorFilter/getConnector/getSelectionAsHtml}</label>
+						<label class="nocmx" for="mode_${connectorFilter/getId}">${structure connectorFilter/getConnector/getSelectionAsHtml}</label>
 					</li>
 				</ol>
 			</tal:block>			

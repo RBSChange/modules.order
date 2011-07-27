@@ -78,7 +78,7 @@
 			
 			<!-- Coupon -->
 			<tr tal:condition="order/getCouponId" tal:define="coupon order/getCouponData">
-				<td change:translate="modules.order.frontoffice.Coupon-nameLabel"></td>
+				<td tal:content="trans:m.order.frontoffice.coupon-name,ucf,lab"></td>
 				<td>${coupon/code}</td>
 			</tr>
 			

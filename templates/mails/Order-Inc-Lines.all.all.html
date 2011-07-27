@@ -38,20 +38,20 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr align="left">
 	<td style="padding-left: 18px; padding-bottom: 10px;">
-		<span style="font-weight: bold;" change:translate="modules.order.bo.general.Total-to-payLabel"></span> 
+		<span style="font-weight: bold;" tal:content="trans:m.order.bo.general.total-to-pay,ucf,lab"></span> 
 		${orderAmount}<br />
-		<span style="font-weight: bold;" change:translate="modules.order.frontoffice.Shipping-modeLabel"></span>
+		<span style="font-weight: bold;" tal:content="trans:m.order.frontoffice.shipping-mode,ucf,lab"></span>
 		${shippingMode}<br />
-		<span style="font-weight: bold;" change:translate="modules.order.frontoffice.Shipping-feesLabel"></span>
+		<span style="font-weight: bold;" tal:content="trans:m.order.frontoffice.shipping-fees,ucf,lab"></span>
 		${shippingFeesWithTax}
 	</td>
   </tr>
   <tr align="left">
 	<td style="padding-left: 18px; font-weight: bold; width: 50%;">
-		<span change:translate="modules.order.frontoffice.BillingaddressLabel"></span>
+		<span tal:content="trans:m.order.frontoffice.billingaddress,ucf,lab"></span>
 	</td>
 	<td style="padding-left: 18px; font-weight: bold; width: 50%;">
-		<span change:translate="modules.order.frontoffice.ShippingaddressLabel"></span>
+		<span tal:content="trans:m.order.frontoffice.shippingaddress,ucf,lab"></span>
 	</td>
   </tr>
   <tr align="left">
@@ -65,10 +65,10 @@
 		${address/getCountry/getLabelAsHtml}<br />
 		<tal:block tal:condition="address/getEmail">${address/getEmailAsHtml}<br /></tal:block>
 		<tal:block tal:condition="address/getPhone">
-			<span change:translate="modules.order.frontoffice.PhoneLabel"></span> ${address/getPhoneAsHtml}<br />
+			<span tal:content="trans:m.order.frontoffice.phone,ucf,lab"></span> ${address/getPhoneAsHtml}<br />
 		</tal:block>
 		<tal:block tal:condition="address/getFax">
-			<span change:translate="modules.order.frontoffice.FaxLabel"></span> ${address/getFaxAsHtml}<br />
+			<span tal:content="trans:m.order.frontoffice.fax,ucf,lab"></span> ${address/getFaxAsHtml}<br />
 		</tal:block>
 	</td>
 	<td style="padding-left: 30px; width: 50%;" tal:define="address order/getShippingAddress">
@@ -81,10 +81,10 @@
 		${address/getCountry/getLabelAsHtml}<br />
 		<tal:block tal:condition="address/getEmail">${address/getEmailAsHtml}<br /></tal:block>
 		<tal:block tal:condition="address/getPhone">
-			<span change:translate="modules.order.frontoffice.PhoneLabel"></span> ${address/getPhoneAsHtml}<br />
+			<span tal:content="trans:m.order.frontoffice.phone,ucf,lab"></span> ${address/getPhoneAsHtml}<br />
 		</tal:block>
 		<tal:block tal:condition="address/getFax">
-			<span change:translate="modules.order.frontoffice.FaxLabel"></span> ${address/getFaxAsHtml}<br />
+			<span tal:content="trans:m.order.frontoffice.fax,ucf,lab"></span> ${address/getFaxAsHtml}<br />
 		</tal:block>
 	</td>
   </tr>

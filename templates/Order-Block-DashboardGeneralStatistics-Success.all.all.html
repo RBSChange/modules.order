@@ -1,11 +1,11 @@
 <div class="dashboard-widget" tal:omit-tag="refresh" refreshURL="${refreshURL}" title="${title}" icon="${icon}">
 	<tal:block tal:condition="forEdition">
 		<div class="title-bar" ><img src="${icon}" /> ${title}</div>
-		<div class="content-block"><div class="content" change:translate="&modules.dashboard.dashboard.DummyContent;">...</div></div>
+		<div class="content-block"><div class="content" tal:content="trans:m.dashboard.dashboard.dummycontent,ucf">...</div></div>
 	</tal:block>
 
 	<tal:block tal:condition="not:forEdition">
-		<p><strong change:translate="modules.order.bo.blocks.dashboardgeneralstatistics.Statistics-for-shop"></strong> 
+		<p><strong tal:content="trans:m.order.bo.blocks.dashboardgeneralstatistics.statistics-for-shop,ucf"></strong> 
 		<select onchange="var widget = Dashboard.getWidgetByNode(this); widget.parameters['orderParam[shopId]'] = this.options[this.selectedIndex].value; widget.refresh();">
 			<tal:block tal:repeat="shop shops">
 				<option tal:condition="php: shopId == shop.getId()" selected="selected" value="${shop/getId}">${shop/getLabel}</option>
@@ -17,9 +17,9 @@
 			<thead>
 				<tr>
 					<th />
-					<th tal:condition="columnsArray/orders" change:translate="&modules.order.bo.blocks.dashboardgeneralstatistics.Column-orders;" />
-					<th tal:condition="columnsArray/amount" change:translate="&modules.order.bo.blocks.dashboardgeneralstatistics.Column-amount;" />
-					<th tal:condition="columnsArray/toDeliver" change:translate="&modules.order.bo.blocks.dashboardgeneralstatistics.Column-toDeliver;" />
+					<th tal:condition="columnsArray/orders" tal:content="trans:m.order.bo.blocks.dashboardgeneralstatistics.column-orders,ucf" />
+					<th tal:condition="columnsArray/amount" tal:content="trans:m.order.bo.blocks.dashboardgeneralstatistics.column-amount,ucf" />
+					<th tal:condition="columnsArray/toDeliver" tal:content="trans:m.order.bo.blocks.dashboardgeneralstatistics.column-todeliver,ucf" />
 				</tr>
 			</thead>
 			<tbody>

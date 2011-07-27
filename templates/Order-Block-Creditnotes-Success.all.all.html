@@ -1,21 +1,21 @@
-<h2 change:h="" change:translate="modules.order.frontoffice.Creditnotes-title"></h2>
+<h2 change:h="" tal:content="trans:m.order.frontoffice.creditnotes-title,ucf"></h2>
 
-<p tal:condition="not: creditnotes" change:translate="modules.order.frontoffice.Creditnotes-empty" />
+<p tal:condition="not: creditnotes" tal:content="trans:m.order.frontoffice.creditnotes-empty,ucf" />
 <div tal:condition="creditnotes">
 	<table border="0" class="normal" >
 		<thead>
 			<tr>
-				<th change:translate="modules.order.frontoffice.Creditnotes-creditnote" />
-				<th change:translate="modules.order.frontoffice.Creditnotes-date" />
-				<th change:translate="modules.order.frontoffice.Creditnotes-total-amount" />
-				<th change:translate="modules.order.frontoffice.Creditnotes-amount-not-applied" />
-				<th change:translate="modules.order.frontoffice.Creditnotes-order" />
+				<th tal:content="trans:m.order.frontoffice.creditnotes-creditnote,ucf" />
+				<th tal:content="trans:m.order.frontoffice.creditnotes-date,ucf" />
+				<th tal:content="trans:m.order.frontoffice.creditnotes-total-amount,ucf" />
+				<th tal:content="trans:m.order.frontoffice.creditnotes-amount-not-applied,ucf" />
+				<th tal:content="trans:m.order.frontoffice.creditnotes-order,ucf" />
 			</tr>
 		</thead>
 		<tbody>
 			<tr tal:repeat="creditnote creditnotes" class="row-${repeat/creditnote/odd}">	
 				<td>${creditnote/getLabelAsHtml}</td>	
-				<td><tal:block change:datetime="creditnote/getOrder/getCreationdate" /></td>
+				<td>${datetime:creditnote/getOrder/getUICreationdate}</td>
 				<td class="pricettc">${creditnote/getAmountFormated}</td>								
 				<td class="pricettc">${creditnote/getAmountNotAppliedFormated}</td>							
 				<td><a change:link="document creditnote/getOrder">${creditnote/getOrderNumber}</a></td>								

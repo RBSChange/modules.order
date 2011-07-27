@@ -116,7 +116,7 @@
 		</tr>
 		
 		<tr>
-			<td class="pricetotal" change:translate="modules.order.frontoffice.Total-withouttax-abrLabel" />
+			<td class="pricetotal" tal:content="trans:m.order.frontoffice.total-withouttax-abr,ucf,lab" />
 			<td class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithoutTax())}</td>
 		</tr>
 		
