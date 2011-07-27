@@ -20,30 +20,7 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	{
 		return LocaleService::getInstance()->transBO('m.order.frontoffice.status.bill.' . $this->getStatus(), array('ucf', 'html'));
 	}
-	
-	/**
-	 * @deprecated 
-	 * @return string
-	 */
-	public function getArchiveBoURL()
-	{
-		if (!$this->getDocumentService()->generateBillIsActive())
-		{
-			return "-2";
-		}
-		if ($this->getStatus() != order_BillService::SUCCESS)
-		{
-			return "-1";
-		}
-		if ($this->getArchive() !== null)
-		{
-			$actionUrl = LinkHelper::getUIActionLink("media", "BoDisplay");
-			$actionUrl->setQueryParameter('cmpref', $this->getArchive()->getId());
-			return $actionUrl->getUrl();
-		}
-		return "";
-	}
-	
+		
 	/**
 	 * @param double $value
 	 * @return string
@@ -277,5 +254,30 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	function setClientIp($ip)
 	{
 		return $this->setMeta('clientip', $ip);
+	}
+	
+	// Deprecated
+	
+	/**
+	 * @deprecated 
+	 * @return string
+	 */
+	public function getArchiveBoURL()
+	{
+		if (!$this->getDocumentService()->generateBillIsActive())
+		{
+			return "-2";
+		}
+		if ($this->getStatus() != order_BillService::SUCCESS)
+		{
+			return "-1";
+		}
+		if ($this->getArchive() !== null)
+		{
+			$actionUrl = LinkHelper::getUIActionLink("media", "BoDisplay");
+			$actionUrl->setQueryParameter('cmpref', $this->getArchive()->getId());
+			return $actionUrl->getUrl();
+		}
+		return "";
 	}
 }

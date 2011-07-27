@@ -690,14 +690,4 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$data['links']['order'] = $order->getOrderNumber();
 		return $data;
 	}
-	
-	// DEPRECATED.
-	
-	/**
-	 * @deprecated
-	 */
-	public function udatePaymentStatus($bill, $newStatus)
-	{
-		$this->updatePaymentStatus($bill, $newStatus);
-	}
 }

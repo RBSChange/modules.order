@@ -53,14 +53,6 @@ class order_SmartfolderService extends filter_QueryfolderService
 	}
 	
 	/**
-	 * @deprecated (will be removed in 4.0) use getVirtualChildrenAt
-	 */
-	public function getOrders($folder)
-	{
-		return f_persistentdocument_DocumentFilterService::getInstance()->getQueryIntersectionFromJson($folder->getQuery())->find();
-	}
-	
-	/**
 	 * @param filter_persistentdocument_queryfolder $document
 	 * @param string[] $subModelNames
 	 * @param integer $locateDocumentId null if use startindex

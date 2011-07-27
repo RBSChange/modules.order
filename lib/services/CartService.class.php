@@ -967,19 +967,4 @@ class order_CartService extends BaseService
 		
 		$this->refresh($sessionCart);
 	}
-	
-	// Deprecated
-	
-	/**
-	 * @deprecated (will be removed in 4.0) use addProductToCart
-	 */
-	public function addProduct($product, $quantity, $properties = array())
-	{
-		$cart = $this->getDocumentInstanceFromSession();
-		if (!$this->addProductToCart($cart, $product, $quantity))
-		{
-			throw new order_Exception('Unable-to-add-product-to-cart');
-		}
-		return $cart;
-	}
 }

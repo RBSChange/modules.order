@@ -285,30 +285,4 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	{
 		return  $this->getGlobalProperty('orderLabelAsHtml');
 	}
-	
-	// Deprecated.
-	
-	/**
-	 * @deprecated (will be removed in 4.0)
-	 */	
-	public function getSynchronizedProduct()
-	{
-		throw new Exception(__METHOD__ .' is removed');
-	}
-	
-	/**
-	 * @deprecated (will be removed in 4.0)
-	 */
-	public function getArticleId()
-	{
-		throw new Exception(__METHOD__ .' is removed');
-	}
-	
-	/**
-	 * @deprecated (will be removed in 4.0)
-	 */
-	public function setArticleId($articleId)
-	{
-		throw new Exception(__METHOD__ .' is removed');
-	}	
 }

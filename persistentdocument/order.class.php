@@ -95,7 +95,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		{
 			if (!isset($taxInfoArray[$taxCode]))
 			{
-				$taxInfoArray[$taxCode] = array('taxAmount' => 0, 'formattedTaxRate' => catalog_PriceHelper::formatTaxRate($this->getShippingModeTaxRate()));
+				$taxInfoArray[$taxCode] = array('taxAmount' => 0, 'formattedTaxRate' => catalog_PriceHelper::formatTaxRate($this->getOrderProperty('shippingModeTaxRate')));
 			}
 			$taxInfoArray[$taxCode]['taxAmount'] += ($this->getShippingFeesWithTax() - $this->getShippingFeesWithoutTax());
 		}
@@ -721,66 +721,10 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		return $this->getTotalAmountWithTax() + $this->getTotalCreditNoteAmount();
 	}
 	
-	//DEPRECTAED FUNCTIONS
-
-	/**
-	 * @return String
-	 * @deprecated use getBoOrderStatusLabel or getFoOrderStatusLabel
-	 */
-	public function getOrderStatusLabel()
-	{
-		return $this->getFoOrderStatusLabel();
-	}
-		
-	/**
-	 * Get the readable order date.
-	 * @return String
-	 * @deprecated use getCreationdate or getUICreationdate
-	 */
-	public function getOrderDate()
-	{
-		return $this->getCreationdate();
-	}
+	// Deprecated
 	
 	/**
-	 * @deprecated 
-	 * @var order_persistentdocument_bill
-	 */
-	private $currentBill;
-	
-	/**
-	 * @deprecated 
-	 * @return order_persistentdocument_bill
-	 */
-	private function getCurrentBill()
-	{
-		if ($this->currentBill === null)
-		{
-			$billArray = $this->getBillArrayInverse();
-			$this->currentBill = $billArray[0];
-		}
-		return $this->currentBill;
-	}
-			
-	/**
-	 * @deprecated  use getPaymentConnectorLabel
-	 * @return String
-	 */
-	public function getBillingMode()
-	{
-		return $this->getPaymentConnectorLabel();
-	}
-	
-	/**
-	 * @deprecated use getPaymentConnectorCode
-	 * @return String
-	 */
-	public function getBillingModeCodeReference()
-	{
-		return $this->getPaymentConnectorCode();
-	}
-			
-	/**
+	 * @deprecated
 	 * @var order_persistentdocument_expedition
 	 */
 	private $currentExpedition;
@@ -798,15 +742,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		}
 		return $this->currentExpedition ? $this->currentExpedition : null;
 	}	
-		
-	/**
-	 * @deprecated 
-	 */
-	public function getShippingModeCodeReference()
-	{
-		$sD = $this->getShippingModeDocument();
-		return $sD ? $sD->getCodeReference() : null;
-	}	
 
 	/**
 	 * @deprecated 
@@ -816,40 +751,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		$exp = $this->getCurrentExpedition();
 		return $exp ? $exp->getTrackingNumber() : null;
 	}
-	
-	/**
-	 * @deprecated 
-	 */
-	public function getPackageTrackingURL()
-	{
-		$exp = $this->getCurrentExpedition();
-		return $exp ? $exp->getTrackingURL() : null;
-	}
-	
-	/**
-	 * @deprecated use getShippingModeLabel
-	 */
-	public function getShippingMode()
-	{
-		return $this->getShippingModeLabel();
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function setShippingModeTaxCode($shippingModeTaxCode)
-	{
-		$this->setOrderProperty('shippingModeTaxCode', $shippingModeTaxCode);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function setShippingModeTaxRate($shippingModeTaxRate)
-	{
-		$this->setOrderProperty('shippingModeTaxRate', $shippingModeTaxRate);
-	}
-	
+		
 	/**
 	 * @deprecated
 	 */
@@ -857,12 +759,4 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	{
 		return $this->getOrderProperty('shippingModeTaxCode');
 	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function getShippingModeTaxRate()
-	{
-		return $this->getOrderProperty('shippingModeTaxRate');
-	}	
 }

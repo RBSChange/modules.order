@@ -254,7 +254,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		}
 		$informations['reference'] = $order->getOrderNumber();
 		$informations['creationdate'] = date_Formatter::toDefaultDateTimeBO($order->getUICreationdate());
-		$informations['shippingMode'] = $order->getShippingMode();
+		$informations['shippingMode'] = $order->getShippingModeLabel();
 
 		$informations['subTotal'] =  $order->formatPrice($order->getLinesAmountWithTax());
 		$couponId = $order->getCouponId();
@@ -284,10 +284,10 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		}
 		
 		$informations['subTotalWithModificators'] = $order->formatPrice(-1);
-		$informations['shippingMode'] = $order->getShippingMode();
+		$informations['shippingMode'] = $order->getShippingModeLabel();
 		$informations['shippingFees'] = $order->formatPrice($order->getShippingFeesWithTax());
 
-		$informations['billingMode'] = $order->getBillingMode();
+		$informations['billingMode'] = $order->getPaymentConnectorLabel();
 		$tvaAmounts = array();
 		foreach ($order->getTotalTaxInfoArray() as $subTotal)
 		{
@@ -520,14 +520,15 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$orderDocument->setCurrencyCode($shop->getCurrencyCode());
 			$orderDocument->setPriceFormat($shop->getDocumentService()->getPriceFormat($shop));
 			
+			$pf = catalog_PriceFormatter::getInstance();
 			if ($cartInfo->hasCreditNote())
 			{
 				order_CreditnoteService::getInstance()->setOrderInfoFromCart($orderDocument, $cartInfo);
 			}
 			else
 			{		
-				$orderDocument->setTotalAmountWithTax(catalog_PriceHelper::roundPrice($cartInfo->getTotalWithTax()));
-				$orderDocument->setTotalAmountWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getTotalWithoutTax()));
+				$orderDocument->setTotalAmountWithTax($pf->round($cartInfo->getTotalWithTax()));
+				$orderDocument->setTotalAmountWithoutTax($pf->round($cartInfo->getTotalWithoutTax()));
 			}
 						
 			$customer = $cartInfo->getCustomer();
@@ -542,8 +543,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$shippingMode = $cartInfo->getShippingMode();
 			$orderDocument->setShippingModeDocument($shippingMode);
 
-			$orderDocument->setShippingFeesWithTax(catalog_PriceHelper::roundPrice($cartInfo->getFeesTotalWithTax()));
-			$orderDocument->setShippingFeesWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getFeesTotalWithoutTax()));
+			$orderDocument->setShippingFeesWithTax($pf->round($cartInfo->getFeesTotalWithTax()));
+			$orderDocument->setShippingFeesWithoutTax($pf->round($cartInfo->getFeesTotalWithoutTax()));
 			$orderDocument->setShippingDataArray($cartInfo->getShippingArray());
 			
 			// Adresse de facturation.
@@ -718,7 +719,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$template->setAttribute('orderAmount', $orderAmount);
 		$template->setAttribute('orderAmountWithTax', $orderAmountWithTax);
 		$template->setAttribute('orderAmountWithoutTax', $orderAmountWithoutTax);
-		$template->setAttribute('shippingMode', $order->getShippingMode());
+		$template->setAttribute('shippingMode', $order->getShippingModeLabel());
 		$template->setAttribute('shippingFeesWithTax', $shippingFeesWithTax);
 		$template->setAttribute('shippingFeesWithoutTax', $shippingFeesWithoutTax);
 
@@ -731,8 +732,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			'title' => (!is_null($user->getTitle())) ? $user->getTitle()->getLabel() : '', 
 			'fullname' => $user->getFullname(), 
 			'orderDetail' => $template->execute(), 
-			'billingMode' => $order->getBillingMode(), 
-			'shippingMode' => $order->getShippingMode(), 
+			'billingMode' => $order->getPaymentConnectorLabel(), 
+			'shippingMode' => $order->getShippingModeLabel(), 
 			'shippingFeesWithTax' => $shippingFeesWithTax, 
 			'shippingFeesWithoutTax' => $shippingFeesWithoutTax, 
 			'date' => date_Formatter::toDefaultDateTime($order->getUICreationdate())
@@ -1395,7 +1396,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			'monthLabel' => ucfirst(date_Formatter::format($fromDate, 'F Y')),
 			'monthShortLabel' => date_Formatter::format($fromDate, 'm/Y'),
 			'totalCount' => $this->findProjectedTotal($shop, $fromDate, $toDate, Projections::rowCount('projection')),
-			'totalAmount' => catalog_PriceHelper::roundPrice($totalAmount),
+			'totalAmount' => catalog_PriceFormatter::getInstance()->round($totalAmount),
 			'totalAmountFormatted' => $shop->formatPrice($totalAmount),
 			'to' => $shop->formatPrice($totalAmount),
 			'toDeliver' => $this->findProjectedTotal($shop, $fromDate, $toDate, Projections::rowCount('projection'), array('in_progress'))
@@ -1578,59 +1579,9 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	// Deprecated
 	
 	/**
-	 * @deprecated (will be removed in 4.0) use order_BillService::getInstance()->generateBillIsActive()
-	 */
-	public function generateBillIsActive()
-	{
-		return order_BillService::getInstance()->generateBillIsActive();
-	}
-	
-	/**
-	 * @deprecated (will be removed in 4.0) use order_BillService::getInstance()->genBills();
-	 */
-	public function genBills()
-	{
-		order_BillService::getInstance()->genBills();
-	}
-	
-	/**
-	 * @deprecated (will be removed in 4.0) use order_BillService::getInstance()->genBill()
-	 */
-	public function genBill($order)
-	{	
-		$billArray = $order->getBillArrayInverse();
-		order_BillService::getInstance()->genBill($billArray[0]);
-	}
-	
-	/**
-	 * @deprecated (will be removed in 4.0) use order_BillService::getInstance()->createBill()
-	 */
-	public function createBill($order)
-	{
-		$billArray = $order->getBillArrayInverse();
-		order_BillService::getInstance()->createBill($billArray[0]);
-	}
-	
-	/**
 	 * @deprecated (will be removed in 4.0)
 	 */
 	public function updateStock($order)
 	{
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function getStatusLabel($orderStatus)
-	{
-		return LocaleService::getInstance()->transFO('m.order.frontoffice.status.' . $orderStatus, array('ucf', 'html'));
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function getBoStatusLabel($orderStatus)
-	{
-		return LocaleService::getInstance()->transBO('m.order.frontoffice.status.' . $orderStatus, array('ucf', 'html'));
 	}
 }
