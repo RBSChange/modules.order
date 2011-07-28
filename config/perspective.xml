@@ -68,13 +68,13 @@
 		<toolbarbutton name="edit" />
 	</toolbar>
 	<actions>
-		<action name="refresh" single="true" icon="refresh" label="&amp;modules.uixul.bo.actions.Refresh;" />
-		<action name="openFolder" icon="open-folder" label="&amp;modules.uixul.bo.actions.OpenFolder;" />
-		<action name="edit" single="true" permission="Load" icon="edit" label="&amp;modules.uixul.bo.actions.Edit;" />
-		<action name="delete" permission="Delete" icon="delete" label="&amp;modules.uixul.bo.actions.Delete;" />
-		<action name="cancelOrder" permission="CancelOrder" icon="reject" label="&amp;modules.order.bo.actions.CancelOrder;" />
+		<action name="refresh" single="true" icon="refresh" labeli18n="m.uixul.bo.actions.refresh" />
+		<action name="openFolder" icon="open-folder" labeli18n="m.uixul.bo.actions.openfolder" />
+		<action name="edit" single="true" permission="Load" icon="edit" labeli18n="m.uixul.bo.actions.edit" />
+		<action name="delete" permission="Delete" icon="delete" labeli18n="m.uixul.bo.actions.delete" />
+		<action name="cancelOrder" permission="CancelOrder" icon="reject" labeli18n="m.order.bo.actions.cancelorder" />
 		<action name="createSmartfolder" single="true" permission="Insert_smartfolder" icon="create-folder"
-			label="&amp;modules.order.bo.actions.Create-smartfolder;" />
-		<action name="openTreeNodeOrder" single="true" permission="Order" icon="sort" label="&amp;modules.uixul.bo.actions.Set-children-order;" />
+			labeli18n="m.order.bo.actions.create-smartfolder" />
+		<action name="openTreeNodeOrder" single="true" permission="Order" icon="sort" labeli18n="m.uixul.bo.actions.set-children-order" />
 	</actions>
 </perspective>
