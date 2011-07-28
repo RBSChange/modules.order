@@ -28,7 +28,7 @@ class order_BlockShortCartAction extends website_BlockAction
 		{
 			// Set the url only if it is not the current page.
 			$opURL = $op->getOrderProcessURL();
-			if ($this->removeVars($opURL) != $this->removeVars(LinkHelper::getCurrentUrlComplete()))
+			if ($this->removeVars($opURL) != $this->removeVars(LinkHelper::getCurrentUrl()))
 			{
 				$request->setAttribute('processUrl', $opURL);
 			}
