@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <panel>
-  <section labeli18n="modules.uixul.bo.doceditor.fieldsgroup.Title">
+  <section labeli18n="m.uixul.bo.doceditor.fieldsgroup.title">
     <field name="orderNumber" type="text" disabled="true" labeli18n="m.order.document.creditnote.ordernumber" />
     <field name="customer" disabled="true" />
     <field name="label" required="false" />

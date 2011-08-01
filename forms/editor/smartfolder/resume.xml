@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <panel>
-	<section name="properties" linkedtab="properties" labeli18n="modules.uixul.bo.doceditor.section.Properties" image="{IconsBase}/small/edit-properties.png">
-		<property name="label" labeli18n="modules.uixul.bo.doceditor.property.Label" />
-		<property name="author" labeli18n="modules.uixul.bo.doceditor.property.Author" />
-		<property name="creationdate" labeli18n="modules.uixul.bo.doceditor.property.Creationdate" />
+	<section name="properties" linkedtab="properties" labeli18n="m.uixul.bo.doceditor.section.properties" image="{IconsBase}/small/edit-properties.png">
+		<property name="label" labeli18n="m.uixul.bo.doceditor.property.label" />
+		<property name="author" labeli18n="m.uixul.bo.doceditor.property.author" />
+		<property name="creationdate" labeli18n="m.uixul.bo.doceditor.property.creationdate" />
 	</section>
-	<section name="history" linkedtab="history" actiontexti18n="modules.uixul.bo.doceditor.section.action.View" labeli18n="modules.uixul.bo.doceditor.section.History"
+	<section name="history" linkedtab="history" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.uixul.bo.doceditor.section.history"
 		image="{IconsBase}/small/history.png">
-		<property name="modificationdate" labeli18n="modules.uixul.bo.doceditor.property.Modificationdate" />
+		<property name="modificationdate" labeli18n="m.uixul.bo.doceditor.property.modificationdate" />
 	</section>
 </panel>

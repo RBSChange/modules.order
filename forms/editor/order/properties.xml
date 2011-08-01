@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <panel>
-	<section labeli18n="modules.order.bo.general.Order-informations">
-		<sectionrow labeli18n="modules.order.bo.general.Website" id="website" />
-		<sectionrow labeli18n="modules.order.bo.general.Reference" id="reference" />
-		<sectionrow labeli18n="modules.order.bo.general.Date" id="creationdate" />
+	<section labeli18n="m.order.bo.general.order-informations">
+		<sectionrow labeli18n="m.order.bo.general.website" id="website" />
+		<sectionrow labeli18n="m.order.bo.general.reference" id="reference" />
+		<sectionrow labeli18n="m.order.bo.general.date" id="creationdate" />
 		<section class="customer" />
 		<field name="commentadmin" type="longtext" />	
 	</section>	
 	
-	<section labeli18n="modules.order.bo.general.Order-details" >
+	<section labeli18n="m.order.bo.general.order-details" >
 		<section class="orderlines"/>
 	</section>
 	
-	<section labeli18n="modules.order.bo.general.Coupon" class="couponSection">
-		<sectionrow labeli18n="modules.order.bo.general.Coupon-name" id="couponSectionName" />
-		<sectionrow labeli18n="modules.order.bo.general.Coupon-code" id="couponSectionCode" />
+	<section labeli18n="m.order.bo.general.coupon" class="couponSection">
+		<sectionrow labeli18n="m.order.bo.general.coupon-name" id="couponSectionName" />
+		<sectionrow labeli18n="m.order.bo.general.coupon-code" id="couponSectionCode" />
 	</section>
 		
-	<section labeli18n="modules.order.bo.doceditor.section.Discounts" class="discountsSection">
+	<section labeli18n="m.order.bo.doceditor.section.discounts" class="discountsSection">
 		<section class="discountlines" />
 	</section>
 	
-	<section labeli18n="modules.order.bo.general.Amount">
-		<sectionrow labeli18n="modules.order.bo.general.Sub-total" id="subTotal" />
-		<sectionrow labeli18n="modules.order.frontoffice.Coupon-name" id="couponName" />
-		<sectionrow labeli18n="modules.order.frontoffice.Discount-name" id="discountTotal" />
-		<sectionrow labeli18n="modules.order.bo.general.Shipping-fees" id="shippingFees" />
-		<sectionrow labeli18n="modules.order.bo.general.Billing-mode" id="billingMode" />
-		<sectionrow labeli18n="modules.order.bo.general.Billing-fees" id="billingFees" />
-		<sectionrow labeli18n="modules.order.bo.doceditor.panel.carts.Tva-amounts" id="tvaAmounts" />
-		<sectionrow labeli18n="modules.order.bo.doceditor.property.Used-credit-note" id="usedCreditNote" />
-		<sectionrow labeli18n="modules.order.bo.general.Total-to-pay" id="totalAmount" />
+	<section labeli18n="m.order.bo.general.amount">
+		<sectionrow labeli18n="m.order.bo.general.sub-total" id="subTotal" />
+		<sectionrow labeli18n="m.order.frontoffice.coupon-name" id="couponName" />
+		<sectionrow labeli18n="m.order.frontoffice.discount-name" id="discountTotal" />
+		<sectionrow labeli18n="m.order.bo.general.shipping-fees" id="shippingFees" />
+		<sectionrow labeli18n="m.order.bo.general.billing-mode" id="billingMode" />
+		<sectionrow labeli18n="m.order.bo.general.billing-fees" id="billingFees" />
+		<sectionrow labeli18n="m.order.bo.doceditor.panel.carts.tva-amounts" id="tvaAmounts" />
+		<sectionrow labeli18n="m.order.bo.doceditor.property.used-credit-note" id="usedCreditNote" />
+		<sectionrow labeli18n="m.order.bo.general.total-to-pay" id="totalAmount" />
 	</section>
 
 	<xul>

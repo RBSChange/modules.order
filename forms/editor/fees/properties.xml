@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <panel>
-	<section labeli18n="modules.uixul.bo.doceditor.fieldsgroup.Title">
+	<section labeli18n="m.uixul.bo.doceditor.fieldsgroup.title">
 		<field name="label" hidehelp="true" />
 		<field name="description" hidehelp="true" />
 		<field name="applicationstrategy" />
 		<field name="exclusive" />
 		<field name="excludeModifier" moduleselector="catalog" allow="[modules_order/fees]" />
 	</section>
-	<section labeli18n="modules.order.document.fees.Application-conditions">
+	<section labeli18n="m.order.document.fees.application-conditions">
 		<field name="startpublicationdate" hidehelp="true" />
 		<field name="endpublicationdate" hidehelp="true" />
 		<field name="query" type="objectfilter" allow="order/cart,order/cartfees::checkValue" hidehelp="true" />

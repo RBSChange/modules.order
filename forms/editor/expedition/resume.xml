@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <panel>
-	<section name="properties" linkedtab="properties" labeli18n="modules.uixul.bo.doceditor.section.Properties" image="{IconsBase}/small/edit-properties.png">
-		<property name="label" labeli18n="modules.uixul.bo.doceditor.property.Label" />
-		<property name="author" labeli18n="modules.uixul.bo.doceditor.property.Author" />
-		<property name="creationdate" labeli18n="modules.uixul.bo.doceditor.property.Creationdate" />
-		<property name="status" class="shipExpedition" labeli18n="modules.order.bo.doceditor.property.Status" />
-		<property name="tracking" class="link" labeli18n="modules.order.bo.doceditor.property.Tracking" />
+	<section name="properties" linkedtab="properties" labeli18n="m.uixul.bo.doceditor.section.properties" image="{IconsBase}/small/edit-properties.png">
+		<property name="label" labeli18n="m.uixul.bo.doceditor.property.label" />
+		<property name="author" labeli18n="m.uixul.bo.doceditor.property.author" />
+		<property name="creationdate" labeli18n="m.uixul.bo.doceditor.property.creationdate" />
+		<property name="status" class="shipExpedition" labeli18n="m.order.bo.doceditor.property.status" />
+		<property name="tracking" class="link" labeli18n="m.order.bo.doceditor.property.tracking" />
 	</section>
-	<section name="lines" labeli18n="modules.order.bo.doceditor.section.Lines" image="{IconsBase}/small/list-classic.png" />
-	<section name="publication" linkedtab="publication" labeli18n="modules.uixul.bo.doceditor.section.Status" image="{IconsBase}/small/status.png">
-		<property name="status" labeli18n="modules.uixul.bo.doceditor.property.Status" />
+	<section name="lines" labeli18n="m.order.bo.doceditor.section.lines" image="{IconsBase}/small/list-classic.png" />
+	<section name="publication" linkedtab="publication" labeli18n="m.uixul.bo.doceditor.section.status" image="{IconsBase}/small/status.png">
+		<property name="status" labeli18n="m.uixul.bo.doceditor.property.status" />
 	</section>
-	<section name="history" linkedtab="history" actiontexti18n="modules.uixul.bo.doceditor.section.action.View" labeli18n="modules.uixul.bo.doceditor.section.History"
+	<section name="history" linkedtab="history" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.uixul.bo.doceditor.section.history"
 		image="{IconsBase}/small/history.png">
-		<property name="modificationdate" labeli18n="modules.uixul.bo.doceditor.property.Modificationdate" />
+		<property name="modificationdate" labeli18n="m.uixul.bo.doceditor.property.modificationdate" />
 	</section>
 </panel>
