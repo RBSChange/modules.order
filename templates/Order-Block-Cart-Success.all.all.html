@@ -4,7 +4,7 @@
 	<li class="print">
 		<a class="link" tal:attributes="href printLink" onclick="accessiblePrint(this); return false;" change:translate="modules.catalog.frontoffice.Print"></a></li>
 	<li>
-		<a change:link="tag ctx_catalog_favorite-product-list; catalogParam[addCartToList] cart/getCatalogId" change:translate="modules.order.frontoffice.Add-cart-to-list"></a>
+		<a change:link="tag ctx_catalog_favorite-product-list; catalogParam[addCartToList] 'true'" change:translate="modules.order.frontoffice.Add-cart-to-list"></a>
 	</li>
 	<li>
 		<a change:link="module order; action ContinueShopping; cmpref cart/getShopId" change:translate="modules.order.frontoffice.Continue-shopping"></a>
