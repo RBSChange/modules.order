@@ -684,7 +684,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$url = str_replace('&amp;', '&', LinkHelper::getDocumentUrl($page, RequestContext::getInstance()->getLang()));
 		$parameters['backUrl'] = $url;
 		
-		HttpController::getInstance()->redirectToUrl(LinkHelper::getActionUrl('order', 'AddToCartMultiple', $parameters));
+		change_Controller::getInstance()->redirectToUrl(LinkHelper::getActionUrl('order', 'AddToCartMultiple', $parameters));
 	}
 	
 	/**

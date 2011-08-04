@@ -42,7 +42,7 @@ class order_BlockCartAction extends website_BlockAction
 					if ($emptyCartPage->getId() != $pageId)
 					{
 						$url = LinkHelper::getDocumentUrl($emptyCartPage);
-						HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
+						change_Controller::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 					}
 				}
 				catch (TagException $e)
@@ -102,7 +102,7 @@ class order_BlockCartAction extends website_BlockAction
 				$url = order_OrderProcessService::getInstance()->startOrderProcess($cart);
 				if ($url)
 				{
-					HttpController::getInstance()->redirectToUrl($url);
+					change_Controller::getInstance()->redirectToUrl($url);
 				}
 			}
 		}
@@ -203,6 +203,6 @@ class order_BlockCartAction extends website_BlockAction
 		unset($params['website_BlockAction_submit']);
 		unset($params['message']);
 		$url = LinkHelper::getActionUrl($params['addToCartModule'], $params['addToCartAction'], $params);
-		HttpController::getInstance()->redirectToUrl($url);
+		change_Controller::getInstance()->redirectToUrl($url);
 	}
 }

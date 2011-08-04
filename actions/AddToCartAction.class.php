@@ -3,11 +3,11 @@
  * order_AddToCartAction
  * @package modules.order.actions
  */
-class order_AddToCartAction extends f_action_BaseAction
+class order_AddToCartAction extends change_Action
 {
 	/**
-	 * @param Context $context
-	 * @param Request $request
+	 * @param change_Context $context
+	 * @param change_Request $request
 	 */
 	public function _execute($context, $request)
 	{
@@ -48,7 +48,7 @@ class order_AddToCartAction extends f_action_BaseAction
 		{
 			$backUrl = LinkHelper::getTagUrl('contextual_website_website_modules_order_cart');
 		}
-		HttpController::getInstance()->redirectToUrl($backUrl);
+		change_Controller::getInstance()->redirectToUrl($backUrl);
 	}
 	
 	/**

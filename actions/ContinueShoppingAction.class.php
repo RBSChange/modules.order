@@ -1,9 +1,9 @@
 <?php
-class order_ContinueShoppingAction extends f_action_BaseAction
+class order_ContinueShoppingAction extends change_Action
 {
 	/**
-	 * @param Context $context
-	 * @param Request $request
+	 * @param change_Context $context
+	 * @param change_Request $request
 	 */
 	public function _execute($context, $request)
 	{
@@ -18,7 +18,7 @@ class order_ContinueShoppingAction extends f_action_BaseAction
 		$user->removeAttribute('cartBackLink');
 		$context->getController()->redirectToUrl(str_replace('&amp;', '&', $backLink));
 
-		return View::NONE;		
+		return change_View::NONE;		
 	}
 	
     /**

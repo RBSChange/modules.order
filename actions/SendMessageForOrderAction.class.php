@@ -3,11 +3,11 @@
  * order_SendMessageForOrderAction
  * @package modules.order.actions
  */
-class order_SendMessageForOrderAction extends f_action_BaseJSONAction
+class order_SendMessageForOrderAction extends change_JSONAction
 {
 	/**
-	 * @param Context $context
-	 * @param Request $request
+	 * @param change_Context $context
+	 * @param change_Request $request
 	 */
 	public function _execute($context, $request)
 	{

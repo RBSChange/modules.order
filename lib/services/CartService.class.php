@@ -31,7 +31,7 @@ class order_CartService extends BaseService
 	 */
 	public function hasCartInSession()
 	{
-		$session = Controller::getInstance()->getContext()->getUser();
+		$session = change_Controller::getInstance()->getContext()->getUser();
 		$key = $this->getSessionKey('CartInfo');
 		$ns = self::CART_SESSION_NAMESPACE;
 		return ($session->hasAttribute($key, $ns) && $session->getAttribute($key, $ns) instanceof order_CartInfo);
@@ -44,7 +44,7 @@ class order_CartService extends BaseService
 	{	
 		if ($this->hasCartInSession())
 		{
-			$session = Controller::getInstance()->getContext()->getUser();
+			$session = change_Controller::getInstance()->getContext()->getUser();
 			$cart = $session->getAttribute($this->getSessionKey('CartInfo'), self::CART_SESSION_NAMESPACE);
 			$this->clearCartIfNeeded($cart);
 		}
@@ -182,7 +182,7 @@ class order_CartService extends BaseService
 			$this->resetCartOrder($cart);
 		}
 
-		$user = Controller::getInstance()->getContext()->getUser();
+		$user = change_Controller::getInstance()->getContext()->getUser();
 		$user->setAttribute($this->getSessionKey('CartInfo'), $cart, self::CART_SESSION_NAMESPACE);
 		
 		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
@@ -897,7 +897,7 @@ class order_CartService extends BaseService
 			}
 			unset($paramsToRedirect['confirmPagePopin']);
 			
-			HttpController::getInstance()->redirectToUrl($url);
+			change_Controller::getInstance()->redirectToUrl($url);
 		}
 		return true;
 	}

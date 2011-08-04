@@ -60,7 +60,7 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 		$orderProcess = $this->getCurrentOrderProcess();
 				
 		$url = $orderProcess->getOrderProcessURL();
-		HttpController::getInstance()->redirectToUrl($url);	
+		change_Controller::getInstance()->redirectToUrl($url);	
 	}
 	
 	/**

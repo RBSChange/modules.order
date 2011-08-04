@@ -1,9 +1,9 @@
 <?php
-class order_RemoveCartLineAction extends f_action_BaseAction
+class order_RemoveCartLineAction extends change_Action
 {
 	/**
-	 * @param Context $context
-	 * @param Request $request
+	 * @param change_Context $context
+	 * @param change_Request $request
 	 */
 	public function _execute($context, $request)
 	{
@@ -22,18 +22,18 @@ class order_RemoveCartLineAction extends f_action_BaseAction
 		{
 			$url = LinkHelper::getDocumentUrl(DocumentHelper::getDocumentInstance($pageId, 'modules_website/page'));
 			$context->getController()->redirectToUrl(str_replace('&amp;', '&', $url));
-			return View::NONE;	
+			return change_View::NONE;	
 		}
 			
 		$backUrl = $request->getParameter('backurl', null);
 		if ($backUrl !== null)
 		{
 			$context->getController()->redirectToUrl($backUrl);
-			return View::NONE;	
+			return change_View::NONE;	
 		}
 		
 		$context->getController()->forward('website', 'Error404');
-		return View::NONE;		
+		return change_View::NONE;		
 	}
 
 	/**

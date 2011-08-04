@@ -3,11 +3,11 @@
  * order_ShipExpeditionAction
  * @package modules.order.actions
  */
-class order_ShipExpeditionAction extends f_action_BaseJSONAction
+class order_ShipExpeditionAction extends change_JSONAction
 {
 	/**
-	 * @param Context $context
-	 * @param Request $request
+	 * @param change_Context $context
+	 * @param change_Request $request
 	 */
 	public function _execute($context, $request)
 	{
@@ -26,7 +26,7 @@ class order_ShipExpeditionAction extends f_action_BaseJSONAction
 	}
 	
 	/**
-	 * @param Request $request
+	 * @param change_Request $request
 	 * @return order_persistentdocument_expedition
 	 */
 	private function getExpeditionFromRequest($request)

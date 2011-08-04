@@ -3,11 +3,11 @@
  * order_ValidateBillAction
  * @package modules.order.actions
  */
-class order_ValidateBillAction extends f_action_BaseJSONAction
+class order_ValidateBillAction extends change_JSONAction
 {
 	/**
-	 * @param Context $context
-	 * @param Request $request
+	 * @param change_Context $context
+	 * @param change_Request $request
 	 */
 	public function _execute($context, $request)
 	{
@@ -27,7 +27,7 @@ class order_ValidateBillAction extends f_action_BaseJSONAction
 	}
 	
 	/**
-	 * @param Request $request
+	 * @param change_Request $request
 	 * @return order_persistentdocument_bill
 	 */
 	private function getBillFromRequest($request)

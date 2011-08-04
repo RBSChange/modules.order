@@ -69,7 +69,7 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 		}
 		$orderProcess->setCurrentStep($nextStep);
 		$url = $orderProcess->getOrderProcessURL();
-		HttpController::getInstance()->redirectToUrl($url);
+		change_Controller::getInstance()->redirectToUrl($url);
 	}
 	
 	protected function redirectToStep($step)
@@ -77,7 +77,7 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 		$orderProcess = $this->getCurrentOrderProcess();
 		$orderProcess->setCurrentStep($step);
 		$url = $orderProcess->getOrderProcessURL();
-		HttpController::getInstance()->redirectToUrl($url);
+		change_Controller::getInstance()->redirectToUrl($url);
 	}
 	
 	protected function redirectToFirstStep()
@@ -85,7 +85,7 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 		$orderProcess = $this->getCurrentOrderProcess();
 		$orderProcess->setCurrentStep(null);
 		$url = $orderProcess->getOrderProcessURL();
-		HttpController::getInstance()->redirectToUrl($url);
+		change_Controller::getInstance()->redirectToUrl($url);
 	}
 	
 	/**
@@ -98,7 +98,7 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 		if ($page !== null)
 		{
 			$url = LinkHelper::getDocumentUrl($page);
-			HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
+			change_Controller::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 		}		
 		$this->redirectToCart();
 	}
@@ -111,7 +111,7 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
 		$page = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart', $website, true);
 		$url = LinkHelper::getDocumentUrl($page);
-		HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
+		change_Controller::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 	}
 	
 	protected function checkCurrentCustomer()
