@@ -20,18 +20,24 @@
 		<input name="orderParam[shopId]" type="hidden" value="${cart/getShopId}" />
 		<input change:submit="name Refresh" labeli18n="m.order.frontoffice.update-button" />
 	</p>
-	<table class="normal" border="0" summary="${trans:m.order.frontoffice.cart-table-summary,ucf,attr}">
+	<table class="normal" border="0" summary="${trans:m.order.frontoffice.cart-table-summary,ucf,attr}" tal:define="showTTC shop/getDisplayPriceWithTax; showHT php: !showTTC && shop.getDisplayPriceWithoutTax()">
 		<thead>
 			<tr>
 				<th class="first">&nbsp;</th>
 				<th>${trans:m.order.frontoffice.designation,ucf}</th>
 				<th>${trans:m.order.frontoffice.availability,ucf}</th>
-				<th tal:condition="shop/getDisplayPriceWithTax">
+				<th tal:condition="showHT">
+					<abbr title="${trans:m.order.frontoffice.unitprice-without-tax,attr}">${trans:m.order.frontoffice.unitprice-without-tax-abr}</abbr>
+				</th>
+				<th tal:condition="showTTC">
 					<abbr title="${trans:m.order.frontoffice.unitprice-with-tax,attr}">${trans:m.order.frontoffice.unitprice-with-tax-abr}</abbr>
 				</th>
 				<th>${trans:m.order.frontoffice.quantity,ucf}</th>
-				<th tal:condition="shop/getDisplayPriceWithTax">${trans:m.order.frontoffice.tva-column,ucf}</th>
-				<th tal:condition="shop/getDisplayPriceWithTax">
+				<th tal:condition="showTTC">${trans:m.order.frontoffice.tva-column,ucf}</th>
+				<th tal:condition="showHT">
+					<abbr title="${trans:m.order.frontoffice.totalprice-without-tax,attr}">${trans:m.order.frontoffice.totalprice-without-tax-abr}</abbr>
+				</th>
+				<th tal:condition="showTTC">
 					<abbr title="${trans:m.order.frontoffice.totalprice-with-tax,attr}">${trans:m.order.frontoffice.totalprice-with-tax-abr}</abbr>
 				</th>
 				<th class="last">&nbsp;</th>
@@ -53,14 +59,20 @@
 	
 					<!-- Disponibilite -->
 					<td>${product/getAvailability}</td>
-					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
+					
+					<!-- Unit price -->
+					<td class="priceht" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
+					<td class="pricettc" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
 	
 					<!-- Quantity -->
 					<td> ${cartLine/getQuantity} </td>
 	
-					<!-- TVA -->
-					<td class="priceht" tal:condition="shop/getDisplayPriceWithTax">${cartLine/getFormattedTaxCode}</td>
-					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
+					<!-- Tax rate -->
+					<td tal:condition="showTTC">${cartLine/getFormattedTaxCode}</td>
+										
+					<!-- Total price -->
+					<td class="priceht" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
+					<td class="pricettc" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
 	
 					<!-- Remove link -->
 					<td class="sale">&#160;</td>
@@ -83,7 +95,10 @@
 	
 					<!-- Disponibilite -->
 					<td>${product/getAvailability}</td>
-					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
+					
+					<!-- Unit price -->
+					<td class="priceht" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
+					<td class="pricettc" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
 	
 					<!-- Quantity -->
 					<td tal:define="name string:orderParam[lines][${cartLineIndex}][quantity]; update product/updateCartQuantity">
@@ -94,10 +109,13 @@
 						</tal:block>
 					</td>
 	
-					<!-- TVA -->
-					<td class="priceht" tal:condition="shop/getDisplayPriceWithTax">${cartLine/getFormattedTaxCode}</td>
-					<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
-	
+					<!-- Tax rate -->
+					<td tal:condition="showTTC">${cartLine/getFormattedTaxCode}</td>
+										
+					<!-- Total price -->
+					<td class="priceht" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
+					<td class="pricettc" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
+						
 					<!-- Remove link -->
 					<td class="sale">
 						<a tal:condition="not: readonly" change:link="module order; action RemoveCartLine; cartLineIndex cartLineIndex; pageref pageref">
