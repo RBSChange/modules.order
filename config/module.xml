@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
 	<module>
-		<enabled>true</enabled>
 		<visible>true</visible>
 		<icon>order</icon>
 		<category>e-commerce</category>
-		<usetopic>false</usetopic>
 	</module>
 	<project>
 		<!-- Feeders for product suggestions. -->

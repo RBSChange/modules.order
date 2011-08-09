@@ -34,7 +34,6 @@
       <permission name="ReActivate.*"/>
       <permission name="Deactivated.*"/>
       <permission name="CancelOrder.order"/>
-      <permission name="EditLocale"/>
       <permission name="LoadOrderMessages.order"/>
       <permission name="LoadOrderFinancial.order"/>
       <permission name="LoadOrderShipping.order"/>
