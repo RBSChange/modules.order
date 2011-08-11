@@ -2,7 +2,7 @@
 $controller = change_Controller::newInstance('change_Controller');
 $tm = f_persistentdocument_TransactionManager::getInstance();
 $rc = RequestContext::getInstance();
-foreach ($_POST['argv'] as $id) 
+foreach ($arguments as $id) 
 {
 	try
 	{
