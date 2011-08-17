@@ -35,7 +35,7 @@
 				<!-- Mode d'envoi -->
 				<tr tal:condition="cart/getShippingMode">	
 					<td>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</td>
-					<td>${cart/getShippingMode/getLabelAsHtml}</td>
+					<td>${structure cart/getShippingMode/getLabelAsHtml}</td>
 				</tr>	
 				<!-- Fees -->
 				<tr tal:repeat="fees cart/getFeesDataArrayForDisplay">	

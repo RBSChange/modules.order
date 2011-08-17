@@ -14,7 +14,7 @@
 		</thead>
 		<tbody>
 			<tr tal:repeat="creditnote creditnotes" class="row-${repeat/creditnote/odd}">	
-				<td>${creditnote/getLabelAsHtml}</td>	
+				<td>${structure creditnote/getLabelAsHtml}</td>	
 				<td>${datetime:creditnote/getOrder/getUICreationdate}</td>
 				<td class="pricettc">${creditnote/getAmountFormated}</td>								
 				<td class="pricettc">${creditnote/getAmountNotAppliedFormated}</td>							

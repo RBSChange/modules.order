@@ -11,29 +11,29 @@
 	<li class="even">
 		<dl tal:define="address order/getShippingAddress">
 			<dt>${trans:m.order.frontoffice.shippingaddress,ucf}</dt>
-				<dd>${address/getTitle/getLabelAsHtml} ${address/getFirstnameAsHtml} ${address/getLastnameAsHtml}</dd>
-				<dd>${address/getAddressLine1AsHtml}</dd>
-				<dd tal:condition="address/getAddressLine2">${address/getAddressLine2AsHtml}</dd>
-				<dd tal:condition="address/getAddressLine3">${address/getAddressLine3AsHtml}</dd>
-				<dd>${address/getZipcodeAsHtml} ${address/getCityAsHtml}</dd>
-				<dd tal:condition="address/getProvince">${address/getProvinceAsHtml}</dd>
-				<dd>${address/getCountry/getLabelAsHtml}</dd>
-				<dd tal:condition="address/getPhone">${address/getPhoneAsHtml}</dd>
-				<dd tal:condition="address/getFax">${address/getFaxAsHtml}</dd>
+				<dd>${structure address/getTitle/getLabelAsHtml} ${structure address/getFirstnameAsHtml} ${structure address/getLastnameAsHtml}</dd>
+				<dd>${structure address/getAddressLine1AsHtml}</dd>
+				<dd tal:condition="address/getAddressLine2">${structure address/getAddressLine2AsHtml}</dd>
+				<dd tal:condition="address/getAddressLine3">${structure address/getAddressLine3AsHtml}</dd>
+				<dd>${structure address/getZipcodeAsHtml} ${structure address/getCityAsHtml}</dd>
+				<dd tal:condition="address/getProvince">${structure address/getProvinceAsHtml}</dd>
+				<dd>${structure address/getCountry/getLabelAsHtml}</dd>
+				<dd tal:condition="address/getPhone">${structure address/getPhoneAsHtml}</dd>
+				<dd tal:condition="address/getFax">${structure address/getFaxAsHtml}</dd>
 		</dl>
 	</li>
 	<li class="odd">
 		<dl tal:define="address order/getBillingAddress">
 			<dt>${trans:m.order.frontoffice.billingaddress,ucf}</dt>
-				<dd>${address/getTitle/getLabelAsHtml} ${address/getFirstnameAsHtml} ${address/getLastnameAsHtml}</dd>
-				<dd>${address/getAddressLine1AsHtml}</dd>
-				<dd tal:condition="address/getAddressLine2">${address/getAddressLine2AsHtml}</dd>
-				<dd tal:condition="address/getAddressLine3">${address/getAddressLine3AsHtml}</dd>
-				<dd>${address/getZipcodeAsHtml} ${address/getCityAsHtml}</dd>
-				<dd tal:condition="address/getProvince">${address/getProvinceAsHtml}</dd>
-				<dd>${address/getCountry/getLabelAsHtml}</dd>
-				<dd tal:condition="address/getPhone">${address/getPhoneAsHtml}</dd>
-				<dd tal:condition="address/getFax">${address/getFaxAsHtml}</dd>
+				<dd>${structure address/getTitle/getLabelAsHtml} ${structure address/getFirstnameAsHtml} ${structure address/getLastnameAsHtml}</dd>
+				<dd>${structure address/getAddressLine1AsHtml}</dd>
+				<dd tal:condition="address/getAddressLine2">${structure address/getAddressLine2AsHtml}</dd>
+				<dd tal:condition="address/getAddressLine3">${structure address/getAddressLine3AsHtml}</dd>
+				<dd>${structure address/getZipcodeAsHtml} ${structure address/getCityAsHtml}</dd>
+				<dd tal:condition="address/getProvince">${structure address/getProvinceAsHtml}</dd>
+				<dd>${structure address/getCountry/getLabelAsHtml}</dd>
+				<dd tal:condition="address/getPhone">${structure address/getPhoneAsHtml}</dd>
+				<dd tal:condition="address/getFax">${structure address/getFaxAsHtml}</dd>
 		</dl>
 	</li>
 </ol>
@@ -85,7 +85,7 @@
 			<!-- Mode d'envoi -->
 			<tr tal:condition="cart/getShippingMode">	
 				<td>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</td>
-				<td>${cart/getShippingMode/getLabelAsHtml}</td>
+				<td>${structure cart/getShippingMode/getLabelAsHtml}</td>
 			</tr>	
 			<!-- Fees -->
 			<tr tal:repeat="fees cart/getFeesDataArrayForDisplay">	

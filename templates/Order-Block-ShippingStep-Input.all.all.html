@@ -85,16 +85,16 @@
 						<tal:block tal:define="mode modeFilter/getMode">
 							<span>
 								<label class="nocmx">
-									${mode/getLabelAsHtml}
+									${structure mode/getLabelAsHtml}
 									<tal:block tal:condition="modeFilter/getValueWithTax">  (${modeFilter/getFormattedValueWithTax})</tal:block>
 									<tal:block tal:condition="not: modeFilter/getValueWithTax"> (${trans:m.order.frontoffice.freeshipping,ucf})</tal:block>
 								</label>
 								<img change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
 							</span>
-							<p tal:condition="mode/getDescription">${mode/getDescriptionAsHtml}</p>
+							<p tal:condition="mode/getDescription">${structure mode/getDescriptionAsHtml}</p>
 						</tal:block>
 						<ul tal:define="cartLines php:cart.getCartLineArrayByShippingMode(modeFilter.getMode())">
-							<li tal:repeat="cartLine cartLines">${cartLine/getProduct/getLabelAsHtml}</li>
+							<li tal:repeat="cartLine cartLines">${structure cartLine/getProduct/getLabelAsHtml}</li>
 						</ul>  
 					</li>
 				</ol>			
@@ -115,13 +115,13 @@
 									<label class="nocmx" for="mode_${modeFilter/getId}">
 										<input tal:condition="php:shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" checked="checked" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
 										<input tal:condition="php:!shippingStep.selected(modeFilter.getId(), repeat.modeFilter.start)" id="mode_${modeFilter/getId}" type="radio" name="orderParam[shippingFilterId]" value="${modeFilter/getId}" />
-										${mode/getLabelAsHtml}
+										${structure mode/getLabelAsHtml}
 										<tal:block tal:condition="modeFilter/getValueWithTax"> (${modeFilter/getFormattedValueWithTax})</tal:block>
 										<tal:block tal:condition="not: modeFilter/getValueWithTax"> (${trans:m.order.frontoffice.freeshipping,ucf})</tal:block>
 									</label>
 									<img change:media="document mode/getVisual/getId; class 'floatLeft'; format 'modules.media.frontoffice/thumbnail'" />
 								</span>
-								<p tal:condition="mode/getDescription">${mode/getDescriptionAsHtml}</p>
+								<p tal:condition="mode/getDescription">${structure mode/getDescriptionAsHtml}</p>
 							</tal:block>
 						</li>
 					</ol>

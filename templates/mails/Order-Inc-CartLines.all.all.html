@@ -18,7 +18,7 @@
 	<tal:block tal:repeat="line cart/getCartLineArray">
 		<tr tal:define="product line/getProduct" tal:condition="line/getProduct" align="center">
 			<td>
-				<a tal:condition="product" change:link="document product">${product/getLabelAsHtml}</a>
+				<a tal:condition="product" change:link="document product">${structure product/getLabelAsHtml}</a>
 			</td>
 			<td tal:condition="shop/getDisplayPriceWithoutTax">${php:shop.formatPrice(line.getValueWithoutTax())}</td>
 			<td tal:condition="shop/getDisplayPriceWithTax">${php:shop.formatPrice(line.getValueWithTax())}</td>

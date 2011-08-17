@@ -112,7 +112,7 @@
 				<ol id="paymentselector" style="clear: both" tal:condition="paymentFilters">
 					<li tal:repeat="paymentFilter cart/getPaymentConnectors">
 						<input change:radioinput="name paymentFilterId" id="paymentFilter" value="${paymentFilter/getId}" />
-						<label class="nocmx" for="paymentFilter_${paymentFilter/getId}">${paymentFilter/getConnector/getSelectionAsHtml}</label>
+						<label class="nocmx" for="paymentFilter_${paymentFilter/getId}">${structure paymentFilter/getConnector/getSelectionAsHtml}</label>
 					</li>
 				</ol>
 				<p class="buttons" tal:condition="canContinue">
@@ -148,7 +148,7 @@
    		<div tal:condition="cart/getShippingModeId" class="normal resume-section">
     		<h2 change:h="">${trans:m.order.standardprocess.shipping-title,ucf}</h2>
     		<ol>
-    			<li>${cart/getShippingMode/getLabelAsHtml}</li>
+    			<li>${structure cart/getShippingMode/getLabelAsHtml}</li>
     			<li><a class="link" href="${cart/getOrderProcess/getShippingStepUrl}">${trans:m.order.standardprocess.modify}</a></li>
     		</ol>
     	</div>

@@ -56,35 +56,35 @@
   </tr>
   <tr align="left">
 	<td style="padding-left: 30px; width: 50%;" tal:define="address order/getBillingAddress">
-		${address/getTitle/getLabelAsHtml} ${address/getFirstnameAsHtml} ${address/getLastnameAsHtml}<br />
-		${address/getAddressLine1AsHtml}<br />
-		<tal:block tal:condition="address/getAddressLine2">${address/getAddressline2AsHtml}<br /></tal:block>
-		<tal:block tal:condition="address/getAddressLine3">${address/getAddressline3AsHtml}<br /></tal:block>
-		${address/getZipcodeAsHtml} ${address/getCityAsHtml}<br />
-		<tal:block tal:condition="address/getProvince">${address/getProvinceAsHtml}<br /></tal:block>
-		${address/getCountry/getLabelAsHtml}<br />
-		<tal:block tal:condition="address/getEmail">${address/getEmailAsHtml}<br /></tal:block>
+		${structure address/getTitle/getLabelAsHtml} ${structure address/getFirstnameAsHtml} ${structure address/getLastnameAsHtml}<br />
+		${structure address/getAddressLine1AsHtml}<br />
+		<tal:block tal:condition="address/getAddressLine2">${structure address/getAddressline2AsHtml}<br /></tal:block>
+		<tal:block tal:condition="address/getAddressLine3">${structure address/getAddressline3AsHtml}<br /></tal:block>
+		${structure address/getZipcodeAsHtml} ${structure address/getCityAsHtml}<br />
+		<tal:block tal:condition="address/getProvince">${structure address/getProvinceAsHtml}<br /></tal:block>
+		${structure address/getCountry/getLabelAsHtml}<br />
+		<tal:block tal:condition="address/getEmail">${structure address/getEmailAsHtml}<br /></tal:block>
 		<tal:block tal:condition="address/getPhone">
-			<span tal:content="trans:m.order.frontoffice.phone,ucf,lab"></span> ${address/getPhoneAsHtml}<br />
+			<span tal:content="trans:m.order.frontoffice.phone,ucf,lab"></span> ${structure address/getPhoneAsHtml}<br />
 		</tal:block>
 		<tal:block tal:condition="address/getFax">
-			<span tal:content="trans:m.order.frontoffice.fax,ucf,lab"></span> ${address/getFaxAsHtml}<br />
+			<span tal:content="trans:m.order.frontoffice.fax,ucf,lab"></span> ${structure address/getFaxAsHtml}<br />
 		</tal:block>
 	</td>
 	<td style="padding-left: 30px; width: 50%;" tal:define="address order/getShippingAddress">
-		${address/getTitle/getLabelAsHtml} ${address/getFirstnameAsHtml} ${address/getLastnameAsHtml}<br />
-		${address/getAddressLine1AsHtml}<br />
-		<tal:block tal:condition="address/getAddressLine2">${address/getAddressline2AsHtml}<br /></tal:block>
-		<tal:block tal:condition="address/getAddressLine3">${address/getAddressline3AsHtml}<br /></tal:block>
-		${address/getZipcodeAsHtml} ${address/getCityAsHtml}<br />
-		<tal:block tal:condition="address/getProvince">${address/getProvinceAsHtml}<br /></tal:block>
-		${address/getCountry/getLabelAsHtml}<br />
-		<tal:block tal:condition="address/getEmail">${address/getEmailAsHtml}<br /></tal:block>
+		${structure address/getTitle/getLabelAsHtml} ${structure address/getFirstnameAsHtml} ${structure address/getLastnameAsHtml}<br />
+		${structure address/getAddressLine1AsHtml}<br />
+		<tal:block tal:condition="address/getAddressLine2">${structure address/getAddressline2AsHtml}<br /></tal:block>
+		<tal:block tal:condition="address/getAddressLine3">${structure address/getAddressline3AsHtml}<br /></tal:block>
+		${structure address/getZipcodeAsHtml} ${structure address/getCityAsHtml}<br />
+		<tal:block tal:condition="address/getProvince">${structure address/getProvinceAsHtml}<br /></tal:block>
+		${structure address/getCountry/getLabelAsHtml}<br />
+		<tal:block tal:condition="address/getEmail">${structure address/getEmailAsHtml}<br /></tal:block>
 		<tal:block tal:condition="address/getPhone">
-			<span tal:content="trans:m.order.frontoffice.phone,ucf,lab"></span> ${address/getPhoneAsHtml}<br />
+			<span tal:content="trans:m.order.frontoffice.phone,ucf,lab"></span> ${structure address/getPhoneAsHtml}<br />
 		</tal:block>
 		<tal:block tal:condition="address/getFax">
-			<span tal:content="trans:m.order.frontoffice.fax,ucf,lab"></span> ${address/getFaxAsHtml}<br />
+			<span tal:content="trans:m.order.frontoffice.fax,ucf,lab"></span> ${structure address/getFaxAsHtml}<br />
 		</tal:block>
 	</td>
   </tr>

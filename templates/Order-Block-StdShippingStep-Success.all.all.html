@@ -21,14 +21,14 @@
 				<ol>
 					<li tal:repeat="modeFilter requiredShippingFilters">
 						<img tal:condition="modeFilter/getMode/getVisual" change:media="document modeFilter/getMode/getVisual; format 'modules.media.frontoffice/thumbnail'" />	
-						<span tal:condition="not: modeFilter/getMode/getVisual">${modeFilter/getMode/getLabelAsHtml}</span> 
+						<span tal:condition="not: modeFilter/getMode/getVisual">${structure modeFilter/getMode/getLabelAsHtml}</span> 
 						<span>
 							<tal:block tal:condition="modeFilter/getValueWithTax"> (${modeFilter/getFormattedValueWithTax})</tal:block>
 							<tal:block tal:condition="not: modeFilter/getValueWithTax"> (${trans:m.order.frontoffice.freeshipping,ucf})</tal:block>
 						</span>
-						<p>${modeFilter/getMode/getDescriptionAsHtml}</p>
+						<p>${structure modeFilter/getMode/getDescriptionAsHtml}</p>
 						<ul tal:define="cartLines php:cart.getCartLineArrayByShippingMode(modeFilter.getMode())">
-							<li tal:repeat="cartLine cartLines">${cartLine/getProduct/getLabelAsHtml}</li>
+							<li tal:repeat="cartLine cartLines">${structure cartLine/getProduct/getLabelAsHtml}</li>
 						</ul>  
 					</li>
 				</ol>
@@ -39,9 +39,9 @@
 						<li tal:repeat="mode requiredShippingModeErrors">
 							<img tal:condition="mode/getVisual" change:media="document mode/getVisual; format 'modules.media.frontoffice/thumbnail'" />	
 							<span tal:condition="not: mode/getVisual">${mode/getLabel}</span>
-							<p>${mode/getDescriptionAsHtml}</p>
+							<p>${structure mode/getDescriptionAsHtml}</p>
 							<ul tal:define="cartLines php:cart.getCartLineArrayByShippingMode(mode)">
-								<li tal:repeat="cartLine cartLines">${cartLine/getProduct/getLabelAsHtml}</li>
+								<li tal:repeat="cartLine cartLines">${structure cartLine/getProduct/getLabelAsHtml}</li>
 							</ul>  						
 						</li>
 					</ol>
@@ -60,7 +60,7 @@
 								<label tal:condition="modeFilter/getMode/getVisual" class="nocmx" for="shippingFilter_${modeFilter/getId}" >
 									<img change:media="document modeFilter/getMode/getVisual; format 'modules.media.frontoffice/thumbnail'" />
 								</label>
-								<label tal:condition="not: modeFilter/getMode/getVisual" class="nocmx" for="shippingFilter_${modeFilter/getId}">${modeFilter/getMode/getLabelAsHtml}</label> 
+								<label tal:condition="not: modeFilter/getMode/getVisual" class="nocmx" for="shippingFilter_${modeFilter/getId}">${structure modeFilter/getMode/getLabelAsHtml}</label> 
 							</td>
 							<td>
 								<span>
@@ -68,7 +68,7 @@
 									<tal:block tal:condition="not: modeFilter/getValueWithTax"> (${trans:m.order.frontoffice.freeshipping,ucf})</tal:block>
 								</span>
 							</td>
-							<td>${modeFilter/getMode/getDescriptionAsHtml}</td>
+							<td>${structure modeFilter/getMode/getDescriptionAsHtml}</td>
 						</tr>
 					</table>
 					<p id="shipping-updatemode-cnt">Mise à jour de votre choix de mode de livraison

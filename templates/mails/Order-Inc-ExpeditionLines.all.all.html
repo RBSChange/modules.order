@@ -5,8 +5,8 @@
 		<th tal:content="trans:m.order.frontoffice.quantity,ucf" />
 	</tr>
 	<tr tal:repeat="line expedition/getLinesForDisplay" align="center">
-		<td>${line/getLabelAsHtml}</td>
-		<td>${line/getCodeReferenceAsHtml}</td>
+		<td>${structure line/getLabelAsHtml}</td>
+		<td>${structure line/getCodeReferenceAsHtml}</td>
 		<td>${line/getQuantity}</td>
 	</tr>
 </table>

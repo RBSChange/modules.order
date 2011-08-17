@@ -1,10 +1,10 @@
-<h3 change:h=""><span>${trans:m.order.frontoffice.shipping-number,ucf}</span> ${expedition/getLabelAsHtml} (${expedition/getStatusLabel})</h3>
+<h3 change:h=""><span>${trans:m.order.frontoffice.shipping-number,ucf}</span> ${structure expedition/getLabelAsHtml} (${expedition/getStatusLabel})</h3>
 <ol class="messages" tal:define="shippingMode expedition/getShippingMode">
-	<li><span>${trans:m.order.frontoffice.transport-name,ucf,lab}</span> ${shippingMode/getLabelAsHtml}</li>
+	<li><span>${trans:m.order.frontoffice.transport-name,ucf,lab}</span> ${structure shippingMode/getLabelAsHtml}</li>
 	<li><span>${trans:m.order.frontoffice.tracking-number,ucf,lab}</span> <a class="link" href="${expedition/getTrackingURL}">${expedition/getTrackingNumber}</a></li>
-	<li tal:condition="expedition/getTrackingText"><span>${trans:m.order.frontoffice.tracking-text,ucf,lab}</span> ${expedition/getTrackingTextAsHtml}</li>
+	<li tal:condition="expedition/getTrackingText"><span>${trans:m.order.frontoffice.tracking-text,ucf,lab}</span> ${structure expedition/getTrackingTextAsHtml}</li>
 	<li tal:repeat="line expeditionlines">
-		<span>${line/getProduct/getLabelAsHtml} - ${line/getProduct/getCodeReferenceAsHtml}</span>
+		<span>${structure line/getProduct/getLabelAsHtml} - ${structure line/getProduct/getCodeReferenceAsHtml}</span>
 		<span>${line/getQuantity} / ${line/getOrderProductQuantity}</span>
 		<tal:block tal:condition="line/getURL">
 			<a class="link download" href="${line/getURL}">${trans:m.order.frontoffice.product-download,ucf}</a> ${line/getURLClick} <span>${trans:m.order.frontoffice.product-download-count,ucf}</span>
