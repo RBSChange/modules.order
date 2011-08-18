@@ -283,4 +283,13 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 		}
 		return null;		
 	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	protected function redirectToCart($cart)
+	{
+		$this->redirectToUrl($cart->getCartUrl());
+		exit(0);
+	}
 }
