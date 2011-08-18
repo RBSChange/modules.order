@@ -89,9 +89,10 @@ class order_OrderProcessService extends BaseService
 	 */
 	protected function getFromSession()
 	{
-		if (isset($_SESSION['order_OrderProcess']) && $_SESSION['order_OrderProcess'] instanceof order_OrderProcess)
+		$op = change_Controller::getInstance()->getStorage()->read('order_OrderProcess');
+		if ($op instanceof order_OrderProcess)
 		{
-			return $_SESSION['order_OrderProcess'];
+			return $op;
 		}
 		return null;
 	}
@@ -103,11 +104,11 @@ class order_OrderProcessService extends BaseService
 	{
 		if ($orderProcess instanceof order_OrderProcess) 
 		{
-			$_SESSION['order_OrderProcess'] = $orderProcess;
+			change_Controller::getInstance()->getStorage()->write('order_OrderProcess', $orderProcess);
 		}		
 		else
 		{
-			$_SESSION['order_OrderProcess'] = null;
+			change_Controller::getInstance()->getStorage()->remove('order_OrderProcess');
 		}
 	}	
 	
