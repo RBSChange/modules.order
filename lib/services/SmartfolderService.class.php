@@ -17,7 +17,7 @@ class order_SmartfolderService extends filter_QueryfolderService
 	{
 		if (self::$instance === null)
 		{
-			self::$instance = self::getServiceClassInstance(get_class());
+			self::$instance = new self();
 		}
 		return self::$instance;
 	}

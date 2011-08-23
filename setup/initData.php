@@ -36,7 +36,7 @@ class order_Setup extends object_InitDataSetup
 		{
 			uixul_DocumentEditorService::getInstance()->compileEditorsConfig();
 		}
-		f_permission_PermissionService::getInstance()->addImportInRight('catalog', 'order', 'catalog.rights');
+		change_PermissionService::getInstance()->addImportInRight('catalog', 'order', 'catalog.rights');
 		
 		$this->executeModuleScript('listfeesstrategy.xml', 'order');
 	}

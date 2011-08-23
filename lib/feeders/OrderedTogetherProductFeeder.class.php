@@ -16,8 +16,7 @@ class order_OrderedTogetherProductFeeder extends catalog_ProductFeeder
 	{
 		if (self::$instance === null)
 		{
-			$finalClassName = Injection::getFinalClassName(get_class());
-			self::$instance = new $finalClassName();
+			self::$instance = new self();
 		}
 		return self::$instance;
 	}

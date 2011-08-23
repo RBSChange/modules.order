@@ -67,8 +67,8 @@ class order_BlockCartAction extends website_BlockAction
 		));
 
 		// Backlink.
-		$user = $this->getContext()->getUser();
-		if (!$user->hasAttribute('cartBackLink'))
+		$cbLink = $this->getStorage()->readForUser('cartBackLink');
+		if (!$cbLink)
 		{
 			if (isset($_SERVER['HTTP_REFERER']))
 			{
@@ -78,7 +78,7 @@ class order_BlockCartAction extends website_BlockAction
 				{
 					$href = substr($href, 0, $index);
 				}
-				$user->setAttribute('cartBackLink', $href);
+				$this->getStorage()->writeForUser('cartBackLink', $href);
 			}
 		}
 		$request->setAttribute('addressInfo', $cart->getAddressInfo());
