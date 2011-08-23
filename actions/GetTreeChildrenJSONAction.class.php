@@ -9,8 +9,7 @@ class order_GetTreeChildrenJSONAction extends generic_GetTreeChildrenJSONAction
 	 */
 	protected function getVirtualChildren($document, $subModelNames, $propertyName)
 	{
-		if ($document instanceof generic_persistentdocument_folder && 
-			!($document instanceof order_persistentdocument_smartfolder))
+		if ($document->getDocumentModelName() === 'modules_generic/folder')
 		{
 			$dateLabel = $document->getLabel();
 			$matches = null;			
