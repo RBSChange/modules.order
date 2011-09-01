@@ -296,6 +296,11 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		$expedition->setBill($bill);
 		
 		$shippingMode = $expedition->getShippingMode();
+	    if ($shippingMode === null)
+	    {
+	        return null;
+	    }
+		
 		$expedition->setTransporteur($shippingMode->getCodeReference());
 		$expedition->setTrackingURL($shippingMode->getTrackingUrl());
 		

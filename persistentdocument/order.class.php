@@ -499,7 +499,14 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		$result = array();
 		if (intval($this->getShippingModeId()) > 0)
 		{
-			$sm = DocumentHelper::getDocumentInstance($this->getShippingModeId(), 'modules_shipping/mode');
+		    try 
+		    {
+			    $sm = DocumentHelper::getDocumentInstance($this->getShippingModeId(), 'modules_shipping/mode');
+		    }
+		    catch (Exception $e)
+		    {
+		        return "N.A.";    
+		    }
 			$result[] = $sm->getLabel();
 		} 
 		
