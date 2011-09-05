@@ -67,6 +67,6 @@
 		<p class="normal"><strong class="error">${trans:m.order.frontoffice.payment-failed-text,ucf}</strong></p>
 	</tal:block>
 	<tal:block tal:repeat="bill bills">
-		<tal:block change:block="" name="payment" module="payment" billid="${bill/getId}" />
+		<tal:block tal:condition="repeat/bill/end" change:block="" name="payment" module="payment" billid="${bill/getId}" />
 	</tal:block>
 </div>
