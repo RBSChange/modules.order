@@ -11,9 +11,8 @@
   <key id="maxamount">Maximum</key>
   <key id="customer">Client</key>
   <key id="customer-help">Client</key>
-  <key id="amountnotapplied">Montant non réstitué</key>
+  <key id="amountnotapplied">Montant non restitué</key>
   <key id="amountnotapplied-help">Montant de l'avoir non encore restitué au client</key>
-  
   <key id="manual-recredit">remboursement manuel</key>
   <key id="recredit-dialog-title">remboursement</key>
   <key id="transactionid">Identifiant du remboursement</key>

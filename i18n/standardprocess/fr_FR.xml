@@ -20,7 +20,7 @@
   
   <key id="bad-password">mot de passe non valide</key>
   <key id="invalid-account">Cette email n'est pas un identifiant de compte valide</key>
-  <key id="invalid-password-validate">Mot de passe non comfirmé</key>
+  <key id="invalid-password-validate">Mot de passe non confirmé</key>
   
   <key id="address-generate-password">generer un mot de passe</key>
   <key id="address-password-validate">confimer le mot de passe</key>
@@ -73,10 +73,10 @@
   
   <key id="result-status-title">Confirmation du paiement de la commande</key>
   <key id="result-status-date">en date du</key>
-  <key id="result-client-ref">Réference client</key>
+  <key id="result-client-ref">Référence client</key>
   <key id="result-order-number">Commande n°</key>
   <key id="result-bill-number">Facture  n°</key>
-  <key id="result-transaction-id">Réference banquaire</key>
+  <key id="result-transaction-id">Référence bancaire</key>
   <key id="result-amount">montant</key>
   <key id="result-invalid-order">Impossible de trouver la référence de votre commande.</key>
 </i18n>
