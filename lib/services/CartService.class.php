@@ -574,7 +574,7 @@ class order_CartService extends BaseService
 					$discountInfo->setValueWithoutTax($wwt);
 					foreach ($result as $rateKey => $rateValue) 
 					{
-						$result[$rateKey] -= $taxe;
+						$result[$rateKey] -= ($taxe / $totalTax) * $rateValue;
 					}
 					$totalTax = array_sum($result);
 				}
