@@ -568,11 +568,12 @@ class order_CartService extends BaseService
 				$value = $discountInfo->getValueWithTax();
 				if ($value > 0)
 				{
-					$taxe = $value * $globalTaxRate;
-					$discountInfo->setValueWithoutTax($value - $taxe);
+					$wwt = $value/(1+$globalTaxRate);
+					$taxe = $value - $wwt;
+					$discountInfo->setValueWithoutTax($wwt);
 					foreach ($result as $rateKey => $rateValue) 
 					{
-						$result[$rateKey] += ($taxe / $totalTax) * $rateValue;
+						$result[$rateKey] -= ($taxe / $totalTax) * $rateValue;
 					}
 					$totalTax = array_sum($result);
 				}
