@@ -172,15 +172,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$lineInfo = array();
 		$lineInfo['linetype'] = $type;
-		$product = $line->getProduct();
-		if ($product === null)
-		{
-			$lineInfo['productLabel'] = f_Locale::translateUI('&module.customer.bo.doceditor.panel.carts.Unexisting-product;');
-		}
-		else
-		{
-			$lineInfo['productLabel'] = $product->getLabel();
-		}
+		$lineInfo['productLabel'] = $line->getOrderLabel() ? $line->getOrderLabel() : $line->getLabel();
 		$lineInfo['codeReference'] = $line->getCodeReference();
 
 		$lineInfo['unitPriceWithoutTax'] = $order->formatPrice($line->getUnitPriceWithoutTax());
