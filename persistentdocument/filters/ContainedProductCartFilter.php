@@ -44,7 +44,8 @@ class order_ContainedProductCartFilter extends order_LinesCartFilterBase
 				}
 				else if (($product = $line->getProduct()) instanceof catalog_persistentdocument_productdeclination)
 				{
-					$productId = $product->getRelatedDeclinedProduct()->getId();
+					/* @var $product catalog_persistentdocument_productdeclination */
+					$productId = $product->getDeclinedproduct()->getId();
 					if (in_array($productId, $productIds))
 					{
 						$quantity += $line->getQuantity();
