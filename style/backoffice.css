@@ -1,37 +1,3 @@
-treechildren::-moz-tree-image(modules_order_preferences){
-	list-style-image: url(/changeicons/small/order.png) ;
-}
-treechildren::-moz-tree-image(modules_order_order){
-	list-style-image: url(/changeicons/small/order.png) ;
-}
-treechildren::-moz-tree-image(modules_order_smartfolder){
-	list-style-image: url(/changeicons/small/folder.png);
-}
-treechildren::-moz-tree-image(modules_order_message){
-	list-style-image: url(/changeicons/small/document.png);
-}
-treechildren::-moz-tree-image(modules_order_orderline){
-	list-style-image: url(/changeicons/small/shoppingcart_full.png);
-}
-treechildren::-moz-tree-image(modules_order_bill){
-	list-style-image: url(/changeicons/small/bill.png);
-}
-treechildren::-moz-tree-image(modules_order_expeditionline){
-	list-style-image: url(/changeicons/small/document.png);
-}
-treechildren::-moz-tree-image(modules_order_expedition){
-	list-style-image: url(/changeicons/small/expedition.png);
-}
-treechildren::-moz-tree-image(modules_order_creditnote){
-	list-style-image: url(/changeicons/small/document.png);
-}
-
 wdialog[template="ProcessReshipmentNpai"] .dialog-header{
 	background: url(/changeicons/small/expedition.png) transparent center  left no-repeat!important;
-}
-treechildren::-moz-tree-image(modules_order_cartmodifier){
-	list-style-image: url(/changeicons/small/cart-modifier.png);
-}
-treechildren::-moz-tree-image(modules_order_fees){
-	list-style-image: url(/changeicons/small/cart-modifier.png);
 }
