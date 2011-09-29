@@ -70,6 +70,8 @@
 				<tag name="contextual_website_website_modules_order_order-list" />
 				<changecontent for="content-block">
 					<changeblock type="modules_order_orderlist" />
+					<changeblock type="modules_order_Creditnotes" />
+					<changeblock type="modules_order_Repayments" />
 				</changecontent>
 			</page>
 			<page label="Détail d'une commande" navigationVisibility="hidden" 
