@@ -147,7 +147,7 @@ class order_OrderProcessService extends BaseService
 	 * @param string $email
 	 * @param string $password
 	 * @param order_AddressBean $address
-	 * @return users_persistentdocument_websitefrontenduser
+	 * @return users_persistentdocument_user
 	 */
 	public function createNewUser($website, $email, $password, $address)
 	{
@@ -155,11 +155,8 @@ class order_OrderProcessService extends BaseService
 		try
 		{
 			$tm->beginTransaction();
-			$user = users_WebsitefrontenduserService::getInstance()->getNewDocumentInstance();
-			$user->setTitleid((intval($address->Title) > 0) ? intval($address->Title) : null);
-			$user->setFirstname($address->FirstName);
-			$user->setLastname($address->LastName);
-			$user->setLogin($email);
+			$user = users_UserService::getInstance()->getNewDocumentInstance();
+			$user->setLabel($address->FirstName . ' '. $address->LastName);
 			$user->setEmail($email);
 			if ($password !== null)
 			{
@@ -168,14 +165,19 @@ class order_OrderProcessService extends BaseService
 			else
 			{
 				$user->setGeneratepassword(true);
-			}
-	
-			$group = users_WebsitefrontendgroupService::getInstance()->getDefaultByWebsite($website);
-			$user->setWebsiteid($group->getWebsiteid());
+			}			
+			$group = $website->getGroup();
 			$user->addGroups($group);
+			$user->save();	
+					
+			$profile = users_UsersprofileService::getInstance()->getNewDocumentInstance();
+			$profile->setAccessor($user);		
+			$profile->setTitleid((intval($address->Title) > 0) ? intval($address->Title) : null);
+			$profile->setFirstname($address->FirstName);
+			$profile->setLastname($address->LastName);
+			$profile->setRegisteredwebsiteid($website->getId());
+			$profile->save();
 			
-			// Save the user.
-			$user->save();
 			$user->activate();			
 			$tm->commit();
 		}

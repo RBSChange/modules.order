@@ -93,7 +93,7 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 	 */
 	protected function redirectToEmptyCart()
 	{
-		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		$website = website_WebsiteService::getInstance()->getCurrentWebsite();
 		$page = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart-empty', $website, false);
 		if ($page !== null)
 		{
@@ -108,7 +108,7 @@ class order_BlockAbstractProcessStepAction extends website_TaggerBlockAction
 	 */
 	protected function redirectToCart()
 	{
-		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		$website = website_WebsiteService::getInstance()->getCurrentWebsite();
 		$page = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart', $website, true);
 		$url = LinkHelper::getDocumentUrl($page);
 		change_Controller::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));

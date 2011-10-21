@@ -68,7 +68,7 @@ class order_CartService extends BaseService
 		}
 		else
 		{
-			$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+			$website = website_WebsiteService::getInstance()->getCurrentWebsite();
 		}
 		
 		$page = null;
@@ -844,7 +844,7 @@ class order_CartService extends BaseService
 		$ls = LocaleService::getInstance();
 		
 		// Check website.
-		$currentWebsite = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		$currentWebsite = website_WebsiteService::getInstance()->getCurrentWebsite();
 		if ($currentWebsite->getId() != $shop->getWebsite()->getId())
 		{
 			$cart->addTransientErrorMessage($ls->transFO('m.order.fo.shop-in-other-website', array('ucf')));
@@ -887,7 +887,7 @@ class order_CartService extends BaseService
 			// Generate the URL to redirect.
 			if (isset($paramsToRedirect['confirmPagePopin']) && $paramsToRedirect['confirmPagePopin'] == 'true')
 			{
-				$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+				$website = website_WebsiteService::getInstance()->getCurrentWebsite();
 				$page = TagService::getInstance()->getDocumentByContextualTag($tag, $website);
 				$url = LinkHelper::getActionUrl('website', 'PopIn', array('pageref' => $page->getId(), 'orderParam' => $paramsToRedirect));
 			}

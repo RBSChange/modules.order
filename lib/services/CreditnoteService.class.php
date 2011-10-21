@@ -376,7 +376,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		
 		// Send the notification.
 		$order = $document->getOrder();
-		$wms = website_WebsiteModuleService::getInstance();
+		$wms = website_WebsiteService::getInstance();
 		$currentWebsite = $wms->getCurrentWebsite();
 		$wms->setCurrentWebsite($order->getWebsite());
 		$rc = RequestContext::getInstance();

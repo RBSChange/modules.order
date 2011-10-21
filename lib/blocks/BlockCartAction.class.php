@@ -37,7 +37,7 @@ class order_BlockCartAction extends website_BlockAction
 				{
 					$emptyCartPage = TagService::getInstance()->getDocumentByContextualTag(
 						'contextual_website_website_modules_order_cart-empty',
-						website_WebsiteModuleService::getInstance()->getCurrentWebsite()
+						website_WebsiteService::getInstance()->getCurrentWebsite()
 					);
 					if ($emptyCartPage->getId() != $pageId)
 					{

@@ -84,7 +84,7 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 	 */
 	function executeLogin($request, $response, order_IdentifyStepBean $identifyStep)
 	{
-		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		$website = website_WebsiteService::getInstance()->getCurrentWebsite();
 		$user = users_UserService::getInstance()->getIdentifiedFrontendUser($identifyStep->email, $identifyStep->password, $website->getId());
 		if ($user !== null)
 		{
@@ -99,7 +99,7 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 	}
 	
 	/**
-	 * @param users_persistentdocument_websitefrontenduser $user
+	 * @param users_persistentdocument_user $user
 	 * @param order_IdentifyStepBean $identifyStep
 	 */
 	private function authentifyUser($user, $identifyStep)
@@ -154,13 +154,13 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 	 */
 	private function checkValidNewUserAccount($login)
 	{
-		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
-		$user = users_UserService::getInstance()->getFrontendUserByLogin($login, $website->getId());
-		if ($user !== null)
+		$website = website_WebsiteService::getInstance()->getCurrentWebsite();
+		$valid = users_UserService::getInstance()->validateUserLogin($login, null, array($website->getGroup()->getId()));
+		if (!$valid)
 		{
 			$errMsg = f_Locale::translate('&modules.order.document.identifystepbean.Useraccount-already-exist;');	
 			$this->addError($errMsg);
-			return false;			
+			return false;
 		}
 		return true;
 	}
@@ -180,8 +180,7 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 	 */
 	function validateCreateAccountInput($request, $identifyStep)
 	{
-		$securityLevel = ModuleService::getInstance()->getPreferenceValue('users', 'securitylevel');
-		
+		$securityLevel = website_WebsiteService::getInstance()->getCurrentWebsite()->getGroup()->getSecuritylevel();	
 		$validationRules = array(
 			'newemail{blank:false;email:true}',
 			'firstname{blank:false}',
@@ -198,7 +197,8 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 		}
 
 		$ok = $this->processValidationRules($validationRules, $request, $identifyStep);
-		$accountExists = users_WebsitefrontenduserService::getInstance()->getFrontendUserByLogin($identifyStep->newemail, website_WebsiteModuleService::getInstance()->getCurrentWebsite()->getId()) !== null;
+		$groupsIds = array(website_WebsiteService::getInstance()->getCurrentWebsite()->getGroup()->getId());
+		$accountExists = !users_UserService::getInstance()->validateUserLogin($identifyStep->newemail, null, $groupsIds);
 		if ($accountExists)
 		{
 			$errMsg = f_Locale::translate('&modules.order.document.identifystepbean.Login-already-exists-error;');
@@ -229,7 +229,7 @@ class order_BlockIdentifyStepAction extends order_BlockAbstractProcessStepAction
 	 */
 	function executeCreateAccount($request, $response, order_IdentifyStepBean $identifyStep)
 	{
-		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		$website = website_WebsiteService::getInstance()->getCurrentWebsite();
 		$customer = customer_CustomerService::getInstance()->createNewCustomer($website->getId(), $identifyStep->newemail, $identifyStep->firstname, $identifyStep->lastname, $identifyStep->newpassword);
 		if ($customer !== null)
 		{

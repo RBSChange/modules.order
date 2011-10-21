@@ -23,7 +23,7 @@ class order_BlockShortCartAction extends website_BlockAction
 		$request->setAttribute('cart', $cart);
 		
 		// Check if order process is started or not.
-		$currentPage = website_WebsiteModuleService::getInstance()->getCurrentPage();
+		$currentPage = website_PageService::getInstance()->getCurrentPage();
 		if ($op->inProcess())
 		{
 			// Set the url only if it is not the current page.

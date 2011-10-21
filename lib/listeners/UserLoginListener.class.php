@@ -7,7 +7,7 @@ class order_UserLoginListener
 	public function onUserLogin($sender, $params)
 	{	
 		$user = $params['user'];
-		if ($user instanceof users_persistentdocument_frontenduser)
+		if ($user instanceof users_persistentdocument_user)
 		{
 			// Cart merge has to be done only if the current user is a customer.
 			$customer = customer_CustomerService::getInstance()->getByUser($user);

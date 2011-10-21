@@ -6,7 +6,7 @@
 	publish-on-day-change="false" backoffice-indexable="false">
 	<properties>
 		<add name="label" default-value="preferences" />
-		<add name="orderConfirmedNotificationUser" type="modules_users/backenduser" max-occurs="-1" />
+		<add name="orderConfirmedNotificationUser" type="modules_users/user" max-occurs="-1" />
 		<add name="disableCoupons" type="Boolean" default-value="false" />
 		<add name="orderProcessClosedBeginDate" type="DateTime"/>
 		<add name="orderProcessClosedEndDate" type="DateTime" />

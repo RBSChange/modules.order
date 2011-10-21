@@ -45,7 +45,7 @@ class order_MessageService extends f_persistentdocument_DocumentService
 	{
 		$order = $document->getOrder();
 		$update = !$order->isModified();
-		$order->setNeedsAnswer(!($document->getSender() instanceof users_persistentdocument_backenduser));
+		$order->setNeedsAnswer(!($document->getSender() instanceof users_persistentdocument_user));
 		if ($update && $order->isModified())
 		{
 			$this->pp->updateDocument($order);

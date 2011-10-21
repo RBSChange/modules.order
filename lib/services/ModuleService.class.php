@@ -417,7 +417,7 @@ class order_ModuleService extends ModuleBaseService
 	protected function clearDraftBill($bill)
 	{
 		$order = $bill->getOrder();
-		$user = users_BackenduserService::getInstance()->getCurrentBackEndUser();
+		$user = users_UserService::getInstance()->getCurrentBackEndUser();
 		
 		if ($bill->getTransactionId())
 		{

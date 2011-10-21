@@ -671,7 +671,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$parameters['productIds'] = $productIds;
 		$parameters['quantities'] = $quantities;
 		
-		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		$website = website_WebsiteService::getInstance()->getCurrentWebsite();
 		$page = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart', $website);
 		$url = str_replace('&amp;', '&', LinkHelper::getDocumentUrl($page, RequestContext::getInstance()->getLang()));
 		$parameters['backUrl'] = $url;

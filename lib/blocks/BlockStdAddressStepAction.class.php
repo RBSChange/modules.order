@@ -67,30 +67,15 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
 			$cart->setUserId(null);
 			$cart->setCustomerId(null);
-			$wfus = users_WebsitefrontenduserService::getInstance();
+			$wfus = users_UserService::getInstance();
 			
-			$user = $wfus->getIdentifiedFrontendUser($login, $password, $website->getId());
+			$user = $wfus->getIdentifiedUser($login, $password, $website->getGroup()->getId());
 			if ($user === null)
 			{
-				$user = $wfus->getFrontendUserByLogin($login, $website->getId());
-				if ($user)
-				{
-					if ($user->isPublished())
-					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.bad-password', array('ucf'));
-						$this->addError($error);
-						$this->addErrorForProperty('password', $error);
-						$valid = false;
-					}
-					else
-					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
-						$this->addError($error);
-						$this->addErrorForProperty('email', $error);
-						$valid = false;
-					}
-					$user = null;
-				}
+				$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
+				$this->addError($error);
+				$this->addErrorForProperty('email', $error);
+				$valid = false;
 			}
 			
 			if ($valid && $user)
@@ -98,7 +83,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 				$cart->setUserId($user->getId());
 				$cart->setMergeWithUserCart(false);
 				$cart->setAddressInfo(new order_ShippingStepBean());
-				$wfus->authenticateFrontEndUser($user);
+				$wfus->authenticate($user);
 			}
 		}
 		
@@ -195,7 +180,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			if ($cart->getUserId() === null)
 			{
 				$website = $this->getContext()->getWebsite();
-				$user = users_WebsitefrontenduserService::getInstance()->getFrontendUserByLogin($email, $website->getId());
+				$user = users_UserService::getInstance()->getFrontendUserByLogin($email, $website->getId());
 				if ($user !== null)
 				{
 					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
@@ -396,7 +381,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	 */
 	protected function redirectToCart($cart)
 	{
-		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		$website = website_WebsiteService::getInstance()->getCurrentWebsite();
 		$page = null;
 		if ($cart->isEmpty())
 		{

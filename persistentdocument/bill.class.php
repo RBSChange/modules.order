@@ -182,7 +182,7 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	/**
 	 * @see payment_Order::getPaymentUser()
 	 *
-	 * @return users_persistentdocument_frontenduser
+	 * @return users_persistentdocument_user
 	 */
 	function getPaymentUser()
 	{
