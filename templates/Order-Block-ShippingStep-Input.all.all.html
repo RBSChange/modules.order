@@ -99,7 +99,7 @@
 					</li>
 				</ol>			
 				<div class="cleaner"></div>
-				<p class="normal error">${trans:m.order.document.shippingstepbean.no-shipping-mode,ucf}</p>
+				<p tal:condition="not: shippingModes/0" class="normal error">${trans:m.order.document.shippingstepbean.no-shipping-mode,ucf}</p>
 			</fieldset>				
 		</tal:block>
 		
