@@ -17,7 +17,7 @@
 		<model name="modules_generic/folder">
 			<children>
 				<child model="modules_generic/folder" />
-				<child model="modules_order/order" from="treenode" />
+				<child model="modules_order/order" from="function" />
 			</children>
 			<columns>
 				<column name="formattedTotalAmountWithTax" flex="1" label="TotalAmountWithTax" />
