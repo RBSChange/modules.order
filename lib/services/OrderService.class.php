@@ -628,6 +628,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 
 			// Save the Order.
 			$folder = $this->getFolderOfDay($orderDocument->getUICreationdate());
+			
 			$orderDocument->save($folder->getId());
 			foreach ($orderDocument->getLineArray() as $orderLine)
 			{
@@ -977,6 +978,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	protected function preInsert($document, $parentNodeId)
 	{
+		$document->setInsertInTree(false);
+		
 		if ($document->getLabel() === null)
 		{
 			$document->setLabel(date_Calendar::now()->toString());
