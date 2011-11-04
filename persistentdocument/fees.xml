@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd"
-	model-version="1.0" extend="modules_order/cartmodifier">
-	<properties>
-		<add name="shop" inverse="true" />
-		<add name="query" type="Lob" />
-		<add name="applicationstrategy" type="String" min-occurs="1" from-list="modules_order/feesstrategy" />
-	</properties>
-	<serializedproperties>
-		<add name="strategylabel" type="String" />
-	</serializedproperties>
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/4.0.xsd" model-version="1.0" extend="modules_order/cartmodifier">
+  <properties>
+    <property name="shop" inverse="true"/>
+    <property name="query" type="Lob"/>
+    <property name="applicationstrategy" type="String" min-occurs="1" from-list="modules_order/feesstrategy"/>
+  </properties>
+  <serializedproperties>
+    <property name="strategylabel" type="String"/>
+  </serializedproperties>
 </document>

@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd"
-	model-version="1.0" icon="order" 
-	indexable="false" has-url="false"
-	publish-on-day-change="false" backoffice-indexable="false">
-	<properties>
-		<add name="label" default-value="preferences" />
-		<add name="orderConfirmedNotificationUser" type="modules_users/user" max-occurs="-1" />
-		<add name="disableCoupons" type="Boolean" default-value="false" />
-		<add name="orderProcessClosedBeginDate" type="DateTime"/>
-		<add name="orderProcessClosedEndDate" type="DateTime" />
-		<add name="orderProcessClosedDateMessage" type="XHTMLFragment" />
-		<add name="orderProcessClosed" type="Boolean" default-value="false" />
-		<add name="orderProcessClosedMessage" type="XHTMLFragment" />
-		<add name="orderProcessAllowedCustomer" type="modules_customer/customer" max-occurs="-1" />
-		<add name="enableCommentReminder" type="Boolean" min-occurs="1" default-value="true" />
-		<add name="commentReminderPeriod" type="Integer" min-occurs="1" default-value="7" />
-		<add name="commentReminderReference" type="String" min-occurs="1" default-value="shipment" from-list="modules_order/commentreminderreferences" />
-		<add name="commentReminderSelection" type="String" min-occurs="1" default-value="random" from-list="modules_order/commentreminderselections" />
-		<add name="commentReminderCount" type="Integer" min-occurs="1" default-value="3">
-			<constraints>min:1</constraints>
-		</add>
-	</properties>
-	<statuses default="PUBLICATED" />
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/4.0.xsd" model-version="1.0" icon="order" indexable="false" has-url="false" publish-on-day-change="false" backoffice-indexable="false">
+  <properties>
+    <property name="label" default-value="preferences"/>
+    <property name="orderConfirmedNotificationUser" type="modules_users/user" max-occurs="-1"/>
+    <property name="disableCoupons" type="Boolean" default-value="false"/>
+    <property name="orderProcessClosedBeginDate" type="DateTime"/>
+    <property name="orderProcessClosedEndDate" type="DateTime"/>
+    <property name="orderProcessClosedDateMessage" type="XHTMLFragment"/>
+    <property name="orderProcessClosed" type="Boolean" default-value="false"/>
+    <property name="orderProcessClosedMessage" type="XHTMLFragment"/>
+    <property name="orderProcessAllowedCustomer" type="modules_customer/customer" max-occurs="-1"/>
+    <property name="enableCommentReminder" type="Boolean" min-occurs="1" default-value="true"/>
+    <property name="commentReminderPeriod" type="Integer" min-occurs="1" default-value="7"/>
+    <property name="commentReminderReference" type="String" min-occurs="1" default-value="shipment" from-list="modules_order/commentreminderreferences"/>
+    <property name="commentReminderSelection" type="String" min-occurs="1" default-value="random" from-list="modules_order/commentreminderselections"/>
+    <property name="commentReminderCount" type="Integer" min-occurs="1" default-value="3">
+      <constraint name="min" min="1"/>
+    </property>
+  </properties>
+  <statuses default="PUBLICATED"/>
 </document>
