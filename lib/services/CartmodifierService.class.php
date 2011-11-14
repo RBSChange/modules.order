@@ -57,32 +57,39 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 	 */
 	public function refreshModifiersForCart($cart)
 	{
-		$oldModifierInfoArray = array();				
+		$old = array();				
 		foreach ($cart->getDiscountArray() as $modifierInfo) 
 		{
-			$oldModifierInfoArray[$modifierInfo->getId()] = $modifierInfo;
+			$old[$modifierInfo->getId()] = array('discount', $modifierInfo);
 		}
+		$cart->clearDiscountArray();
+		
 		foreach ($cart->getFeesArray() as $feesInfo) 
 		{
-			$oldModifierInfoArray[$feesInfo->getId()] = $feesInfo;
+			$old[$feesInfo->getId()] = array('fees', $feesInfo);
 		}
+		$cart->clearFeesArray();
 		
 		$newModifiers = array();				
 		$query = $this->createQuery()->add(Restrictions::published())
 			->add(Restrictions::eq('shop', $cart->getShop()))
-			->add(Restrictions::eq('exclusive', true));
+			->add(Restrictions::eq('exclusive', true))
+			->addOrder(Order::desc('applicationPriority'))
+			->addOrder(Order::asc('id'));
+			
 		foreach ($query->find() as $modifier)
 		{
-			
+			$mid = $modifier->getId();
 			if ($modifier->getDocumentService()->validateForCart($modifier, $cart))
 			{
+				if (isset($old[$mid])) 
+				{
+					if ($old[$mid][0] === 'discount') {$cart->addDiscount($old[$mid][1]);} else {$cart->addFeesInfo($old[$mid][1]);}
+				}
 				if ($modifier->applyToCart($cart))
 				{
-					if (isset($oldModifierInfoArray[$modifier->getId()]))
-					{
-						unset($oldModifierInfoArray[$modifier->getId()]);
-					}
-					$newModifiers[$modifier->getId()] = $modifier;
+					if (isset($old[$mid])) {unset($old[$mid]);}
+					$newModifiers[$mid] = $modifier;
 				}
 			}
 		}
@@ -93,22 +100,27 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 			$query = $this->createQuery()->add(Restrictions::published())
 				->add(Restrictions::eq('shop', $cart->getShop()))
 				->add(Restrictions::eq('exclusive', false))
-				->add(Restrictions::isNotEmpty('excludeModifier'));
+				->add(Restrictions::isNotEmpty('excludeModifier'))
+				->addOrder(Order::desc('applicationPriority'))
+				->addOrder(Order::asc('id'));
+			
 			foreach ($query->find() as $modifier)
 			{
+				$mid = $modifier->getId();
 				if ($modifier->getDocumentService()->validateForCart($modifier, $cart))
 				{
+					if (isset($old[$mid])) 
+					{
+						if ($old[$mid][0] === 'discount') {$cart->addDiscount($old[$mid][1]);} else {$cart->addFeesInfo($old[$mid][1]);}
+					}
 					if ($modifier->applyToCart($cart))
 					{
 						foreach ($modifier->getExcludeModifierArray() as $toExclude) 
 						{
 							$exludeModifier[] = $toExclude->getId();
 						}
-						if (isset($oldModifierInfoArray[$modifier->getId()]))
-						{
-							unset($oldModifierInfoArray[$modifier->getId()]);
-						}
-						$newModifiers[$modifier->getId()] = $modifier;
+						if (isset($old[$mid])) {unset($old[$mid]);}
+						$newModifiers[$mid] = $modifier;
 					}
 				}
 			}
@@ -116,31 +128,57 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 			$query = $this->createQuery()->add(Restrictions::published())
 				->add(Restrictions::eq('shop', $cart->getShop()))
 				->add(Restrictions::eq('exclusive', false))
-				->add(Restrictions::isEmpty('excludeModifier'));
+				->add(Restrictions::isEmpty('excludeModifier'))
+				->addOrder(Order::desc('applicationPriority'))
+				->addOrder(Order::asc('id'));
+				
 			if (count($exludeModifier) > 0)
 			{
 				$query->add(Restrictions::notin('id', $exludeModifier));
-			}			
+			}	
+					
 			foreach ($query->find() as $modifier)
 			{
+				$mid = $modifier->getId();
 				if ($modifier->getDocumentService()->validateForCart($modifier, $cart))
 				{
+					if (isset($old[$mid])) 
+					{
+						if ($old[$mid][0] === 'discount') {$cart->addDiscount($old[$mid][1]);} else {$cart->addFeesInfo($old[$mid][1]);}
+					}
 					if ($modifier->applyToCart($cart))
 					{
-						if (isset($oldModifierInfoArray[$modifier->getId()]))
-						{
-							unset($oldModifierInfoArray[$modifier->getId()]);
-						}
-						$newModifiers[$modifier->getId()] = $modifier;
+						if (isset($old[$mid])) {unset($old[$mid]);}
+						$newModifiers[$mid] = $modifier;
 					}
 				}
 			}			
 		}
 		
-		foreach ($oldModifierInfoArray as $modifierInfo) 
+		foreach ($old as $data) 
 		{
-			$modifier = order_persistentdocument_cartmodifier::getInstanceById($modifierInfo->getId());
-			$modifier->removeFromCart($cart);
+			list($t, $modifierInfo) = $data;
+			$mid = $modifierInfo->getId();
+			$model = $this->getPersistentProvider()->getDocumentModelName($mid);
+			if ($model)
+			{
+				$modifier = order_persistentdocument_cartmodifier::getInstanceById($mid);
+				if ($t === 'discount') 
+				{	
+					if ($cart->getDiscountById($mid) === null)
+					{
+						$cart->addDiscount($modifierInfo);
+					}
+				} 
+				else 
+				{
+					if ($cart->getFeesById($mid) === null)
+					{
+						$cart->addFeesInfo($modifierInfo);
+					}
+				}
+				$modifier->removeFromCart($cart);
+			}
 		}
 	}
 	
