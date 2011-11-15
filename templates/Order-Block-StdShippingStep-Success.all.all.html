@@ -126,6 +126,13 @@
 						<dd><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify}</a></dd>
 					</dl>
 				</li>
+				<li class="odd">
+					<dl>
+						<dt>${trans:m.order.standardprocess.resume-address-billing,ucf}</dt>
+						<dd tal:repeat="line billingAddress">${line}</dd>
+						<dd><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify}</a></dd>
+					</dl>
+				</li>
 			</ol>
 		</div>
     </div>
