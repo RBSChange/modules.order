@@ -5,7 +5,7 @@
  */
 class order_BlockStdShippingStepAction extends website_BlockAction
 {
-	
+
 	/**
 	 * @see website_BlockAction::getInputViewName()
 	 */
@@ -13,8 +13,8 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 	{
 		return website_BlockView::SUCCESS;
 	}
-	
-	
+
+
 	/**
 	 * @see website_BlockAction::execute()
 	 *
@@ -27,22 +27,22 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 		if ($this->isInBackoffice())
 		{
 			return website_BlockView::NONE;
-		}		
+		}
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
 		if ($cart->isEmpty() || $cart->getCustomer() === null) {$this->redirectToCart($cart);}
 		$op = $cart->getOrderProcess();
 		$op->setCurrentStep('Shipping');
-		
+
 		$this->setRequestParams($request, $cart);
 		return $this->getInputViewName();
 	}
-	
+
 	/**
 	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @return String
-	 */		
+	 */
 	public function executeUpdateMode($request, $response)
 	{
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
@@ -61,66 +61,75 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 			}
 			$cart->setCurrentTestFilter(null);
 		}
-		
+
 		$this->setRequestParams($request, $cart);
 		return $this->getInputViewName();
 	}
-	
+
 	/**
 	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @return String
-	 */	
+	 */
 	public function executeNextStep($request, $response)
 	{
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
 		if ($cart->canSelectShippingModeId())
 		{
-		   $shippingFilterId = intval($request->getParameter('shippingFilterId', 0));
-		   if ($shippingFilterId == 0)
-		   {
-		   		$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.shipping-mode-not-selected'), "shippingFilters");
-		   }
-		   else
-		   {
-		   		$shippingFilter = catalog_persistentdocument_shippingfilter::getInstanceById($shippingFilterId);
-		   		$cart->setCurrentTestFilter($shippingFilter);
-				if ($shippingFilter->getDocumentService()->isValidShippingFilter($shippingFilter, $cart))
+			if ($request->hasParameter('shippingFilterId') || !$cart->getShippingFilterId())
+			{
+				$shippingFilterId = intval($request->getParameter('shippingFilterId', 0));
+				if ($shippingFilterId == 0)
 				{
-					$cart->setRequiredShippingFilter(0, $shippingFilter);
+					$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.shipping-mode-not-selected'), "shippingFilters");
 				}
 				else
 				{
-					$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-shipping-mode'), "shippingFilters");
+					$shippingFilter = catalog_persistentdocument_shippingfilter::getInstanceById($shippingFilterId);
+					$cart->setCurrentTestFilter($shippingFilter);
+					if ($shippingFilter->getDocumentService()->isValidShippingFilter($shippingFilter, $cart))
+					{
+						$cart->setRequiredShippingFilter(0, $shippingFilter);
+					}
+					else
+					{
+						$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-shipping-mode'), "shippingFilters");
+					}
+					$cart->setCurrentTestFilter(null);
 				}
-				$cart->setCurrentTestFilter(null);
-		   }
+			}
 		}
-		
+
 		if (!$this->hasErrors())
 		{
+			if (ModuleService::getInstance()->moduleExists('featurepackb')
+				&& !featurepackb_ShippingModeConfigurationService::getInstance()->checkModesConfiguration($this, $request, 'nextStep'))
+			{
+				return null;
+			}
+				
 			$op = $cart->getOrderProcess();
 			$nextStep = $op->getNextStepForStep('Shipping');
 			$op->setCurrentStep($nextStep);
 			$cart->save();
-			
+				
 			$url = $op->getOrderProcessURL();
 			$this->redirectToUrl($url);
 			exit(0);
 		}
-		
+
 		$this->setRequestParams($request, $cart);
 		return $this->getInputViewName();
 	}
-	
+
 	/**
 	 * @param f_mvc_Request $request
 	 * @param order_CartInfo $cart
 	 */
 	protected function setRequestParams($request, $cart)
 	{
-		$request->setAttribute('cart', $cart);			
+		$request->setAttribute('cart', $cart);
 		$requiredShippingModeIds = $cart->getRequiredShippingModeIds();
 		if (count($requiredShippingModeIds))
 		{
@@ -130,10 +139,10 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 			if (count($requiredShippingModeIds) !== count($requiredShippingFilters))
 			{
 				$requiredShippingModeErrors = array();
-				foreach ($requiredShippingModeIds as $id) 
+				foreach ($requiredShippingModeIds as $id)
 				{
 					$error = true;
-					foreach ($requiredShippingFilters as $requiredShippingFilter) 
+					foreach ($requiredShippingFilters as $requiredShippingFilter)
 					{
 						if ($requiredShippingFilter->getMode()->getId() == $id)
 						{
@@ -141,7 +150,7 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 							break;
 						}
 					}
-					if ($error) 
+					if ($error)
 					{
 						$requiredShippingModeErrors[] = DocumentHelper::getDocumentInstance($id);
 					}
@@ -156,7 +165,7 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 			$request->setAttribute('canSelectShippingMode', true);
 			$shippingFilters = $this->getShippingFilters($cart);
 			if (count($shippingFilters))
-			{		
+			{
 				$request->setAttribute('shippingFilters', $shippingFilters);
 			}
 			else
@@ -165,18 +174,29 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 			}
 			$request->setAttribute('shippingFilterId', $cart->getShippingFilterId());
 		}
-		
+
 		if (!$this->hasErrors())
 		{
 			order_CartService::getInstance()->refresh($cart, false);
-			$request->setAttribute('canContinue', true);	
+			$request->setAttribute('canContinue', true);
 		}
 
-		$request->setAttribute('shippingAddress', $this->getResumeAddressInfo($cart->getAddressInfo()->shippingAddress));
+		$this->setResumeInfoFromCart($request, $cart);
 	}
 	
+	/**
+	 * @param f_mvc_Request $request
+	 * @param order_CartInfo $cart
+	 */	
+	protected function setResumeInfoFromCart($request, $cart)
+	{
+		$addressInfo = $cart->getAddressInfo();
+		$request->setAttribute('billingAddress', $this->getResumeAddressInfo($addressInfo->billingAddress));
+		$request->setAttribute('shippingAddress', $this->getResumeAddressInfo($addressInfo->shippingAddress));
+	}
+
 	protected $shippingFilters;
-	
+
 	/**
 	 * @param order_CartInfo $cart
 	 * @return catalog_persistentdocument_shippingfilter[]
@@ -188,7 +208,7 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 			$shippingModeId = $cart->getShippingModeId();
 			$inList = false;
 			$results = catalog_ShippingfilterService::getInstance()->getCurrentShippingModes($cart);
-			foreach ($results as $shippingFilter) 
+			foreach ($results as $shippingFilter)
 			{
 				if ($shippingFilter instanceof catalog_persistentdocument_shippingfilter)
 				{
@@ -209,7 +229,7 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 		}
 		return $this->shippingFilters;
 	}
-	
+
 	/**
 	 * @param catalog_persistentdocument_shippingfilter $a
 	 * @param catalog_persistentdocument_shippingfilter $b
@@ -223,7 +243,7 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 		}
 		return (intval($a->getValueWithoutTax()) < intval($b->getValueWithoutTax())) ? -1 : 1;
 	}
-	
+
 	/**
 	 * @param order_AddressBean $address
 	 * @return string
@@ -233,7 +253,7 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 		if ($address instanceof order_AddressBean)
 		{
 			$result = array();
-			if ($address->Title) 
+			if ($address->Title)
 			{
 				$result[] = DocumentHelper::getDocumentInstance($address->Title)->getLabel() . ' ' . $address->FirstName . ' ' .  $address->LastName;
 			}
@@ -251,8 +271,8 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 		}
 		return null;
 	}
-	
-	
+
+
 	/**
 	 * @param order_CartInfo $cart
 	 */

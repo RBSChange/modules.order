@@ -93,8 +93,8 @@
 				</tr>
 				
 				<tr tal:condition="cart/hasCreditNote">
-					<td>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</td>
-					<td>${php:shop.formatPrice(cart.getTotalCreditNoteAmount())}</td>
+					<td>${trans:m.order.standardprocess.resume-credit-note,ucf,lab}</td>
+					<td>${php:cart.formatPrice(-cart.getTotalCreditNoteAmount())}</td>
 				</tr>
 				
 				<tr>
