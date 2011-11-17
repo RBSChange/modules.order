@@ -5,6 +5,7 @@
     <property name="exclusive" type="Boolean" default-value="false"/>
     <property name="excludeModifier" type="modules_order/cartmodifier" max-occurs="-1"/>
     <property name="description" type="XHTMLFragment"/>
+    <property name="applicationPriority" type="Integer" default-value="0"/>
   </properties>
   <statuses default="DRAFT"/>
   <serializedproperties/>

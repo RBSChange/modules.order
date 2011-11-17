@@ -6,6 +6,7 @@
 		<field name="applicationstrategy" />
 		<field name="exclusive" />
 		<field name="excludeModifier" moduleselector="catalog" allow="[modules_order/fees]" />
+		<field name="applicationPriority" />
 	</section>
 	<section labeli18n="m.order.document.fees.application-conditions">
 		<field name="startpublicationdate" hidehelp="true" />

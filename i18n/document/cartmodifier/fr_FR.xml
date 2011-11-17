@@ -10,4 +10,7 @@
 	<key id="excludemodifier-help">Liste des modificateurs de panier qui ne peuvent pas etre appliqués en meme temps que cette réduction.</key>
 	<key id="startpublicationdate">début de validité</key>
 	<key id="endpublicationdate">fin de validité</key>
+	
+	<key id="applicationpriority">priorité d'application</key>
+	<key id="applicationpriority-help">les priorités les plus élevées sont appliquées en premier.</key>
 </i18n>
