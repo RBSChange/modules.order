@@ -437,7 +437,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			{
 				$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ?  $backendUser->getId() : 'UNKNOWN'));
 			}
-			$bill->setTransactionText(LocaleService::getInstance()->transBO('m.order.bo.general.canceled-by', array('ucf', 'labl')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
+			$bill->setTransactionText(LocaleService::getInstance()->transBO('m.order.bo.general.canceled-by', array('ucf', 'lab')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
 			$this->save($bill);
 			$this->cancelBill($bill);
 		}
@@ -622,7 +622,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			{
 				$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ?  $backendUser->getId() : 'UNKNOWN'));
 			}
-			$bill->setTransactionText(LocaleService::getInstance()->transBO('m.order.bo.general.canceled-by', array('ucf', 'labl')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
+			$bill->setTransactionText(LocaleService::getInstance()->transBO('m.order.bo.general.canceled-by', array('ucf', 'lab')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
 			$this->save($bill);
 			$order = $bill->getOrder();
 			order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_failed', $order, $bill);
