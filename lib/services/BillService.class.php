@@ -10,6 +10,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 	const SUCCESS = "success";
 	const FAILED = "failed";
 		
+	const BILL_STATUS_MODIFIED_EVENT = 'order_billStatusChanged';
+		
 	/**
 	 * @var order_BillService
 	 */
@@ -370,6 +372,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function updatePaymentStatus($bill, $newStatus)
 	{
+		$oldStatus = $bill->getStatus();
 		try 
 		{
 			$this->tm->beginTransaction();
@@ -390,6 +393,10 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$this->tm->rollBack($e);
 			throw $e;
 		}
+		if ($oldStatus != $newStatus)
+		{
+			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 'oldStatus' => $oldStatus));
+	}
 	}
 	
 	/**
@@ -440,6 +447,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$bill->setTransactionText(LocaleService::getInstance()->transBO('m.order.bo.general.canceled-by', array('ucf', 'lab')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
 			$this->save($bill);
 			$this->cancelBill($bill);
+			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 'oldStatus' => self::WAITING));
 		}
 
 		$this->createQuery()
@@ -597,6 +605,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 				$this->tm->rollBack($e);
 				throw $e;
 			}
+			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 'oldStatus' => self::WAITING));
 		}
 		else
 		{
@@ -611,6 +620,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function cancelBillFromBo($bill)
 	{
+		$oldStatus = $bill->getStatus();
 		try
 		{
 			$this->tm->beginTransaction();
@@ -633,6 +643,10 @@ class order_BillService extends f_persistentdocument_DocumentService
 		{
 			$this->tm->rollBack($e);
 			throw $e;
+		}
+		if ($oldStatus != self::FAILED)
+		{
+			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 'oldStatus' => $oldStatus));
 		}
 		return $this->buildBoRow($bill);
 	}
