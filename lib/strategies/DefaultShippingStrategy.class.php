@@ -18,7 +18,8 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 				return false;
 			}
 			$feesId = $this->fees->getId();
-			foreach ($cart->getShippingArray() as $data) 
+			$shippingArray = $cart->getShippingArray();
+			foreach ($shippingArray as $k => $data) 
 			{
 				if (isset($data['filter']) && $data['filter']['feesId'] == $feesId)
 				{
@@ -34,6 +35,9 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 					$feesInfo->setValueWithoutTax($this->getValueWithoutTax());
 					$rate = catalog_TaxService::getInstance()->getTaxRate($shop->getId(), $this->getTaxCategory(), $taxZone);
 					$feesInfo->setValueWithTax($feesInfo->getValueWithoutTax() * ( 1 + $rate) );
+					$shippingArray[$k]['filter']['shippingvalueWithTax'] = $feesInfo->getValueWithTax();
+					$shippingArray[$k]['filter']['shippingvalueWithoutTax'] = $feesInfo->getValueWithoutTax();
+					$cart->setShippingArray($shippingArray);
 					return true;					
 				}
 			} 			
