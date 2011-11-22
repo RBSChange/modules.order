@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.document.smartfolder" lcid="en_GB">
-  <key id="document-name">smatrt folder</key>
-  <key id="label">label</key>
-  <key id="description">description</key>
-  <key id="query">query</key>
-  <key id="query-help">the query to find order of this folder.</key>
+	<include id="m.filter.document.queryfolder" />
 </i18n>

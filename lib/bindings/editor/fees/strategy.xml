@@ -10,11 +10,11 @@
 				<xul:cmessageinfo anonid="message"/>
 				<xul:hbox anonid="action-bar">
 					<xul:button anonid="save_properties" oncommand="saveProperties()" 
-						label="&amp;modules.uixul.bo.doceditor.button.Save;" 
+						label="${transui:m.uixul.bo.doceditor.button.Save,ucf,attr}" 
 						image="{IconsBase}/small/save.png"
 						disabled="true" />
 					<xul:button anonid="reset_properties" oncommand="resetProperties()" 
-						label="&amp;modules.uixul.bo.doceditor.button.Canceledit;" 
+						label="${transui:m.uixul.bo.doceditor.button.Canceledit,ucf,attr}" 
 						image="{IconsBase}/small/undo.png"
 						disabled="true" />
 				</xul:hbox>

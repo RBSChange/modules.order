@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.document.bill" lcid="en_GB">
-  <key id="document-name">bill</key>
+  <key id="document-name">invoice</key>
   <key id="label">number</key>
-  <key id="label-help">bill number</key>
+  <key id="label-help">This is the invoice number.</key>
   <key id="amount">amount</key>
   <key id="amount-help">amount</key>
   <key id="transactiontext">Text</key>
   <key id="status">status</key>
-  <key id="archive">pdf version</key>
+  <key id="archive">PDF version</key>
+  <key id="not-validated">The payment is not valid yet</key>
+  <key id="transactiondate">Date</key>
+  <key id="transactiondate-help">This is the transaction date.</key>
+  <key id="transactionid">transaction number</key>
+  <key id="transactionid-help">This is the bank transaction identifier or cheque number.</key>
+  <key id="transactiontext-help">Text displayed to the customer.</key>
 </i18n>

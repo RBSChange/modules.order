@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.mail" lcid="en_GB">
-  <key id="message-label">message on the order n°{orderId} sent on {date}</key>
+  <key id="message-label">message related to order No. {orderId} sent on {date}</key>
 </i18n>

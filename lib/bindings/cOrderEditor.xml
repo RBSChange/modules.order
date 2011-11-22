@@ -7,9 +7,9 @@
 	<binding id="customerSection">
 		<content>
 			<xul:hbox align="center">
-				<xul:clabel value="&amp;modules.order.bo.general.Email;" />
+				<xul:clabel value="${transui:m.order.bo.general.Email,ucf,attr}" />
 				<xul:label xbl:inherits="value=email" />
-				<xul:toolbarbutton label="&amp;modules.order.bo.doceditor.panel.properties.View-customer;" image="{IconsBase}/small/customer.png" oncommand="showCustomer()" />
+				<xul:toolbarbutton label="${transui:m.order.bo.doceditor.panel.properties.View-customer,ucf,attr}" image="{IconsBase}/small/customer.png" oncommand="showCustomer()" />
 				<xul:spacer flex="1" />
 			</xul:hbox>
 		</content>
@@ -171,11 +171,11 @@
 					</xul:columns>
 					<xul:rows>
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.message.Creationdate;" />
+							<xul:label value="${transui:m.order.document.message.Creationdate,ucf,attr}" />
 							<xul:label class="allow-text-selection" xbl:inherits="xbl:text=date" />
 						</xul:row>
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.message.Content;" />
+							<xul:label value="${transui:m.order.document.message.Content,ucf,attr}" />
 							<xul:hbox flex="1">
 								<html:div flex="1" anonid="content" class="allow-text-selection"><xbl:children /></html:div>
 							</xul:hbox>
@@ -192,9 +192,9 @@
 			<children />
 			<xul:vbox>
 				<xul:hbox>
-					<xul:button xbl:inherits="hidden=hide-generate,disabled=disable-generate" label="&amp;modules.order.bo.actions.GenerateBill;" oncommand="generate()" image="{IconsBase}/small/document-text.png" />
-					<xul:button xbl:inherits="hidden=hide-dl" hidden="true" label="&amp;modules.order.bo.actions.DownloadBill;" oncommand="download()" image="{IconsBase}/small/download.png" />
-					<xul:label xbl:inherits="hidden=hide-msg" value="&amp;modules.order.bo.actions.CannotGenerateBillMsg;" />
+					<xul:button xbl:inherits="hidden=hide-generate,disabled=disable-generate" label="${transui:m.order.bo.actions.GenerateBill,ucf,attr}" oncommand="generate()" image="{IconsBase}/small/document-text.png" />
+					<xul:button xbl:inherits="hidden=hide-dl" hidden="true" label="${transui:m.order.bo.actions.DownloadBill,ucf,attr}" oncommand="download()" image="{IconsBase}/small/download.png" />
+					<xul:label xbl:inherits="hidden=hide-msg" value="${transui:m.order.bo.actions.CannotGenerateBillMsg,ucf,attr}" />
 					
 				</xul:hbox>
 			</xul:vbox>
@@ -245,11 +245,11 @@
 					try
 					{
 						
-						propspanel.showTextMessage("&amp;modules.order.bo.actions.GeneratingBill;");
+						propspanel.showTextMessage("${transui:m.order.bo.actions.GeneratingBill,ucf,js}");
 						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: edt.documentid, lang: edt.mDocumentInfos.vo}, null , true); 	
 						if (result.status === 'OK')
 						{
-							propspanel.showTextMessage("&amp;modules.order.bo.actions.GeneratingBillDone;");
+							propspanel.showTextMessage("${transui:m.order.bo.actions.GeneratingBillDone,ucf,js}");
 							this.tmpBillUrl = result.contents.url;
 							this.setAttribute('hide-generate', true);
 							this.removeAttribute('hide-dl');
@@ -340,12 +340,12 @@
 					
 					try
 					{
-						propspanel.showTextMessage("&amp;modules.order.bo.actions.GeneratingBill;");
+						propspanel.showTextMessage("${transui:m.order.bo.actions.GeneratingBill,ucf,js}");
 						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: rowData.id, lang: rowData.lang}, null , true); 	
 						wCore.debug(wCore.dump(result));
 						if (result.status === 'OK')
 						{
-							propspanel.showTextMessage("&amp;modules.order.bo.actions.GeneratingBillDone;");
+							propspanel.showTextMessage("${transui:m.order.bo.actions.GeneratingBillDone,ucf,js}");
 							rowNode.mDataRow.archive = result.contents.url;
 							this.setCellArchiveValue(rowNode.childNodes[3], rowNode.mDataRow);
 						}
@@ -405,7 +405,7 @@
 				<body><![CDATA[	
 					if (dataRow.archive == "-1")
 					{
-						cell.setAttribute('value', "&amp;modules.order.bo.actions.CannotGenerateBillMsg;");
+						cell.setAttribute('value', "${transui:m.order.bo.actions.CannotGenerateBillMsg,ucf,js}");
 					}
 					else if (dataRow.archive == "-2")
 					{
@@ -413,13 +413,13 @@
 					}
 					else if (dataRow.archive == "")
 					{
-						cell.setAttribute('value', "&amp;modules.order.bo.actions.GenerateBill;");
+						cell.setAttribute('value', "${transui:m.order.bo.actions.GenerateBill,ucf,js}");
 						cell.setAttribute('class', 'text-link');
 						cell.setAttribute('action', 'generate');
 					}
 					else
 					{
-						cell.setAttribute('value', "&amp;modules.order.bo.actions.DownloadBill;");
+						cell.setAttribute('value', "${transui:m.order.bo.actions.DownloadBill,ucf,js}");
 						cell.setAttribute('class', 'text-link');
 						cell.setAttribute('action', 'download');
 					}
@@ -438,12 +438,12 @@
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
-						<xul:label name="label" value="&amp;modules.order.document.bill.Label;" />
-						<xul:label name="amount" value="&amp;modules.order.document.bill.Amount;" />
-						<xul:label name="trsid" value="&amp;modules.order.document.bill.TransactionId;" />					
-						<xul:label name="status" value="&amp;modules.order.document.bill.Status;" />
-						<xul:label name="archive" value="&amp;modules.order.document.bill.Archive;" />						
-						<xul:label name="actionrow" value="&amp;modules.order.bo.doceditor.Actions;" />
+						<xul:label name="label" value="${transui:m.order.document.bill.Label,ucf,attr}" />
+						<xul:label name="amount" value="${transui:m.order.document.bill.Amount,ucf,attr}" />
+						<xul:label name="trsid" value="${transui:m.order.document.bill.TransactionId,ucf,attr}" />					
+						<xul:label name="status" value="${transui:m.order.document.bill.Status,ucf,attr}" />
+						<xul:label name="archive" value="${transui:m.order.document.bill.Archive,ucf,attr}" />						
+						<xul:label name="actionrow" value="${transui:m.order.bo.doceditor.Actions,ucf,attr}" />
 					</xul:row>
 				</xul:rows>
 			</xul:grid>
@@ -454,7 +454,7 @@
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:toolbar class="actions">
-					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="&amp;modules.uixul.bo.actions.Edit;" />
+					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="${transui:m.uixul.bo.actions.Edit,ucf,attr}" />
 				</xul:toolbar>
 			</xul:row>				
 		</content>
@@ -560,11 +560,11 @@
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
-						<xul:label name="label" value="&amp;modules.order.document.expedition.Label;" />
-						<xul:label name="status" value="&amp;modules.order.document.expedition.TrackingText;" />
-						<xul:label name="transporteur" value="&amp;modules.order.document.expedition.Transporteur;" />
-						<xul:label name="trackingnumber" value="&amp;modules.order.document.expedition.TrackingNumber;" />
-						<xul:label name="actionrow" value="&amp;modules.order.bo.doceditor.Actions;" />
+						<xul:label name="label" value="${transui:m.order.document.expedition.Label,ucf,attr}" />
+						<xul:label name="status" value="${transui:m.order.document.expedition.TrackingText,ucf,attr}" />
+						<xul:label name="transporteur" value="${transui:m.order.document.expedition.Transporteur,ucf,attr}" />
+						<xul:label name="trackingnumber" value="${transui:m.order.document.expedition.TrackingNumber,ucf,attr}" />
+						<xul:label name="actionrow" value="${transui:m.order.bo.doceditor.Actions,ucf,attr}" />
 					</xul:row>
 				</xul:rows>
 			</xul:grid>
@@ -574,7 +574,7 @@
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:toolbar class="actions">
-					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="&amp;modules.uixul.bo.actions.Edit;" />
+					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="${transui:m.uixul.bo.actions.Edit,ucf,attr}" />
 				</xul:toolbar>
 			</xul:row>				
 		</content>
@@ -653,7 +653,7 @@
 			
 			<method name="onFail">
 				<body><![CDATA[
-					if (confirm("&amp;modules.order.bo.general.Confirm-cancel-bill;"))
+					if (confirm("${transui:m.order.bo.general.Confirm-cancel-bill,ucf,js}"))
 					{
 						var rowData = this.parameters.rowData;		
 						var parameters = {cmpref: rowData.id, lang: rowData.lang, cancel: 'true'};
@@ -677,10 +677,10 @@
 		<xbl:content>
 			<xul:vbox flex="1">
 				<xul:hbox class="dialog-header">
-					<xul:label value="&amp;modules.order.bo.general.Validate-bill;" class="dialog-title" />
+					<xul:label value="${transui:m.order.bo.general.Validate-bill,ucf,attr}" class="dialog-title" />
 					<xul:spacer flex="1" />
 					<xul:vbox pack="center">
-						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" tooltiptexts="&amp;modules.uixul.bo.dialog.Cancel;" />
+						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" tooltiptexts="${transui:m.uixul.bo.dialog.Cancel,ucf,attr}" />
 					</xul:vbox>
 				</xul:hbox>
 				<xul:grid flex="1">
@@ -690,31 +690,31 @@
 					</xul:columns>
 					<xul:rows>
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.bill.Label;" />
+							<xul:label value="${transui:m.order.document.bill.Label,ucf,attr}" />
 							<xul:label anonid="number" value="-" />
 						</xul:row>	
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.bill.Amount;" />
+							<xul:label value="${transui:m.order.document.bill.Amount,ucf,attr}" />
 							<xul:label anonid="amount" value="-" />
 						</xul:row>							
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.bill.transactionDate;" />
+							<xul:label value="${transui:m.order.document.bill.transactionDate,ucf,attr}" />
 							<xul:cfield name="transactiondate" anonid="transactiondate" hidehelp="true" fieldtype="datetime" initialvalue="" timeoffset="30"/>
 						</xul:row>
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.bill.Transactionid;" />
+							<xul:label value="${transui:m.order.document.bill.Transactionid,ucf,attr}" />
 							<xul:textbox anonid="transactionid" value="" size="30" maxlength="30" onchange="checkValidate()"/>							
 						</xul:row>	
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.bill.Transactiontext;" />
+							<xul:label value="${transui:m.order.document.bill.Transactiontext,ucf,attr}" />
 							<xul:textbox anonid="transactiontext" value="" multiline="true" maxlength="512" cols="40" rows="5" oninput="checkValidate()" />
 						</xul:row>												
 					</xul:rows>
 				</xul:grid>
 				<xul:hbox pack="center" style="height: 32px">
-					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="&amp;modules.order.bo.general.Validate;" />
-					<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="&amp;modules.order.bo.general.Cancel;" />
-					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="&amp;modules.uixul.bo.dialog.Close;" />
+					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="${transui:m.order.bo.general.Validate,ucf,attr}" />
+					<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="${transui:m.order.bo.general.Cancel,ucf,attr}" />
+					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="${transui:m.uixul.bo.dialog.Close,ucf,attr}" />
 				</xul:hbox>
 			</xul:vbox>
 		</xbl:content>
@@ -784,7 +784,7 @@
 			
 			<method name="onFail">
 				<body><![CDATA[
-					if (confirm("&amp;modules.order.bo.general.Confirm-cancel-expedition;"))
+					if (confirm("${transui:m.order.bo.general.Confirm-cancel-expedition,ucf,js}"))
 					{
 						var rowData = this.parameters.rowData;		
 						var parameters = {cmpref: rowData.id, lang: rowData.lang, cancel: 'true'};
@@ -809,10 +809,10 @@
 		<xbl:content>
 			<xul:vbox flex="1">
 				<xul:hbox class="dialog-header">
-					<xul:label value="&amp;modules.order.bo.general.Ship-Expedition;" class="dialog-title" />
+					<xul:label value="${transui:m.order.bo.general.Ship-Expedition,ucf,attr}" class="dialog-title" />
 					<xul:spacer flex="1" />
 					<xul:vbox pack="center">
-						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" tooltiptexts="&amp;modules.uixul.bo.dialog.Cancel;" />
+						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" tooltiptexts="${transui:m.uixul.bo.dialog.Cancel,ucf,attr}" />
 					</xul:vbox>
 				</xul:hbox>
 				<xul:grid flex="1">
@@ -822,27 +822,27 @@
 					</xul:columns>
 					<xul:rows>
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.expedition.Label;" />
+							<xul:label value="${transui:m.order.document.expedition.Label,ucf,attr}" />
 							<xul:label anonid="number" value="-" />
 						</xul:row>	
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.expedition.Transporteur;" />
+							<xul:label value="${transui:m.order.document.expedition.Transporteur,ucf,attr}" />
 							<xul:label anonid="transporteur" value="-" />
 						</xul:row>							
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.expedition.Shippingdate;" />
+							<xul:label value="${transui:m.order.document.expedition.Shippingdate,ucf,attr}" />
 							<xul:cfield name="shippingdate" anonid="shippingdate" hidehelp="true" fieldtype="datetime" initialvalue="" timeoffset="30"/>
 						</xul:row>
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.expedition.Trackingnumber;" />
+							<xul:label value="${transui:m.order.document.expedition.Trackingnumber,ucf,attr}" />
 							<xul:textbox anonid="trackingnumber" value="" size="30" maxlength="30" />							
 						</xul:row>										
 					</xul:rows>
 				</xul:grid>
 				<xul:hbox pack="center" style="height: 32px">
-					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="&amp;modules.order.bo.general.Validate;" />
-					<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="&amp;modules.order.bo.general.Cancel;" />
-					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="&amp;modules.uixul.bo.dialog.Close;" />
+					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="${transui:m.order.bo.general.Validate,ucf,attr}" />
+					<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="${transui:m.order.bo.general.Cancel,ucf,attr}" />
+					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="${transui:m.uixul.bo.dialog.Close,ucf,attr}" />
 				</xul:hbox>
 			</xul:vbox>
 		</xbl:content>
@@ -888,9 +888,9 @@
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
-						<xul:label name="label" value="&amp;modules.order.frontoffice.Designation;" />
-						<xul:label name="codeReference" value="&amp;modules.order.frontoffice.CodeReference;" />
-						<xul:label name="quantity" value="&amp;modules.order.frontoffice.Quantity;" />
+						<xul:label name="label" value="${transui:m.order.frontoffice.Designation,ucf,attr}" />
+						<xul:label name="codeReference" value="${transui:m.order.frontoffice.CodeReference,ucf,attr}" />
+						<xul:label name="quantity" value="${transui:m.order.frontoffice.Quantity,ucf,attr}" />
 					</xul:row>
 				</xul:rows>
 			</xul:grid>
@@ -1031,10 +1031,10 @@
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
-						<xul:label name="label" value="&amp;modules.order.document.creditnote.Label;" />
-						<xul:label name="amount" value="&amp;modules.order.document.creditnote.Amount;" />	
-						<xul:label name="amountNotApplied" value="&amp;modules.order.document.creditnote.AmountNotApplied;" />				
-						<xul:label name="actionrow" value="&amp;modules.order.bo.doceditor.Actions;" />
+						<xul:label name="label" value="${transui:m.order.document.creditnote.Label,ucf,attr}" />
+						<xul:label name="amount" value="${transui:m.order.document.creditnote.Amount,ucf,attr}" />	
+						<xul:label name="amountNotApplied" value="${transui:m.order.document.creditnote.AmountNotApplied,ucf,attr}" />				
+						<xul:label name="actionrow" value="${transui:m.order.bo.doceditor.Actions,ucf,attr}" />
 					</xul:row>
 				</xul:rows>
 			</xul:grid>
@@ -1043,8 +1043,8 @@
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:toolbar class="actions">
-					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="&amp;modules.uixul.bo.actions.Edit;" />
-					<xul:toolbarbutton action="manualrecredit" image="{IconsBase}/small/cheque.png" tooltiptext="&amp;modules.order.document.creditnote.Manual-recredit;" />
+					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="${transui:m.uixul.bo.actions.Edit,ucf,attr}" />
+					<xul:toolbarbutton action="manualrecredit" image="{IconsBase}/small/cheque.png" tooltiptext="${transui:m.order.document.creditnote.Manual-recredit,ucf,attr}" />
 				</xul:toolbar>
 			</xul:row>				
 		</content>
@@ -1121,11 +1121,11 @@
 		<xbl:content>
 			<xul:vbox flex="1">
 				<xul:hbox class="dialog-header">
-					<xul:label value="&amp;modules.order.document.creditnote.Recredit-dialog-title;" class="dialog-title" />
+					<xul:label value="${transui:m.order.document.creditnote.Recredit-dialog-title,ucf,attr}" class="dialog-title" />
 					<xul:spacer flex="1" />
 					<xul:vbox pack="center">
 						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" 
-							tooltiptexts="&amp;modules.uixul.bo.dialog.Cancel;" />
+							tooltiptexts="${transui:m.uixul.bo.dialog.Cancel,ucf,attr}" />
 					</xul:vbox>
 				</xul:hbox>
 				<xul:grid flex="1">
@@ -1135,27 +1135,27 @@
 					</xul:columns>
 					<xul:rows>
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.creditnote.Label;" />
+							<xul:label value="${transui:m.order.document.creditnote.Label,ucf,attr}" />
 							<xul:label anonid="number" value="-" />
 						</xul:row>	
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.creditnote.Amount;" />
+							<xul:label value="${transui:m.order.document.creditnote.Amount,ucf,attr}" />
 							<xul:label anonid="amount" value="-" />
 						</xul:row>	
 						<xul:row>
-							<xul:label value="&amp;modules.order.document.creditnote.Transactiondate;" />
+							<xul:label value="${transui:m.order.document.creditnote.Transactiondate,ucf,attr}" />
 							<xul:cfield name="transactiondate" anonid="transactiondate" hidehelp="true" fieldtype="datetime" initialvalue="" timeoffset="30"/>
 						</xul:row>						
 						<xul:row>
-							<xul:label  value="&amp;modules.order.document.creditnote.Transactiontext;" />
+							<xul:label  value="${transui:m.order.document.creditnote.Transactiontext,ucf,attr}" />
 							<xul:textbox anonid="transactiontext" value="" multiline="true" maxlength="512" cols="40" rows="5" />
 						</xul:row>																		
 					</xul:rows>
 				</xul:grid>
 				<xul:hbox pack="center" style="height: 32px">
 					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" 
-						label="&amp;modules.order.document.creditnote.Recredit-action;" />
-					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="&amp;modules.uixul.bo.dialog.Close;" />
+						label="${transui:m.order.document.creditnote.Recredit-action,ucf,attr}" />
+					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="${transui:m.uixul.bo.dialog.Close,ucf,attr}" />
 				</xul:hbox>
 			</xul:vbox>
 		</xbl:content>

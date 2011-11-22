@@ -17,6 +17,6 @@
 	</models>
 	<actions>
 		<action name="createFees" single="true" permission="Insert_fees" icon="add" 
-			label="&amp;modules.order.bo.actions.createFees;"/>
+			labeli18n="m.order.bo.actions.createFees"/>
 	</actions>
 </perspective>

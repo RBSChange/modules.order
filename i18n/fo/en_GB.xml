@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.fo" lcid="en_GB">
+  <key id="add-to-cart">add to my basket</key>
+  <key id="add-to-cart-confirm">cancel</key>
+  <key id="back-to-cart">return to my cart</key>
+  <key id="cancel">cancel</key>
+  <key id="cant-create-order">Could not create the order.</key>
+  <key id="confirm">confirm</key>
+  <key id="confirm-incompatible-shop">Your basket already contains one or more products from another shop. Adding this product to the basket will remove the others. Are you sure you want to add this product to the basket?</key>
+  <key id="product-added">The product has been added to the basket.</key>
+  <key id="product-label-added">The {label} product has been successfully added to your basket.</key>
+  <key id="product-label-not-added">The product "{label}" could not be added to your basket.</key>
+  <key id="product-labels-added">the {firstLabels} and {lastLabel} products have been successfully added to your basket.</key>
+  <key id="product-labels-not-added">the {firstLabels} and {lastLabel} products could not be added to your basket.</key>
+  <key id="shop-in-other-website">Could not recover your previous basket, because it contained products from the shop of another website.</key>
+</i18n>

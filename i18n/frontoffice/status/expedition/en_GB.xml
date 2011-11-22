@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.frontoffice.status.expedition" lcid="en_GB">
   <key id="shipped">shipped</key>
-  <key id="prepare">building</key>
+  <key id="prepare">preparing</key>
   <key id="delivered">delivered</key>
-  <key id="canceled">canceled</key>
+  <key id="canceled">cancelled</key>
 </i18n>
