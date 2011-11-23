@@ -3,7 +3,6 @@
   <include id="m.order.document.cartmodifier"/>
   <key id="document-name">fees</key>
   <key id="query">conditions</key>
-  <key id="query-help">[TO TRANSLATE] query-help</key>
   <key id="applicationstrategy">Fee action</key>
   <key id="applicationstrategy-help">Defines how the fees affect the basket.</key>
   <key id="application-conditions">application conditions</key>

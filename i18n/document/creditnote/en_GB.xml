@@ -2,20 +2,10 @@
 <i18n baseKey="m.order.document.creditnote" lcid="en_GB">
   <include id="m.generic.document.document"/>
   <key id="document-name">Credit note</key>
-  <key id="order">[TO TRANSLATE] order</key>
-  <key id="order-help">[TO TRANSLATE] order-help</key>
   <key id="amount">Amount</key>
   <key id="amount-help">Amount of credit</key>
-  <key id="currency">[TO TRANSLATE] currency</key>
-  <key id="currency-help">[TO TRANSLATE] currency-help</key>
-  <key id="connectorid">[TO TRANSLATE] connectorId</key>
-  <key id="connectorid-help">[TO TRANSLATE] connectorId-help</key>
   <key id="transactionid">Refund identifier</key>
-  <key id="transactionid-help">[TO TRANSLATE] transactionId-help</key>
   <key id="transactiondate">Refund date</key>
-  <key id="transactiondate-help">[TO TRANSLATE] transactionDate-help</key>
-  <key id="restamount">[TO TRANSLATE] restamount</key>
-  <key id="restamount-help">[TO TRANSLATE] restamount-help</key>
   <key id="amountnotapplied">Amount not refunded</key>
   <key id="amountnotapplied-help">Amount of credit not yet refunded to the customer</key>
   <key id="customer">Customer</key>
