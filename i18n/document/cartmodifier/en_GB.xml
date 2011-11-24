@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.document.cartmodifier" lcid="en_GB">
-	<include id="m.generic.document.document" />
-	<key id="document-name">cart modifier</key>
-	<key id="description">description</key>
-	<key id="shop">shop</key>
-	<key id="startpublicationdate">start validity date</key>
-	<key id="endpublicationdate">end validity date</key>
+  <include id="m.generic.document.document"/>
+  <key id="document-name">basket modifier</key>
+  <key id="description">description</key>
+  <key id="shop">shop</key>
+  <key id="startpublicationdate">validity start date</key>
+  <key id="endpublicationdate">validity end date</key>
+  <key id="excludemodifier">modifiers to exclude</key>
+  <key id="excludemodifier-help">List of the basket modifiers that cannot be applied at the same time as this discount.</key>
+  <key id="exclusive">non-cumulative modifier</key>
+  <key id="exclusive-help">Indicates that using this basket modifier excludes every other basket modifier.</key>
+  <key id="applicationpriority"/>
+  <key id="applicationpriority-help"/>
 </i18n>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.doceditor.panel.messages" lcid="en_GB">
-	<key id="title">send new mail for this order</key>
-	<key id="send">send</key>
-	<key id="error-no-message-to-send">You must set a content to send.</key>
-	<key id="success-sending-message">Message successfully sent.</key>
-	<key id="markasanswered">mark as answered</key>
-	<key id="success-markasanswered-message">The message has been marked has answered.</key>
+  <key id="title">send a new message for this order</key>
+  <key id="send">send</key>
+  <key id="error-no-message-to-send">You must enter content to send.</key>
+  <key id="success-sending-message">The message has been sent successfully.</key>
+  <key id="markasanswered">mark as answered</key>
+  <key id="success-markasanswered-message">The message has been marked has answered.</key>
 </i18n>

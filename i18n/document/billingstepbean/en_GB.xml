@@ -3,10 +3,10 @@
   <key id="refresh">Add</key>
   <key id="removecoupon">Remove</key>
   <key id="select">Continue</key>
-  <key id="invalid-coupon-code">The coupon {coupon} is not a valid coupon</key>
-  <key id="transaction-amount-overview-legend">Mode of payment</key>
-  <key id="transaction-amount-overview-text">Please find below information on the transaction you want to perform. Thank you to choose the mode of payment you want to use. At the end of this step, you can view the summary of your order and make payment.</key>
+  <key id="invalid-coupon-code">The coupon code {coupon} does not match a valid coupon.</key>
+  <key id="transaction-amount-overview-legend">Payment method</key>
+  <key id="transaction-amount-overview-text">Please find information on the transaction you want to perform below. Please choose the payment method that you want to use. At the end of this step, you will be able to view a summary of your order and make the payment.</key>
   <key id="transaction-amount-overview-head">Transaction information</key>
-  <key id="mops-legend">Payment methods available</key>
-  <key id="no-valid-mop">No valid payment methods available.</key>
+  <key id="mops-legend">Available payment methods</key>
+  <key id="no-valid-mop">No valid payment methods are available for your order.</key>
 </i18n>

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.doceditor.section" lcid="en_GB">
   <key id="messages">messages related to this order</key>
+  <key id="discounts">discounts</key>
+  <key id="lines">concerned lines</key>
 </i18n>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.general.tags" lcid="en_GB">
-  <key id="cart">Cart detail</key>
-  <key id="cart-empty">Empty cart</key>
-  <key id="cgv">general sales conditions</key>
-  <key id="order">order detail</key>
+  <key id="cart">Basket details</key>
+  <key id="cart-empty">Empty basket</key>
+  <key id="cgv">general terms and conditions for sales</key>
+  <key id="order">order details</key>
   <key id="order-list">my orders</key>
-  <key id="order-messages">messaging</key>
+  <key id="order-messages">messaging system</key>
 </i18n>

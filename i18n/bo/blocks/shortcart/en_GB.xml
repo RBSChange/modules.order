@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.blocks.shortcart" lcid="en_GB">
-  <key id="title">current cart (summary)</key>
-  <key id="showtotalwithfees">include fees</key>
+  <key id="title">current basket (summary)</key>
+  <key id="showtotalwithfees">include the fees</key>
+  <key id="showtotalwithfees-help">Include or do not include the shipping fees in the displayed total.</key>
 </i18n>
