@@ -58,13 +58,13 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	{
 		$validationRules = array('email{blank:false;email:true}');
 		$valid = $this->processValidationRules($validationRules, $request, null);
+		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
 		if ($valid)
 		{
 			$login = $request->getParameter('email');
 			$password = $request->getParameter('password', '');
 			$website = $this->getContext()->getWebsite();
 			
-			$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
 			$cart->setUserId(null);
 			$cart->setCustomerId(null);
 			$wfus = users_WebsitefrontenduserService::getInstance();
