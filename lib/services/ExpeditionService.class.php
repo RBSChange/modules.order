@@ -162,6 +162,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		$params = array(
 			'packageNumber' => $trackingNumber,
 			'trackingNumber' => $expedition->getTrackingNumberAsHtml(),
+			'expeditionUrl' => LinkHelper::getDocumentUrl($expedition, $expedition->getOrder()->getLang()),
 			'expeditionDetail' => $template->execute()
 		);
 		
@@ -261,10 +262,19 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		
 		if (count($lines) > 0)
 		{
+			$addressId = $order->getAddressIdByModeId($shippingMode->getId());
+			if ($addressId)
+			{
+				$address = order_persistentdocument_shippingaddress::getInstanceById($addressId);
+			}
+			else
+			{
+				$address = $order->getShippingAddress();
+			}
 			$expedition = $this->getNewDocumentInstance();
 			$expedition->setOrder($order);
 			$expedition->setStatus(self::PREPARE);
-			$expedition->setAddress($order->getShippingAddress());
+			$expedition->setAddress($address);
 			$expedition->setLabel(order_ExpeditionNumberGenerator::getInstance()->generate($expedition));
 			Framework::info('Add Expedition ' . $expedition->getLabel() . ' for order '. $order->getId() . ' => ' . $order->getOrderNumber());
 			$expedition->setUseOrderlines(false);
@@ -543,11 +553,17 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			
 			try 
 			{
-				$this->tm->beginTransaction();				
+				$this->tm->beginTransaction();
+				
 				$expedition->setStatus(self::SHIPPED);
 				$expedition->setTrackingText($message);
 				$expedition->setTrackingNumber($trackingNumber);
 				$expedition->setShippingDate($shippingDate);
+				$mode = $expedition->getShippingMode();
+				if ($mode instanceof shipping_persistentdocument_mode)
+				{
+					$trackingNumber = $mode->getDocumentService()->completeExpeditionForShipping($mode, $expedition);
+				}			
 				$this->save($expedition);	
 				$order = $expedition->getOrder();
 				
@@ -597,6 +613,26 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			$resume['properties']['status']['rowData'] = JsonService::getInstance()->encode($this->buildShipExpeditionDialogParams($document));
 		}
 		
+		$addressData = array();
+		$address = $document->getAddress();
+		if ($address instanceof customer_persistentdocument_address)
+		{
+			$addressData['label'] = $address->getLabel();
+			$addressData['email'] = $address->getEmail();
+			$addressData['company'] = $address->getCompany();
+			$addressData['addressLine1'] = $address->getAddressLine1();
+			$addressData['addressLine2'] = $address->getAddressLine2();
+			$addressData['addressLine3'] = $address->getAddressLine3();
+			$addressData['zipCode'] = $address->getZipCode();
+			$addressData['city'] = $address->getCity();
+			$addressData['province'] = $address->getProvince();
+			$addressData['country'] = $address->getCountryName();
+			$addressData['phone'] = $address->getPhone();
+			$addressData['fax'] = $address->getFax();
+			$addressData['mobilephone'] = $address->getMobilephone();
+		}
+		$resume['address'] = $addressData;
+		
 		$resume['lines'] = array();
 		foreach ($this->getLinesForDisplay($document) as $line)
 		{
@@ -608,5 +644,35 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		}
 		
 		return $resume;
+	}
+	
+	/**
+	 * @param order_persistentdocument_expedition $document
+	 * @return website_persistentdocument_page or null
+	 */
+	public function getDisplayPage($document)
+	{
+		if ($document->isPublished())
+		{
+			$mode = $document->getShippingMode();
+			$page = null;
+			if ($mode instanceof shipping_persistentdocument_mode)
+			{
+				$page = $mode->getDocumentService()->getDisplayPageForExpedition($mode, $document);
+			}
+						
+			if ($page === null)
+			{
+				if (customer_CustomerService::getInstance()->getCurrentCustomer() === $document->getOrder()->getCustomer())
+				{
+					return parent::getDisplayPage($document);
+				}
+			}
+			elseif ($page !== false)
+			{
+				return $page;
+			} 
+		}
+		return null;
 	}
 }

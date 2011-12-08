@@ -8,6 +8,21 @@
 		<property name="tracking" class="link" labeli18n="modules.order.bo.doceditor.property.Tracking" />
 	</section>
 	<section name="lines" labeli18n="modules.order.bo.doceditor.section.Lines" image="{IconsBase}/small/list-classic.png" />
+	<section name="address" labeli18n="modules.order.bo.doceditor.section.Shipping-address" image="{IconsBase}/small/expedition.png">
+		<property name="label" labeli18n="modules.order.document.shippingaddress.Label" />
+		<property name="email" labeli18n="modules.order.document.shippingaddress.Email" />
+		<property name="company" labeli18n="modules.order.document.shippingaddress.Company" />
+		<property name="addressLine1" labeli18n="modules.order.document.shippingaddress.AddressLine1" />
+		<property name="addressLine2" labeli18n="modules.order.document.shippingaddress.AddressLine2" />
+		<property name="addressLine3" labeli18n="modules.order.document.shippingaddress.AddressLine3" />
+		<property name="zipCode" labeli18n="modules.order.document.shippingaddress.ZipCode" />
+		<property name="city" labeli18n="modules.order.document.shippingaddress.City" />
+		<property name="province" labeli18n="modules.order.document.shippingaddress.Province" />
+		<property name="country" labeli18n="modules.order.document.shippingaddress.Countryid" />
+		<property name="phone" labeli18n="modules.order.document.shippingaddress.Phone" />
+		<property name="fax" labeli18n="modules.order.document.shippingaddress.Fax" />
+		<property name="mobilephone" labeli18n="modules.order.document.shippingaddress.Mobilephone" />
+	</section>
 	<section name="publication" linkedtab="publication" labeli18n="modules.uixul.bo.doceditor.section.Status" image="{IconsBase}/small/status.png">
 		<property name="status" labeli18n="modules.uixul.bo.doceditor.property.Status" />
 	</section>

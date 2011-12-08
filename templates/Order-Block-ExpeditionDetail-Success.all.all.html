@@ -1,0 +1,50 @@
+<ul class="mini-navigation">
+	<li>
+		<a change:link="document order">${trans:m.customer.frontoffice.back-to-order,ucf}</a>
+	</li>
+</ul>
+
+<h1 change:h=""><span>${trans:m.order.frontoffice.shipping-number,ucf}</span> ${expedition/getLabelAsHtml}</h1>
+<h2 change:h="">${trans:m.order.frontoffice.general-informations,ucf}</h2>
+<ul tal:define="shippingMode expedition/getShippingMode" class="normal">
+	<li><span>${trans:m.order.frontoffice.related-order,ucf,lab}</span> <a change:link="document order">${order/getOrderNumber}</a> (${datetime:order/getCreationdate})</li>
+	<li><span>${trans:m.order.frontoffice.expedition-status,ucf,lab}</span> ${expedition/getStatusLabel}</li>
+	<li><span>${trans:m.order.frontoffice.transport-name,ucf,lab}</span> ${shippingMode/getLabelAsHtml}</li>
+	<li tal:condition="expedition/getShippingDate"><span>${trans:m.order.document.expedition.shippingdate,ucf,lab}</span> ${datetime:expedition/getUIShippingDate}</li>
+	<li tal:condition="expedition/getTrackingNumber"><span>${trans:m.order.frontoffice.tracking-number,ucf,lab}</span> <a class="link" href="${expedition/getTrackingURL}">${expedition/getTrackingNumber}</a></li>
+	<li tal:condition="expedition/getTrackingText"><span>${trans:m.order.frontoffice.tracking-text,ucf,lab}</span> ${expedition/getTrackingTextAsHtml}</li>
+</ul>
+
+<h2 change:h="">${trans:m.order.frontoffice.address,ucf}</h2>
+<ol class="ecom-adresses">
+	<li class="even">
+		<dl tal:define="address expedition/getAddress">
+			<dt>${trans:m.order.frontoffice.shippingaddress,ucf}</dt>
+			<dd>${address/getLabelAsHtml}</dd>
+			<dd>${address/getAddressLine1}</dd>
+			<dd tal:condition="address/getAddressLine2">${address/getAddressLine2}</dd>
+			<dd tal:condition="address/getAddressLine3">${address/getAddressLine3}</dd>
+			<dd>${address/getZipcode} ${address/getCity}</dd>
+			<dd tal:condition="address/getProvince">${address/getProvince}</dd>
+			<dd>${address/getCountry/getLabel}</dd>
+			<dd tal:condition="address/getPhone">${address/getPhone}</dd>
+			<dd tal:condition="address/getFax">${address/getFax}</dd>
+		</dl>
+	</li>
+</ol>
+
+<h2 change:h="">${trans:m.order.frontoffice.expedition-lines,ucf}</h2>
+<table class="normal">
+	<thead>
+		<tr>
+		    <th>${trans:m.order.frontoffice.designation,ucf}</th>
+		    <th>${trans:m.order.frontoffice.quantity,ucf}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="line expeditionlines" class="${php: repeat.line.odd ? 'odd' : 'even'}">
+			<td>${line/getProduct/getLabelAsHtml}<br />${line/getProduct/getCodeReferenceAsHtml}</td>
+			<td>${line/getQuantity} / ${line/getOrderProductQuantity}</td>
+		</tr>
+	</tbody>
+</table>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.doceditor.section" lcid="fr_FR">
-  <key id="messages">messagerie relative à cette commande</key>
-  <key id="lines">lignes concernées</key>
-  <key id="discounts">réductions</key>
+	<key id="messages">messagerie relative à cette commande</key>
+	<key id="lines">lignes concernées</key>
+	<key id="discounts">réductions</key>
+	<key id="shipping-address">adresse de livraison</key>
 </i18n>

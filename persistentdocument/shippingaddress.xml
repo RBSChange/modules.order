@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/3.5.xsd"
+	model-version="3.5" extend="modules_customer/address">
+	<properties>
+		<add name="orderId" type="Integer" />
+		<add name="targetId" type="Integer" />
+		<add name="firstname" default-value="-" />
+		<add name="lastname" default-value="-" />
+	</properties>
+</document>

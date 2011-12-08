@@ -16,6 +16,7 @@
     <document name="expedition"/>
     <document name="creditnote"/>
     <document name="cartmodifier"/>
+    <document name="shippingaddress"/>
   </actions>
   <roles>
     <role name="Admin">

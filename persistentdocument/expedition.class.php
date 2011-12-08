@@ -54,6 +54,16 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 	 */
 	public function getTrackingURL()
 	{
-		return str_replace('{NumeroColis}', $this->getTrackingNumber(), parent::getTrackingURL());
-	}	
+		$url = parent::getTrackingURL();
+		if (empty($url)) { return null; }
+		return str_replace('{NumeroColis}', $this->getTrackingNumber(), $url);
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	public function hasDetailPage()
+	{
+		return $this->getDocumentService()->getDisplayPage($this) !== null;
+	}
 }

@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<document xmlns="http://www.rbs.fr/schema/change-document/1.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd"
-	model-version="1.0"  has-url="false" publish-on-day-change="false" icon="expedition" backoffice-indexable="false">
+	model-version="1.0" has-url="true" publish-on-day-change="false" icon="expedition" backoffice-indexable="false">
 	<properties>
-		<add name="label" type="String"/>
-		
-		<add name="order" type="modules_order/order" min-occurs="1" inverse="true"/>	
+		<add name="label" type="String" />
+
+		<add name="order" type="modules_order/order" min-occurs="1" inverse="true" />
 		<add name="useOrderlines" type="Boolean" default-value="true" />
-		<add name="line" type="modules_order/expeditionline" max-occurs="-1" inverse="true"/>
+		<add name="line" type="modules_order/expeditionline" max-occurs="-1" inverse="true" />
 		<add name="address" type="modules_customer/address" />
-		
-		<add name="bill" type="modules_order/bill" inverse="true"/>
-		
-		<add name="shippingDate" type="DateTime"/>
-		<add name="status" type="String" default-value="prepare"/>		
-		<add name="shippingModeId"  type="Integer" />
-		
-		<add name="transporteur"  type="String" />
-		<add name="trackingNumber"  type="String" />
-		
-		<add name="amount" type="Double" default-value="0"/>
+
+		<add name="bill" type="modules_order/bill" inverse="true" />
+
+		<add name="shippingDate" type="DateTime" />
+		<add name="status" type="String" default-value="prepare" />
+		<add name="shippingModeId" type="Integer" />
+
+		<add name="transporteur" type="String" />
+		<add name="trackingNumber" type="String" />
+
+		<add name="amount" type="Double" default-value="0" />
 	</properties>
 	<statuses default="ACTIVE" />
 
 	<serializedproperties>
-		<add name="trackingText"  type="String" />
-		<add name="trackingURL"  type="String" />	
-		<add name="tax" type="Double" default-value="0"/>
-		<add name="taxCode" type="String" />	
+		<add name="trackingText" type="String" />
+		<add name="trackingURL" type="String" />
+		<add name="tax" type="Double" default-value="0" />
+		<add name="taxCode" type="String" />
 	</serializedproperties>
 </document>

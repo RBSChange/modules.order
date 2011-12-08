@@ -35,3 +35,6 @@ treechildren::-moz-tree-image(modules_order_cartmodifier){
 treechildren::-moz-tree-image(modules_order_fees){
 	list-style-image: url(/changeicons/small/cart-modifier.png);
 }
+treechildren::-moz-tree-image(modules_order_shippingaddress){
+	list-style-image: url(/changeicons/small/addressbook2.png);
+}

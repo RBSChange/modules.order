@@ -383,17 +383,9 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 * @param order_CartInfo $cartInfo
 	 */
 	protected function populateOrderAddresses($orderDocument, $cartInfo)
-	{
-		if ($orderDocument->getShippingAddress() === null)
-		{
-			$shippingAddress = customer_AddressService::getNewDocumentInstance();
-			$orderDocument->setShippingAddress($shippingAddress);
-		}
-		if ($orderDocument->getBillingAddress() === null)		
-		{
-			$billingAddress = customer_AddressService::getNewDocumentInstance();
-			$orderDocument->setBillingAddress($billingAddress);
-		}
+	{			
+		$this->fillOrderBillingAddress($orderDocument, $cartInfo);
+		$this->fillOrderShippingAddress($orderDocument, $cartInfo);
 	}
 	
 	/**
@@ -433,40 +425,43 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * @param order_persistentdocument_order orderDocument
+	 * @param order_persistentdocument_order $orderDocument
 	 * @param order_CartInfo $cartInfo
 	 */	
-	protected function fillOrderShippingAddress($orderDocument, $cartInfo)
+	protected function fillOrderShippingAddress($orderDocument, $cart)
 	{
-		$shippingAddress = $orderDocument->getShippingAddress();
-		$cartInfo->getAddressInfo()->exportShippingAddress($shippingAddress);
-		$shippingAddress->setPublicationstatus('FILED');
-		$shippingAddress->save();	
-		$cartInfo->setShippingAddressId($shippingAddress->getId());
+		$isSet = false;
+		$modeIds = array();
+		foreach ($cart->getShippingArray() as $key => $shippingInfos)
+		{
+			$modeId = $shippingInfos['filter']['modeId'];
+			if (in_array($modeId, $modeIds)) { continue; }
+			$modeIds[] = $modeId;
+			
+			$mode = shipping_persistentdocument_mode::getInstanceById($modeId);
+			$isSet = $mode->getDocumentService()->setShippingAddress($mode, $orderDocument, $cart, !$isSet) || $isSet;
+		}
 	}
 	
 	/**
-	 * @param order_persistentdocument_order orderDocument
+	 * @param order_persistentdocument_order $orderDocument
 	 * @param order_CartInfo $cartInfo
 	 */	
 	protected function fillOrderBillingAddress($orderDocument, $cartInfo)
 	{
-		$billingAddress = $orderDocument->getBillingAddress();
-		if ($cartInfo->getAddressInfo()->useSameAddressForBilling)
+		$mode = $cartInfo->getBillingMode();
+		if ($mode instanceof payment_persistentdocument_connector)
 		{
-			$cartInfo->getAddressInfo()->exportShippingAddress($billingAddress);
+			$mode->getDocumentService()->setOrderAddress($orderDocument, $cartInfo);
 		}
 		else
 		{
-			$cartInfo->getAddressInfo()->exportBillingAddress($billingAddress);
+			throw new Exception('No billing mode!');
 		}
-		$billingAddress->setPublicationstatus('FILED');
-		$billingAddress->save();
-		$cartInfo->setBillingAddressId($billingAddress->getId());
 	}
 	
 	/**
-	 * @param order_persistentdocument_order orderDocument
+	 * @param order_persistentdocument_order $orderDocument
 	 * @param order_CartInfo $cartInfo
 	 */
 	protected function generateDefaultAddressByOrder($orderDocument, $cartInfo)
@@ -529,10 +524,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$orderDocument->setCustomer($customer);
 			$orderDocument->setShopId($shop->getId());
 			$orderDocument->setWebsiteId($shop->getWebsite()->getId());
-	
-			// Adresse de livraison.
-			$this->fillOrderShippingAddress($orderDocument, $cartInfo);
-			
+				
 			// Frais de livraison.
 			$shippingMode = $cartInfo->getShippingMode();
 			$orderDocument->setShippingModeDocument($shippingMode);
@@ -540,9 +532,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$orderDocument->setShippingFeesWithTax(catalog_PriceHelper::roundPrice($cartInfo->getFeesTotalWithTax()));
 			$orderDocument->setShippingFeesWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getFeesTotalWithoutTax()));
 			$orderDocument->setShippingDataArray($cartInfo->getShippingArray());
-			
-			// Adresse de facturation.
-			$this->fillOrderBillingAddress($orderDocument, $cartInfo);
 			
 			// Adresse par defaut.
 			$this->generateDefaultAddressByOrder($orderDocument, $cartInfo);

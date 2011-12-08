@@ -176,4 +176,8 @@
   <key id="repayments-total-amount">montant total</key>
   <key id="repayments-order">commande</key>  
   <key id="repayments-empty">aucun remboursement à afficher</key>   
+  <key id="general-informations">informations générales</key>   
+  <key id="expedition-status">statut de l'expédition</key>   
+  <key id="expedition-lines">produits concernés</key>   
+  <key id="related-order">commande associée</key>   
 </i18n>

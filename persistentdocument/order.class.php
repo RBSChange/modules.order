@@ -720,6 +720,57 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	{
 		return $this->getTotalAmountWithTax() + $this->getTotalCreditNoteAmount();
 	}
+
+	/**
+	 * @return customer_persistentdocument_address
+	 */
+	public function getShippingAddress()
+	{
+		$address = parent::getShippingAddress();
+		return ($address !== null) ? $address : $this->getBillingAddress();
+	}
+		
+	/**
+	 * @param array $addressIdByModeIdArray
+	 * @example array<modeId => addressId>
+	 */
+	private function setAddressIdByModeIdArray($addressIdByModeIdArray)
+	{
+		$this->setGlobalProperty('__addressIdByModeIdArray', $addressIdByModeIdArray);
+	}
+	
+	/**
+	 * @param integer $modeId
+	 * @return integer
+	 */
+	public function getAddressIdByModeId($modeId)
+	{
+		$array = $this->getGlobalProperty('__addressIdByModeIdArray');
+		if (is_array($array) && isset($array[$modeId]))
+		{
+			return $array[$modeId];
+		}
+		return null;
+	}
+
+	/**
+	 * @param integer $modeId
+	 * @param integer $addressId
+	 */
+	public function setAddressIdByModeId($modeId, $addressId)
+	{
+		$array = $this->getGlobalProperty('__addressIdByModeIdArray');
+		if ($addressId !== null)
+		{
+			if (!is_array($array)) { $array = array(); }
+			$array[$modeId] = $addressId;
+		}
+		elseif (is_array($array) && isset($array[$modeId]))
+		{
+			unset($array[$modeId]);
+		}
+		$this->setGlobalProperty('__addressIdByModeIdArray', $array);
+	}
 	
 	//DEPRECTAED FUNCTIONS
 
@@ -864,5 +915,5 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	public function getShippingModeTaxRate()
 	{
 		return $this->getOrderProperty('shippingModeTaxRate');
-	}	
+	}
 }

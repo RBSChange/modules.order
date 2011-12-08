@@ -80,6 +80,20 @@
 					<changeblock type="modules_order_order" />
 				</changecontent>
 			</page>
+			<page label="Détail d'une expédition" navigationVisibility="hidden" 
+				indexingstatus="false" robotsmeta="noindex,nofollow">
+				<tag name="contextual_website_website_modules_order_expedition" />
+				<changecontent for="content-block">
+					<changeblock type="modules_order_ExpeditionDetail" />
+				</changecontent>
+			</page>
+			<page label="Détail d'une expédition virtuelle" navigationVisibility="hidden" 
+				indexingstatus="false" robotsmeta="noindex,nofollow">
+				<tag name="contextual_website_website_modules_order_expeditionvirtual" />
+				<changecontent for="content-block">
+					<changeblock type="modules_order_ExpeditionDetailVirtual" />
+				</changecontent>
+			</page>
 			<page label="Messagerie relative à une commande" navigationVisibility="hidden">
 				<tag name="contextual_website_website_modules_order_order-messages" />
 				<changecontent for="content-block">
