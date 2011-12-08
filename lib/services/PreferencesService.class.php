@@ -1,8 +1,4 @@
 <?php
-/**
- * @date Fri, 07 Dec 2007 14:03:30 +0100
- * @author intbonjf
- */
 class order_PreferencesService extends f_persistentdocument_DocumentService
 {
 	/**
@@ -36,7 +32,7 @@ class order_PreferencesService extends f_persistentdocument_DocumentService
 	 */
 	public function createQuery()
 	{
-		return $this->pp->createQuery('modules_order/preferences');
+		return $this->getPersistentProvider()->createQuery('modules_order/preferences');
 	}
 
 	/**
@@ -46,6 +42,6 @@ class order_PreferencesService extends f_persistentdocument_DocumentService
 	 */
 	protected function preSave($document, $parentNodeId)
 	{
-		$document->setLabel('&modules.order.bo.general.Module-name;');
+		$document->setLabel('order');
 	}
 }

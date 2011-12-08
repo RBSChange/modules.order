@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/4.0.xsd" model-version="1.0" icon="order" indexable="false" has-url="false" publish-on-day-change="false" backoffice-indexable="false">
   <properties>
-    <property name="label" default-value="preferences"/>
+    <property name="label" default-value="order"/>
     <property name="orderConfirmedNotificationUser" type="modules_users/user" max-occurs="-1"/>
     <property name="disableCoupons" type="Boolean" default-value="false"/>
     <property name="orderProcessClosedBeginDate" type="DateTime"/>
