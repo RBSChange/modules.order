@@ -721,6 +721,14 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		return $this->getTotalAmountWithTax() + $this->getTotalCreditNoteAmount();
 	}
 	
+	/**
+	 * @return string
+	 */
+	public function getTreeNodeLabel()
+	{
+		return $this->getOrderNumber();
+	}
+	
 	// Deprecated
 	
 	/**

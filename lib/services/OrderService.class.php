@@ -1538,34 +1538,29 @@ class order_OrderService extends f_persistentdocument_DocumentService
 
 	/**
 	 * @param order_persistentdocument_order $document
+	 * @param array<string, string> $attributes
+	 * @param integer $mode
 	 * @param string $moduleName
-	 * @param string $treeType
-	 * @param array<string, string> $nodeAttributes
 	 */
-	public function addTreeAttributes($document, $moduleName, $treeType, &$nodeAttributes)
+	public function completeBOAttributes($document, &$attributes, $mode, $moduleName)
 	{
-		$nodeAttributes['label'] = $document->getOrderNumber();	
-		if ($treeType === 'wtree' || $treeType === 'wlist')
+		$attributes['canBeCanceled'] = $document->canBeCanceled();
+		if ($mode & DocumentHelper::MODE_CUSTOM)
 		{
-			$nodeAttributes['orderStatus'] = $document->getOrderStatus();
-			if ($treeType === 'wlist')
+			$attributes['date'] = date_Formatter::toDefaultDateTimeBO($document->getUICreationdate());
+			$attributes['orderStatusLabel'] = $document->getBoOrderStatusLabel();
+			$attributes['formattedTotalAmountWithTax'] = $document->formatPrice($document->getTotalAmountWithTax());
+			$user = $document->getCustomer()->getUser();
+			$attributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
+			$messages = order_MessageService::getInstance()->getByOrder($document);
+			if (count($messages) > 0)
 			{
-				$nodeAttributes['date'] =  date_Formatter::toDefaultDateTimeBO($document->getUICreationdate());
-				$nodeAttributes['orderStatusLabel'] = $document->getBoOrderStatusLabel();
-				$nodeAttributes['formattedTotalAmountWithTax'] = $document->formatPrice($document->getTotalAmountWithTax());
-				$user = $document->getCustomer()->getUser();
-				$nodeAttributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
-				$nodeAttributes['canBeCanceled'] = $document->canBeCanceled();
-				$messages = order_MessageService::getInstance()->getByOrder($document);
-				if (count($messages) > 0)
-				{
-					$message = f_util_ArrayUtils::firstElement($messages);
-					$nodeAttributes['lastMessageDate'] = date_Formatter::toDefaultDateTimeBO($message->getUICreationdate());
-				}
-				else
-				{
-					$nodeAttributes['lastMessageDate'] = LocaleService::getInstance()->transBO('m.order.bo.general.na', array('ucf'));
-				}
+				$message = f_util_ArrayUtils::firstElement($messages);
+				$attributes['lastMessageDate'] = date_Formatter::toDefaultDateTimeBO($message->getUICreationdate());
+			}
+			else
+			{
+				$attributes['lastMessageDate'] = LocaleService::getInstance()->trans('m.order.bo.general.na', array('ucf'));
 			}
 		}
 	}

@@ -32,6 +32,82 @@ class order_ModuleService extends ModuleBaseService
 	{
 		$this->preferencesDocument = null;
 	}
+	
+	/**
+	 * @param f_persistentdocument_PersistentDocument $document
+	 * @param string[] $subModelNames
+	 * @param integer $locateDocumentId null if use startindex
+	 * @param integer $pageSize
+	 * @param integer $startIndex
+	 * @param integer $totalCount
+	 * @return f_persistentdocument_PersistentDocument[]
+	 */
+	public function getVirtualChildrenAt($document, $subModelNames, $locateDocumentId, $pageSize, &$startIndex, &$totalCount)
+	{
+		if ($document->getDocumentModelName() === 'modules_generic/folder')
+		{
+			$dateLabel = $document->getLabel();
+			$matches = null;			
+			if (preg_match('/^\d{4}\-\d{2}\-\d{2}$/', $dateLabel, $matches) && in_array('modules_order/order', $subModelNames))
+			{
+				$startdate = date_Converter::convertDateToGMT($matches[0] . ' 00:00:00');
+				$endate = date_Calendar::getInstance($startdate)->add(date_Calendar::DAY, 1)->toString();
+				if ($locateDocumentId !== null)
+				{
+					$startIndex = 0;				
+					$idsArray = order_OrderService::getInstance()->createQuery()
+						->add(Restrictions::between('creationdate', $startdate, $endate))
+						->addOrder(Order::desc('id'))
+		           		->setProjection(Projections::property('id', 'id'))->findColumn('id');    		 
+		           	$totalCount = count($idsArray);
+		           	foreach ($idsArray as $index => $id)
+		           	{            		
+		           		if ($id == $locateDocumentId)
+		           		{
+		           			$startIndex = $index - ($index % $pageSize);
+		           			break;
+		           		}
+		           	}	 
+				}
+				else 
+				{
+					$countQuery = order_OrderService::getInstance()->createQuery()
+						->add(Restrictions::between('creationdate', $startdate, $endate))
+						->setProjection(Projections::rowCount('countItems'));
+					$totalCount = intval(f_util_ArrayUtils::firstElement($countQuery->findColumn('countItems')));
+				}
+				$query = order_OrderService::getInstance()->createQuery()
+					->add(Restrictions::between('creationdate', $startdate, $endate))
+					->addOrder(Order::desc('id'))
+					->setFirstResult($startIndex)->setMaxResults($pageSize);
+				return $query->find();
+			}
+			else
+			{
+				return generic_FolderService::getInstance()->createQuery()
+					->add(Restrictions::childOf($document->getId()))
+					->addOrder(Order::desc('label'))
+					->find();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @param f_persistentdocument_PersistentDocument $document
+	 * @return f_persistentdocument_PersistentDocument or null
+	 */
+	public function getVirtualParentForBackoffice($document)
+	{
+		if ($document instanceof order_persistentdocument_order)
+		{
+			$folderName = date_Formatter::format($document->getUICreationdate(), 'Y-m-d');
+			return generic_FolderService::getInstance()->createQuery()
+				->add(Restrictions::descendentOf(ModuleService::getInstance()->getRootFolderId('order')))
+				->add(Restrictions::eq('label', $folderName))->setMaxResults(1)->findUnique();
+		}
+		return null;
+	}
 		
 	/**
 	 * Checks if the order process is enable or not.
