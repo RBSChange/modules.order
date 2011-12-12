@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>${order/getOrderNumber} - ${order/getBillingAddress/getFirstnameAsHtml} ${order/getBillingAddress/getLastnameAsHtml}</title>
+		<style tal:replace="cssInclusion" />
+	</head>
+	<body>
+		<h1 change:h=""><tal:block change:translate="modules.order.bo.print.Messages-for-order; orderNumber order/getOrderNumber" /></h1>
+		
+		<dl>
+			<dd change:translate="modules.order.bo.print.DateLabel" />
+			<dt><span change:datetime="order/getCreationdate; formatI18n framework.date.date.default-datetime-format" /></dt>
+			<dd change:translate="modules.order.bo.print.CustomerLabel" />
+			<dt>${order/getCustomer/getUser/getFullname}</dt>
+			<dd change:translate="modules.order.bo.print.StatusLabel" />
+			<dt>${order/getFoOrderStatusLabel}</dt>
+		</dl>
+		
+		<div class="cleaner"></div>
+		
+		<h2 change:h="" change:translate="modules.order.bo.print.Messages-list"></h2>
+		<ul tal:condition="messages" class="messagecustomer">
+			<tal:block tal:repeat="message messages">
+				<li class="fromcustomer" tal:condition="message/isSentByCustomer">
+					<p><strong><tal:block change:translate="modules.customer.frontoffice.Message-sent-by-customer; companyName companyName" /> <tal:block change:datetime="message/getCreationdate; formatI18n framework.date.date.default-datetime-format" /></strong></p>
+					<blockquote>${message/getContentAsHtml}</blockquote>
+				</li>
+				<li class="tocustomer" tal:condition="not: message/isSentByCustomer">
+					<p><strong><tal:block change:translate="modules.customer.frontoffice.Message-sent-by-company; companyName companyName" /> <tal:block change:datetime="message/getCreationdate; formatI18n framework.date.date.default-datetime-format" /></strong></p>
+					<blockquote>${message/getContentAsHtml}</blockquote>
+				</li>	
+			</tal:block>
+		</ul>
+		<p tal:condition="not: messages" change:translate="modules.customer.frontoffice.No-message-for-this-order"></p>
+	</body>
+</html>

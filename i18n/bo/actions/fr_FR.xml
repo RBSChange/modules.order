@@ -25,4 +25,7 @@
 	<key id="createfees">Créer des frais</key>
 	<key id="generate-default-expedition">générer l'expédition</key>
 	<key id="generating-default-expedition">Génération de l'expédition en cours.</key>
+	<key id="view-printable-version">version imprimable</key>
+	<key id="create-from-this">créer un autre prix à partir de celui-ci</key>
+	<key id="createproductqueryfolder">créer un dossier intelligent de produits</key>
 </i18n>

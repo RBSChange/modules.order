@@ -136,6 +136,7 @@
 	</systemfolder>
 		
 	<rootfolder module="order">
+		<waitingresponseorderfolder byLabel="waitingresponseorderfolder" />
 		<smartfolder byLabel="Commandes des dernières 24 heures" query='[{"class":"order_CreationDateOrderFilter","parameters":{"count":[null,null,"1"],"unit":[null,null,"day"]}}]' />
 		<smartfolder byLabel="Commandes des sept derniers jours" query='[{"class":"order_CreationDateOrderFilter","parameters":{"count":[null,null,"1"],"unit":[null,null,"week"]}}]' />
 	</rootfolder>

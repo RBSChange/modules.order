@@ -37,12 +37,16 @@
 		<javascript>
 			<constructor><![CDATA[
 				// Cancel order button.
-				this.mCancelOrderButton = this.addActionButton("${transui:m.order.bo.actions.cancel-order,ucf}", wToolkit.getIcon('reject', 'small'));
+				this.mCancelOrderButton = this.addActionButton("${transui:m.order.bo.actions.cancel-order,ucf,js}", "{IconsBase}/small/reject.png");
 				var me = this;
-				this.mCancelOrderButton.addEventListener('command', function(event) {me.onCancelOrder();}, true);			
+				this.mCancelOrderButton.addEventListener('command', function(event) { me.onCancelOrder(); }, true);			
 				this.extendMethod("updateCommandsUI", this.updateCancelOrderUI);
 				this.extendMethod("fireInitializeComplete", this.initializeExtra);				
-				this.addEventListener("gridInitialised", function (event) {return me.onGridInitialised(event);}, true);
+				this.addEventListener("gridInitialised", function (event) { return me.onGridInitialised(event); }, true);
+				
+				// Print order button.
+				var button = this.addActionButton("${transui:m.order.bo.actions.view-printable-version,ucf,js}", "{IconsBase}/small/printer.png");
+				button.addEventListener('command', function () { me.printOrder(); }, true);
 			]]></constructor>
 			
 			<field name="mPropIds">["website", "reference", "creationdate",
@@ -201,6 +205,13 @@
 					{
 						document.getAnonymousElementByAttribute(this, 'class', 'discountsSection').removeAttribute('collapsed');
 					}	
+				]]></body>
+			</method>
+			
+			<method name="printOrder">
+				<body><![CDATA[	
+					var url = wCore.buildServerUrl('order', 'PrintOrder', { mode: 'Properties', cmpref: this.documentEditor.documentid, lang: this.documentEditor.vo });												
+					wToolkit.openurl(url);
 				]]></body>
 			</method>
 		</javascript>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<i18n baseKey="m.order.bo.print" lcid="fr_FR">
+  <key id="details-for-order">détail de la commande n°{orderNumber}</key>
+  <key id="order-details">détail de la commande</key>
+  <key id="payments">paiements</key>
+  <key id="expeditions">expeditions</key>
+  <key id="date">date</key>
+  <key id="customer">client</key>
+  <key id="status">statut</key>
+  <key id="messages-for-order">messages relatif à la commande n°{orderNumber}</key>
+  <key id="messages-list">liste des messages</key>
+</i18n>

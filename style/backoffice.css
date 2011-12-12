@@ -38,3 +38,6 @@ treechildren::-moz-tree-image(modules_order_fees){
 treechildren::-moz-tree-image(modules_order_shippingaddress){
 	list-style-image: url(/changeicons/small/addressbook2.png);
 }
+treechildren::-moz-tree-image(modules_order_waitingresponseorderfolder){
+	list-style-image: url(/changeicons/small/folder.png);
+}

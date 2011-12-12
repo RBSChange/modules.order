@@ -5,9 +5,11 @@
 			<children>
 				<child model="modules_generic/folder" />
 				<child model="modules_order/smartfolder" />
+				<child model="modules_order/waitingresponseorderfolder" />
 			</children>
 			<drops>
 				<drop model="modules_order/smartfolder" action="move" />
+				<drop model="modules_order/waitingresponseorderfolder" action="move" />
 			</drops>
 			<contextactions>
 				<contextaction name="edit" />
@@ -61,6 +63,21 @@
 				<contextaction name="activate" />
 				<contextaction name="deactivated" />
 				<contextaction name="reactivate" />
+			</contextactions>
+		</model>
+		<model name="modules_order/waitingresponseorderfolder">
+			<children>
+				<child model="modules_order/order" from="function" />
+			</children>
+			<columns>
+				<column name="formattedTotalAmountWithTax" flex="1" label="TotalAmountWithTax" />
+				<column name="orderStatusLabel" flex="2" label="OrderStatus" />
+				<column name="customer" flex="4" label="Customer" />
+				<column name="date" flex="1" label="Date" />
+				<column name="lastMessageDate" flex="1" label="LastMessageDate" />
+			</columns>
+			<contextactions>
+				<contextaction name="openFolder" />
 			</contextactions>
 		</model>
 	</models>

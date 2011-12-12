@@ -10,13 +10,19 @@
 		<content>
 			<xul:vbox flex="1">
 				<xul:cmessageinfo anonid="message" />
+				<xul:hbox anonid="action-bar">
+					<xul:button anonid="print_button" label="${transui:m.order.bo.actions.view-printable-version,ucf,attr}"
+						image="{IconsBase}/small/printer.png" />
+					<xul:spacer flex="1" />
+				</xul:hbox>
 				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
 					<xul:groupbox class="messageForm">
 						<xul:caption label="${transui: m.order.bo.doceditor.panel.messages.title,ucf,attr}" />
 						<xul:vbox>
 							<xul:cfield name="messageContent" anonid="field_messageContent" fieldtype="longtext" cols="100" hidehelp="true" />
 							<xul:hbox>
-								<xul:button anonid="sendMessageButton" label="${transui: m.order.bo.doceditor.panel.messages.send,ucf,attr}" image="{IconsBase}/small//mail.png" />
+								<xul:button anonid="sendMessageButton" label="${transui: m.order.bo.doceditor.panel.messages.send,ucf,attr}"
+									image="{IconsBase}/small/mail.png" />
 								<xul:button anonid="markAsAnswered" label="${transui: m.order.bo.doceditor.panel.messages.markasanswered,ucf,attr}"
 									image="{IconsBase}/small/check.png" />
 							</xul:hbox>
@@ -29,11 +35,10 @@
 		</content>
 		<implementation>
 			<constructor><![CDATA[
-				var _this = this;
-				var node = document.getAnonymousElementByAttribute(this, 'anonid', 'sendMessageButton');
-				node.addEventListener('command', function () { _this.sendNewMessage(); }, true);
-				var node = document.getAnonymousElementByAttribute(this, 'anonid', 'markAsAnswered');
-				node.addEventListener('command', function () { _this.markAsAnswered(); }, true);
+				var me = this;
+				this.getElementByAnonId('sendMessageButton').addEventListener('command', function () { me.sendNewMessage(); }, true);
+				this.getElementByAnonId('markAsAnswered').addEventListener('command', function () { me.markAsAnswered(); }, true);
+				this.getElementByAnonId('print_button').addEventListener('command', function () { me.printMessages(); }, true);
 			]]></constructor>
 
 			<method name="getInitializeParameters">
@@ -141,6 +146,13 @@
 						this.documentEditor.refresh();
 					}
                ]]></body>
+			</method>
+			
+			<method name="printMessages">
+				<body><![CDATA[	
+					var url = wCore.buildServerUrl('order', 'PrintOrder', { mode: 'Messages', cmpref: this.documentEditor.documentid, lang: this.documentEditor.vo });												
+					wToolkit.openurl(url);
+				]]></body>
 			</method>
 		</implementation>
 	</binding>
