@@ -50,4 +50,7 @@
 	<block type="modules_order_StdResultStep" icon="arrow-right-blue" />
 	<block type="modules_order_ExpeditionDetail" icon="expedition" />
 	<block type="modules_order_ExpeditionDetailVirtual" icon="expedition" />
+	
+	<block type="modules_order_ShippingModeConfigurationContainer" hidden="true" />
+
 </blocks>

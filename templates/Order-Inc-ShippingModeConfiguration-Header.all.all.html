@@ -1,0 +1,14 @@
+<tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-NavigationTop'; type 'html';cart cart" />
+
+<h1 change:h="">${trans:m.order.fo.configure-mode,ucf,mode=mode/getLabelAsHtml}</h1>
+
+<div class="normal">
+	<dl class="inline-list" tal:condition="lines">
+		<dt>${trans:m.order.fo.for-following-products,ucf}</dt>
+		<dd tal:repeat="line lines">
+			${line/getProduct/getLabelAsHtml}
+			<span tal:condition="not: repeat/line/end">, </span>
+		</dd>
+	</dl>
+	<p tal:condition="not:lines">${trans:m.order.fo.for-complete-order,ucf}</p>
+</div>

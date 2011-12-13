@@ -103,8 +103,7 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 
 		if (!$this->hasErrors())
 		{
-			if (ModuleService::getInstance()->moduleExists('featurepackb')
-				&& !featurepackb_ShippingModeConfigurationService::getInstance()->checkModesConfiguration($this, $request, 'nextStep'))
+			if (!order_ShippingModeConfigurationService::getInstance()->checkModesConfiguration($this, $request, 'nextStep'))
 			{
 				return null;
 			}
