@@ -17,4 +17,11 @@
 	<key id="for-following-products">concerne les produits suivants</key>
 	<key id="for-complete-order">concerne l'ensemble de la commande</key>
 	<key id="configure-mode">configuration de la livraison par {mode}</key>
+	
+	
+	<key id="order-nothing">non pertinant</key>
+	<key id="order-valid">Commande validée</key>
+	<key id="order-preparation">Commande en préparation</key>
+	<key id="order-partialy-shipped">Commande partiellement expédiée</key>
+	<key id="order-shipped">Commande expédiée</key>
 </i18n>

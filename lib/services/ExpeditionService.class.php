@@ -836,7 +836,45 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		return $result;
 	}
 	
-	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return string [nothing|valid|preparation|partialy-shipped|shipped]
+	 */
+	public function evaluateGlobalStatusForOrder($order)
+	{
+		$value = 'nothing';
+		if ($order->getOrderStatus() === order_OrderService::COMPLETE)
+		{
+			$value = 'shipped';
+		}
+		elseif ($order->getOrderStatus() === order_OrderService::IN_PROGRESS)
+		{
+			
+			if (order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
+			{
+				$value = 'preparation';
+			}
+			else
+			{
+				$value = 'valid';
+			}
+			
+			$expArray = $this->getByOrder($order);
+			if (count($expArray))
+			{
+				$value = ($this->hasShippedExpeditionFromOrder($order)) ? 'partialy-shipped' : 'preparation';
+			}
+			elseif (order_ModuleService::getInstance()->useOrderPreparationEnabled())
+			{
+				if (count(order_OrderpreparationService::getInstance()->getByOrder($order)))
+				{
+					$value = 'preparation';
+				}
+			}
+		} 
+		return $value;
+	}
+		
 	/**
 	 * @param order_persistentdocument_expedition $document
 	 * @param string $forModuleName
@@ -924,4 +962,6 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		}
 		return null;
 	}
+	
+	
 }

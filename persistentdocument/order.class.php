@@ -20,6 +20,16 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	{
 		return LocaleService::getInstance()->transFO('m.order.frontoffice.status.' . $this->getOrderStatus(), array('ucf', 'html'));
 	}
+	
+	
+	/**
+	 * @return String
+	 */
+	public function getLogisticStatusLabel()
+	{
+		return LocaleService::getInstance()->transFO('m.order.fo.order-' . order_ExpeditionService::getInstance()->evaluateGlobalStatusForOrder($this));
+	}
+		
 		
 	/**
 	 * @param double $value
