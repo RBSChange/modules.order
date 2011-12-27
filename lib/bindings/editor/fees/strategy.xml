@@ -121,14 +121,11 @@
 						var bindingurl = Context.CHROME_BASEURL
 								+ '/module=order&action=GetBinding&uilang=' + Context.W_UILANG + '&cmpref=' + cmpref
 								+ '&class=' + this.mParameters.strategyClassName;	
-						wCore.debug("updateEditorBinding: " + bindingurl);	
 						parameterseditor.style.MozBinding = 'url(' + bindingurl + '#cStrategy)';
 					}
 				]]>
 				</body>
 			</method>			
-			
-
 			
 			<method name="saveProperties">
 				<body><![CDATA[
@@ -180,7 +177,6 @@
 						
 			<method name="clear">
 				<body><![CDATA[
-					wCore.debug("clear cStrategyPanel");
 					this.showTextMessage('');
 					this.mInitialized = false;
 				]]>
@@ -189,7 +185,6 @@
 			
 			<method name="onCloseEditor">
 				<body><![CDATA[
-					wCore.debug("onCloseEditor cStrategyPanel");
 					try {
 						this.updateEditorBinding(null);
 					} catch (e) {
@@ -268,7 +263,6 @@
 			<method name="setInitialValues">
 				<parameter name="initialValues" />
 				<body><![CDATA[
-					wCore.debug('cStrategySections.setInitialValues');
 					for (var i = 0; i < this.mParameters.length; i++) {
 						var name = this.mParameters[i];
 						var field = document.getAnonymousElementByAttribute(this, "name", name);

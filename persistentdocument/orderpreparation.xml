@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/3.5.xsd"
+	model-version="3.5" has-url="false" use-rewrite-url="false" backoffice-indexable="false" icon="orderpreparation" publish-on-day-change="false">
+	<properties>
+		<!-- used for stored order preparation number -->
+		<add name="label" />
+		<add name="orderId" type="Integer" />
+		<add name="targetId" type="Integer" />
+		<add name="linesData" type="Lob" />
+	</properties>
+	<serializedproperties>
+		<add name="stateInfo" type="LongString"/>	
+	</serializedproperties>
+</document>

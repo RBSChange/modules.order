@@ -2,5 +2,9 @@
 <panel>
   <section labeli18n="modules.uixul.bo.doceditor.fieldsgroup.Title">
     <field name="trackingText"/>
+    <field name="deliveryDate"/>
   </section>
+  <section labeli18n="m.order.document.expedition.lines-section">
+  	<fieldinput name="boExplinesJSON" type="namedgridlist" flex="1" />
+  </section>  
 </panel>

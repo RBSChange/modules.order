@@ -286,6 +286,14 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 		return  $this->getGlobalProperty('orderLabelAsHtml');
 	}
 	
+	/**
+	 * @return integer
+	 */
+	public function getShippingModeId()
+	{
+		return $this->getGlobalProperty('shippingModeId');
+	}	
+	
 	// Deprecated.
 	
 	/**

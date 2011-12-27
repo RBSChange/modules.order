@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <script>
-	<binding fileName="modules/generic/persistentdocument/import/generic_binding.xml" />
-	<binding name="preferences" className="order_PreferencesScriptDocumentElement" />
-	<binding name="orderpreferences" className="order_PreferencesScriptDocumentElement" />
-	<binding name="order" className="order_OrderScriptDocumentElement" />
-	<binding name="orderline" className="order_OrderlineScriptDocumentElement" />
-	<binding name="message" className="order_MessageScriptDocumentElement" />
-	<binding name="cart" className="order_CartInfoScriptElement" />
-	<binding name="cartline" className="order_CartLineScriptElement" />
-	<binding name="smartfolder" className="order_SmartfolderScriptDocumentElement" />
-	<binding name="bill" className="order_BillScriptDocumentElement" />
-	<binding name="expeditionline" className="order_ExpeditionlineScriptDocumentElement" />
-	<binding name="expedition" className="order_ExpeditionScriptDocumentElement" />
-	<binding name="creditnote" className="order_CreditnoteScriptDocumentElement" />
-	<binding name="cartmodifier" className="order_CartmodifierScriptDocumentElement" />
-	<binding name="fees" className="order_FeesScriptDocumentElement" />
-	<binding name="shippingaddress" className="order_ShippingaddressScriptDocumentElement" />
-	<binding name="waitingresponseorderfolder" className="order_WaitingresponseorderfolderScriptDocumentElement" />
+  <binding fileName="modules/generic/persistentdocument/import/generic_binding.xml"/>
+  <binding name="preferences" className="order_PreferencesScriptDocumentElement"/>
+  <binding name="orderpreferences" className="order_PreferencesScriptDocumentElement"/>
+  <binding name="order" className="order_OrderScriptDocumentElement"/>
+  <binding name="orderline" className="order_OrderlineScriptDocumentElement"/>
+  <binding name="message" className="order_MessageScriptDocumentElement"/>
+  <binding name="cart" className="order_CartInfoScriptElement"/>
+  <binding name="cartline" className="order_CartLineScriptElement"/>
+  <binding name="smartfolder" className="order_SmartfolderScriptDocumentElement"/>
+  <binding name="bill" className="order_BillScriptDocumentElement"/>
+  <binding name="expeditionline" className="order_ExpeditionlineScriptDocumentElement"/>
+  <binding name="expedition" className="order_ExpeditionScriptDocumentElement"/>
+  <binding name="creditnote" className="order_CreditnoteScriptDocumentElement"/>
+  <binding name="cartmodifier" className="order_CartmodifierScriptDocumentElement"/>
+  <binding name="fees" className="order_FeesScriptDocumentElement"/>
+  <binding name="shippingaddress" className="order_ShippingaddressScriptDocumentElement"/>
+  <binding name="waitingresponseorderfolder" className="order_WaitingresponseorderfolderScriptDocumentElement"/>
+  <binding name="orderpreparation" className="order_OrderpreparationScriptDocumentElement"/>
 </script>

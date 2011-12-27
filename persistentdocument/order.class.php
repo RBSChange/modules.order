@@ -653,8 +653,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function canBeCanceled()
 	{
-		$orderStatus = $this->getOrderStatus();
-		return $orderStatus == order_OrderService::IN_PROGRESS;
+		return $this->getDocumentService()->canBeCanceled($this);
 	}
 	
 	/**
@@ -668,8 +667,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			->add(Restrictions::isNotNull('archive'))
 			->find();
 	}
-	
-
 		
 	/**
 	 * @example array<creditNoteId => amount>

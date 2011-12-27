@@ -20,7 +20,8 @@ class order_ShipExpeditionAction extends f_action_BaseJSONAction
 		{
 			$result = order_ExpeditionService::getInstance()->shipExpeditionFromBo($expedition, 
 				$request->getParameter('shippingDate'),
-				$request->getParameter('trackingNumber'));
+				$request->getParameter('trackingNumber'),
+				$request->getParameter('packetNumber'));
 		}
 		return $this->sendJSON($result);
 	}

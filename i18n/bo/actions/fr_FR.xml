@@ -28,4 +28,13 @@
 	<key id="view-printable-version">version imprimable</key>
 	<key id="create-from-this">créer un autre prix à partir de celui-ci</key>
 	<key id="createproductqueryfolder">créer un dossier intelligent de produits</key>
+	<key id="createorderpreparation">créer un bon de préparation</key>
+	<key id="createexpedition">créer une expedition</key>
+	
+	<key id="invalid-order-status">La commande n'est pas dans le bon statut</key>
+	
+	<key id="finalize-order">Finaliser la commande</key>
+	<key id="finalize-order-confirm-message">En finalisant la commande, le montant de tout produits non-expédiés sera recrédité au client sous forme d'avoir. Attention, cette opération est irréversible.</key>
+	<key id="finalize-order-in-progress">finalisation de la commande en cours...</key>
+	<key id="order-finalized">commande finalisé...</key>
 </i18n>

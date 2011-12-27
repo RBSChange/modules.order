@@ -20,13 +20,6 @@
 						this.mInitData = null;
 						return;
 					}
-					/*
-					wCore.debug(wCore.dump(result));
-					var s = result.contents.currencySymbol;
-					this.fields.amount.setAttribute('currency', s);
-					this.fields.amount.setAttribute('mode', "${transui:m.order.document.creditnote.maxamount,ucf,space,js}" + result.contents.maxAmount + s);					
-					this.fields.amountNotApplied.setAttribute('currency', s);
-					*/
 				]]></body>
 			</method>
 		</javascript>

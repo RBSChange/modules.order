@@ -66,4 +66,66 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 	{
 		return $this->getDocumentService()->getDisplayPage($this) !== null;
 	}
+	
+	/**
+	 * @return string
+	 */
+	public function getBoExplinesJSON()
+	{
+		$json = array();
+		foreach ($this->getLinesForDisplay() as $line) 
+		{
+			/* @var $line order_persistentdocument_expeditionline */
+			$data = array('id' => $line->getId(),
+						  'st' => $this->getStatus(),
+						  'label' => $line->getLabel(),
+						  'codereference' => $line->getCodeReference(),
+						  'quantity' => $line->getQuantity(),
+						  'packetnumber' => $line->getPacketNumber(),
+						  'trackingnumber' => $line->getTrackingNumber(),
+					);
+			$json[] = $data;
+		}
+		return JsonService::getInstance()->encode($json);
+	}
+	
+	/**
+	 * @param string $string
+	 */
+	public function setBoExplinesJSON($string)
+	{
+		if (!empty($string))
+		{
+			$tm = f_persistentdocument_TransactionManager::getInstance();
+			try 
+			{
+				$tm->beginTransaction();
+				$array = JsonService::getInstance()->decode($string);
+				foreach ($array as $lineInfo)
+				{
+					if (isset($lineInfo['id']) && isset($lineInfo['trackingnumber']) && isset($lineInfo['packetnumber']))
+					{
+						$line = order_persistentdocument_expeditionline::getInstanceById($lineInfo['id']);
+						$trackingnumber = $lineInfo['trackingnumber'] == '' ? null : $lineInfo['trackingnumber'];
+						$line->setTrackingNumber($trackingnumber);
+						
+						$packetnumber = $lineInfo['packetnumber'] == '' ? null : $lineInfo['packetnumber'];
+						$line->setPacketNumber($packetnumber);
+						
+						if ($line->isModified())
+						{
+							$line->save();
+							$this->setModificationdate(null);
+						}
+					}
+				}
+				$tm->commit();
+			} 
+			catch (Exception $e) 
+			{
+				$tm->rollBack($e);
+				throw $e;
+			}
+		}
+	}
 }

@@ -36,11 +36,7 @@
 	<xul>
 		<javascript>
 			<constructor><![CDATA[
-				// Cancel order button.
-				this.mCancelOrderButton = this.addActionButton("${transui:m.order.bo.actions.cancel-order,ucf,js}", "{IconsBase}/small/reject.png");
 				var me = this;
-				this.mCancelOrderButton.addEventListener('command', function(event) { me.onCancelOrder(); }, true);			
-				this.extendMethod("updateCommandsUI", this.updateCancelOrderUI);
 				this.extendMethod("fireInitializeComplete", this.initializeExtra);				
 				this.addEventListener("gridInitialised", function (event) { return me.onGridInitialised(event); }, true);
 				
@@ -54,65 +50,12 @@
 				"tvaAmounts", "discountTotal", "usedCreditNote", "totalAmount",
 				"couponSectionName", "couponSectionCode"]</field>
 			
-			<field name="mCancelOrderButton">null</field>
-			<field name="mCanBeCanceled">false</field>
-			
+
 			<field name="mOrderlines">null</field>
 			<field name="mDiscountLines">null</field>
 			
 			<field name="mInitData">null</field>
-
-			<method name="updateCancelOrderUI">
-				<parameter name="event" />
-				<body><![CDATA[
-					this.mCancelOrderButton.disabled = (this.modified || !this.mCanBeCanceled);
-				]]></body>
-			</method>
-
-			<method name="onCancelOrder">
-				<parameter name="event" />
-				<body><![CDATA[
-					this.lockCommandsUI();
-					if (confirm("${transui:m.order.bo.doceditor.confirm-cancelation,ucf}"))
-					{
-						this.showTextMessage("${transui:m.order.bo.doceditor.cancelation-in-progress,ucf}");
-						this.documentEditor.executeServerAction('properties', 'CancelOrder');
-					}
-				]]></body>
-			</method>
-			
-			<method name="getCancelOrderParameters">
-				<body><![CDATA[
-					var documentInfos = this.documentEditor.documentInfos;
-					var attributes = {
-						action: 'CancelOrderJSON',
-						cmpref: this.mDocumentId, 
-						lang : this.mLang,
-						documentversion: this.mRevision,
-						documentproperties: this.mFieldNames.join(',')
-					};
-					return attributes;
-				]]></body>
-			</method>
-			
-			<method name="fireCancelOrderComplete">
-				<parameter name="result" />
-				<body><![CDATA[			
-					if (result.status == "OK")
-					{
-						this.modified = false;						
-						this.documentEditor.clearTabs();
-						//wCore.debug('fireCancelOrderComplete' + wCore.dump(result));						
-						this.fireInitializeComplete(result);						
-						this.showTextMessage("&modules.order.bo.doceditor.message.Order-canceled;");
-					}
-					else
-					{
-						this.showErrorMessage(result.contents.errorMessage);					
-					}
-				]]></body>
-			</method>
-				
+	
 			<method name="onGridInitialised">
 				<parameter name="event" />
 				<body><![CDATA[	
@@ -155,9 +98,6 @@
 					
 					this.mInitData = result.contents;					
 					var informations = this.mInitData.informations;
-					this.mCanBeCanceled = informations['canBeCanceled'];
-					wCore.debug ('initializeExtra mCanBeCanceled ' + this.mCanBeCanceled);
-					this.updateCancelOrderUI();
 					
 					for each (var name in this.mPropIds)
 					{

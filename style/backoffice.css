@@ -41,3 +41,6 @@ treechildren::-moz-tree-image(modules_order_shippingaddress){
 treechildren::-moz-tree-image(modules_order_waitingresponseorderfolder){
 	list-style-image: url(/changeicons/small/folder.png);
 }
+treechildren::-moz-tree-image(modules_order_orderpreparation){
+	list-style-image: url(/changeicons/small/orderpreparation.png);
+}

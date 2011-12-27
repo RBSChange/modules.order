@@ -92,6 +92,7 @@
 		<action name="cancelOrder" permission="CancelOrder" icon="reject" labeli18n="m.order.bo.actions.CancelOrder" />
 		<action name="createSmartfolder" single="true" permission="Insert_smartfolder" icon="create-folder"
 			labeli18n="m.order.bo.actions.Create-smartfolder" />
-		<action name="openTreeNodeOrder" single="true" permission="Order" icon="sort" labeli18n="m.uixul.bo.actions.Set-children-order" />
+		<action name="openTreeNodeOrder" single="true" permission="Order" icon="sort" labeli18n="m.uixul.bo.actions.Set-children-order" />		
+		<action name="createOrderpreparation" single="true" permission="Insert_orderpreparation" icon="add" />		
 	</actions>
 </perspective>

@@ -76,6 +76,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$result['billArray'] = order_BillService::getInstance()->getBoList($order);
 		$result['creditnoteArray'] = order_CreditnoteService::getInstance()->getBoList($order);
 		
+		$this->addJsActionsProperties($order, $result);
 		return $result;
 	}
 	
@@ -98,25 +99,39 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$address['fax'] = $shippingAddress->getFax();	
 		$result['address'] = $address;
 		
-		$result['expeditionArray'] = order_ExpeditionService::getInstance()->getBoList($order);
-		if (f_util_ArrayUtils::isEmpty($result['expeditionArray']))
+		if (order_ModuleService::getInstance()->useOrderPreparationEnabled())
 		{
-			$status = $order->getOrderStatus();
-			if ($status == order_OrderService::IN_PROGRESS && order_BillService::getInstance()->hasPublishedBill($order))
+			$result['orderPreparationArray'] = order_OrderpreparationService::getInstance()->getBoList($order);
+			if ($order->getOrderStatus() == self::IN_PROGRESS)
 			{
-				$result['showExpeditionMessage'] = true;
-				if (order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
-				{
-					$result['allowCreatedefaultExpedition'] = true;
-				}
+				$result['createOrderPreparation'] = true;
 			}
 		}
-		
-		if (ModuleService::getInstance()->moduleExists('productreturns'))
+				
+		$result['expeditionArray'] = order_ExpeditionService::getInstance()->getBoList($order);	
+		if (count($result['expeditionArray']))
 		{
-			$result['returnsArray'] = productreturns_BasereturnService::getInstance()->getBoList($order);
+			$status = $order->getOrderStatus();
+			if ($status == self::IN_PROGRESS)
+			{
+				if (order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
+				{
+					$result['showExpeditionMessage'] = true;
+				}
+			}
+			
+			if (ModuleService::getInstance()->moduleExists('productreturns'))
+			{
+				$result['createProductReturn'] = true;
+				$result['returnsArray'] = productreturns_BasereturnService::getInstance()->getBoList($order);
+			}
+		}
+		elseif (order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
+		{
+			$result['generateDefaultExpedition'] = true;
 		}
 		
+		$this->addJsActionsProperties($order, $result);
 		return $result;
 	}
 	
@@ -127,8 +142,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$result = array();
 		$informations = array();
-				
-		$informations['canBeCanceled'] = $order->canBeCanceled();
 		$informations['reference'] = $order->getOrderNumber();
 		$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
 		$informations['creationdate'] = date_DateFormat::format($order->getUICreationdate(), $dateTimeFormat);
@@ -807,6 +820,28 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$folder = TreeService::getInstance()->getFolderOfDate(ModuleService::getInstance()->getRootFolderId('order'), $date);
 		return $folder;
 	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return boolean
+	 */
+	public function canBeCanceled($order)
+	{	
+		$orderStatus = $order->getOrderStatus();
+		if ($orderStatus == self::IN_PROGRESS)
+		{
+			if (order_ModuleService::getInstance()->useOrderPreparationEnabled())
+			{
+				return !order_OrderpreparationService::getInstance()->existForOrderId($order->getId());
+			}
+			elseif (!order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
+			{
+				return !order_ExpeditionService::getInstance()->existForOrderId($order->getId());
+			}
+		}
+		return false;
+	}
+	
 	
 	/**
 	 * @param order_persistentdocument_order $order
@@ -1493,13 +1528,36 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$template->setAttribute('products', $products);
 		return $template->execute();
 	}
+	
+	/**
+	 * @param order_persistentdocument_order $document
+	 * @param Array $datas
+	 */	
+	protected function addJsActionsProperties($document, &$datas)
+	{
+		$datas['canBeCanceled'] = $this->canBeCanceled($document);
+		$datas['canBeFinalize'] = (!$datas['canBeCanceled'] && $document->getOrderStatus() === self::IN_PROGRESS);
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $document
+	 * @param string $forModuleName
+	 * @return array
+	 */
+	public function getDocumentEditorInfos($document, $forModuleName)
+	{
+		$infos = parent::getDocumentEditorInfos($document, $forModuleName);
+		$this->addJsActionsProperties($document, $infos);
+		return $infos;
+	}
 		
 	/**
 	 * @param order_persistentdocument_order $document
 	 * @param String[] $propertiesName
 	 * @param Array $datas
+	 * @param integer $parentId
 	 */
-	public function addFormProperties($document, $propertiesNames, &$datas)
+	public function addFormProperties($document, $propertiesNames, &$datas, $parentId = null)
 	{
 		if (in_array('financial', $propertiesNames))
 		{
@@ -1547,7 +1605,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$nodeAttributes['formattedTotalAmountWithTax'] = $document->formatPrice($document->getTotalAmountWithTax());
 				$user = $document->getCustomer()->getUser();
 				$nodeAttributes['customer'] = $user->getFullName() . ' (' . $user->getEmail() . ')';
-				$nodeAttributes['canBeCanceled'] = $document->canBeCanceled();
+				
 				$messages = order_MessageService::getInstance()->getByOrder($document);
 				if (count($messages) > 0)
 				{
@@ -1558,6 +1616,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				{
 					$nodeAttributes['lastMessageDate'] = LocaleService::getInstance()->transBO('m.order.bo.general.na', array('ucf'));
 				}
+				$this->addJsActionsProperties($document, $nodeAttributes);
 			}
 		}
 	}

@@ -318,7 +318,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	 * @param string $actionType
 	 * @param array $formProperties
 	 */
-	public function addFormProperties($document, $propertiesNames, &$formProperties)
+	public function addFormProperties($document, $propertiesNames, &$formProperties, $parentId = null)
 	{	
 		$tamount = $this->getTotalAmountForOrder($document->getOrder(), $document);
 		$document->setOtherCreditNoteAmount($tamount);

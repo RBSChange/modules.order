@@ -331,9 +331,19 @@ class order_ModuleService extends ModuleBaseService
 	/**
 	 * @return boolean
 	 */
+	public function useOrderPreparationEnabled()
+	{
+		return Framework::getConfigurationValue('modules/order/useOrderPreparation', 'false') == 'true';
+	}
+
+	
+	/**
+	 * @return boolean
+	 */
 	public function isDefaultExpeditionGenerationEnabled()
 	{
-		return Framework::getConfigurationValue('modules/order/generateDefaultExpedition', 'true') == 'true';
+		return !$this->useOrderPreparationEnabled() && 
+			Framework::getConfigurationValue('modules/order/generateDefaultExpedition', 'true') == 'true';
 	}
 	
 	/**
@@ -345,6 +355,9 @@ class order_ModuleService extends ModuleBaseService
 		$generateDefaultExpedition = $this->isDefaultExpeditionGenerationEnabled();
 		$maxAge = intval(Framework::getConfigurationValue('modules/order/maxDraftBillAge', '60'));
 		
+		$oos = $order->getDocumentService();
+		$oess = order_ExpeditionService::getInstance();
+		
 		$orderStatus = $order->getOrderStatus();
 		if ($orderStatus == order_OrderService::IN_PROGRESS)
 		{
@@ -353,25 +366,24 @@ class order_ModuleService extends ModuleBaseService
 				$this->clearDraftBill($bill);
 			}
 			
-			if ($generateDefaultExpedition && order_BillService::getInstance()->hasPublishedBill($order))
+			if ($oess->isCompleteForOrder($order))
 			{
-				$result = order_ExpeditionService::getInstance()->createQuery()
-						->add(Restrictions::eq('order', $order))
-						->add(Restrictions::eq('status', order_ExpeditionService::PREPARE))
-						->setProjection(Projections::rowCount('rowcount'))->find();
-				
-				if ($result[0]['rowcount'] == 0)
+				if ($oess->hasShippedExpeditionFromOrder($order))
 				{
-					$expedition = order_ExpeditionService::getInstance()->createForOrder($order);
-					if ($expedition === null)
-					{
-						Framework::info(__METHOD__ . ' all expedition shipped for order ' . $order->getOrderNumber());
-						order_OrderService::getInstance()->completeOrder($order);					
-					}
+					$oos->completeOrder($order);
+				}
+				else
+				{
+					$oos->cancelOrder($order);
 				}
 			}
+			elseif ($generateDefaultExpedition && order_BillService::getInstance()->hasPublishedBill($order))
+			{
+				//Génération de l'expedition par défaut en PREPARATION
+				$oess->createForOrder($order);
+			}
 		}
-		else if ($orderStatus == order_OrderService::INITIATED)
+		else if ($orderStatus == order_OrderService::INITIATED && $maxAge > 0)
 		{
 			//Payment interompu en cours de processus
 			$orderDate = $order->getCreationdate();
@@ -401,6 +413,56 @@ class order_ModuleService extends ModuleBaseService
 			}
 		}
 	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @param boolean $sendNotification
+	 * @throws Exception
+	 */
+	public function finalizeOrder($order, $sendNotification = true)
+	{
+		if ($order->getOrderStatus() === order_OrderService::IN_PROGRESS)
+		{
+			$oos = $order->getDocumentService();
+			$tm = $this->getTransactionManager();
+			try
+			{
+				$tm->beginTransaction();
+				if ($this->useOrderPreparationEnabled())
+				{
+					//Suppression des bon de preparation
+					$oops = order_OrderpreparationService::getInstance();
+					$opArray = order_OrderpreparationService::getInstance()->getByOrder($order);
+					foreach ($opArray as $op)
+					{
+						$oops->delete($op);
+					}
+				}
+				$oes = order_ExpeditionService::getInstance();
+				$oes->cleanUpExpeditionsForOrder($order);
+				$expArray = $oes->getShippedByOrder($order);
+				if (count($expArray))
+				{
+					$oos->completeOrder($order, $sendNotification);
+				}
+				else
+				{
+					$oos->cancelOrder($order, $sendNotification);
+				}
+				$tm->commit();
+			}
+			catch (Exception $e)
+			{
+				$tm->rollback($e);
+				throw $e;
+			}
+		}
+		else
+		{
+			throw new BaseException('Invalid Order Status', 'm.order.bo.actions.invalid-order-status');
+		}	
+	}
+	
 	
 	/**
 	 * @param order_persistentdocument_order $order
@@ -438,6 +500,9 @@ class order_ModuleService extends ModuleBaseService
 			$bill->delete();
 		}		
 	}
+	
+	
+	
 	
 	/**
 	 * @deprecated

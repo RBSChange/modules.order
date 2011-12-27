@@ -25,14 +25,19 @@
 			<entry name="billNumberStrategyClass">order_BillNumberYearSequenceStrategy</entry>
 			<entry name="expeditionNumberStrategyClass">order_ExpeditionOrderNumberStrategy</entry>
 			<entry name="creditNoteNumberStrategyClass">order_CreditNoteNumberYearSequenceStrategy</entry>
+			<entry name="packetNumberStrategyClass"></entry>
+			<entry name="orderPreparationNumberStrategyClass"></entry>
 		  -->
 
 		<!--  Generation de l'expedition par défaut pour les commandes payés --> 
 		<entry name="generateDefaultExpedition">true</entry>
 		
+		<!-- Utilisation de bon de preparation -->
+		<entry name="useOrderPreparation">false</entry>
+		
 		<!-- Durrée maximum en minutes d'une facture en publicationstatus DRAFT avant son annulation --> 
 		<entry name="maxDraftBillAge">60</entry>
-		
+
 		<orderProcess>
 			<entry name="default">order_OrderProcess</entry>
 		</orderProcess>

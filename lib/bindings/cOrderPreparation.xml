@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	
+	<binding id="cLinesGrid" extends="widgets.cGrid#cAbstractSortableGrid">
+		<implementation>
+			<constructor><![CDATA[
+				this.fireEvent('gridInitialised');
+			]]></constructor>
+			
+			<method name="getDatarowKey">
+				<parameter name="datarow" />
+				<body><![CDATA[
+					return datarow.id + ',' + datarow.quantity;
+				]]></body>
+			</method>
+			
+			<method name="execute_zero">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />
+				<body><![CDATA[
+					if (this.disabled || rowData.quantity == 0) {return;}
+					rowData.quantity = 0;					
+					var dataset = this.buildDataset();
+					this.mCurrentDatasetKey = this.generateDatasetKey(dataset);
+					this.refreshUI(dataset);
+					this.dispatchChanged();
+				]]></body>
+			</method>	
+			
+			<method name="execute_decrement">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />
+				<body><![CDATA[
+					if (this.disabled || rowData.quantity <= 0) {return;}
+					rowData.quantity -= 1;
+					
+					var dataset = this.buildDataset();
+					this.mCurrentDatasetKey = this.generateDatasetKey(dataset);
+					this.refreshUI(dataset);
+					this.dispatchChanged();
+				]]></body>
+			</method>	
+			
+			<method name="execute_increment">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />
+				<body><![CDATA[
+					if (this.disabled || rowData.quantity >= rowData.maxquantity) {return;}
+					rowData.quantity += 1;
+					
+					var dataset = this.buildDataset();
+					this.mCurrentDatasetKey = this.generateDatasetKey(dataset);
+					this.refreshUI(dataset);
+					this.dispatchChanged();
+				]]></body>
+			</method>
+			
+			<method name="execute_all">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />
+				<body><![CDATA[
+					if (this.disabled || rowData.quantity == rowData.maxquantity) {return;}
+					rowData.quantity = rowData.maxquantity;			
+					var dataset = this.buildDataset();
+					this.mCurrentDatasetKey = this.generateDatasetKey(dataset);
+					this.refreshUI(dataset);
+					this.dispatchChanged();
+				]]></body>
+			</method>
+						
+		</implementation>
+		
+		<content>
+			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
+				<xul:columns>
+					<xul:column />
+					<xul:column flex="1"/>
+					<xul:column />
+					<xul:column />
+					<xul:column xbl:inherits="collapsed=hideactions" />
+				</xul:columns>
+				<xul:rows anonid="document-rows">
+					<xul:row class="head" anonid="head-row">
+						<xul:label name="codereference" value="${transui:m.catalog.document.product.codereference,ucf,attr}" />
+						<xul:label name="label" value="${transui:m.catalog.document.product.label,ucf,attr}" />
+						<xul:label name="shippingmode" value="${transui:m.shipping.document.mode.document-name,ucf,attr}" />
+						<xul:label name="quantity" value="${transui:m.order.document.orderline.quantity,ucf,attr}" />
+						<xul:label name="actionrow" value="${transui:m.uixul.bo.doceditor.actions,ucf,attr}" xbl:inherits="hidden=hideactions" />
+					</xul:row>
+				</xul:rows>
+			</xul:grid>
+			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:toolbar class="actions">
+					<xul:toolbarbutton action="zero" image="{IconsBase}/small/control-begin.png" 
+						tooltiptext="${transui:m.order.document.orderpreparation.zero-quantity,ucf,attr}" />
+						
+					<xul:toolbarbutton action="decrement" image="{IconsBase}/small/minus-button.png" 
+						tooltiptext="${transui:m.order.document.orderpreparation.decrement-quantity,ucf,attr}" />	
+											
+					<xul:toolbarbutton action="increment" image="{IconsBase}/small/plus-button.png" 
+						tooltiptext="${transui:m.order.document.orderpreparation.increment-quantity,ucf,attr}" />
+						
+					<xul:toolbarbutton action="all" image="{IconsBase}/small/control-end.png" 
+						tooltiptext="${transui:m.order.document.orderpreparation.all-quantity,ucf,attr}" />						
+				</xul:toolbar>
+			</xul:row>				
+		</content>		
+	</binding>
+	
+	<binding id="cOrderpreparationsGrid" extends="widgets.cGrid#cAbstractSortableGrid">
+		<implementation>
+			<constructor><![CDATA[
+				this.fireEvent('gridInitialised');
+			]]></constructor>
+						
+			<method name="execute_edit">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
+				<body><![CDATA[
+					if (this.disabled) {return;}
+					var uri = ['order', 'openDocument', rowData.type, rowData.id, 'properties'].join(',');
+					openActionUri(uri);
+				]]></body>
+			</method>
+			
+			<method name="execute_createexpe">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />			
+				<body><![CDATA[
+					if (this.disabled) {return;}
+					var evt = document.createEvent("Event");
+					evt.initEvent('generateExpedition', true, true);
+					evt.orderPreparationId = rowData.id;
+					this.dispatchEvent(evt);
+				]]></body>
+			</method>
+			
+			<method name="setCellValue">
+				<parameter name="cell" />
+				<parameter name="name" />
+				<parameter name="dataRow" />
+				<body><![CDATA[
+					if (name == 'nextaction')
+					{
+						if (dataRow[name] == 'generateExpedition')
+						{
+							cell.setAttribute('class', 'text-link');
+							cell.setAttribute('action', 'createexpe');
+							cell.setAttribute('value', "${transui:m.order.bo.actions.createexpedition,ucf,js}");
+						}
+						else 
+						{
+							cell.removeAttribute('class');
+							cell.removeAttribute('action');	
+							cell.setAttribute('value', '');
+						}
+					}
+					else
+					{
+						cell.setAttribute('value', dataRow[name]);
+					}
+				]]></body>
+			</method>	
+							
+		</implementation>
+		<content>
+			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
+				<xul:columns>	
+					<xul:column />
+					<xul:column />
+					<xul:column flex="1" />
+					<xul:column />
+				</xul:columns>
+				<xul:rows anonid="document-rows">
+					<xul:row class="head" anonid="head-row">
+						<xul:label name="status" value="${transui:m.order.document.orderpreparation.status-header,ucf,attr}" />
+						<xul:label name="nextaction" value=" " />
+						<xul:label name="label" value="${transui:m.order.document.orderpreparation.label,ucf,attr}" />
+						<xul:label name="actionrow" value="${transui:m.order.bo.doceditor.actions,ucf,attr}" />
+					</xul:row>
+				</xul:rows>
+			</xul:grid>
+			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:cpublicationcell value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:toolbar class="actions">
+					<xul:toolbarbutton action="edit" image="{IconsBase}/small/edit.png" tooltiptext="${transui:m.uixul.bo.actions.edit,ucf,attr}" />
+				</xul:toolbar>
+			</xul:row>				
+		</content>
+	</binding>
+</bindings>

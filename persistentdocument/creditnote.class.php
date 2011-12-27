@@ -36,6 +36,7 @@ class order_persistentdocument_creditnote extends order_persistentdocument_credi
 	 */
 	public function getOrderNumber()
 	{
+		if ($this->getOrder() == null) {return "";}
 		return $this->getOrder()->getOrderNumber();	
 	}
 	
@@ -44,6 +45,7 @@ class order_persistentdocument_creditnote extends order_persistentdocument_credi
 	 */
 	public function getOrderAmount()
 	{
+		if ($this->getOrder() == null) {return 0;}
 		return $this->getOrder()->getTotalAmountWithTax();
 	}
 
@@ -60,7 +62,7 @@ class order_persistentdocument_creditnote extends order_persistentdocument_credi
 	 */
 	public function getAmountFormated()
 	{
-		$priceFormat = $this->getOrder()->getPriceFormat();
+		$priceFormat = ($this->getOrder() == null) ? null : $this->getOrder()->getPriceFormat();
 		return catalog_PriceHelper::applyFormat($this->getAmount(), $priceFormat ? $priceFormat : "%s €");
 	}
 
@@ -69,7 +71,7 @@ class order_persistentdocument_creditnote extends order_persistentdocument_credi
 	 */
 	public function getAmountNotAppliedFormated()
 	{
-		$priceFormat = $this->getOrder()->getPriceFormat();
+		$priceFormat = ($this->getOrder() == null) ? null : $this->getOrder()->getPriceFormat();
 		return catalog_PriceHelper::applyFormat($this->getAmountNotApplied(), $priceFormat ? $priceFormat : "%s €");
 	}
 	

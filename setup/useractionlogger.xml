@@ -14,10 +14,16 @@
   <actiondef modulename="order" actionname="insert.creditnote" label="m.order.bo.useractionlogger.insert-creditnote"/>
   <actiondef modulename="order" actionname="update.creditnote" label="m.order.bo.useractionlogger.update-creditnote"/>
   <actiondef modulename="order" actionname="delete.creditnote" label="m.order.bo.useractionlogger.delete-creditnote"/>
-  
   <actiondef modulename="catalog" actionname="insert.fees" label="m.order.bo.useractionlogger.insert-fees"/>
   <actiondef modulename="catalog" actionname="activate.fees" label="m.order.bo.useractionlogger.activate-fees"/>
   <actiondef modulename="catalog" actionname="deactivated.fees" label="m.order.bo.useractionlogger.deactivated-fees"/>
   <actiondef modulename="catalog" actionname="delete.fees" label="m.order.bo.useractionlogger.delete-fees"/>
   <actiondef modulename="catalog" actionname="update.fees" label="m.order.bo.useractionlogger.update-fees"/>
+  <actiondef modulename="order" actionname="insert.orderpreparation" label="m.order.bo.useractionlogger.insert-orderpreparation"/>
+  <actiondef modulename="order" actionname="delete.orderpreparation" label="m.order.bo.useractionlogger.delete-orderpreparation"/>
+  <actiondef modulename="order" actionname="update.orderpreparation" label="m.order.bo.useractionlogger.update-orderpreparation"/>
+  <actiondef modulename="order" actionname="activate.orderpreparation" label="m.order.bo.useractionlogger.activate-orderpreparation"/>
+  <actiondef modulename="order" actionname="generateexpedition.orderpreparation" label="m.order.bo.useractionlogger.generateexpedition-orderpreparation"/>
+  <actiondef modulename="order" actionname="update.expedition" label="m.order.bo.useractionlogger.update-expedition"/>
+  <actiondef modulename="order" actionname="finalizeorder.order" label="m.order.bo.useractionlogger.finalizeorder-order"/>
 </script>

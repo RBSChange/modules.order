@@ -23,7 +23,6 @@
   <key id="log-update-creditnote">log update creditnote</key>
   <key id="delete-creditnote">delete.creditnote {documentlabel}</key>
   <key id="log-delete-creditnote">log delete creditnote</key>
-  
   <key id="insert-fees">insert.fees {documentlabel}</key>
   <key id="log-insert-fees">log insert fees</key>
   <key id="update-fees">update.fees {documentlabel}</key>
@@ -34,4 +33,18 @@
   <key id="log-deactivated-fees">log deactivated fees</key>
   <key id="delete-fees">delete.fees {documentlabel}</key>
   <key id="log-delete-fees">log delete fees</key>
+  <key id="insert-orderpreparation">insert.orderpreparation {documentlabel}</key>
+  <key id="log-insert-orderpreparation">log insert orderpreparation</key>
+  <key id="delete-orderpreparation">delete.orderpreparation {documentlabel}</key>
+  <key id="log-delete-orderpreparation">log delete orderpreparation</key>
+  <key id="update-orderpreparation">update.orderpreparation {documentlabel}</key>
+  <key id="log-update-orderpreparation">log update orderpreparation</key>
+  <key id="activate-orderpreparation">activate.orderpreparation {documentlabel}</key>
+  <key id="log-activate-orderpreparation">log activate orderpreparation</key>
+  <key id="generateexpedition-orderpreparation">generateexpedition.orderpreparation {documentlabel}</key>
+  <key id="log-generateexpedition-orderpreparation">log generateexpedition orderpreparation</key>
+  <key id="update-expedition">update.expedition {documentlabel}</key>
+  <key id="log-update-expedition">log update expedition</key>
+  <key id="finalizeorder-order">finalizeorder.order {status} {documentlabel}</key>
+  <key id="log-finalizeorder-order">log finalizeorder order</key>
 </i18n>

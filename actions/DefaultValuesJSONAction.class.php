@@ -3,23 +3,23 @@ class order_DefaultValuesJSONAction extends generic_DefaultValuesJSONAction
 {	
 	/**
 	 * @param f_persistentdocument_PersistentDocument $document
-	 * @param String[]
+	 * @param String[] $allowedProperties
+	 * @param integer $parentId
 	 * @return Array
 	 */
-	protected function exportFieldsData($document, $allowedProperties)
+	protected function exportFieldsData($document, $allowedProperties, $parentId)
 	{		
 		if ($document instanceof order_persistentdocument_creditnote)
 		{
-			$parentRefId = $this->getContext()->getRequest()->getParameter('parentref');
-			if (intval($parentRefId))
+			if (intval($parentId))
 			{
-				$order = DocumentHelper::getDocumentInstance($parentRefId);
+				$order = DocumentHelper::getDocumentInstance($parentId);
 				if ($order instanceof order_persistentdocument_order) 
 				{
 					order_CreditnoteService::getInstance()->updateInitFormPropertyForOrder($document, $order);
 				}
 			}
 		}
-		return parent::exportFieldsData($document, $allowedProperties);
+		return parent::exportFieldsData($document, $allowedProperties, $parentId);
 	}
 }

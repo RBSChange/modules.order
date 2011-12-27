@@ -341,8 +341,7 @@
 					try
 					{
 						propspanel.showTextMessage("${transui:m.order.bo.actions.GeneratingBill,ucf,js}");
-						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: rowData.id, lang: rowData.lang}, null , true); 	
-						wCore.debug(wCore.dump(result));
+						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: rowData.id, lang: rowData.lang}, null , true); 
 						if (result.status === 'OK')
 						{
 							propspanel.showTextMessage("${transui:m.order.bo.actions.GeneratingBillDone,ucf,js}");
@@ -552,23 +551,26 @@
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
 				<xul:columns>	
-					<xul:column flex="1" />
-					<xul:column flex="1" />
-					<xul:column flex="1" />
+					<xul:column />
+					<xul:column />
+					<xul:column />
+					<xul:column />
 					<xul:column flex="1" />
 					<xul:column />
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
-						<xul:label name="label" value="${transui:m.order.document.expedition.Label,ucf,attr}" />
-						<xul:label name="status" value="${transui:m.order.document.expedition.TrackingText,ucf,attr}" />
-						<xul:label name="transporteur" value="${transui:m.order.document.expedition.Transporteur,ucf,attr}" />
-						<xul:label name="trackingnumber" value="${transui:m.order.document.expedition.TrackingNumber,ucf,attr}" />
-						<xul:label name="actionrow" value="${transui:m.order.bo.doceditor.Actions,ucf,attr}" />
+						<xul:label name="label" value="${transui:m.order.document.expedition.label,ucf,attr}" />
+						<xul:label name="status" value="${transui:m.order.document.expedition.trackingtext,ucf,attr}" />
+						<xul:label name="transporteur" value="${transui:m.order.document.expedition.transporteur,ucf,attr}" />
+						<xul:label name="packetnumber" value="${transui:m.order.document.expedition.packetnumber,ucf,attr}" />
+						<xul:label name="trackingnumber" value="${transui:m.order.document.expedition.trackingnumber,ucf,attr}" />
+						<xul:label name="actionrow" value="${transui:m.order.bo.doceditor.actions,ucf,attr}" />
 					</xul:row>
 				</xul:rows>
 			</xul:grid>
 			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />
@@ -582,10 +584,6 @@
 	
 	<binding id="validateBillDialog" extends="core.wDialog#wDialog">
 		<implementation>
-			<constructor><![CDATA[
-				wCore.debug('validateBillDialog.constructor');	
-			]]></constructor>
-			
 			<property name="transactionId" readonly="true">
 				<getter><![CDATA[
 					return document.getAnonymousElementByAttribute(this, 'anonid', 'transactionid').value;
@@ -721,11 +719,7 @@
 	</binding>
 	
 	<binding id="shipExpeditionDialog" extends="core.wDialog#wDialog">
-		<implementation>
-			<constructor><![CDATA[
-				wCore.debug('shipExpeditionDialog.constructor');	
-			]]></constructor>
-			
+		<implementation>			
 			<property name="shippingDate" readonly="true">
 				<getter><![CDATA[
 					return document.getAnonymousElementByAttribute(this, 'anonid', 'shippingdate').value;
@@ -735,6 +729,12 @@
 			<property name="trackingNumber" readonly="true">
 				<getter><![CDATA[
 					return document.getAnonymousElementByAttribute(this, 'anonid', 'trackingnumber').value;
+				]]></getter>
+			</property>
+			
+			<property name="packetNumber" readonly="true">
+				<getter><![CDATA[
+					return document.getAnonymousElementByAttribute(this, 'anonid', 'packetnumber').value;
 				]]></getter>
 			</property>
 			
@@ -765,7 +765,7 @@
 				<body><![CDATA[
 					var rowData = this.parameters.rowData;
 					var parameters = {cmpref: rowData.id, lang: rowData.lang, 
-							shippingDate: this.shippingDate, trackingNumber: this.trackingNumber};
+							shippingDate: this.shippingDate, trackingNumber: this.trackingNumber, packetNumber: this.packetNumber};
 					var result = wCore.executeJSON("order", "ShipExpedition", parameters, null , true); 	
 					if (result.status === 'OK')
 					{
@@ -809,7 +809,7 @@
 		<xbl:content>
 			<xul:vbox flex="1">
 				<xul:hbox class="dialog-header">
-					<xul:label value="${transui:m.order.bo.general.Ship-Expedition,ucf,attr}" class="dialog-title" />
+					<xul:label value="${transui:m.order.bo.general.ship-expedition,ucf,attr}" class="dialog-title" />
 					<xul:spacer flex="1" />
 					<xul:vbox pack="center">
 						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" tooltiptexts="${transui:m.uixul.bo.dialog.Cancel,ucf,attr}" />
@@ -822,21 +822,25 @@
 					</xul:columns>
 					<xul:rows>
 						<xul:row>
-							<xul:label value="${transui:m.order.document.expedition.Label,ucf,attr}" />
+							<xul:label value="${transui:m.order.document.expedition.label,ucf,attr}" />
 							<xul:label anonid="number" value="-" />
 						</xul:row>	
 						<xul:row>
-							<xul:label value="${transui:m.order.document.expedition.Transporteur,ucf,attr}" />
+							<xul:label value="${transui:m.order.document.expedition.transporteur,ucf,attr}" />
 							<xul:label anonid="transporteur" value="-" />
 						</xul:row>							
 						<xul:row>
-							<xul:label value="${transui:m.order.document.expedition.Shippingdate,ucf,attr}" />
+							<xul:label value="${transui:m.order.document.expedition.shippingdate,ucf,attr}" />
 							<xul:cfield name="shippingdate" anonid="shippingdate" hidehelp="true" fieldtype="datetime" initialvalue="" timeoffset="30"/>
 						</xul:row>
 						<xul:row>
-							<xul:label value="${transui:m.order.document.expedition.Trackingnumber,ucf,attr}" />
-							<xul:textbox anonid="trackingnumber" value="" size="30" maxlength="30" />							
-						</xul:row>										
+							<xul:label value="${transui:m.order.document.expedition.trackingnumber,ucf,attr}" />
+							<xul:textbox anonid="trackingnumber" value="" maxlength="30" />							
+						</xul:row>
+						<xul:row>
+							<xul:label value="${transui:m.order.document.expedition.packetnumber,ucf,attr}" />
+							<xul:textbox anonid="packetnumber" value="" maxlength="30" />							
+						</xul:row>									
 					</xul:rows>
 				</xul:grid>
 				<xul:hbox pack="center" style="height: 32px">
@@ -882,15 +886,17 @@
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
 				<xul:columns>	
-					<xul:column flex="2" />
-					<xul:column flex="2" />
+					<xul:column flex="1" />
+					<xul:column flex="1" />
+					<xul:column />
 					<xul:column />
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
-						<xul:label name="label" value="${transui:m.order.frontoffice.Designation,ucf,attr}" />
-						<xul:label name="codeReference" value="${transui:m.order.frontoffice.CodeReference,ucf,attr}" />
-						<xul:label name="quantity" value="${transui:m.order.frontoffice.Quantity,ucf,attr}" />
+						<xul:label name="label" value="${transui:m.order.frontoffice.designation,ucf,attr}" />
+						<xul:label name="codeReference" value="${transui:m.order.frontoffice.codeReference,ucf,attr}" />
+						<xul:label name="packetnumber" value="${transui:m.order.document.expedition.packetnumber,ucf,attr}" />
+						<xul:label name="quantity" value="${transui:m.order.frontoffice.quantity,ucf,attr}" />
 					</xul:row>
 				</xul:rows>
 			</xul:grid>
@@ -898,6 +904,75 @@
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />
+				<xul:label value="" />
+			</xul:row>				
+		</content>
+	</binding>
+	
+	<binding id="cEditExpeditionLinesGrid" extends="widgets.cGrid#cAbstractSortableGrid">
+		<implementation>
+			<constructor><![CDATA[
+				this.fireEvent('gridInitialised');
+			]]></constructor>
+			
+			<method name="getDatarowKey">
+				<parameter name="datarow" />
+				<body><![CDATA[
+					return datarow.id + ',' + datarow.packetnumber + ',' + datarow.trackingnumber;
+				]]></body>
+			</method>
+
+			<method name="execute_update">
+				<parameter name="rowNode" />
+				<parameter name="rowData" />
+				<body><![CDATA[
+					if (this.disabled) {return;}					
+					var dataset = this.buildDataset();
+					this.mCurrentDatasetKey = this.generateDatasetKey(dataset);
+					this.dispatchChanged();
+				]]></body>
+			</method>		
+		</implementation>
+		
+		<xbl:handlers>
+			<xbl:handler event="change"><![CDATA[
+				var ctrl = event.originalTarget;
+				while (ctrl != null && ctrl.localName != 'textbox') {ctrl = ctrl.parentNode;}
+				if (ctrl != null)
+				{
+					var rowNode = ctrl.parentNode;
+					var rowData = rowNode.mDataRow;
+					rowData[ctrl.getAttribute('cn')] = ctrl.value;
+					this.execute_update(rowNode, rowData);
+				}
+			]]></xbl:handler>
+		</xbl:handlers>
+		
+		<content>
+			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
+				<xul:columns>	
+					<xul:column />
+					<xul:column flex="1" />
+					<xul:column />
+					<xul:column style="width:15em;" />
+					<xul:column style="width:15em;" />
+				</xul:columns>
+				<xul:rows anonid="document-rows">
+					<xul:row class="head" anonid="head-row">
+						<xul:label name="quantity" value="${transui:m.order.frontoffice.quantity,ucf,attr}" />
+						<xul:label name="label" value="${transui:m.order.frontoffice.designation,ucf,attr}" />
+						<xul:label name="codereference" value="${transui:m.order.frontoffice.codeReference,ucf,attr}" />
+						<xul:label name="packetnumber" value="${transui:m.order.document.expedition.packetnumber,ucf,attr}" />
+						<xul:label name="trackingnumber" value="${transui:m.order.document.expedition.trackingnumber,ucf,attr}" />	
+					</xul:row>
+				</xul:rows>
+			</xul:grid>
+			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:label value="" />
+				<xul:textbox value="" size="15" cn="packetnumber"/>
+				<xul:textbox value="" size="15" cn="trackingnumber" />
 			</xul:row>				
 		</content>
 	</binding>
@@ -1051,12 +1126,7 @@
 	</binding>
 	
 	<binding id="cReCreditNoteDialog" extends="core.wDialog#wDialog">
-		<implementation>
-			<constructor><![CDATA[
-				wCore.debug('cReCreditNoteDialog.constructor');	
-			]]></constructor>
-	
-		
+		<implementation>		
 			<method name="onInitialize">
 				<body><![CDATA[
 					this.autoResize(500, 200);
@@ -1170,7 +1240,6 @@
 			<method name="setValue">
 				<parameter name="infos" />
 				<body><![CDATA[
-					wCore.debug("cOrderTransactionInfo.setValue "+infos);
 					var infosElem = document.getAnonymousElementByAttribute(this, "anonid", "infos");
 					while (infosElem.hasChildNodes())
 					{
