@@ -576,7 +576,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 * @param order_persistentdocument_order $order
 	 * @return boolean
 	 */
-	protected function hasShippedExpeditionFromOrder($order)
+	public function hasShippedExpeditionFromOrder($order)
 	{
 		$result = $this->createQuery()
 			->add(Restrictions::eq('order', $order))
