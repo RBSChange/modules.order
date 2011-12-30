@@ -203,8 +203,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @param array $couponData
-	 * @example array<id => integer, code => string, valueWithTax => double, valueWithoutTax => double>
+	 * @param array $couponData For example: array<id => integer, code => string, valueWithTax => double, valueWithoutTax => double>
 	 */
 	public function setCouponData($couponData)
 	{
@@ -263,8 +262,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @param array $discountDataArray
-	 * @example array<array<id => integer, label => string, valueWithTax => double, valueWithoutTax => double>>
+	 * @param array $discountDataArray For example: array<array<id => integer, label => string, valueWithTax => double, valueWithoutTax => double>> 
 	 */
 	public function setDiscountDataArray($discountDataArray)
 	{
@@ -293,8 +291,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @param array $feesDataArray
-	 * @example array<array<id => integer, label => string, valueWithTax => double, valueWithoutTax => double>>
+	 * @param array $feesDataArray For example array<array<id => integer, label => string, valueWithTax => double, valueWithoutTax => double>> 
 	 */
 	public function setFeesDataArray($feesDataArray)
 	{
@@ -363,8 +360,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @param array $taxDataArray
-	 * @example array<rateFormated => value>
+	 * @param array $taxDataArray For example: array<rateFormated => value> 
 	 */
 	public function setTaxDataArray($taxDataArray)
 	{
@@ -672,7 +668,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 
 		
 	/**
-	 * @example array<creditNoteId => amount>
+	 * @return array For example: array<creditNoteId => amount>
 	 */
 	public function getCreditNoteDataArray()
 	{
@@ -685,8 +681,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @param array $creditNoteDataArray
-	 * @example array<creditNoteId => amount>
+	 * @param array $creditNoteDataArray For example: array<creditNoteId => amount> 
 	 */
 	public function setCreditNoteDataArray($creditNoteDataArray)
 	{
