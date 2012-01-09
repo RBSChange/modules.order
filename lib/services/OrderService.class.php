@@ -671,6 +671,14 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$productIds[] = $productId;
 			$quantities[$productId] = $line->getQuantity();
 		}
+		
+		// Exclude the ids of the products that no longer exist.
+		if (count($productIds))
+		{
+			$productIds = catalog_ProductService::getInstance()->createQuery()->add(Restrictions::in('id', $productIds))
+				->setProjection(Projections::property('id'))->findColumn('id');
+		}
+		
 		$parameters['productIds'] = $productIds;
 		$parameters['quantities'] = $quantities;
 		
