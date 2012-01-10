@@ -6,7 +6,7 @@
 	<key id="transporteur">transporteur</key>
 	<key id="transporteur-help">nom du transporetur</key>
 	<key id="packetnumber">Numéro colis</key>
-	<key id="packetNumber-help">Numéro colis interne</key>
+	<key id="packetnumber-help">Numéro colis interne</key>
 	
 	<key id="trackingnumber" updated="true">Numéro de suivi</key>
 	<key id="trackingnumber-help" updated="true">Numéro de suivi du transporteur</key>
