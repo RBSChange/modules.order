@@ -1,26 +1,26 @@
-<div class="ecom-block">
-	<h3 class="title"><strong change:translate="modules.order.frontoffice.My-cart"></strong></h3>
-	<div class="content">
-		<ul class="cartsummary">
-			<li>
-				<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">
-					<tal:block tal:replace="cart/getCartLineCount" />
-					<tal:block tal:condition="php: cart->getCartLineCount() == 1" change:translate="modules.order.frontoffice.item" />
-					<tal:block tal:condition="php: cart->getCartLineCount() gt 1" change:translate="modules.order.frontoffice.items" />
-				</a>
-				<span> | </span>
-			</li>
-			<li tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
-				<a tal:condition="cart/getShop/getDisplayPriceWithoutTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedTotalWithoutTax} <tal:block change:translate="modules.catalog.frontoffice.ht"/></a>
-				<a tal:condition="cart/getShop/getDisplayPriceWithTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedTotalWithTax} <tal:block change:translate="modules.catalog.frontoffice.ttc"/></a>
-				<tal:block change:translate="modules.order.frontoffice.with-fees" />
-			</li>
-			<li tal:condition="php: !configuration.getShowTotalWithFees() || !cart.getShippingModeId()">
-				<a tal:condition="cart/getShop/getDisplayPriceWithoutTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedTotalExcludingFeesWithoutTax} <tal:block change:translate="modules.catalog.frontoffice.ht"/></a>
-				<a tal:condition="cart/getShop/getDisplayPriceWithTax" tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getFormattedTotalExcludingFeesWithTax} <tal:block change:translate="modules.catalog.frontoffice.ttc"/></a>
-				<tal:block change:translate="modules.order.frontoffice.without-fees" />
-			</li>
-		</ul>
-		<a tal:condition="setLinks" class="link" change:link="tag ctx_order_cart" change:translate="&modules.order.frontoffice.My-cart;"></a>
-	</div>
+<div class="scroll">
+	<h2 change:h="">
+		${trans:m.order.frontoffice.my-cart,ucf}
+		<span>
+			(<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getCartLineCount}</a>)
+		</span>
+	</h2>
+	<ul>
+		<li>
+			${cart/getCartLineCount}
+			<tal:block tal:condition="php: cart->getCartLineCount() == 1">${trans:m.order.frontoffice.item}</tal:block>
+			<tal:block tal:condition="php: cart->getCartLineCount() gt 1">${trans:m.order.frontoffice.items}</tal:block>
+		</li>
+		<li tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
+			<tal:block tal:condition="cart/getShop/getDisplayPriceWithoutTax">${cart/getFormattedTotalWithoutTax} ${trans:m.catalog.frontoffice.ht}</tal:block>
+			<tal:block tal:condition="cart/getShop/getDisplayPriceWithTax">${cart/getFormattedTotalWithTax} ${trans:m.catalog.frontoffice.ttc}</tal:block>
+			${trans:m.order.frontoffice.with-fees}
+		</li>
+		<li tal:condition="php: !configuration.getShowTotalWithFees() || !cart.getShippingModeId()">
+			<tal:block tal:condition="cart/getShop/getDisplayPriceWithoutTax">${cart/getFormattedTotalExcludingFeesWithoutTax} ${trans:m.catalog.frontoffice.ht}</tal:block>
+			<tal:block tal:condition="cart/getShop/getDisplayPriceWithTax">${cart/getFormattedTotalExcludingFeesWithTax} ${trans:m.catalog.frontoffice.ttc}</tal:block>
+			${trans:m.order.frontoffice.without-fees}
+		</li>
+		<li tal:condition="setLinks"><a change:link="tag ctx_order_cart">${trans:m.order.fo.view-my-cart,ucf}</a></li>
+	</ul>
 </div>

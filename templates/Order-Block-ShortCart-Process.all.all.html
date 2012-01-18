@@ -1,6 +1,6 @@
-<div class="ecom-block">
-	<h3 change:h="">
-		<a class="link" tal:attributes="href processUrl" change:translate="modules.order.frontoffice.Continue-my-order">${trans:m.order.frontoffice.my-order,ucf}</a>
-	</h3>
-	
+<div class="scroll">
+	<h2 change:h=""><a tal:omit-tag="processUrl" class="link" tal:attributes="href processUrl">${trans:m.order.frontoffice.my-order,ucf}</a></h2>
+	<ul tal:condition="processUrl">
+		<li><a class="link" href="processUrl">${trans:m.order.frontoffice.continue-my-order,ucf}</a></li>
+	</ul>
 </div>
