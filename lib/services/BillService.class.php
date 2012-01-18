@@ -487,7 +487,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	protected function validatePayment($bill)
 	{
 		$order = $bill->getOrder();
-		if ($order->getOrderStatus() == order_OrderService::INITIATED)
+		if ($order->getOrderStatus() == order_OrderService::INITIATED || $order->getOrderStatus() == order_OrderService::CANCELED)
 		{
 			$order->getDocumentService()->updateStock($order);
 			$order->getDocumentService()->processOrder($order);
