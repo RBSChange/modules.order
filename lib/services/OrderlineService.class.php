@@ -83,7 +83,7 @@ class order_OrderlineService extends f_persistentdocument_DocumentService
 		$orderLine->setAmountWithoutTax($cpf->round($cartLine->getTotalValueWithoutTax(), $currencyCode));
 		
 		$orderLine->setTaxCode($cartLine->getTaxCode());
-		$orderLine->setTaxRate($cartLine->getTaxRate());		
+		$orderLine->setTaxRate(catalog_PriceHelper::getTaxRateByValue($cartLine->getValueWithTax(), $cartLine->getValueWithoutTax()));		
 		$orderLine->setTaxAmount($cartLine->getTotalTax());
 		
 		$cartLineProperties = $cartLine->getPropertiesArray();
