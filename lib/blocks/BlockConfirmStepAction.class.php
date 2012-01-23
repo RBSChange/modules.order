@@ -33,6 +33,10 @@ class order_BlockConfirmStepAction extends order_BlockAbstractProcessStepAction
 		}
 
 		$order = $cartInfo->getOrder();
+		if (!($order instanceof order_persistentdocument_order))
+		{
+			$this->redirectToCart();
+		}
 		$bill = order_BillService::getInstance()->initializeByOrderForPayment($order);		
 		$request->setAttribute('order', $order);
 		$request->setAttribute('shop', $cartInfo->getShop());
