@@ -58,6 +58,9 @@ class order_CartLineInfo
 	 * @var string
 	 */
 	private $key = null;
+	
+	
+	private $priceParts;
 
 	/**
 	 * @return Integer
@@ -125,7 +128,7 @@ class order_CartLineInfo
 	{
 		return $this->quantity;
 	}
-
+	
 	/**
 	 * @param Double $quantity
 	 */
@@ -193,6 +196,22 @@ class order_CartLineInfo
 			$this->setOldValueWithTax($price->getOldValueWithTax());
 			$this->setDiscountDetail($price->getDiscountDetail());
 			$this->setTaxCode($price->getTaxCode());
+			if ($price->hasPricePart())
+			{
+				$this->priceParts = array();
+				foreach ($price->getPricePartArray() as $pricePart)
+				{
+					/* @var $pricePart catalog_persistentdocument_price */
+					$this->priceParts[] = array('valueWithTax' => $pricePart->getValueWithTax(), 
+						'valueWithoutTax' => $pricePart->getValueWithoutTax(), 
+						'taxCategory' => $pricePart->getTaxCategory(),
+						'productId'  => $pricePart->getProductId());
+				}
+			}
+			else
+			{
+				$this->priceParts = null;
+			}
 		}
 		else
 		{
@@ -204,6 +223,7 @@ class order_CartLineInfo
 			$this->setOldValueWithTax(0);
 			$this->setDiscountDetail(null);
 			$this->setTaxCode(null);
+			$this->priceParts = null;
 		}
 	}
 	
@@ -228,22 +248,66 @@ class order_CartLineInfo
 	 */
 	public function getTaxRate()
 	{
-		if ($this->taxCode !== null)
+		return catalog_PriceHelper::getTaxRateByValue($this->getValueWithTax(), $this->getValueWithoutTax());
+	}
+	
+	/**
+	 * @return array<string, float>
+	 */
+	public function getTaxArray()
+	{
+		$result = array();
+		if ($this->priceParts === null)
 		{
-			return catalog_PriceHelper::getTaxRateByCode($this->taxCode);
+			$value = $this->getTotalValueWithTax() - $this->getTotalValueWithoutTax();
+			if ($value > 0)
+			{
+				$result[catalog_PriceHelper::formatTaxRate($this->getTaxRate())] = $value;
+			}
 		}
 		else
 		{
-			return catalog_PriceHelper::getTaxRateByValue($this->getValueWithTax(), $this->getValueWithoutTax());
+			$qtt = $this->getQuantity();
+			foreach ($this->priceParts as $pricePart)
+			{			
+				$valueWithTax = $pricePart['valueWithTax'];
+				$valueWithoutTax = $pricePart['valueWithoutTax'];
+				$value = ($valueWithTax - $valueWithoutTax) * $qtt;
+				if ($value > 0)
+				{
+					$formattedTaxCode = catalog_PriceHelper::formatTaxRate(catalog_PriceHelper::getTaxRateByValue($valueWithTax, $valueWithoutTax));
+					if (isset($result[$formattedTaxCode]))
+					{
+						$result[$formattedTaxCode] += $value;
+					}
+					else
+					{
+						$result[$formattedTaxCode] = $value;
+					}
+				}
+			}
 		}
+		return $result;
 	}
 	
 	/**
 	 * @return string
 	 */
 	public function getFormattedTaxCode()
-	{
-		return catalog_PriceHelper::formatTaxRate($this->getTaxRate());
+	{	
+		$tr = $this->getTaxArray();
+		if (count($tr) === 0) 
+		{
+			return LocaleService::getInstance()->transFO('m.order.fo.no-tax');;
+		}
+		elseif (count($tr) > 1)
+		{
+			return LocaleService::getInstance()->transFO('m.order.fo.mixed-tax');
+		}
+		else
+		{
+			return f_util_ArrayUtils::firstElement(array_keys($tr));
+		}
 	}
 
 	/**

@@ -13,4 +13,7 @@
 	<key id="product-added">Produit ajouté au panier.</key>
 	<key id="cant-create-order">Impossible de créer la commande.</key>
 	<key id="shop-in-other-website">Votre précédent panier n'a pas pu être restauré car il contenait des produit d'une boutique d'un autre site.</key>
+	
+	<key id="mixed-tax">mixte</key>
+	<key id="no-tax">-</key>
 </i18n>
