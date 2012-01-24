@@ -523,11 +523,10 @@ class order_CartService extends BaseService
 		
 		foreach ($cart->getCartLineArray() as $cartLineInfo) 
 		{
-			$value = $cartLineInfo->getTotalValueWithTax() - $cartLineInfo->getTotalValueWithoutTax();
-			if ($value > 0)
+			/* @var $cartLineInfo order_CartLineInfo */
+			$valueWithTax += $cartLineInfo->getTotalValueWithTax();			
+			foreach ($cartLineInfo->getTaxArray() as $rateKey => $value)
 			{
-				$rateKey = $cartLineInfo->getFormattedTaxCode();
-				$valueWithTax += $cartLineInfo->getTotalValueWithTax();
 				if (isset($result[$rateKey]))
 				{
 					$result[$rateKey] += $value;
@@ -536,7 +535,7 @@ class order_CartService extends BaseService
 				{
 					$result[$rateKey] = $value;
 				}
-			}
+			}			
 		}
 		
 		foreach ($cart->getFeesArray() as $fees)
