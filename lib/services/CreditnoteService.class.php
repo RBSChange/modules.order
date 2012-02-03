@@ -375,27 +375,15 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		$this->save($document);
 		
 		// Send the notification.
-		$order = $document->getOrder();
-		$wms = website_WebsiteModuleService::getInstance();
-		$currentWebsite = $wms->getCurrentWebsite();
-		$wms->setCurrentWebsite($order->getWebsite());
-		$rc = RequestContext::getInstance();
-		try 
+		$order = $document->getOrder();		
+		$notification = notification_NotificationService::getInstance()->getConfiguredByCodeName('modules_order/reCreditNote', $order->getWebsiteId(), $order->getLang());
+		if ($notification)
 		{
-			$rc->beginI18nWork($order->getLang());
-			
+			$notification->setSendingModuleName('order');
+			$notification->addGlobalParam('repaymentAmount', $order->formatPrice($reCreditedAmount));
+			$notification->registerCallback($this, 'getNotificationParameter', $document);		
 			$user = $order->getCustomer()->getUser();
-			$replacements = $this->getNotificationParameter($document);
-			$replacements['repaymentAmount'] = $order->formatPrice($reCreditedAmount);
-			users_UserService::getInstance()->sendNotificationToUser($user, 'modules_order/reCreditNote', $replacements, 'order');
-			
-			$wms->setCurrentWebsite($currentWebsite);
-			$rc->endI18nWork();
-		}
-		catch (Exception $e)
-		{
-			$wms->setCurrentWebsite($currentWebsite);
-			$rc->endI18nWork($e);
+			$notification->sendToUser($user);
 		}
 	}
 	

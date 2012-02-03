@@ -217,32 +217,7 @@ class order_ModuleService extends ModuleBaseService
 		$configuredNotif = $ns->getConfiguredByCodeNameAndSuffix($notifCodeName, $suffix, $order->getWebsiteId(), $order->getLang());
 		return $this->doSendCustomerNotification($configuredNotif, $order, $bill, $expedition, $specificParams);
 	}
-		
-	/**
-	 * @param notification_persistentdocument_notification $configuredNotif
-	 * @param order_persistentdocument_order $order
-	 * @param order_persistentdocument_bill $bill
-	 * @param order_persistentdocument_expedition $expedition
-	 * @param array $specificParams
- 	 * @return boolean
-	 */
-	protected function doSendCustomerNotification($configuredNotif, $order, $bill, $expedition, $specificParams)
-	{
-		if ($configuredNotif instanceof notification_persistentdocument_notification)
-		{
-			$configuredNotif->setSendingModuleName('order');
-			$callback = array($this, 'getNotificationParameters');
-			$params = array('order' => $order, 'bill' => $bill, 'expedition' => $expedition, 'specificParams' => $specificParams);
-			$user = $order->getCustomer()->getUser();
-			return $user->getDocumentService()->sendNotificationToUserCallback($configuredNotif, $user, $callback, $params);
-		}
-		else if (Framework::isInfoEnabled())
-		{
-			Framework::info(__METHOD__ . " No notification found");
-		}
-		return true;
-	}
-
+	
 	/**
 	 * @param string $notifCodeName
 	 * @param order_persistentdocument_order $order
@@ -257,7 +232,7 @@ class order_ModuleService extends ModuleBaseService
 		$configuredNotif = $ns->getConfiguredByCodeName($notifCodeName, $order->getWebsiteId(), $order->getLang());
 		return $this->doSendAdminNotification($configuredNotif, $order, $bill, $expedition, $specificParams);
 	}
-
+	
 	/**
 	 * @param string $notifCodeName
 	 * @param string $suffix
@@ -273,7 +248,70 @@ class order_ModuleService extends ModuleBaseService
 		$configuredNotif = $ns->getConfiguredByCodeNameAndSuffix($notifCodeName, $suffix, $order->getWebsiteId(), $order->getLang());
 		return $this->doSendAdminNotification($configuredNotif, $order, $bill, $expedition, $specificParams);
 	}
-
+	
+	/**
+	 * @param notification_persistentdocument_notification $configuredNotif
+	 * @param order_persistentdocument_order $order
+	 * @param order_persistentdocument_bill $bill
+	 * @param order_persistentdocument_expedition $expedition
+	 */
+	public function registerNotificationCallback($configuredNotif, $order, $bill, $expedition)
+	{
+		if ($configuredNotif instanceof notification_persistentdocument_notification)
+		{
+			Framework::fatal(__METHOD__ . ' -> '. $configuredNotif->getCodename());
+			if ($order instanceof order_persistentdocument_order)
+			{
+				$configuredNotif->registerCallback($order->getDocumentService(), 'getNotificationParameters', $order);
+				$customer = $order->getCustomer();
+				if ($customer instanceof customer_persistentdocument_customer)
+				{
+					$configuredNotif->registerCallback($customer->getDocumentService(), 'getNotificationParameters', $customer);
+				}
+			}
+			if ($bill instanceof order_persistentdocument_bill)
+			{
+				$configuredNotif->registerCallback($bill->getDocumentService(), 'getNotificationParameters', $bill);
+			}
+	
+			if ($expedition instanceof order_persistentdocument_expedition)
+			{
+				$configuredNotif->registerCallback($expedition->getDocumentService(), 'getNotificationParameters', $expedition);
+			}
+		}
+	}	
+		
+	/**
+	 * @param notification_persistentdocument_notification $configuredNotif
+	 * @param order_persistentdocument_order $order
+	 * @param order_persistentdocument_bill $bill
+	 * @param order_persistentdocument_expedition $expedition
+	 * @param array $specificParams
+ 	 * @return boolean
+	 */
+	protected function doSendCustomerNotification($configuredNotif, $order, $bill, $expedition, $specificParams)
+	{
+		if ($configuredNotif instanceof notification_persistentdocument_notification)
+		{
+			$configuredNotif->setSendingModuleName('order');
+			if (is_array($specificParams) && count($specificParams))
+			{
+				foreach ($specificParams as $key => $value)
+				{
+					$configuredNotif->addGlobalParam($key, $value);
+				}
+			}
+			$this->registerNotificationCallback($configuredNotif, $order, $bill, $expedition);
+			$user = $order->getCustomer()->getUser();			
+			return $configuredNotif->sendToUser($user);
+		}
+		else if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__ . " No notification found");
+		}
+		return true;
+	}
+		
 	/**
 	 * @param notification_persistentdocument_notification $configuredNotif
 	 * @param order_persistentdocument_order $order
@@ -284,50 +322,35 @@ class order_ModuleService extends ModuleBaseService
 	 */
 	protected function doSendAdminNotification($configuredNotif, $order, $bill, $expedition, $specificParams)
 	{
+		$result = true;
 		if ($configuredNotif instanceof notification_persistentdocument_notification)
 		{
-			$configuredNotif->setSendingModuleName('order');
-			$callback = array($this, 'getNotificationParameters');
-			$params = array('order' => $order, 'bill' => $bill, 'expedition' => $expedition, 'specificParams' => $specificParams);
-			$result = true;
-			foreach ($this->getOrderConfirmedNotificationUserPreference() as $user)
+			$users = $this->getOrderConfirmedNotificationUserPreference();
+			if (is_array($users) && count($users))
 			{
-				$result = $result && $user->getDocumentService()->sendNotificationToUserCallback($configuredNotif, $user, $callback, $params);
+				$configuredNotif->setSendingModuleName('order');
+				if (is_array($specificParams) && count($specificParams))
+				{
+					foreach ($specificParams as $key => $value)
+					{
+						$configuredNotif->addGlobalParam($key, $value);
+					}
+				}
+				$this->registerNotificationCallback($configuredNotif, $order, $bill, $expedition);
+				$result = true;
+				foreach ($users as $user)
+				{
+					$result = $result && $configuredNotif->sendToUser($user);
+				}
 			}
-			return $result;
 		}
 		else if (Framework::isInfoEnabled())
 		{
 			Framework::info(__METHOD__ . " No notification found");
 		}
-		return true;			
+		return $result;			
 	}
-	
-	/**
-	 * @param array $params an array containing the keys 'order', 'bill', 'expedition' and 'specificParams'
-	 * @return array
-	 */
-	public function getNotificationParameters($params)
-	{
-		$order = $params['order'];
-		$parameters = $order->getDocumentService()->getNotificationParameters($order);
-		if (isset($params['bill']) && $params['bill'] instanceof order_persistentdocument_bill)
-		{
-			$bill = $params['bill'];
-			$parameters = array_merge($parameters, $bill->getDocumentService()->getNotificationParameters($bill));
-		}
-		if (isset($params['expedition']) && $params['expedition'] instanceof order_persistentdocument_expedition)
-		{
-			$expedition = $params['expedition'];
-			$parameters = array_merge($parameters, $expedition->getDocumentService()->getNotificationParameters($expedition));
-		}
-		if (isset($params['specificParams']) && is_array($params['specificParams']))
-		{
-			$parameters = array_merge($parameters, $params['specificParams']);
-		}
-		return $parameters;
-	}
-	
+		
 	/**
 	 * @return boolean
 	 */
@@ -651,5 +674,13 @@ class order_ModuleService extends ModuleBaseService
 			return $recipients;
 		}
 		return null;
+	}
+	
+	/**
+	 * @deprecated  (will be removed in 4.0) with no replacement
+	 */
+	public function getNotificationParameters($params)
+	{
+		return array();
 	}
 }

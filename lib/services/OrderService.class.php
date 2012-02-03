@@ -702,14 +702,14 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		
 		$orderAmountWithTax = $shop->formatPrice($order->getTotalAmountWithTax());
 		$orderAmountWithoutTax = $shop->formatPrice($order->getTotalAmountWithoutTax());
-		
+		$ls = LocaleService::getInstance();
 		if ($shop->getDisplayPriceWithTax() || !$shop->getDisplayPriceWithoutTax())
 		{
-			$orderAmount = $orderAmountWithTax." ".f_Locale::translate("&modules.catalog.frontoffice.ttc;");	
+			$orderAmount = $orderAmountWithTax." ". $ls->transFO('m.catalog.frontoffice.ttc', array('html'));	
 		}
 		elseif ($shop->getDisplayPriceWithoutTax())
 		{
-			$orderAmount = $orderAmountWithoutTax." ".f_Locale::translate("&modules.catalog.frontoffice.ht;");
+			$orderAmount = $orderAmountWithoutTax." ".$ls->transFO('m.catalog.frontoffice.ht', array('html'));
 		}
 		
 		$shippingFeesWithTax = $shop->formatPrice($order->getShippingFeesWithTax());
@@ -740,7 +740,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			'shippingMode' => $order->getShippingMode(), 
 			'shippingFeesWithTax' => $shippingFeesWithTax, 
 			'shippingFeesWithoutTax' => $shippingFeesWithoutTax, 
-			'date' => date_DateFormat::format($order->getOrderDate(), f_Locale::translate('&framework.date.date.localized-user-time-format;'))
+			'date' => date_Formatter::toDefaultDateTime($order->getUICreationdate())
 		);
 	}
 
@@ -1398,18 +1398,36 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$codeName = 'modules_order/comment-reminder';
 		foreach ($this->getOrdersToRemind() as $order)
 		{
+			/* @var $order order_persistentdocument_order */
 			$user = $order->getCustomer()->getUser();
 			$products = $this->getNotCommentedProducts($order, $user);
 			if (count($products) > 0)
 			{
 				$products = $this->filterProductsForCommentReminder($products);	
-				$params = $this->getNotificationParameters($order);
-				$params['reminderProductBlock'] = $this->renderReminderProductBlock($products);
-				order_ModuleService::getInstance()->sendCustomerNotification($codeName, $order, null, null, $params);
+				$notif = notification_NotificationService::getInstance()->getConfiguredByCodeName($codeName, $order->getWebsiteId(), $order->getLang());
+				if ($notif)
+				{
+					$notif->setSendingModuleName('order');
+					order_ModuleService::getInstance()->registerNotificationCallback($notif, $order, null, null);
+					$notif->registerCallback($this, 'renderReminderProductBlock', $products);
+					$notif->sendToUser($user);
+				}
 			}
 			$order->setLastCommentReminder(date_calendar::getInstance()->toString());
 			$order->save();
 		}
+	}
+	
+	/**
+	 * @param catalog_persistentdocument_product[] $products
+	 * @return array<string, string>
+	 */
+	public function renderReminderProductBlock($products)
+	{
+		$template = TemplateLoader::getInstance()->setPackageName('modules_order')
+		->setMimeContentType(K::HTML)->setDirectory('templates/mails')->load('Order-Inc-CommentReminderProducts');
+		$template->setAttribute('products', $products);
+		return array('reminderProductBlock' => $template->execute());
 	}
 
 	/**
@@ -1523,18 +1541,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				break;
 		}
 		return $products;
-	}
-
-	/**
-	 * @param catalog_persistentdocument_product[] $products
-	 * @return String
-	 */
-	private function renderReminderProductBlock($products)
-	{
-		$template = TemplateLoader::getInstance()->setPackageName('modules_order')
-			->setMimeContentType(K::HTML)->setDirectory('templates/mails')->load('Order-Inc-CommentReminderProducts');
-		$template->setAttribute('products', $products);
-		return $template->execute();
 	}
 	
 	/**
