@@ -76,14 +76,23 @@ class order_ExpeditionNumberGenerator
 	 */
 	protected function generateDefault($expedition)
 	{
-		Framework::info(__METHOD__);
-		$order = $expedition->getOrder();	
-		$expeditionCount = $expedition->getDocumentService()->createQuery()
-			->setProjection(Projections::rowCount('count'))
-			->add(Restrictions::ne('id', $expedition->getId()))
-			->add(Restrictions::eq('order', $order))
-			->findColumn("count");	
-		return strval($expeditionCount[0]+1); 
+		$oes = $expedition->getDocumentService();
+		$dt = date_Calendar::getInstance();
+		$baseNumber = 'E-' . $dt->getYear() . $dt->getMonth() . '-';
+		$result = $oes->createQuery()->setProjection(Projections::property('label', 'label'))
+			->add(Restrictions::like('label', $baseNumber, MatchMode::START()))
+			->setMaxResults(1)
+			->addOrder(Order::desc('label'))->findColumn('label');
+		
+		$lastNumber = 1;
+		if (is_array($result) && count($result))
+		{
+			if (preg_match('/([0-9]+)$/', $result[0], $matches))
+			{
+				$lastNumber = intval(end($matches)) + 1;
+			}
+		}
+		return $baseNumber . str_pad(strval($lastNumber), 9, '0', STR_PAD_LEFT);
 	}
 }
 
@@ -96,7 +105,6 @@ class order_ExpeditionOrderNumberStrategy implements order_ExpeditionNumberStrat
 	 */
 	public function generate($expedition)
 	{
-		Framework::info(__METHOD__);
 		$order = $expedition->getOrder();	
 		$expeditionCount = $expedition->getDocumentService()->createQuery()
 			->setProjection(Projections::rowCount('count'))
