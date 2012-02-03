@@ -34,17 +34,34 @@
 </ol>
 
 <h2 change:h="">${trans:m.order.frontoffice.expedition-lines,ucf}</h2>
-<table class="normal">
-	<thead>
-		<tr>
-		    <th>${trans:m.order.frontoffice.designation,ucf}</th>
-		    <th>${trans:m.order.frontoffice.quantity,ucf}</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr tal:repeat="line expeditionlines" class="${php: repeat.line.odd ? 'odd' : 'even'}">
-			<td>${line/getProduct/getLabelAsHtml}<br />${line/getProduct/getCodeReferenceAsHtml}</td>
-			<td>${line/getQuantity} / ${line/getOrderProductQuantity}</td>
-		</tr>
-	</tbody>
-</table>
+<tal:block tal:repeat="packetLines packetByExpedition">
+	<ol tal:define="packet packetLines/0">
+		<li tal:condition="packet/getPacketNumber">Colis : ${packet/getPacketNumberAsHtml}</li>
+		<li tal:condition="packet/getTrackingNumber">Suivi : 
+			<a tal:omit-tag="not: packet/getTrackingURL" class="link" target="_blank" href="${packet/getEvaluatedTrackingURL}">${packet/getTrackingNumberAsHtml}</a>
+			<p tal:condition="packet/getTrackingText">${packet/getTrackingTextAsHtml}</p>
+		</li>
+		<li tal:condition="packet/getStatus">Status : ${packet/getStatusLabel}</li>
+		<li tal:condition="packet/getReceiveDate">Date de récéption : ${date:packet/getUIReceiveDate}</li>
+		<li tal:condition="packet/getDeliveryDate">Date de remise : ${date:packet/getUIDeliveryDate}</li>
+	</ol>
+	<table class="normal">
+		<thead>
+			<tr>
+			    <th>${trans:m.order.frontoffice.designation,ucf}</th>
+			    <th>${trans:m.order.frontoffice.codereference,ucf}</th>
+			    <th>${trans:m.order.frontoffice.quantity,ucf}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr tal:repeat="line packetLines" class="${alternateclass: expIndex}">
+				<tal:block tal:define="product line/getProduct">
+				<td>${product/getLabelAsHtml}</td>
+				<td>${product/getCodeReferenceAsHtml}</td>
+				<td>${line/getQuantity} / ${line/getOrderProductQuantity}</td>
+				</tal:block>
+			</tr>
+		</tbody>	
+	</table>
+	<hr tal:condition="not: repeat/packetLines/end" />
+</tal:block>

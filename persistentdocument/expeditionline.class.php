@@ -6,6 +6,44 @@
 class order_persistentdocument_expeditionline extends order_persistentdocument_expeditionlinebase 
 {
 	/**
+	 * @param String $packetNumber
+	 * @return Boolean
+	 */
+	protected function setPacketNumberInternal($packetNumber)
+	{
+		if ($packetNumber != null)
+		{
+			$packetNumber = f_util_StringUtils::strtoupper(strval($packetNumber));
+		}
+		return parent::setPacketNumberInternal($packetNumber);
+	}
+	
+	/**
+	 * @param unknown_type $trackingNumber
+	 * @return boolean
+	 */
+	protected function setTrackingNumberInternal($trackingNumber)
+	{
+		if ($trackingNumber != null)
+		{
+			$trackingNumber = f_util_StringUtils::strtoupper(strval($trackingNumber));
+		}
+		return parent::setTrackingNumberInternal($trackingNumber);
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getEvaluatedTrackingURL()
+	{
+		$url = $this->getTrackingURL();
+		if (empty($url)) {
+			return null;
+		}
+		return str_replace('{NumeroColis}', $this->getTrackingNumber(), $url);
+	}
+	
+	/**
 	 * @return order_persistentdocument_orderline
 	 */
 	private function getOrderLine()
@@ -73,5 +111,13 @@ class order_persistentdocument_expeditionline extends order_persistentdocument_e
 			return $this->getMeta('MediaAccessGranted');
 		}
 		return 0;
+	}
+	
+	/**
+	 * @return String
+	 */
+	public function getStatusLabel()
+	{
+		return LocaleService::getInstance()->transFO('m.order.document.expeditionline.status-' . $this->getStatus(), array('ucf', 'html'));
 	}
 }

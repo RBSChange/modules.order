@@ -528,7 +528,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
-	 * @return Array<String=>String>
+	 * @return array<string,string>
 	 */
 	public function getNotificationParameters($bill)
 	{

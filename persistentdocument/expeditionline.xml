@@ -6,6 +6,7 @@
     <add name="quantity" type="Double"/>
     <add name="orderId" type="Integer"/>
     <add name="packetNumber" type="String"/>
+    <add name="status" type="String" />
     <add name="trackingNumber" type="String"/>
     <add name="shippingDate" type="DateTime"/>
   </properties>
@@ -14,6 +15,7 @@
     <add name="description" type="LongString"/>
     <add name="trackingURL" type="String"/>
     <add name="trackingText" type="LongString"/>
+    <add name="receiveDate" type="DateTime"/>
     <add name="deliveryDate" type="DateTime"/>
   </serializedproperties>
 </document>

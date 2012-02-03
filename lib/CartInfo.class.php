@@ -635,6 +635,15 @@ class order_CartInfo
 		return $mode ? $mode->getLabel() : null;
 	}
 	
+	/**
+	 * @return String
+	 */
+	public function getShippingResumeAsHtml()
+	{
+		$mode = $this->getShippingMode();
+		return $mode ? $mode->getResumeAsHtml($this): null;
+	}
+	
 	//Payment Mode
 
 	/**

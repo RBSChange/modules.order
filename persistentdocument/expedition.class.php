@@ -5,6 +5,33 @@
  */
 class order_persistentdocument_expedition extends order_persistentdocument_expeditionbase 
 {
+	
+	/**
+	 * @param String $packetNumber
+	 * @return Boolean
+	 */
+	protected function setPacketNumberInternal($packetNumber)
+	{
+		if ($packetNumber != null)
+		{
+			$packetNumber = f_util_StringUtils::strtoupper(strval($packetNumber));
+		}
+		return parent::setPacketNumberInternal($packetNumber);
+	}
+
+	/**
+	 * @param unknown_type $trackingNumber
+	 * @return boolean
+	 */
+	protected function setTrackingNumberInternal($trackingNumber)
+	{
+		if ($trackingNumber != null)
+		{
+			$trackingNumber = f_util_StringUtils::strtoupper(strval($trackingNumber));
+		}
+		return parent::setTrackingNumberInternal($trackingNumber);
+	}
+
 	/**
 	 * @return order_persistentdocument_expeditionline[]
 	 */
@@ -47,6 +74,14 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 	public function getBoStatusLabel()
 	{
 		return LocaleService::getInstance()->transBO('m.order.frontoffice.status.expedition.' . $this->getStatus(), array('ucf', 'html'));
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getOriginalTrackingURL()
+	{
+		return parent::getTrackingURL();
 	}
 	
 	/**
@@ -103,7 +138,7 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 				$array = JsonService::getInstance()->decode($string);
 				foreach ($array as $lineInfo)
 				{
-					if (isset($lineInfo['id']) && isset($lineInfo['trackingnumber']) && isset($lineInfo['packetnumber']))
+					if (isset($lineInfo['id']) && array_key_exists('trackingnumber', $lineInfo) && array_key_exists('packetnumber', $lineInfo))
 					{
 						$line = order_persistentdocument_expeditionline::getInstanceById($lineInfo['id']);
 						$trackingnumber = $lineInfo['trackingnumber'] == '' ? null : $lineInfo['trackingnumber'];

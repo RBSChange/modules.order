@@ -37,8 +37,26 @@ class order_BlockExpeditionDetailAction extends website_BlockAction
 		}		
 		$request->setAttribute('expedition', $expedition);
 		$expeditionlines = $expedition->getDocumentService()->getLinesForDisplay($expedition);
+		
+
 		$request->setAttribute('expeditionlines', $expeditionlines);
 		$request->setAttribute('order', $expedition->getOrder());
+		
+		
+		$packetByExpedition = array();
+		$packetIndex = array();
+			
+		foreach ($expedition->getLineArray() as $line)
+		{
+			/* @var $line order_persistentdocument_expeditionline */
+			$packetNumber = $line->getPacketNumber() ? $line->getPacketNumber() : '-';
+			if (!isset($packetIndex[$packetNumber]))
+			{
+				$packetIndex[$packetNumber] = count($packetIndex);
+			}
+			$packetByExpedition[$packetIndex[$packetNumber]][] = $line;
+		}
+		$request->setAttribute('packetByExpedition', $packetByExpedition);
 	
 		return website_BlockView::SUCCESS;
 	}

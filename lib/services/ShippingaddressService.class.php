@@ -63,7 +63,7 @@ class order_ShippingaddressService extends customer_AddressService
 		{
 			return parent::getFullName($address, $includeTitle);
 		}
-		return $this->getLabel();
+		return $address->getLabel();
 	}
 	
 	/**

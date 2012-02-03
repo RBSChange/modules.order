@@ -514,14 +514,14 @@
 			</method>
 			
 			<method name="setCellValue">
-				<parameter name="cell" />
+				<parameter name="cell" />	
 				<parameter name="name" />
 				<parameter name="dataRow" />
 				<body><![CDATA[	
 					cell.setAttribute('value', dataRow[name]);
 					if (name === 'status')
 					{
-						if (dataRow.st == 'prepare')
+						if (dataRow.st == 'prepare' && (dataRow.packetnumber == null || dataRow.packetnumber.length == 0))
 						{
 							cell.setAttribute('class', 'text-link');
 							cell.setAttribute('action', 'shipped');
@@ -861,6 +861,8 @@
 	
 	<binding id="cExpeditionLinesResumeSection" extends="layout.cDocumentEditor#cResumeSection">
 		<implementation>
+			<field name="mTmpData">null</field>	
+				
 			<method name="setValues">
 				<parameter name="values" />
 				<body><![CDATA[
@@ -869,9 +871,23 @@
 					{
 						section = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:linesgrid');
 						section.setAttribute('flex', '1');
-						this.appendChild(section);
+						var handler = {
+							section: section,
+							value: values[this.name],
+							handleEvent: function(event)
+							{
+								wCore.debug('setJSONDataset in gridInitialised');
+								this.section.setJSONDataset(this.value);
+							}
+						}
+						section.addEventListener('gridInitialised', handler, false);
+						this.appendChild(section);	
 					}
-					section.setJSONDataset(values[this.name]);
+					else if ('setJSONDataset' in section)
+					{
+						wCore.debug('setJSONDataset in section');
+						section.setJSONDataset(values[this.name]);
+					}
 				]]></body>
 			</method>		
 		</implementation>
@@ -887,7 +903,7 @@
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
 				<xul:columns>	
 					<xul:column flex="1" />
-					<xul:column flex="1" />
+					<xul:column />
 					<xul:column />
 					<xul:column />
 				</xul:columns>

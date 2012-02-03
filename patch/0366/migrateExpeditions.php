@@ -21,6 +21,7 @@ foreach ($ids as $id)
 			$expLine->setPacketNumber($expedition->getPacketNumber());
 			$expLine->setTrackingNumber($expedition->getTrackingNumber());
 			$expLine->setShippingDate($expedition->getShippingDate());
+			$expLine->setTrackingURL($expedition->getOriginalTrackingURL());
 			
 			$expLine->save();
 			$expedition->addLine($expLine);

@@ -12,18 +12,19 @@
 				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
 					<xul:cfieldsgroup class="customeraddress" label="${transui:m.order.bo.general.shipping-address,ucf,attr}"/>
 									
-					<xul:cfieldsgroup label="${transui:m.order.document.orderpreparation.documents-name,ucf,attr}" xbl:inherits="hidden=hideorderpreparation">
+					<xul:cfieldsgroup label="${transui:m.order.document.orderpreparation.documents-name,ucf,attr}" hidegrid="true" 
+						xbl:inherits="hidden=hideorderpreparation">
 						<xul:cfieldsgroup class="orderpreparations" anonid="orderpreparation-grid" />
 					</xul:cfieldsgroup>
 					
-					<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.expeditions,ucf,attr}">
+					<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.expeditions,ucf,attr}" hidegrid="true">
 						<xul:cfieldsgroup class="orderexpeditions" anonid="expedition-grid" xbl:inherits="collapsed=collapseexpeditions" />
 						<xul:hbox anonid="expedition-message" collapsed="true" align="center">
 							<xul:label value="${transui:m.order.document.expedition.generating,ucf,attr}" />
 						</xul:hbox>
 					</xul:cfieldsgroup>
 					
-					<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.returns,ucf,attr}"  xbl:inherits="hidden=hideorderreturns">
+					<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.returns,ucf,attr}" hidegrid="true" xbl:inherits="hidden=hideorderreturns">
 						<xul:cfieldsgroup class="orderreturns" xbl:inherits="collapsed=collapseorderreturns" />
 					</xul:cfieldsgroup>
 				</xul:scrollbox>
@@ -364,6 +365,10 @@
 					else
 					{
 						this.setAttribute('collapseexpeditions', 'true');
+						if (this.mOrderExpeditions)
+						{
+							this.mOrderExpeditions.initJSONDataset(null);
+						}
 						if ('showExpeditionMessage' in idts && idts.showExpeditionMessage)
 						{
 							nodeMessage.removeAttribute('collapsed');

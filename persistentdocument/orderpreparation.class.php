@@ -160,7 +160,7 @@ class order_persistentdocument_orderpreparation extends order_persistentdocument
 				}
 			}
 			
-			if (isset($maxQuantity[$id]))
+			if (isset($maxQuantity[$id]) && !$this->isNew())
 			{
 				$lineInfo['maxquantity'] = $lineInfo['quantity'] + $maxQuantity[$id]['quantity'];
 			}

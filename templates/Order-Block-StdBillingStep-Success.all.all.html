@@ -148,7 +148,7 @@
    		<div tal:condition="cart/getShippingModeId" class="normal resume-section">
     		<h2 change:h="">${trans:m.order.standardprocess.shipping-title,ucf}</h2>
     		<ol>
-    			<li>${cart/getShippingMode/getLabelAsHtml}</li>
+    			<li>${cart/getShippingResumeAsHtml}</li>
     			<li><a class="link" href="${cart/getOrderProcess/getShippingStepUrl}">${trans:m.order.standardprocess.modify}</a></li>
     		</ol>
     	</div>
