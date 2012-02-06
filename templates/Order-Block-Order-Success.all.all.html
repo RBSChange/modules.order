@@ -145,7 +145,9 @@
 			</tr>
 		</tal:block>	
 	</table>
-	<a change:actionlink="" block="order_order" action="addToCart" cmpref="${order/getId}">${trans:m.order.frontoffice.add-order-articles-to-cart,ucf}</a>
+	<div id="actionAddOrderToCart">
+		<a change:actionlink="" block="order_order" action="addToCart" cmpref="${order/getId}" >${trans:m.order.frontoffice.add-order-articles-to-cart,ucf}</a>
+	</div>
 </div>
 <div class="cleaner"></div>
 
@@ -156,4 +158,26 @@
 
 <tal:block tal:repeat="expedition expeditions">
 	<tal:block change:block="" name="expedition" module="order" expeditionid="${expedition/getId}" />
+</tal:block>
+
+<tal:block tal:condition="cart">
+<div id="addPopin" style="display: none;">
+	<p class="normal">${trans:m.order.frontoffice.add-order-articles-txt,ucf}</p>
+	<ul class="normal">
+		<li><a change:actionlink="" block="order_order" action="addToCart" cmpref="${order/getId}" >${trans:m.order.frontoffice.add-order-articles-merge,ucf}</a></li>
+		<li><a change:actionlink="" block="order_order" action="addToCart" clearCart="1" cmpref="${order/getId}" >${trans:m.order.frontoffice.add-order-articles-replace,ucf}</a></li>
+	</ul>
+</div>
+<script tal:condition="not:cart/isEmpty" type="text/javascript" >
+//<![CDATA[
+jQuery(document).ready(function(){
+	var a = jQuery("#actionAddOrderToCart > a:first-child");	
+	a.attr('href', "javascript:void 0;");
+	
+	a.click(function(){
+		jQuery("#addPopin").dialog({title:"${trans:m.order.frontoffice.add-order-articles-title,ucf,js}", modal: true, width:300, closeOnEscape:true});
+	});
+});
+//]]>
+</script>
 </tal:block>
