@@ -133,7 +133,12 @@
   <key id="order-title">détail d'une commande</key>
   <key id="order-number-title">détail de la commande numéro {orderNumber}</key>
   <key id="order-back-to-list">revenir à la liste des commandes</key>
-  <key id="add-order-articles-to-cart">ajouter les articles de cette commande au panier</key>
+  <key id="add-order-articles-to-cart">Ajouter les articles de cette commande au panier</key>
+  <key id="add-order-articles-title">Re-commander les articles</key>
+  <key id="add-order-articles-txt">Vous avez déjà des articles dans votre panier, que souhaitez vous faire ?</key>  
+  <key id="add-order-articles-merge">Ajouter au panier</key>
+  <key id="add-order-articles-replace">Remplacer le panier</key>
+  
   <key id="orderlist-title">mes commandes</key>
   <key id="orderlist-description">cette page vous permet de visualiser vos commandes passées sur le site.</key>
   <key id="orderlist-order">commande</key>
@@ -175,7 +180,7 @@
   <key id="repayments-date">date</key>
   <key id="repayments-total-amount">montant total</key>
   <key id="repayments-order">commande</key>  
-  <key id="repayments-empty">aucun remboursement à afficher</key>   
+  <key id="repayments-empty">aucun remboursement à afficher</key>  
   <key id="general-informations">informations générales</key>   
   <key id="expedition-status">statut de l'expédition</key>   
   <key id="expedition-lines">produits concernés</key>   
