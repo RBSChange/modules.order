@@ -7,7 +7,6 @@
 			<xul:vbox flex="1">
 		        <xul:cmessageinfo anonid="message"/>
 		        <xul:hbox anonid="action-bar">
-		          <!-- <xul:button anonid="save_properties" oncommand="saveProperties()" label="Enregistrer" image="http://web35.localhost/changeicons/small/save.png"/> -->
 		        </xul:hbox>
 				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
 					<xul:cfieldsgroup class="customeraddress" label="${transui:m.order.bo.general.shipping-address,ucf,attr}"/>
@@ -23,17 +22,12 @@
 							<xul:label value="${transui:m.order.document.expedition.generating,ucf,attr}" />
 						</xul:hbox>
 					</xul:cfieldsgroup>
-					
-					<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.returns,ucf,attr}" hidegrid="true" xbl:inherits="hidden=hideorderreturns">
-						<xul:cfieldsgroup class="orderreturns" xbl:inherits="collapsed=collapseorderreturns" />
-					</xul:cfieldsgroup>
 				</xul:scrollbox>
 			</xul:vbox>	
 		</content>
 		<implementation>
 			<field name="mButtons">null</field>
 			<field name="mOrderExpeditions">null</field>
-			<field name="mOrderReturns">null</field>
 			<field name="mOrderPreparations">null</field>
 			<field name="mAddress">null</field>				
 			<field name="mInitData">null</field>
@@ -53,15 +47,7 @@
 				this.mButtons.Finalize = this.addActionButton("${transui:m.order.bo.actions.finalize-order,ucf,js}", wToolkit.getIcon('check', 'small'));
 				this.mButtons.Finalize.addEventListener('command', function(event) {me.onFinalizeOrder(event);}, true);
 				this.mButtons.Finalize.disabled = true;
-				
-				this.mButtons.ReturnButton = this.addActionButton("${transui:m.productreturns.bo.actions.createreturn,ucf,js}", wToolkit.getIcon('add', 'small'));
-				this.mButtons.ReturnButton.addEventListener('command', function(event) {me.onCreateReturn(event);}, true);
-				this.mButtons.ReturnButton.setAttribute('hidden', 'true');
-					
-				this.mButtons.NPAIReturnButton = this.addActionButton("${transui:m.productreturns.bo.actions.createnpaireturn,ucf,js}", wToolkit.getIcon('add', 'small'));
-				this.mButtons.NPAIReturnButton.addEventListener('command', function(event) {me.onCreateNPAIReturn(event);}, true);
-				this.mButtons.NPAIReturnButton.setAttribute('hidden', 'true');
-									
+													
 				this.addEventListener("gridInitialised", function (event) {return me.onGridInitialised(event);}, true);
 				this.addEventListener("addressInitialised", function (event) {return me.onAddressInitialised(event);}, true);
 				this.addEventListener("generateExpedition", function (event) {return me.onGenerateExpedition(event);}, true);		
@@ -83,16 +69,6 @@
 				if (this.documentEditor.module.hasAttribute('generateDefaultExpedition'))
 				{
 					this.mButtons.GenerateDefaultExpedition.removeAttribute('hidden');		
-				}
-				
-				if (getController().hasModule('productreturns'))
-				{
-					this.mButtons.ReturnButton.removeAttribute('hidden');	
-					this.mButtons.NPAIReturnButton.removeAttribute('hidden');	
-				}
-				else
-				{
-					this.setAttribute('hideorderreturns', 'true');
 				}
 				
 				this.setAttribute('uiinitiated', 'true');
@@ -123,12 +99,6 @@
 						if (('GenerateDefaultExpedition' in this.mButtons) && ('generateDefaultExpedition' in this.mInitData))
 						{
 							this.mButtons.GenerateDefaultExpedition.disabled = false;
-						}
-						
-						if (('ReturnButton' in this.mButtons) && ('createProductReturn' in this.mInitData))
-						{
-							this.mButtons.ReturnButton.disabled = false;
-							this.mButtons.NPAIReturnButton.disabled = false;
 						}
 					}
 				]]></body>
@@ -180,26 +150,6 @@
 				]]></body>
 			</method>
 			
-			<method name="onCreateReturn">
-				<parameter name="event" />
-				<body><![CDATA[
-					var id = this.documentEditor.documentid;	
-					var uri = ['productreturns', 'createReturnForOrder', 'modules_productreturns_return', id].join(',');
-					var from = ['order', 'openDocument', 'modules_order_order', id, 'shipping'].join(',');
-					openActionUri(uri, from);
-				]]></body>
-			</method>
-	
-			<method name="onCreateNPAIReturn">
-				<parameter name="event" />
-				<body><![CDATA[
-					var id = this.documentEditor.documentid;	
-					var uri = ['productreturns', 'createNPAIReturnForOrder', 'modules_productreturns_npaireturn', id].join(',');
-					var from = ['order', 'openDocument', 'modules_order_order', id, 'shipping'].join(',');
-					openActionUri(uri, from);
-				]]></body>
-			</method>
-	
 			<method name="generateDefaultExpedition">
 				<body><![CDATA[
 					this.lockCommandsUI();
@@ -269,18 +219,6 @@
 						else
 						{
 							this.mOrderExpeditions.initJSONDataset(null);
-						}
-					}
-					else if (grid.className == 'orderreturns')
-					{
-						this.mOrderReturns = grid;
-						if (idts && "returnsArray" in idts && idts.returnArray)
-						{
-							this.mOrderReturns.initJSONDataset(idts.returnsArray);
-						}	
-						else
-						{
-							this.mOrderReturns.initJSONDataset(null);
 						}
 					}
 					else if (grid.className == 'orderpreparations')
@@ -377,20 +315,6 @@
 						{
 							nodeMessage.setAttribute('collapsed', 'true');
 						}
-					}
-					
-					// Returns.					
-					if ('returnsArray' in idts && idts.returnsArray.length > 0)
-					{
-						this.removeAttribute('collapseorderreturns');
-						if (this.mOrderReturns)
-						{
-							this.mOrderReturns.initJSONDataset(idts.returnsArray);
-						}
-					}
-					else
-					{
-						this.setAttribute('collapseorderreturns', true);
 					}
 					
 					// Address.

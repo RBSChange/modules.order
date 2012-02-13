@@ -119,12 +119,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 					$result['showExpeditionMessage'] = true;
 				}
 			}
-			
-			if (ModuleService::getInstance()->moduleExists('productreturns'))
-			{
-				$result['createProductReturn'] = true;
-				$result['returnsArray'] = productreturns_BasereturnService::getInstance()->getBoList($order);
-			}
 		}
 		elseif (order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
 		{

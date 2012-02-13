@@ -20,7 +20,7 @@
 	<li class="even">
 		<dl tal:define="address order/getShippingAddress">
 			<dt>${trans:m.order.frontoffice.shippingaddress,ucf}</dt>
-				<dd>${address/getTitle/getLabel} ${address/getFirstname} ${address/getLastname}</dd>
+				<dd>${address/getFullNameAsHtml}</dd>
 				<dd>${address/getAddressLine1}</dd>
 				<dd tal:condition="address/getAddressLine2">${address/getAddressLine2}</dd>
 				<dd tal:condition="address/getAddressLine3">${address/getAddressLine3}</dd>
@@ -34,7 +34,7 @@
 	<li class="odd">
 		<dl tal:define="address order/getBillingAddress">
 			<dt>${trans:m.order.frontoffice.billingaddress,ucf}</dt>
-				<dd>${address/getTitle/getLabel} ${address/getFirstname} ${address/getLastname}</dd>
+				<dd>${address/getFullNameAsHtml}</dd>
 				<dd>${address/getAddressLine1}</dd>
 				<dd tal:condition="address/getAddressLine2">${address/getAddressLine2}</dd>
 				<dd tal:condition="address/getAddressLine3">${address/getAddressLine3}</dd>
