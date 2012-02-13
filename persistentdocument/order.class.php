@@ -722,13 +722,23 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	{
 		return $this->getTotalAmountWithTax() + $this->getTotalCreditNoteAmount();
 	}
-
+	
 	/**
 	 * @return customer_persistentdocument_address
 	 */
 	public function getShippingAddress()
 	{
 		$address = parent::getShippingAddress();
+		if ($address === null)
+		{
+			$data = f_util_ArrayUtils::firstElement($this->getShippingDataArray());
+			$mId = $data['filter']['modeId'];
+			$addressId = $this->getAddressIdByModeId($mId);
+			if (intval($addressId))
+			{
+				$address = DocumentHelper::getDocumentInstanceIfExists($addressId);
+			}
+		}
 		return ($address !== null) ? $address : $this->getBillingAddress();
 	}
 		
