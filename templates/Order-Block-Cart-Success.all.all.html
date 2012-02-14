@@ -297,7 +297,9 @@
 				${trans:m.order.frontoffice.orderProcess.post-read-general-sales-conditions}
 			</p>		
 			<ol>
-				<li><input required="true" change:checkboxinput="" name="cgv" value="true" labeli18n="m.order.frontoffice.OrderProcess.agree-with-general-sales-conditions" class="field" /></li>
+				<li><label change:label="" name="cgv_1" required="true" labeli18n="m.order.frontoffice.orderprocess.cgv"></label> 
+					<input change:checkboxinput="withcolon false" name="cgv" value="true" labeli18n="m.order.frontoffice.orderprocess.cgv-agree" />
+				</li>
 			</ol>
 			<p class="buttons">
 				<input change:submit="name Order" labeli18n="m.order.frontoffice.order-button" />

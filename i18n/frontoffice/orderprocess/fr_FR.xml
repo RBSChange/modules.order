@@ -52,4 +52,6 @@
   <key id="read-general-sales-conditions">consulter les conditions générales de vente</key>
   <key id="post-read-general-sales-conditions">et de cocher la case ci-dessous pour pouvoir passer votre commande.</key>
   <key id="agree-with-general-sales-conditions">j'accepte les conditions générales de vente</key>
+  <key id="cgv">Conditions générales de vente</key>
+  <key id="cgv-agree">Accepter</key>
 </i18n>
