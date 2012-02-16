@@ -1398,8 +1398,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$totalAmount = $this->findProjectedTotal($shop, $fromDate, $toDate, Projections::sum('totalAmountWithTax', 'projection'));
 		return array(
-			'monthLabel' => ucfirst(date_DateFormat::format($fromDate, 'F Y')),
-			'monthShortLabel' => date_DateFormat::format($fromDate, 'm/Y'),
+			'monthLabel' => ucfirst(date_Formatter::format(date_Converter::convertDateToLocal($fromDate), 'F Y')),
+			'monthShortLabel' => date_Formatter::format(date_Converter::convertDateToLocal($fromDate), 'm/Y'),
 			'totalCount' => $this->findProjectedTotal($shop, $fromDate, $toDate, Projections::rowCount('projection')),
 			'totalAmount' => catalog_PriceHelper::roundPrice($totalAmount),
 			'totalAmountFormatted' => $shop->formatPrice($totalAmount),
