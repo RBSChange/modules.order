@@ -97,6 +97,23 @@ class order_BlockBillingStepAction extends order_BlockAbstractProcessStepAction
 	
 	/**
 	 * @param f_mvc_Request $request
+	 * @param order_BillingStepBean $billingStep
+	 * @return boolean
+	 */
+	function validateSelectInput($request, $billingStep)
+	{
+		$cart = $this->getCurrentCart();
+		$paymentFilter = $billingStep->getPaymentFilter();
+		if (!($paymentFilter instanceof catalog_persistentdocument_paymentfilter) || !$paymentFilter->getDocumentService()->isValidPaymentFilter($paymentFilter, $cart))
+		{
+			$this->addError(LocaleService::getInstance()->transFO('m.order.document.billingstepbean.billingmode-error'), "paymentFilter");
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @param order_BillingStepBean $billingStep
 	 * @return String

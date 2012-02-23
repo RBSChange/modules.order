@@ -9,4 +9,5 @@
   <key id="transaction-amount-overview-head">Informations sur la transaction</key>
   <key id="mops-legend">Modes de paiement disponibles</key>
   <key id="no-valid-mop">Pas de modes de paiement disponibles pour votre commande.</key>
+  <key id="billingmode-error">Le mode de paiement choisi n'est pas valide</key>
 </i18n>
