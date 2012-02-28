@@ -56,7 +56,7 @@
 					<table id="shipping-filters" class="selector" width="100%">
 						<tr tal:repeat="modeFilter shippingFilters">
 							<td>
-								<input change:radioinput="name shippingFilterId" id="shippingFilter" value="${modeFilter/getId}" />
+								<input change:radioinput="name shippingFilterId" id="shippingFilter" value="${modeFilter/getId}" labeled="false" />
 								<label tal:condition="modeFilter/getMode/getVisual" class="nocmx" for="shippingFilter_${modeFilter/getId}" >
 									<img change:media="document modeFilter/getMode/getVisual; format 'modules.media.frontoffice/thumbnail'" />
 								</label>
