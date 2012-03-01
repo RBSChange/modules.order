@@ -1,34 +1,33 @@
-<h2 change:h="" change:translate="modules.order.frontoffice.Orderlist-title"></h2>
+<h1 change:h="">${trans:m.order.frontoffice.orderlist-title,ucf}</h1>
 
 <tal:block tal:condition="orders">
-	<p class="normal" change:translate="modules.order.frontoffice.Orderlist-description"></p>
-	<table border="0" class="normal">
+	<p class="normal">${trans:m.order.frontoffice.orderlist-description,ucf}</p>
+	<table class="normal">
 		<thead>
 			<tr>
-				<th class="first" change:translate="modules.order.frontoffice.Orderlist-order" />
-				<th change:translate="modules.order.frontoffice.Orderlist-date" />
-				<th change:translate="modules.order.frontoffice.Orderlist-billing-mode" />
-				<th change:translate="modules.order.frontoffice.Orderlist-price-with-tax" />
-				<th change:translate="modules.order.frontoffice.Orderlist-status" />
-				<th class="last" change:translate="modules.order.frontoffice.Orderlist-bill" />
+				<th>${trans:m.order.frontoffice.orderlist-order,ucf}</th>
+				<th>${trans:m.order.frontoffice.orderlist-date,ucf}</th>
+				<th>${trans:m.order.frontoffice.orderlist-billing-mode,ucf}</th>
+				<th>${trans:m.order.frontoffice.orderlist-price-with-tax,ucf}</th>
+				<th>${trans:m.order.frontoffice.orderlist-status,ucf}</th>
+				<th>${trans:m.order.frontoffice.orderlist-bill,ucf}</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr tal:repeat="order orders" class="row-${repeat/order/odd}">	
+			<tr tal:repeat="order orders" class="${alternateclass:orderIndex}">	
 				<td><a change:link="document order">${order/getOrderNumber}</a></td>
-				<td><tal:block change:datetime="order/getCreationdate" /></td>
+				<td>${datetime:order/getUICreationdate}</td>
 				<td>${order/getBillingMode}</td>
 				<td class="pricettc">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
 				<td>${order/getFoOrderStatusLabel}</td>
 				<td tal:define="bills order/getBillsWithArchive">
 					<tal:block tal:repeat="bill bills">
-						<a change:download="document bill/getArchive" change:translate="modules.order.frontoffice.Orderlist-bill"></a>
-						<tal:block tal:condition="not: repeat/bill/end">, </tal:block>
+						<a change:download="document bill/getArchive">${trans:m.order.frontoffice.orderlist-bill,ucf}</a><span tal:condition="not: repeat/bill/end" class="punctuation">, </span>
 					</tal:block>
-					<span tal:condition="not: bills/0" change:translate="modules.order.frontoffice.Orderlist-billNotAvailable"></span>
+					<span tal:condition="not: bills/0">${trans:m.order.frontoffice.orderlist-billnotavailable,ucf}</span>
 				</td>
 			</tr>
 		</tbody>
 	</table>
 </tal:block>
-<p class="normal" tal:condition="not: orders" change:translate="modules.order.frontoffice.No-order-yet"></p>
+<p class="normal" tal:condition="not: orders">${trans:m.order.frontoffice.no-order-yet,ucf}</p>
