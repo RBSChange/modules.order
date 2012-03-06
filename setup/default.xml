@@ -65,7 +65,7 @@
 			</page>					
 		</topic>
 		
-		<topic byLabel="Compte client (sécurisé)">		
+		<topic byLabel="Compte client">		
 			<page label="Mes commandes" id="MesCommandes" isIndexPage="true">
 				<tag name="contextual_website_website_modules_order_order-list" />
 				<changecontent for="content-block">
