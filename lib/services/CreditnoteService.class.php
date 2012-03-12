@@ -220,9 +220,10 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		$order->setCreditNoteDataArray(null);
 		$order->removeAllUsecreditnote();
 		
+		$pf = catalog_PriceFormatter::getInstance();
 	
 		$totalAmountWithTax = $cart->getTotalWithTax();
-		$order->setTotalAmountWithoutTax(catalog_PriceHelper::roundPrice($cart->getTotalWithoutTax()));
+		$order->setTotalAmountWithoutTax($pf->round($cart->getTotalWithoutTax(), $order->getCurrencyCode()));
 		
 
 		$newCreditNoteDataArray = array();
@@ -260,7 +261,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 			}
 		}
 		
-		$order->setTotalAmountWithTax(catalog_PriceHelper::roundPrice($totalAmountWithTax));
+		$order->setTotalAmountWithTax($pf->round($totalAmountWithTax,$order->getCurrencyCode()));
 	}
 	
 	/**

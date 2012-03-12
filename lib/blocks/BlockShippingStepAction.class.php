@@ -93,11 +93,20 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 	
 	/**
 	 * @param f_mvc_Request $request
+	 * @return array 
+	 */
+	function getUseRegisteredShippingAddressBeanInfo($request)
+	{
+		return array('className' => 'order_ShippingStepBean', 'beanName' => 'shippingStep');
+	}
+	
+	/**
+	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @param order_ShippingStepBean $shippingStep
 	 * @return String
 	 */
-	function executeUseRegisteredShippingAddress($request, $response, order_ShippingStepBean $shippingStep)
+	function executeUseRegisteredShippingAddress($request, $response, $shippingStep)
 	{
 		$addressId = intval($request->getParameter('registeredShippingAddress'));
 		if ($addressId > 0)
@@ -173,11 +182,20 @@ class order_BlockShippingStepAction extends order_BlockAbstractProcessStepAction
 	
 	/**
 	 * @param f_mvc_Request $request
+	 * @return array 
+	 */
+	function getSelectBeanInfo($request)
+	{
+		return array('className' => 'order_ShippingStepBean', 'beanName' => 'shippingStep');
+	}
+	
+	/**
+	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @param order_ShippingStepBean $shippingStep
 	 * @return String
 	 */
-	function executeSelect($request, $response, order_ShippingStepBean $shippingStep)
+	function executeSelect($request, $response, $shippingStep)
 	{
 		$cartInfo = $this->getCurrentCart();
 		

@@ -125,11 +125,20 @@ class order_BlockCartAction extends website_BlockAction
 	
 	/**
 	 * @param f_mvc_Request $request
+	 * @return array 
+	 */
+	function getEvaluateshippingBeanInfo($request)
+	{
+		return array('className' => 'order_ShippingStepBean', 'beanName' => 'bean');
+	}
+	
+	/**
+	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @param order_ShippingStepBean $bean
 	 * @return String
 	 */
-	function executeEvaluateshipping($request, $response, order_ShippingStepBean $bean)
+	function executeEvaluateshipping($request, $response, $bean)
 	{
 		$cs =  order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();

@@ -68,7 +68,7 @@
 					<td> ${cartLine/getQuantity} </td>
 	
 					<!-- Tax rate -->
-					<td tal:condition="showTTC">${cartLine/getFormattedTaxCode}</td>
+					<td tal:condition="showTTC">${cartLine/getFormattedTaxRate}</td>
 										
 					<!-- Total price -->
 					<td class="priceht" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
@@ -110,7 +110,7 @@
 					</td>
 	
 					<!-- Tax rate -->
-					<td tal:condition="showTTC">${cartLine/getFormattedTaxCode}</td>
+					<td tal:condition="showTTC">${cartLine/getFormattedTaxRate}</td>
 										
 					<!-- Total price -->
 					<td class="priceht" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>

@@ -289,7 +289,8 @@ class order_CartService extends BaseService
 	private function validateProduct($cart, $product, $quantity)
 	{
 		$shop = $cart->getShop();
-		if ($product->isPublished() && $product->canBeOrdered($shop) && $product->getPrice($shop, $cart->getCustomer(), $quantity) != null)
+		$billingArea =  $cart->getBillingArea();
+		if ($product->isPublished() && $product->canBeOrdered($shop) && $product->getPrice($shop, $billingArea, $cart->getCustomer(), $quantity) != null)
 		{
 			$stDoc = catalog_StockService::getInstance()->getStockableDocument($product);
 			if ($stDoc !== null)
@@ -445,22 +446,25 @@ class order_CartService extends BaseService
 	 */
 	protected function refreshCartPrice($cart)
 	{
-		$cartLines = $cart->getCartLineArray();
 		$shop = $cart->getShop();
 		if ($shop)
 		{
+			$billingArea = $shop->getCurrentBillingArea(true);
+			$cart->setBillingArea($billingArea);
 			$cart->setTaxZone(catalog_TaxService::getInstance()->getCurrentTaxZone($shop, $cart));
+			$cartLines = $cart->getCartLineArray();
+			$customer = $cart->getCustomer();
+			foreach ($cartLines as $cartLine)
+			{
+				$product = $cartLine->getProduct();
+				$price = $product->getPrice($shop, $billingArea, $customer, $cartLine->getQuantity());
+				$cartLine->importPrice($price);
+			}
 		}
 		else
 		{
 			$cart->setTaxZone(null);
-		}
-		$customer = $cart->getCustomer();
-		foreach ($cartLines as $cartLine)
-		{
-			$product = $cartLine->getProduct();
-			$price = $product->getPrice($shop, $customer, $cartLine->getQuantity());
-			$cartLine->importPrice($price);			
+			$cart->setCartLineArray(array());
 		}
 	}
 	
@@ -540,10 +544,12 @@ class order_CartService extends BaseService
 		
 		foreach ($cart->getFeesArray() as $fees)
 		{
+			/* @var $fees order_CartModifierInfo */
+			
 			$value = $fees->getValueWithTax() - $fees->getValueWithoutTax();
 			if ($value > 0)
 			{
-				$rateKey = $fees->getFormattedTaxCode();
+				$rateKey = $fees->getFormattedTaxRate();
 				$valueWithTax += $fees->getValueWithTax();
 				
 				if (isset($result[$rateKey]))
@@ -793,7 +799,7 @@ class order_CartService extends BaseService
 		if ($countryId)
 		{
 			$country = zone_persistentdocument_country::getInstanceById($countryId);
-			return zone_ZoneService::getInstance()->isCountryInZone($country, $cart->getShop()->getBillingZone());
+			return zone_ZoneService::getInstance()->isCountryInZone($country, $cart->getBillingArea()->getBillingAddressZone());
 		}
 		return false;
 	}

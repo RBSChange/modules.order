@@ -514,8 +514,12 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$orderDocument->setOrderStatus(self::INITIATED);
 			
 			$shop = $cartInfo->getShop();
-			$orderDocument->setCurrencyCode($shop->getCurrencyCode());
-			$orderDocument->setPriceFormat($shop->getDocumentService()->getPriceFormat($shop));
+			$billingArea = $cartInfo->getBillingArea();
+			$pf = catalog_PriceFormatter::getInstance();
+			$currencyCode = $billingArea->getCurrency()->getCode();
+			$orderDocument->setCurrencyCode($currencyCode);
+			$orderDocument->setPriceFormat($billingArea->getPriceFormat());
+			$orderDocument->setTaxZone($cartInfo->getTaxZone());
 			
 			if ($cartInfo->hasCreditNote())
 			{
@@ -523,8 +527,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			}
 			else
 			{		
-				$orderDocument->setTotalAmountWithTax(catalog_PriceHelper::roundPrice($cartInfo->getTotalWithTax()));
-				$orderDocument->setTotalAmountWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getTotalWithoutTax()));
+				$orderDocument->setTotalAmountWithTax($pf->round($cartInfo->getTotalWithTax(), $currencyCode));
+				$orderDocument->setTotalAmountWithoutTax($pf->round($cartInfo->getTotalWithoutTax(), $currencyCode));
 			}
 						
 			$customer = $cartInfo->getCustomer();
@@ -536,8 +540,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$shippingMode = $cartInfo->getShippingMode();
 			$orderDocument->setShippingModeDocument($shippingMode);
 
-			$orderDocument->setShippingFeesWithTax(catalog_PriceHelper::roundPrice($cartInfo->getFeesTotalWithTax()));
-			$orderDocument->setShippingFeesWithoutTax(catalog_PriceHelper::roundPrice($cartInfo->getFeesTotalWithoutTax()));
+			$orderDocument->setShippingFeesWithTax($pf->round($cartInfo->getFeesTotalWithTax(), $currencyCode));
+			$orderDocument->setShippingFeesWithoutTax($pf->round($cartInfo->getFeesTotalWithoutTax(), $currencyCode));
 			$orderDocument->setShippingDataArray($cartInfo->getShippingArray());
 			
 			// Adresse par defaut.
@@ -694,8 +698,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$shop = $order->getShop();
 		
-		$orderAmountWithTax = $shop->formatPrice($order->getTotalAmountWithTax());
-		$orderAmountWithoutTax = $shop->formatPrice($order->getTotalAmountWithoutTax());
+		$orderAmountWithTax = $order->formatPrice($order->getTotalAmountWithTax());
+		$orderAmountWithoutTax = $order->formatPrice($order->getTotalAmountWithoutTax());
 		$ls = LocaleService::getInstance();
 		if ($shop->getDisplayPriceWithTax() || !$shop->getDisplayPriceWithoutTax())
 		{
@@ -706,8 +710,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$orderAmount = $orderAmountWithoutTax." ".$ls->transFO('m.catalog.frontoffice.ht', array('html'));
 		}
 		
-		$shippingFeesWithTax = $shop->formatPrice($order->getShippingFeesWithTax());
-		$shippingFeesWithoutTax = $shop->formatPrice($order->getShippingFeesWithoutTax());
+		$shippingFeesWithTax = $order->formatPrice($order->getShippingFeesWithTax());
+		$shippingFeesWithoutTax = $order->formatPrice($order->getShippingFeesWithoutTax());
 		
 		$template = TemplateLoader::getInstance()->setPackageName('modules_order')->setMimeContentType(K::HTML)
 			->setDirectory('templates/mails')->load('Order-Inc-Lines');
@@ -1432,14 +1436,17 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function getStatisticsByShop($shop, $fromDate, $toDate)
 	{
+		$billingArea = $shop->getDefaultBillingArea();
 		$totalAmount = $this->findProjectedTotal($shop, $fromDate, $toDate, Projections::sum('totalAmountWithTax', 'projection'));
+		$formatedTotalAmount = $billingArea->formatPrice($totalAmount);
+		
 		return array(
 			'monthLabel' => ucfirst(date_Formatter::format(date_Converter::convertDateToLocal($fromDate), 'F Y')),
 			'monthShortLabel' => date_Formatter::format(date_Converter::convertDateToLocal($fromDate), 'm/Y'),
 			'totalCount' => $this->findProjectedTotal($shop, $fromDate, $toDate, Projections::rowCount('projection')),
-			'totalAmount' => catalog_PriceHelper::roundPrice($totalAmount),
-			'totalAmountFormatted' => $shop->formatPrice($totalAmount),
-			'to' => $shop->formatPrice($totalAmount),
+			'totalAmount' => catalog_PriceFormatter::getInstance()->round($totalAmount, $billingArea->getCurrencyCode()),
+			'totalAmountFormatted' => $formatedTotalAmount,
+			'to' => $formatedTotalAmount,
 			'toDeliver' => $this->findProjectedTotal($shop, $fromDate, $toDate, Projections::rowCount('projection'), array('in_progress'))
 		);
 	}

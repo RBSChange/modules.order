@@ -199,21 +199,22 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	{
 		$this->setGlobalProperty('taxAmount', $taxAmount);
 	}
-	
+			
 	/**
 	 * @return String
 	 */
-	public function getTaxCode()
+	public function getTaxCategory()
 	{
-		return $this->getGlobalProperty('taxCode');
+		return $this->getGlobalProperty('taxCategory');
 	}
 	/**
-	 * @param String $taxCode
+	 * @param String $taxCategory
 	 */
-	public function setTaxCode($taxCode)
+	public function setTaxCategory($taxCategory)
 	{
-		$this->setGlobalProperty('taxCode', $taxCode);
-	}	
+		$this->setGlobalProperty('taxCategory', $taxCategory);
+	}
+	
 	/**
 	 * @return Double
 	 */
@@ -295,6 +296,22 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}	
 	
 	// Deprecated.
+	
+	/**
+	 * @deprecated (will be removed in 4.0)
+	 */
+	public function getTaxCode()
+	{
+		return $this->getGlobalProperty('taxCode');
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0)
+	 */
+	public function setTaxCode($taxCode)
+	{
+		$this->setGlobalProperty('taxCode', $taxCode);
+	}
 	
 	/**
 	 * @deprecated (will be removed in 4.0)

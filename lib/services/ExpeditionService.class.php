@@ -385,7 +385,6 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		
 		$expedition->setAmount($order->getShippingFeesWithTax());
 		$expedition->setTax($order->getShippingFeesWithTax() - $order->getShippingFeesWithoutTax());
-		$expedition->setTaxCode($order->getShippingModeTaxCode());
 		$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);
 		
 		$previouslines = array();

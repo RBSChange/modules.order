@@ -22,7 +22,7 @@ class order_CartLineInfo
 	/**
 	 * @var string
 	 */		
-	private $taxCode = null;
+	private $taxCategory = null;
 
 	/**
 	 * @var double
@@ -161,7 +161,7 @@ class order_CartLineInfo
 	{
 		if ($this->priceId)
 		{
-			DocumentHelper::getDocumentInstance($this->priceId, "modules_catalog/price");
+			return catalog_persistentdocument_price::getInstanceById($this->priceId);
 		}
 		return null;
 	}
@@ -195,7 +195,7 @@ class order_CartLineInfo
 			$this->setOldValueWithoutTax($price->getOldValueWithoutTax());
 			$this->setOldValueWithTax($price->getOldValueWithTax());
 			$this->setDiscountDetail($price->getDiscountDetail());
-			$this->setTaxCode($price->getTaxCode());
+			$this->setTaxCategory($price->getTaxCategory());
 			if ($price->hasPricePart())
 			{
 				$this->priceParts = array();
@@ -222,7 +222,7 @@ class order_CartLineInfo
 			$this->setOldValueWithoutTax(0);
 			$this->setOldValueWithTax(0);
 			$this->setDiscountDetail(null);
-			$this->setTaxCode(null);
+			$this->setTaxCategory(null);
 			$this->priceParts = null;
 		}
 	}
@@ -230,17 +230,17 @@ class order_CartLineInfo
 	/**
 	 * @return string
 	 */
-	public function getTaxCode()
+	public function getTaxCategory()
 	{
-		return $this->taxCode;
+		return $this->taxCategory;
 	}
 	
 	/**
-	 * @param string $taxCode
+	 * @param string $taxCategory
 	 */
-	public function setTaxCode($taxCode)
+	public function setTaxCategory($taxCategory)
 	{
-		$this->taxCode = $taxCode;
+		$this->taxCategory = $taxCategory;
 	}
 	
 	/**
@@ -248,7 +248,7 @@ class order_CartLineInfo
 	 */
 	public function getTaxRate()
 	{
-		return catalog_PriceHelper::getTaxRateByValue($this->getValueWithTax(), $this->getValueWithoutTax());
+		return catalog_TaxService::getInstance()->getTaxRateByValue($this->getValueWithTax(), $this->getValueWithoutTax());
 	}
 	
 	/**
@@ -256,13 +256,14 @@ class order_CartLineInfo
 	 */
 	public function getTaxArray()
 	{
+		$ts = catalog_TaxService::getInstance();
 		$result = array();
 		if ($this->priceParts === null)
 		{
 			$value = $this->getTotalValueWithTax() - $this->getTotalValueWithoutTax();
 			if ($value > 0)
 			{
-				$result[catalog_PriceHelper::formatTaxRate($this->getTaxRate())] = $value;
+				$result[$ts->formatRate($this->getTaxRate())] = $value;
 			}
 		}
 		else
@@ -275,14 +276,14 @@ class order_CartLineInfo
 				$value = ($valueWithTax - $valueWithoutTax) * $qtt;
 				if ($value > 0)
 				{
-					$formattedTaxCode = catalog_PriceHelper::formatTaxRate(catalog_PriceHelper::getTaxRateByValue($valueWithTax, $valueWithoutTax));
-					if (isset($result[$formattedTaxCode]))
+					$formattedTaxRate = $ts->formatRate($ts->getTaxRateByValue($valueWithTax, $valueWithoutTax));
+					if (isset($result[$formattedTaxRate]))
 					{
-						$result[$formattedTaxCode] += $value;
+						$result[$formattedTaxRate] += $value;
 					}
 					else
 					{
-						$result[$formattedTaxCode] = $value;
+						$result[$formattedTaxRate] = $value;
 					}
 				}
 			}
@@ -293,10 +294,10 @@ class order_CartLineInfo
 	/**
 	 * @return string
 	 */
-	public function getFormattedTaxCode()
-	{	
+	public function getFormattedTaxRate()
+	{
 		$tr = $this->getTaxArray();
-		if (count($tr) === 0) 
+		if (count($tr) === 0)
 		{
 			return LocaleService::getInstance()->transFO('m.order.fo.no-tax');;
 		}
@@ -309,7 +310,7 @@ class order_CartLineInfo
 			return f_util_ArrayUtils::firstElement(array_keys($tr));
 		}
 	}
-
+	
 	/**
 	 * @return string
 	 */
@@ -552,5 +553,15 @@ class order_CartLineInfo
 			}
 		}
 		return null;
+	}
+	
+	// DEPRECATED
+	
+	/**
+	 * @deprecated use getFormattedTaxRate
+	 */
+	public function getFormattedTaxCode()
+	{
+		return $this->getFormattedTaxRate();
 	}
 }

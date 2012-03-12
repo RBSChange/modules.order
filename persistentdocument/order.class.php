@@ -6,7 +6,7 @@
 class order_persistentdocument_order extends order_persistentdocument_orderbase
 {
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getBoOrderStatusLabel()
 	{
@@ -14,7 +14,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getFoOrderStatusLabel()
 	{
@@ -23,7 +23,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getLogisticStatusLabel()
 	{
@@ -32,13 +32,12 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		
 		
 	/**
-	 * @param double $value
+	 * @param float $value
 	 * @return string
 	 */
 	public function formatPrice($value)
 	{
-		$priceFormat = $this->getPriceFormat();
-		return catalog_PriceHelper::applyFormat($value, $priceFormat ? $priceFormat : "%s €");
+		return catalog_PriceFormatter::getInstance()->applyFormat($value, $this->getPriceFormat(), $this->getCurrencyCode(), $this->getLang());
 	}
 	
 	/**
@@ -58,9 +57,25 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
+	 * @return string
+	 */
+	public function getTaxZone()
+	{
+		return $this->getGlobalProperty('taxZone');
+	}
+	
+	/**
+	 * @param string $taxZone
+	 */
+	public function setTaxZone($taxZone)
+	{
+		return $this->setGlobalProperty('taxZone', $taxZone);
+	}	
+		
+	/**
 	 * @return Array<String, Array<String, String>>
 	 */
-	public function getSubTotalTaxInfoArray()
+	public function getTotalTaxInfoArray()
 	{
 		$taxInfoArray = array();
 		$taxRates = $this->getTaxRates();
@@ -73,42 +88,9 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			return $taxInfoArray;
 		}
 		
-		//Old Tax evaluation
-		foreach ($this->getLineArray() as $line)
-		{
-			if (!isset($taxInfoArray[$line->getTaxCode()]))
-			{
-				$taxInfoArray[$line->getTaxCode()] = array('formattedTaxRate' => catalog_PriceHelper::formatTaxRate($line->getTaxRate()), 'taxAmount' => 0);
-			}
-			$taxInfoArray[$line->getTaxCode()]['taxAmount'] += $line->getTaxAmount();
-		}
-		return $taxInfoArray;
-	}
-	
-	/**
-	 * @return Array<String, Array<String, String>>
-	 */
-	public function getTotalTaxInfoArray()
-	{
-		$taxInfoArray = $this->getSubTotalTaxInfoArray();
-		$this->completeTaxInfoArrayWithShippingFees($taxInfoArray);
-		return $taxInfoArray;
-	}
-	
-	/**
-	 * @param Array $taxInfoArray
-	 */
-	private function completeTaxInfoArrayWithShippingFees(&$taxInfoArray)
-	{		
-		$taxCode = $this->getOrderProperty('shippingModeTaxCode');
-		if ($taxCode)
-		{
-			if (!isset($taxInfoArray[$taxCode]))
-			{
-				$taxInfoArray[$taxCode] = array('taxAmount' => 0, 'formattedTaxRate' => catalog_PriceHelper::formatTaxRate($this->getShippingModeTaxRate()));
-			}
-			$taxInfoArray[$taxCode]['taxAmount'] += ($this->getShippingFeesWithTax() - $this->getShippingFeesWithoutTax());
-		}
+		//Deprecated remove in 4.0
+		return $this->getSubTotalTaxInfoArray();
+
 	}
 	
 	/**
@@ -193,7 +175,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function getShop()
 	{
-		return DocumentHelper::getDocumentInstance($this->getShopId(), 'modules_catalog/shop');
+		return catalog_persistentdocument_shop::getInstanceById($this->getShopId());
 	}
 	
 	/**
@@ -209,7 +191,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function getWebsite()
 	{
-		return DocumentHelper::getDocumentInstance($this->getWebsiteId(), 'modules_website/website');
+		return website_persistentdocument_website::getInstanceById($this->getWebsiteId());
 	}
 	
 	/**
@@ -787,7 +769,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	//DEPRECTAED FUNCTIONS
 
 	/**
-	 * @return String
 	 * @deprecated use getBoOrderStatusLabel or getFoOrderStatusLabel
 	 */
 	public function getOrderStatusLabel()
@@ -796,8 +777,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 		
 	/**
-	 * Get the readable order date.
-	 * @return String
 	 * @deprecated use getCreationdate or getUICreationdate
 	 */
 	public function getOrderDate()
@@ -807,13 +786,11 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	
 	/**
 	 * @deprecated 
-	 * @var order_persistentdocument_bill
 	 */
 	private $currentBill;
 	
 	/**
 	 * @deprecated 
-	 * @return order_persistentdocument_bill
 	 */
 	private function getCurrentBill()
 	{
@@ -827,7 +804,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			
 	/**
 	 * @deprecated  use getPaymentConnectorLabel
-	 * @return String
 	 */
 	public function getBillingMode()
 	{
@@ -836,7 +812,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	
 	/**
 	 * @deprecated use getPaymentConnectorCode
-	 * @return String
 	 */
 	public function getBillingModeCodeReference()
 	{
@@ -850,7 +825,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	
 	/**
 	 * @deprecated 
-	 * @return order_persistentdocument_expedition
 	 */
 	private function getCurrentExpedition()
 	{
@@ -927,5 +901,35 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	public function getShippingModeTaxRate()
 	{
 		return $this->getOrderProperty('shippingModeTaxRate');
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public function getSubTotalTaxInfoArray()
+	{
+		$taxInfoArray = array();
+		$ts = catalog_TaxService::getInstance();
+		foreach ($this->getLineArray() as $line)
+		{
+			/* @var $line order_persistentdocument_orderline */
+			$formatedTaxRate = $ts->formatRate($line->getTaxRate());
+			if (!isset($taxInfoArray[$formatedTaxRate]))
+			{
+				$taxInfoArray[$formatedTaxRate] = array('formattedTaxRate' => $formatedTaxRate, 'taxAmount' => 0);
+			}
+			$taxInfoArray[$formatedTaxRate]['taxAmount'] += $line->getTaxAmount();
+		}
+	
+		if ($this->getShippingModeTaxCode())
+		{
+			$formatedTaxRate = $ts->formatRate($this->getShippingModeTaxRate());
+			if (!isset($taxInfoArray[$formatedTaxRate]))
+			{
+				$taxInfoArray[$formatedTaxRate] = array('taxAmount' => 0, 'formattedTaxRate' => $formatedTaxRate);
+			}
+			$taxInfoArray[$formatedTaxRate]['taxAmount'] += ($this->getShippingFeesWithTax() - $this->getShippingFeesWithoutTax());
+		}
+		return $taxInfoArray;
 	}
 }

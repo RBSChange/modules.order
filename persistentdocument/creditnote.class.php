@@ -54,7 +54,7 @@ class order_persistentdocument_creditnote extends order_persistentdocument_credi
 	 */
 	public function getCurrencySymbol()
 	{
-		return catalog_PriceHelper::getCurrencySymbol($this->getCurrency());
+		return catalog_PriceFormatter::getInstance()->getSymbol($this->getCurrency());
 	}
 	
 	/**
@@ -62,8 +62,7 @@ class order_persistentdocument_creditnote extends order_persistentdocument_credi
 	 */
 	public function getAmountFormated()
 	{
-		$priceFormat = ($this->getOrder() == null) ? null : $this->getOrder()->getPriceFormat();
-		return catalog_PriceHelper::applyFormat($this->getAmount(), $priceFormat ? $priceFormat : "%s €");
+		return $this->getOrder()->formatPrice($this->getAmount());
 	}
 
 	/**
@@ -71,10 +70,12 @@ class order_persistentdocument_creditnote extends order_persistentdocument_credi
 	 */
 	public function getAmountNotAppliedFormated()
 	{
-		$priceFormat = ($this->getOrder() == null) ? null : $this->getOrder()->getPriceFormat();
-		return catalog_PriceHelper::applyFormat($this->getAmountNotApplied(), $priceFormat ? $priceFormat : "%s €");
+		return $this->getOrder()->formatPrice($this->getAmountNotApplied());
 	}
 	
+	/**
+	 * @param string $activate
+	 */
 	public function setAutoActivate($activate)
 	{
 		if ($activate == "1")

@@ -136,7 +136,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 		
 		//
 		$data["number"] = $bill->getLabel();
-		$data["amountWithoutTax"] = $shop->formatPrice($order->getLinesAmountWithoutTax());
+		$data["amountWithoutTax"] = $order->formatPrice($order->getLinesAmountWithoutTax());
 		
 		$lines = $data['billingAddressLine1'];
 		if ($data['billingAddressLine2'] != "")

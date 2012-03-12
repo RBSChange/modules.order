@@ -11,6 +11,7 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 		if ($value > 0)
 		{
 			$shop = $cart->getShop();
+			$billingArea = $shop->getCurrentBillingArea();
 			$taxZone = catalog_TaxService::getInstance()->getCurrentTaxZone($shop, $cart);
 			if ($taxZone === null)
 			{
@@ -33,8 +34,8 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 					}
 					
 					$feesInfo->setValueWithoutTax($this->getValueWithoutTax());
-					$rate = catalog_TaxService::getInstance()->getTaxRate($shop->getId(), $this->getTaxCategory(), $taxZone);
-					$feesInfo->setValueWithTax($feesInfo->getValueWithoutTax() * ( 1 + $rate) );
+					$rate = catalog_TaxService::getInstance()->getTaxRateByKey($billingArea->getId(), $this->getTaxCategory(), $taxZone);
+					$feesInfo->setValueWithTax(catalog_TaxService::getInstance()->addTaxByRate($feesInfo->getValueWithoutTax(), $rate));
 					$shippingArray[$k]['filter']['shippingvalueWithTax'] = $feesInfo->getValueWithTax();
 					$shippingArray[$k]['filter']['shippingvalueWithoutTax'] = $feesInfo->getValueWithoutTax();
 					$cart->setShippingArray($shippingArray);
@@ -147,25 +148,7 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 	 */
 	protected function getBoValueJSON()
 	{
-		$valueHT = $this->getValueWithoutTax();
-		$shop = $this->getShop();
-		$taxZone = $shop->getBoTaxZone();
-		$currencyDoc = catalog_CurrencyService::getInstance()->getByCode($shop->getCurrencyCode());
-		$editTTC = $taxZone !== null;
-		$taxCategory = $this->getTaxCategory();
-		$taxCategories = catalog_TaxService::getInstance()->getBoTaxeInfoForShop($shop);
-		if ($taxZone !== null && $valueHT > 0)
-		{
-			$valueTTC = catalog_PriceFormatter::getInstance()->round($valueHT * (1 + $taxCategories[$taxCategory]['rate']), $currencyDoc->getCode());
-		}
-		else
-		{
-			$valueTTC = $valueHT;
-		}
-		
-		$array = array('value' => $editTTC ? $valueTTC : $valueHT, 'valueTTC' => $valueTTC, 'valueHT' => $valueHT , 'editTTC' => $editTTC, 'taxCategory' => $taxCategory, 
-			'taxCategories' => $taxCategories, 'currency' => $currencyDoc->getSymbol(), 'currencyCode' => $currencyDoc->getCode());
-		
+		$array = catalog_BillingareaService::getInstance()->buildBoPriceEditInfos($this->getValueWithoutTax(), $this->getShop(), $this->getTaxCategory());
 		return JsonService::getInstance()->encode($array);
 	}
 	
@@ -174,23 +157,8 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 	 */
 	public function setBoValueJSON($value)
 	{
-		$parts = explode(',', $value);
-		if (count($parts) != 2 || $parts[0] == '' || $parts[1] == '')
-		{
-			return;
-		}
-		$this->fees->setStrategyParam('taxcategory', $parts[1]);
-		$shop = $this->getShop();
-		$taxZone = $shop->getBoTaxZone();
-		if ($taxZone === null)
-		{
-			$valueHT = doubleval($parts[0]);
-		}
-		else
-		{
-			$rate = catalog_TaxService::getInstance()->getTaxRate($shop->getId(), $this->getTaxCategory(), $taxZone);
-			$valueHT = doubleval($parts[0]) / (1 + $rate);
-		}
-		$this->fees->setStrategyParam('valuewithouttax', $valueHT);
+		list($valueWithoutTax, $taxCategory) = catalog_BillingareaService::getInstance()->parseBoPriceEditInfos($value, $this->getShop());
+		$this->fees->setStrategyParam('taxcategory', $taxCategory);
+		$this->fees->setStrategyParam('valuewithouttax', $valueWithoutTax);
 	}
 }

@@ -21,25 +21,34 @@ class order_CurrentTaxZoneStrategy
 	{
 		if ($shop === null) {return null;}
 
-		if ($cart === null)
+		if ($cart === null )
 		{
-			$addressInfo = order_CartService::getInstance()->getDocumentInstanceFromSession()->getAddressInfo();
+			if (order_CartService::getInstance()->hasCartInSession())
+			{
+				$addressInfo = order_CartService::getInstance()->getDocumentInstanceFromSession()->getAddressInfo();
+			}
+			else
+			{
+				$addressInfo = null;
+			}
 		}
 		else 
 		{
 			$addressInfo = $cart->getAddressInfo();
 		}
+		$billingArea = $shop->getCurrentBillingArea();
 		
 		if ($addressInfo !== null && $addressInfo->shippingAddress !== null)
 		{
 			$countryId = $addressInfo->shippingAddress->CountryId;
+			
 			if ($countryId)
 			{	
 				if (isset($this->taxZones[$countryId]))
 				{
 					return $this->taxZones[$countryId];
 				}
-				$taxZones = catalog_TaxService::getInstance()->getTaxZonesForShop($shop);
+				$taxZones = catalog_TaxService::getInstance()->getZonesCodeForBillingArea($billingArea);
 				foreach ($taxZones as $taxZone) 
 				{
 					$zones = catalog_TaxService::getInstance()->getZonesForTaxZone($taxZone);
@@ -61,8 +70,9 @@ class order_CurrentTaxZoneStrategy
 				}
 			}
 		}
-		$taxZone = $shop->getDefaultTaxZone();
-		return $shop->getDefaultTaxZone();
+		
+		$taxZone = $billingArea->getDefaultZone();
+		return $taxZone;
 	}
 	
 	/**

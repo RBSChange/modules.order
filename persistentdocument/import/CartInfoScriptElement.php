@@ -67,7 +67,7 @@ class order_CartInfoScriptElement extends import_ScriptObjectElement
      */
     public function addLine($cartLine)
     {
-    	$price = catalog_PriceService::getInstance()->getPrice($cartLine->getProduct(), $this->cart->getShop(), $this->cart->getCustomer(), $cartLine->getQuantity());
+    	$price = catalog_PriceService::getInstance()->getPrice($cartLine->getProduct(), $this->cart->getShop(), $this->cart->getBillingArea(), $this->cart->getCustomer(), $cartLine->getQuantity());
     	if (!$price)
     	{
     		throw new Exception('Invalid price for product: ' . $cartLine->getProductId() . ' Qtt: ' . $cartLine->getQuantity());

@@ -11,7 +11,7 @@ class order_CartInfo
 	
 	protected function getCheckSum()
 	{
-		$keys = array($this->shopId, $this->customerId, $this->getCartLineCount());
+		$keys = array($this->shopId, $this->customerId, $this->billinAreaId, $this->taxZone, $this->getCartLineCount());
 		foreach ($this->getCartLineArray() as $cartLine) 
 		{
 			$keys[] = $cartLine->getKey();
@@ -74,7 +74,7 @@ class order_CartInfo
 	//SHOP INFORMATION
 	
 	/**
-	 * @var Integer
+	 * @var integer
 	 */
 	private $shopId = null;
 
@@ -84,6 +84,11 @@ class order_CartInfo
 	 */
 	private $taxZone;
 	
+	
+	/**
+	 * @var integer
+	 */
+	private $billinAreaId = null;
 	
 	/**
 	 * @return string
@@ -164,7 +169,7 @@ class order_CartInfo
 	{
 		if ($this->shopId !== null)
 		{
-			return  catalog_persistentdocument_shop::getInstanceById($this->shopId);
+			return catalog_persistentdocument_shop::getInstanceById($this->shopId);
 		}
 		else 
 		{
@@ -179,13 +184,13 @@ class order_CartInfo
 	{
 		if ($shop === null)
 		{
-			$this->taxZone = null;
 			$this->shopId = null;
+			$this->setBillingArea(null);
 		}
 		else if ($shop instanceof catalog_persistentdocument_shop)
 		{
 			$this->shopId = $shop->getId();
-			$this->taxZone = $shop->getDefaultTaxZone();
+			$this->setBillingArea($shop->getCurrentBillingArea(true));
 		}
 		else 
 		{
@@ -194,15 +199,51 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return zone_persistentdocument_zone
+	 * @return integer || null
 	 */
-	public function getBillingZone()
+	public function getBillingAreaId()
 	{
-		return $this->getShop()->getBillingZone();
+		return $this->billinAreaId;
+	}
+	
+	/**
+	 * @return catalog_persistentdocument_billingarea
+	 */
+	public function getBillingArea()
+	{
+		if ($this->billinAreaId !== null)
+		{
+			return catalog_persistentdocument_billingarea::getInstanceById($this->billinAreaId);
+		}
+		else
+		{
+			return $this->getShop()->getCurrentBillingArea();
+		}
 	}
 	
 	
-	
+	/**
+	 * @param catalog_persistentdocument_billingarea $billingArea
+	 */
+	public function setBillingArea($billingArea)
+	{
+		if ($billingArea === null)
+		{
+			$this->billinAreaId = null;
+			$this->taxZone = null;
+			
+		}
+		else if ($billingArea instanceof catalog_persistentdocument_billingarea)
+		{
+			$this->billinAreaId = $billingArea->getId();		
+			$this->taxZone = $billingArea->getDefaultZone();
+		}
+		else 
+		{
+			throw new Exception('Invalid shop');
+		}
+	}
+		
 	//ORDER MANIPULATION
 
 	/**
@@ -1289,21 +1330,16 @@ class order_CartInfo
 	{
 		return $this->getTotalWithTax() - $this->getTotalCreditNoteAmount();
 	}		
-	
-	public function formatPrice($value)
-	{
-		return $this->getShop()->formatPrice($value);
-	}
-	
+
 	/**
 	 * @param double value
 	 * @return string
 	 */
-	private function formatValue($value)
+	public function formatPrice($value)
 	{
-		return $this->getShop()->formatPrice($value);
+		return $this->getBillingArea()->formatPrice($value);
 	}
-
+	
 	/**
 	 * @return String
 	 */
@@ -1687,6 +1723,22 @@ class order_CartInfo
 	}
 	
 	// Deprecated.
+	
+	/**
+	 * @deprecated
+	 */
+	public function getBillingZone()
+	{
+		return $this->getBillingArea()->getBillingAddressZone();
+	}
+	
+	/**
+	 * @deprecated use formatPrice
+	 */
+	private function formatValue($value)
+	{
+		return $this->getBillingArea()->formatPrice($value);
+	}
 
 	/**
 	 * @deprecated

@@ -125,12 +125,13 @@
 				<dd change:translate="modules.order.frontoffice.Shipping-feesLabel"></dd>
 				<dt>${php:order.formatPrice(order.getShippingFeesWithTax())}</dt>
 			</tal:block>
-
+			
 			<!-- Montants par taxe -->
-			<tal:block tal:repeat="PriceByTax order/getSubTotalTaxInfoArray">
-				<dd change:translate="&modules.order.frontoffice.TvaLabel;; rate PriceByTax/formattedTaxRate"></dd>
+			<tal:block tal:repeat="PriceByTax order/getTotalTaxInfoArray">
+				<dd>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</dd>
 				<dt>${php:order.formatPrice(PriceByTax['taxAmount'])}</dt>
 			</tal:block>
+		
 			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-withouttax-abrLabel" />
 			<dt class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithoutTax())}</dt>
 			<dd class="pricetotal" change:translate="modules.order.frontoffice.Total-TVA-abrLabel" />
