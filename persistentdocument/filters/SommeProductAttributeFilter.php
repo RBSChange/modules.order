@@ -59,6 +59,10 @@ class order_SommeProductAttributeFilter extends order_LinesCartFilterBase
 		foreach ($this->getLines($value) as $cartLine)
 		{
 			$product = $cartLine->getProduct();
+			if ($product instanceof catalog_persistentdocument_productdeclination)
+			{
+				$product = $product->getRelatedDeclinedProduct();
+			}
 			if ($product)
 			{
 				$attrs = $product->getAttributes();
