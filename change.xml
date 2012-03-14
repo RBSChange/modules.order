@@ -32,5 +32,11 @@
 				<version>3.6.0</version>
 			</versions>
 		</dependency>
+		<dependency>
+			<name>lib/fpdf</name>
+			<versions>
+				<version>1.7</version>
+			</versions>
+		</dependency>
 	</dependencies>
 </change>
