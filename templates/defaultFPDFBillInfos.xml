@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fpdf>
+	<logo path="" />
+	<merchantAddress firstname="RBS" addressLine1=" AEROPARC 1 11 Rue Icard" 
+		city="Entzheim" zipcode="67836" phone="+33 (0)3 88 764 764" 
+		fax="+33 (0)3 88 764 765" />
+	<title>RBS Change FPDF Header facturator</title>
+	<footer>RBS Change FPDF Footer facturator</footer>
+	<design orderlineHeight="7" orderLineHeaderFillColorRGB="160, 170, 50" orderLineFillColorRGB="154, 205, 50"/>
+	<billTexts orderLineTxt="Lignes de commandes" customerReferenceTxt="Votre référence client : " />
+</fpdf>

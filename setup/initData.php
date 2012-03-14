@@ -13,6 +13,18 @@ class order_Setup extends object_InitDataSetup
 		$task->setLabel('order_BackgroundOrderCheck');
 		$task->save(ModuleService::getInstance()->getSystemFolderId('task', 'order'));
 		
+		$task = task_PlannedtaskService::getInstance()->getNewDocumentInstance();
+		$task->setSystemtaskclassname('order_BackgroundPDFBillGenerator');
+		$task->setMinute(-1);
+		$task->setLabel('order_BackgroundPDFBillGenerator');
+		$task->save(ModuleService::getInstance()->getSystemFolderId('task', 'order'));
+		
+		$task = task_PlannedtaskService::getInstance()->getNewDocumentInstance();
+		$task->setSystemtaskclassname('order_BackgroundCommentReminder');
+		$task->setMinute(-1);
+		$task->setLabel('order_BackgroundCommentReminder');
+		$task->save(ModuleService::getInstance()->getSystemFolderId('task', 'order'));
+		
 		try
 		{
 			$scriptReader = import_ScriptReader::getInstance();

@@ -85,6 +85,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
+	 * @throws Exception
 	 */
 	public function genBill($bill)
 	{	
@@ -92,10 +93,9 @@ class order_BillService extends f_persistentdocument_DocumentService
 		{
 			return;
 		}
-		
-		$billContent = $this->createBill($bill);
+
 		$tmpPath = f_util_FileUtils::getTmpFile();
-		f_util_FileUtils::write($tmpPath, $billContent, f_util_FileUtils::OVERRIDE);
+		$this->createBill($bill, $tmpPath);
 		
 		try
 		{
@@ -113,84 +113,27 @@ class order_BillService extends f_persistentdocument_DocumentService
 		catch (Exception $e)
 		{
 			$this->tm->rollBack($e);
+			throw $e;
 		}
 	}
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
-	 * @return String the pdf content
+	 * @params string $filePath
+	 * @throws Exception
 	 */
-	public function createBill($bill)
+	public function createBill($bill, $filePath = null)
 	{
-		$order = $bill->getOrder();
-		$shop = $order->getShop();
-		$customer = $order->getCustomer();
-		
-		// OK, ... I will code a dedicated getInfo method
-		$data = order_OrderService::getInstance()->getInfo($order);
-		foreach ($data['informations'] as $key => $value)
+		$className = Framework::getConfigurationValue("modules/order/billPDFGenerator");
+		if ($className && f_util_ClassUtils::classExists($className))
 		{
-			$data[$key] = $value;
+			$generator = new $className();
+			$generator->writePDF($bill, $filePath);
 		}
-		unset($data['informations']);
-		
-		//
-		$data["number"] = $bill->getLabel();
-		$data["amountWithoutTax"] = $order->formatPrice($order->getLinesAmountWithoutTax());
-		
-		$lines = $data['billingAddressLine1'];
-		if ($data['billingAddressLine2'] != "")
+		else
 		{
-			$lines .= "\n".$data['billingAddressLine2'];
+			throw new Exception("Invalid configuration: modules/order/billPDFGenerator");
 		}
-		if ($data['billingAddressLine3'] != "")
-		{
-			$lines .= "\n".$data['billingAddressLine3'];
-		}
-		$data['billingAddressLines'] = $lines;
-	
-		$taxes = array();
-		foreach ($order->getTotalTaxInfoArray() as $subTotal)
-		{
-			$taxes[] = array("rate" => $subTotal['formattedTaxRate'],
-				"amount" => $order->formatPrice($subTotal['taxAmount']));
-		}
-		$data['taxes'] = $taxes;		
-		// Discounts
-		$discounts = array();
-		$cartModificators = $order->getDiscountDataArray();
-		if (count($cartModificators) > 0)
-		{
-			foreach ($cartModificators as $discount) 
-			{
-				if ($discount["valueWithTax"] > 0)
-				{
-					$discounts[] = array("name" => $discount["label"], 
-						"value" => $order->formatPrice($discount["valueWithTax"]));
-				}
-			}			
-		}
-		$data["discounts"] = $discounts;
-		$lang = RequestContext::getInstance()->getLang();
-		$data['creationdate'] = date_DateFormat::format($bill->getUICreationdate(), date_DateFormat::getDateFormatForLang($lang));
-		$data['creationdatetime'] = date_DateFormat::format($bill->getUICreationdate(), date_DateFormat::getDateTimeFormatForLang($lang));
-		$data['customerCode'] = $customer->getCode(); 
-		
-		$odt2pdf = new Odtphp2PDFClient(Framework::getConfigurationValue("modules/order/odtphp2pdfURL"));
-		
-		$ref = $shop->getCodeReference();
-		$lang = $order->getLang();
-		$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate-".$ref."-".$lang.".odt");
-		if ($billTemplate === null)
-		{
-			$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate-".$ref.".odt");
-			if ($billTemplate === null)
-			{
-				$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate.odt");	
-			}
-		}
-		
-		return $odt2pdf->getPdf($billTemplate, $data);
 	}
 	
 	/**

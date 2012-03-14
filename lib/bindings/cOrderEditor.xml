@@ -238,6 +238,7 @@
 					var propspanel = this.parentNode;
 					while (propspanel && propspanel.tagName != "cpropertiespanel")
 					{
+						wCore.debug(propspanel.localName);
 						propspanel = propspanel.parentNode;
 					}
 					var edt = propspanel.documentEditor;
@@ -333,7 +334,7 @@
 				<body><![CDATA[
 					var propspanel = this.parentNode;
 					var propspanel = this.parentNode;
-					while (propspanel && propspanel.tagName != "cpropertiespanel")
+					while (propspanel && propspanel.localName != "cfinancialpanel")
 					{
 						propspanel = propspanel.parentNode;
 					}
