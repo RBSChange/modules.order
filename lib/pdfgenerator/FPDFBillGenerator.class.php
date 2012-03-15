@@ -358,8 +358,6 @@ class order_billToPDF extends FPDF
 	 */
 	private function generateOrderLineCells($orderLineWidth, $orderLine, $fill, $articleMaxLength = 70)
 	{
-		Framework::fatal(__METHOD__ . ' ' . var_export($orderLineWidth, true));
-		
 		$articleText = utf8_decode($orderLine->getProduct()->getLabel());
 			
 		//reduce the width of the article name, if there is too large
@@ -383,12 +381,12 @@ class order_billToPDF extends FPDF
 	{
 		$totalSummaryLabel = $this->summaryTxt[0] . PHP_EOL;
 		$totalSummaryValue = $this->bill->getOrder()->getTotalAmountWithoutTax() . ' ' . utf8_encode($this->currency) . PHP_EOL;
-		foreach ($this->bill->getOrder()->getDiscountDataArrayForDisplay() as $discount)
+		foreach ($this->bill->getOrder()->getDiscountDataArray() as $discount)
 		{
 			$totalSummaryLabel .= $discount['label'] . ' HT : ' . PHP_EOL;
-			$totalSummaryValue .= $discount['valueWithTax'] . ' ' . utf8_encode($this->currency) . PHP_EOL;
+			$totalSummaryValue .= catalog_PriceFormatter::getInstance()->round($discount['valueWithTax']) . ' ' . utf8_encode($this->currency) . PHP_EOL;
 			$totalSummaryLabel .= $discount['label'] . ' TTC : ' . PHP_EOL;
-			$totalSummaryValue .= $discount['valueWithoutTax'] . ' ' . utf8_encode($this->currency) . PHP_EOL;
+			$totalSummaryValue .= catalog_PriceFormatter::getInstance()->round($discount['valueWithoutTax']) . ' ' . utf8_encode($this->currency) . PHP_EOL;
 		}
 		$totalSummaryLabel .= $this->summaryTxt[1] . PHP_EOL;
 		$totalSummaryValue .=  $this->bill->getOrder()->getShippingFeesWithoutTax() . ' ' . utf8_encode($this->currency) . PHP_EOL;
