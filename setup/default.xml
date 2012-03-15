@@ -8,8 +8,7 @@
 
 	<website byTag="default_modules_website_default-website">
 		<topic byLabel="Commande">
-			<page label="Contenu de votre panier" id="DetailPanier" isIndexPage="true"
-				byTag="contextual_website_website_modules_order_cart" 
+			<page label="Mon panier" id="DetailPanier" byTag="contextual_website_website_modules_order_cart" 
 				indexingstatus="false" robotsmeta="noindex,nofollow">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_Cart" />

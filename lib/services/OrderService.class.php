@@ -52,6 +52,16 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		return $this->pp->createQuery('modules_order/order');
 	}
 	
+	
+	/**
+	 * @param order_persistentdocument_order $document
+	 * @return string
+	 */
+	public function getNavigationtitle($document)
+	{
+		return $document->getOrderNumber();
+	}
+
 	/**
 	 * @param order_persistentdocument_order $order
 	 */
