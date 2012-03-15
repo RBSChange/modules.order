@@ -62,19 +62,28 @@ class order_ODTBillGenerator {
 		$data['creationdatetime'] = date_DateFormat::format($bill->getUICreationdate(), date_DateFormat::getDateTimeFormatForLang($lang));
 		$data['customerCode'] = $customer->getCode();
 		
-		$odt2pdf = new Odtphp2PDFClient(Framework::getConfigurationValue("modules/order/odtphp2pdfURL"));
-		
-		$ref = $shop->getCodeReference();
-		$lang = $order->getLang();
-		$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate-".$ref."-".$lang.".odt");
-		if ($billTemplate === null)
+		$configXMLPath = null;
+		$ref = $bill->getOrder()->getShop()->getCodeReference();
+		$lang = $bill->getOrder()->getLang();
+
+		if ($ref)
 		{
-			$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate-".$ref.".odt");
-			if ($billTemplate === null)
-			{
-				$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate.odt");
-			}
+			$configXMLPath = FileResolver::getInstance()->setPackageName('modules_order')
+			->setDirectory('templates')
+			->getPath('ODT2PDFBillInfos-'. $ref. '-'. $lang . '.xml');
 		}
+		if ($configXMLPath == null)
+		{
+			$configXMLPath = FileResolver::getInstance()->setPackageName('modules_order')
+			->setDirectory('templates')
+			->getPath('ODT2PDFBillInfos-default.xml');
+		}
+		
+		$configXML = f_util_DOMUtils::fromPath($configXMLPath)->getElementsByTagName('odt2pdf')->item(0);
+		
+		$odt2pdf = new Odtphp2PDFClient($configXML->getElementsByTagName('server')->item(0)->textContent);
+		$templateName = $configXML->getElementsByTagName('template')->item(0)->textContent;
+		$billTemplate = $this->logoPath = f_util_FileUtils::buildWebeditPath('modules','order','templates', $templateName);
 		
 		f_util_FileUtils::writeAndCreateContainer($filePath, $odt2pdf->getPdf($billTemplate, $data), f_util_FileUtils::OVERRIDE);
 	}

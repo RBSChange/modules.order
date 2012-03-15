@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fpdf>
+	<logo width="100" height="20">defaultPDFLogo.png</logo>
+	<merchantAddress>
+		<line>RBS</line>
+		<line>AEROPARC 1 11 Rue Icard</line>
+		<line>Entzheim</line>
+		<line>67836</line>
+		<line>tel: +33 (0)3 88 764 764</line>
+		<line>fax: +33 (0)3 88 764 765</line>
+	</merchantAddress>
+	<design orderlineHeight="7" orderLineHeaderFillColorRGB="160, 170, 50" orderLineFillColorRGB="154, 205, 50"/>
+	<billTexts>
+		<title>RBS Change FPDF Header facturator</title>
+		<footer>RBS Change FPDF Footer facturator</footer>
+		<billNo>Bill N°</billNo>
+		<date>Date: </date>
+		<orderLineTxt>Order lines</orderLineTxt>
+		<customerReferenceTxt>Your customer reference: </customerReferenceTxt>
+	</billTexts>
+	<summary>
+		<line>Total price excluding tax:</line>
+		<line>Shipping fees with tax:</line>
+		<line>Shipping fees without tax:</line>
+		<line>Tax rate </line>
+		<line>Payment connector:</line>
+		<line>Total price including tax:</line>
+	</summary>
+	<!-- sum of orderLine headers size must be equal to 190 -->
+	<orderLineHeaders>
+		<line size="15">Quantity</line>
+		<line size="70" isProductLabel="true">Product</line>
+		<line size="40">Reference</line>
+		<line size="35">Unit price excluding tax</line>
+		<line size="30">Price excluding tax</line>
+	</orderLineHeaders>
+</fpdf>

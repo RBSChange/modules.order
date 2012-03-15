@@ -14,9 +14,6 @@ class order_FPDFBillGenerator {
 		$shop = $order->getShop();
 		$customer = $order->getCustomer();
 		
-		// OK, ... I will code a dedicated getInfo method
-		$data = order_OrderService::getInstance()->getInfo($order);
-		
 		// Instanciation de la classe dérivée
 		$pdf = new order_billToPDF($bill);
 		f_util_FileUtils::writeAndCreateContainer($filePath, $pdf->generatePDF(), f_util_FileUtils::OVERRIDE);
@@ -39,12 +36,17 @@ class order_billToPDF extends FPDF
 	 * @var string
 	 */
 	private $logoPath;
-
+	
 	/**
 	 * @var string
 	 */
-	private $billTitle;
-
+	private $logoWidth;
+	
+	/**
+	 * @var string
+	 */
+	private $logoHeight;
+	
 	/**
 	 * @var integer
 	 */
@@ -61,20 +63,30 @@ class order_billToPDF extends FPDF
 	private $orderLineHeaderFillColorRGB;
 	
 	/**
-	 * @var string
+	 * @var string[]
 	 */
-	private $customerReferenceTxt;
+	private $billTexts = array();
 	
 	/**
-	 * @var customer_persistentdocument_address
+	 * @var string[]
 	 */
-	private $merchantAddress;
-
+	private $merchantAddress = array();
+	
 	/**
-	 * @var string
+	 * @var string[]
 	 */
-	private $footerText;
-
+	private $orderLineHeaderTxtAndWidth = array();
+	
+	/**
+	 * @var string[]
+	 */
+	private $summaryTxt = array();
+	
+	/**
+	 * @var integer
+	 */
+	private $productLabelMaxWidth;
+	
 	/**
 	 * @var integer
 	 */
@@ -84,6 +96,11 @@ class order_billToPDF extends FPDF
 	 * @var integer
 	 */
 	private $height;
+	
+	/**
+	 * @var string
+	 */
+	private $currency;
 	
 	/**
 	 *
@@ -101,35 +118,72 @@ class order_billToPDF extends FPDF
 			$this->height = (297 - (self::BOTTOM_MARGIN + self::TOP_MARGIN));
 			
 			$this->bill = $bill;
+			$configXMLPath = null;
+			$ref = $bill->getOrder()->getShop()->getCodeReference();
+			$lang = $bill->getOrder()->getLang();
 			
-			//get the merchant address from XML Configuration
-			$configXML = f_util_DOMUtils::fromPath(f_util_FileUtils::buildWebeditPath('modules', 'order', 'templates', 'defaultFPDFBillInfos.xml'));
+			if ($ref)
+			{
+				$configXMLPath = FileResolver::getInstance()->setPackageName('modules_order')
+				->setDirectory('templates')
+				->getPath('FPDFBillInfos-'. $ref. '-'. $lang . '.xml');
+			}
+			if ($configXMLPath == null)
+			{
+				//get the merchant address from XML Configuration
+				$configXMLPath = FileResolver::getInstance()->setPackageName('modules_order')
+					->setDirectory('templates')
+					->getPath('FPDFBillInfos-default.xml');
+			}
+			
+			$configXML = f_util_DOMUtils::fromPath($configXMLPath);
 				
-			$merchantAddressConfiguration = $configXML->getElementsByTagName('merchantAddress')->item(0)->attributes;
-			$merchantAddress = customer_persistentdocument_address::getNewInstance();
-			$merchantAddress->setFirstname($merchantAddressConfiguration->getNamedItem('firstname')->nodeValue);
-			$merchantAddress->setAddressLine1($merchantAddressConfiguration->getNamedItem('addressLine1')->nodeValue);
-			$merchantAddress->setCity($merchantAddressConfiguration->getNamedItem('city')->nodeValue);
-			$merchantAddress->setZipCode($merchantAddressConfiguration->getNamedItem('zipcode')->nodeValue);
-			$merchantAddress->setPhone($merchantAddressConfiguration->getNamedItem('phone')->nodeValue);
-			$merchantAddress->setFax($merchantAddressConfiguration->getNamedItem('fax')->nodeValue);
+			$merchantAddressLines = $configXML->getElementsByTagName('merchantAddress')->item(0)->getElementsByTagName('line');
 				
-			$this->merchantAddress = $merchantAddress;
+			foreach ($merchantAddressLines as $merchantLine)
+			{
+				$this->merchantAddress[] = $merchantLine->textContent;
+			}
 			
-			$logoPath = $configXML->getElementsByTagName('logo')->item(0)->attributes->getNamedItem('path')->nodeValue;
-			$this->logoPath = $logoPath ? $logoPath : f_util_FileUtils::buildWebeditPath('modules','order','webapp','media','frontoffice','order','defaultPDFLogo.png');
+			$orderLineHeaders = $configXML->getElementsByTagName('orderLineHeaders')->item(0)->getElementsByTagName('line');
 			
-			$this->billTitle = $configXML->getElementsByTagName('title')->item(0)->textContent;
-			$this->footerText = $configXML->getElementsByTagName('footer')->item(0)->textContent;
+			foreach ($orderLineHeaders as $orderLineHeader)
+			{
+				/* @var $orderLineHeader DOMNode */
+				$this->orderLineHeaderTxtAndWidth[$orderLineHeader->textContent] = $orderLineHeader->attributes->getNamedItem('size')->nodeValue;
+				if ($orderLineHeader->attributes->getNamedItem('isProductLabel'))
+				{
+					$this->productLabelMaxWidth = $orderLineHeader->attributes->getNamedItem('size')->nodeValue;
+				}
+			}
+			
+			$logoName = $configXML->getElementsByTagName('logo')->item(0)->textContent;
+			$this->logoPath = f_util_FileUtils::buildWebeditPath('media','frontoffice','order', $logoName);
+			$this->logoWidth = $configXML->getElementsByTagName('logo')->item(0)->attributes->getNamedItem('width')->nodeValue;
+			$this->logoHeight = $configXML->getElementsByTagName('logo')->item(0)->attributes->getNamedItem('height')->nodeValue;
+			
+			$billTxts = $configXML->getElementsByTagName('billTexts')->item(0)->childNodes;
+			
+			foreach ($billTxts as $billTxt)
+			{
+				/* @var $billTxt DOMNode */
+				$this->billTexts[$billTxt->localName] = $billTxt->textContent;
+			}
+			
+			$summaryTxts = $configXML->getElementsByTagName('summary')->item(0)->childNodes;
+				
+			foreach ($summaryTxts as $summaryTxt)
+			{
+				/* @var $summaryTxt DOMNode */
+				$this->summaryTxt[] = $summaryTxt->textContent;
+			}
 			
 			$designConfiguration = $configXML->getElementsByTagName('design')->item(0)->attributes;
 			$this->orderLineHeight = $designConfiguration->getNamedItem('orderlineHeight')->nodeValue;
 			$this->orderLineHeaderFillColorRGB = explode(',', $designConfiguration->getNamedItem('orderLineHeaderFillColorRGB')->nodeValue);
 			$this->orderLineFillColorRGB = explode(',', $designConfiguration->getNamedItem('orderLineFillColorRGB')->nodeValue);
 			
-			$textConfiguration = $configXML->getElementsByTagName('billTexts')->item(0)->attributes;
-			$this->orderLineTxt = $textConfiguration->getNamedItem('orderLineTxt')->nodeValue;
-			$this->customerReferenceTxt = $textConfiguration->getNamedItem('customerReferenceTxt')->nodeValue;
+			$this->currency = $this->bill->getCurrency() == 'EUR' ? chr(128) : utf8_decode($this->bill->getCurrency());
 			
 			//FPDF Config
 			$this->SetAutoPageBreak(true, 25);
@@ -144,18 +198,18 @@ class order_billToPDF extends FPDF
 	function Header()
 	{
 		// Logo
-		$this->Image($this->logoPath, 10, 10, 100);
+		$this->Image($this->logoPath, self::LEFT_MARGIN, self::TOP_MARGIN, $this->logoWidth, $this->logoHeight);
 		// Police Arial bold 15
 		$this->SetFont('Times', 'B', 15);
 
-		$title = utf8_decode($this->billTitle);
+		$title = utf8_decode($this->billTexts['title']);
 		$titleSize = $this->GetStringWidth($title) + 2;
 		// Right shift
 		$this->Cell($this->width - $titleSize);
 		$this->Cell($titleSize, 10, $title, 1, 0, 'C');
 		$this->Ln(12);
-		$billNb = 'Facture N° ' . $this->bill->getLabel();
-		$date = 'Date : ' . date_Formatter::format($this->bill->getCreationdate());
+		$billNb = $this->billTexts['billNo'] . ' ' . $this->bill->getLabel();
+		$date = $this->billTexts['date'] . date_Formatter::format($this->bill->getCreationdate());
 		$this->SetFontSize(10);
 		$billInfosSize = 50;
 		//Right shift
@@ -174,31 +228,30 @@ class order_billToPDF extends FPDF
 		// Police Arial italic 8
 		$this->SetFont('Times', 'I', 8);
 		// Page number
-		$this->Cell(0, 10, $this->footerText, 0, 0, 'C');
+		$this->Cell(0, 10, $this->billTexts['footer'], 0, 0, 'C');
 	}
 
 	public function generatePDF()
 	{
-		$currency = $this->bill->getCurrency() == 'EUR' ? chr(128) : utf8_decode($this->bill->getCurrency());
-
 		$this->AliasNbPages();
 		$this->AddPage();
 		$this->SetFont('Times', '', 12);
 
 		//Address
 		$w = 50;
+		$h = 5;
 		$y = $this->GetY();
-		$this->generateAddressCell($this->bill->getAddress(), $w);
+		$this->generateAddressCell($this->bill->getAddress(), $w, $h);
 		$this->SetXY(($this->width + self::LEFT_MARGIN) - $w, $y);
-		$this->generateAddressCell($this->merchantAddress, $w);
-
-		$this->Cell(70, 10, utf8_decode($this->customerReferenceTxt . $this->bill->getOrder()->getCustomer()->getCodeReference()));
+		$this->MultiCell($w, $h, utf8_decode(implode(PHP_EOL, $this->merchantAddress)), 1);
+		
+		$this->Cell(70, 10, utf8_decode($this->billTexts['customerReferenceTxt'] . $this->bill->getOrder()->getCustomer()->getCodeReference()));
 
 		$this->Ln(15);
 
 		$orderLines = $this->bill->getOrder()->getLineArray();
 
-		$this->MultiCell($this->width, 10, $this->orderLineTxt, 1, 'L');
+		$this->MultiCell($this->width, 10, $this->billTexts['orderLineTxt'], 1, 'L');
 
 
 		//Order line headers
@@ -208,28 +261,21 @@ class order_billToPDF extends FPDF
 			$this->orderLineHeaderFillColorRGB[1], 
 			$this->orderLineHeaderFillColorRGB[2]
 		);
-
-		$articleLength = 72;
-		$orderLineHeaderTxtAndWidth = array(
-			'Quantité' => 15,
-			'Article' => $articleLength,
-			'Référence' => 43,
-			'Prix unitaire (H.T.)' => 30,
-			'Prix (H.T.)' => 30
-		);
+		
 		//Sum of width must be equal to $this->width
-		if (array_sum($orderLineHeaderTxtAndWidth) !== $this->width)
+		if (array_sum($this->orderLineHeaderTxtAndWidth) !== $this->width)
 		{
 			Framework::error(__CLASS__ . ': sum of order lines columns is not equal to the fixed width. Your orderlines columns doesn\'t have the good size');
 		}
-
-		foreach ($orderLineHeaderTxtAndWidth as $text => $width)
+		
+		$orderLineHeaderTxts = array();
+		foreach ($this->orderLineHeaderTxtAndWidth as $text => $width)
 		{
 			$this->Cell($width, 8, utf8_decode($text), 1, 0, 'C', true);
+			$orderLineWidth[] = $width;
 		}
 		$this->ln();
 		//Order lines
-		$this->SetFontSize(8);
 		$this->SetFillColor(
 			$this->orderLineFillColorRGB[0], 
 			$this->orderLineFillColorRGB[1], 
@@ -241,13 +287,14 @@ class order_billToPDF extends FPDF
 			//if page change, replicate the orderLine Header
 			if (($this->GetY() + (2 * self::BOTTOM_MARGIN)) > $this->height)
 			{
+				$this->SetFontSize(10);
 				$this->Ln(10);
 				$this->SetFillColor(
 					$this->orderLineHeaderFillColorRGB[0], 
 					$this->orderLineHeaderFillColorRGB[1], 
 					$this->orderLineHeaderFillColorRGB[2]
 				);
-				foreach ($orderLineHeaderTxtAndWidth as $text => $width)
+				foreach ($this->orderLineHeaderTxtAndWidth as $text => $width)
 				{
 					$this->Cell($width, 8, utf8_decode($text), 1, 0, 'C', true);
 				}
@@ -258,71 +305,15 @@ class order_billToPDF extends FPDF
 				);
 				$this->Ln();
 			}
-			/* @var $orderLine order_persistentdocument_orderline */
-			$articleText = utf8_decode($orderLine->getProduct()->getLabel());
-			$articleMaxLength = 70;
-			//reduce the width of the article name, if there is too large
-			while (($this->GetStringWidth($articleText) + 1) > $articleLength)
-			{
-				$articleText = f_util_StringUtils::shortenString($articleText, $articleMaxLength);
-				$articleMaxLength -= 5;
-			} 
-			
-			$this->Cell($orderLineHeaderTxtAndWidth['Quantité'], $this->orderLineHeight, utf8_decode($orderLine->getQuantity()), 1, 0, 'C', $fill);
-			$this->Cell($orderLineHeaderTxtAndWidth['Article'], $this->orderLineHeight, $articleText, 1, 0, 'L', $fill);
-			$this->Cell($orderLineHeaderTxtAndWidth['Référence'], $this->orderLineHeight, utf8_decode($orderLine->getProduct()->getCodeReference()), 1, 0, 'L', $fill);
-			$this->Cell($orderLineHeaderTxtAndWidth['Prix unitaire (H.T.)'], $this->orderLineHeight, utf8_decode($orderLine->getUnitPriceWithoutTax() . ' ') . $currency, 1, 0, 'R', $fill);
-			$this->Cell($orderLineHeaderTxtAndWidth['Prix (H.T.)'], $this->orderLineHeight, utf8_decode($orderLine->getAmountWithoutTax() . ' ') . $currency, 1, 0, 'R', $fill);
+			$this->SetFontSize(8);
+			$this->generateOrderLineCells($orderLineWidth, $orderLine, $fill);
 
 			$this->Ln();
 			$fill = !$fill;
 		}
 		
 		$this->SetFontSize(8);
-		$totalSummaryLabel = 'Total HT : ' . PHP_EOL;
-		$totalSummaryValue = $this->bill->getOrder()->getTotalAmountWithoutTax() . ' ' . utf8_encode($currency) . PHP_EOL;
-		foreach ($this->bill->getOrder()->getDiscountDataArrayForDisplay() as $discount)
-		{
-			$totalSummaryLabel .= $discount['label'] . ' HT : ' . PHP_EOL;
-			$totalSummaryValue .= $discount['valueWithTax'] . ' ' . utf8_encode($currency) . PHP_EOL;
-			$totalSummaryLabel .= $discount['label'] . ' TTC : ' . PHP_EOL;
-			$totalSummaryValue .= $discount['valueWithoutTax'] . ' ' . utf8_encode($currency) . PHP_EOL;
-		}
-		$totalSummaryLabel .= 'Frais d\'envoi HT : ' . PHP_EOL;
-		$totalSummaryValue .=  $this->bill->getOrder()->getShippingFeesWithoutTax() . ' ' . utf8_encode($currency) . PHP_EOL;
-		$totalSummaryLabel .= 'Frais d\'envoi TTC : ' . PHP_EOL;
-		$totalSummaryValue .=  $this->bill->getOrder()->getShippingFeesWithTax() . ' ' . utf8_encode($currency) . PHP_EOL;
-
-		foreach ($this->bill->getOrder()->getTaxRates() as $rateFormated => $value)
-		{
-			$totalSummaryLabel .= 'TVA ' . $rateFormated . ' : ' . PHP_EOL;
-			$totalSummaryValue .= catalog_PriceFormatter::getInstance()->round($value) . ' ' . utf8_encode($currency) . PHP_EOL;
-		}
-
-		$totalSummaryLabel .= 'Mode de paiement : ' . PHP_EOL;
-		$totalSummaryValue .= $this->bill->getOrder()->getPaymentConnectorLabel() . PHP_EOL;
-		
-		//Summary design
-		$w = 30;
-		$h = 4;
-		$numberOfLine = 7;
-		
-		//if the block of summary is too big, add a page and design on it
-		Framework::fatal(__METHOD__ . ' ' . var_export(($this->GetY() + ($numberOfLine * $h)), true));
-		if (($this->GetY() + ($numberOfLine * $h)) > $this->height)
-		{
-			Framework::fatal(__METHOD__ . ' ' . $this->height, true);
-			$this->AddPage();
-		}
-		
-		$y = $this->GetY();
-		$this->MultiCell(($this->width - $w), $h, utf8_decode($totalSummaryLabel), 0, 'R');
-		$this->SetXY(($this->width + self::LEFT_MARGIN) - $w, $y);
-		$this->MultiCell($w, $h, utf8_decode($totalSummaryValue), 0, 'L');
-
-		$this->SetFont('', 'B', 10);
-		$this->Cell(($this->width - $w), $h, utf8_decode('Total TTC : '), 0, 0, 'R');
-		$this->Cell($w, $h, utf8_decode($this->bill->getOrder()->getTotalAmountWithTax()) . ' ' . $currency, 0, 0, 'L');
+		$this->generateSummary();
 
 		return $this->Output('', 'S');
 	}
@@ -356,6 +347,82 @@ class order_billToPDF extends FPDF
 		}
 
 		$this->MultiCell($w, $h, utf8_decode($addressTxt), 1);
+	}
+	
+	/**
+	 * Design the order lines
+	 * @param string[] $orderLineWidth
+	 * @param order_persistentdocument_orderline $orderLine
+	 * @param boolean $fill
+	 * @param integer $articleMaxLength
+	 */
+	private function generateOrderLineCells($orderLineWidth, $orderLine, $fill, $articleMaxLength = 70)
+	{
+		Framework::fatal(__METHOD__ . ' ' . var_export($orderLineWidth, true));
+		
+		$articleText = utf8_decode($orderLine->getProduct()->getLabel());
+			
+		//reduce the width of the article name, if there is too large
+		while (($this->GetStringWidth($articleText) + 1) > $this->productLabelMaxWidth)
+		{
+			$articleText = f_util_StringUtils::shortenString($articleText, $articleMaxLength);
+			$articleMaxLength -= 5;
+		}
+		
+		$this->Cell($orderLineWidth[0], $this->orderLineHeight, utf8_decode($orderLine->getQuantity()), 1, 0, 'C', $fill);
+		$this->Cell($orderLineWidth[1], $this->orderLineHeight, $articleText, 1, 0, 'L', $fill);
+		$this->Cell($orderLineWidth[2], $this->orderLineHeight, utf8_decode($orderLine->getProduct()->getCodeReference()), 1, 0, 'L', $fill);
+		$this->Cell($orderLineWidth[3], $this->orderLineHeight, utf8_decode($orderLine->getUnitPriceWithoutTax() . ' ') . $this->currency, 1, 0, 'R', $fill);
+		$this->Cell($orderLineWidth[4], $this->orderLineHeight, utf8_decode($orderLine->getAmountWithoutTax() . ' ') . $this->currency, 1, 0, 'R', $fill);
+	}
+	
+	/**
+	 * Generate the total price summary
+	 */
+	private function generateSummary()
+	{
+		$totalSummaryLabel = $this->summaryTxt[0] . PHP_EOL;
+		$totalSummaryValue = $this->bill->getOrder()->getTotalAmountWithoutTax() . ' ' . utf8_encode($this->currency) . PHP_EOL;
+		foreach ($this->bill->getOrder()->getDiscountDataArrayForDisplay() as $discount)
+		{
+			$totalSummaryLabel .= $discount['label'] . ' HT : ' . PHP_EOL;
+			$totalSummaryValue .= $discount['valueWithTax'] . ' ' . utf8_encode($this->currency) . PHP_EOL;
+			$totalSummaryLabel .= $discount['label'] . ' TTC : ' . PHP_EOL;
+			$totalSummaryValue .= $discount['valueWithoutTax'] . ' ' . utf8_encode($this->currency) . PHP_EOL;
+		}
+		$totalSummaryLabel .= $this->summaryTxt[1] . PHP_EOL;
+		$totalSummaryValue .=  $this->bill->getOrder()->getShippingFeesWithoutTax() . ' ' . utf8_encode($this->currency) . PHP_EOL;
+		$totalSummaryLabel .= $this->summaryTxt[2] . PHP_EOL;
+		$totalSummaryValue .=  $this->bill->getOrder()->getShippingFeesWithTax() . ' ' . utf8_encode($this->currency) . PHP_EOL;
+		
+		foreach ($this->bill->getOrder()->getTaxRates() as $rateFormated => $value)
+		{
+			$totalSummaryLabel .= $this->summaryTxt[3] . $rateFormated . ': ' . PHP_EOL;
+			$totalSummaryValue .= catalog_PriceFormatter::getInstance()->round($value) . ' ' . utf8_encode($this->currency) . PHP_EOL;
+		}
+		
+		$totalSummaryLabel .= $this->summaryTxt[4] . PHP_EOL;
+		$totalSummaryValue .= $this->bill->getOrder()->getPaymentConnectorLabel() . PHP_EOL;
+		
+		//Summary design
+		$w = 30;
+		$h = 4;
+		$numberOfLine = 7;
+		
+		//if the block of summary is too big, add a page and design on it
+		if (($this->GetY() + ($numberOfLine * $h)) > $this->height)
+		{
+			$this->AddPage();
+		}
+		
+		$y = $this->GetY();
+		$this->MultiCell(($this->width - $w), $h, utf8_decode($totalSummaryLabel), 0, 'R');
+		$this->SetXY(($this->width + self::LEFT_MARGIN) - $w, $y);
+		$this->MultiCell($w, $h, utf8_decode($totalSummaryValue), 0, 'L');
+		
+		$this->SetFont('', 'B', 10);
+		$this->Cell(($this->width - $w), $h, utf8_decode($this->summaryTxt[5]), 0, 0, 'R');
+		$this->Cell($w, $h, utf8_decode($this->bill->getOrder()->getTotalAmountWithTax()) . ' ' . $this->currency, 0, 0, 'L');
 	}
 	
 }
