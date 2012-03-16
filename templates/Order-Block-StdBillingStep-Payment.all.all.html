@@ -19,7 +19,7 @@
 				<tal:block tal:repeat="orderLine order/getLineArray">
 					<tr class="${php: repeat.orderLine.odd ? 'odd' : 'even'}" tal:define="product orderLine/getProduct;">						
 						<td>${orderLine/getQuantity} </td>
-						<td><img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/cartdetailproduct'"/></td> 
+						<td><img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/small'"/></td> 
 						<td>${orderLine/getLabel} <br/> ${line/getCodeReference}</td>
 						<td>${product/getAvailability} </td>
 						<tal:block tal:condition="showPriceWithoutTax">

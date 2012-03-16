@@ -20,7 +20,7 @@
 				<tal:block tal:repeat="cartLine cart/getCartLineArray">
 					<tr class="${alternateclass:lineIndex}" tal:define="product cartLine/getProduct;">						
 						<td>${cartLine/getQuantity}</td>
-						<td><img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/cartdetailproduct'" /></td> 
+						<td><img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/small'" /></td> 
 						<td>${product/getOrderLabel}</td>
 						<td>${product/getAvailability} </td>
 						<tal:block tal:condition="showPriceWithoutTax">
