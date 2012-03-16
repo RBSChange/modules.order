@@ -87,7 +87,7 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 	protected function getQuantitiesFromRequest($request, $products)
 	{
 		$quantities = array();
-		$quantitiesFormParam = $request->getParameter('quantities');
+		$quantitiesFormParam = $request->getParameter('quantities', array());
 		foreach ($products as $product)
 		{
 			$productId = $product->getId();
