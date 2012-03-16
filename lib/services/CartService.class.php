@@ -451,7 +451,7 @@ class order_CartService extends BaseService
 		{
 			$billingArea = $shop->getCurrentBillingArea(true);
 			$cart->setBillingArea($billingArea);
-			$cart->setTaxZone(catalog_TaxService::getInstance()->getCurrentTaxZone($shop, $cart));
+			$cart->setTaxZone(catalog_TaxService::getInstance()->getCurrentTaxZone($shop, $cart, true));
 			$cartLines = $cart->getCartLineArray();
 			$customer = $cart->getCustomer();
 			foreach ($cartLines as $cartLine)

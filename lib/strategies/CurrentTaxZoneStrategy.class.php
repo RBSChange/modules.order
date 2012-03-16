@@ -1,17 +1,6 @@
 <?php
 class order_CurrentTaxZoneStrategy 
-{
-	
-	private $taxZones = array();
-	
-	public function __construct()
-	{
-		if (Framework::isInfoEnabled())
-		{
-			Framework::info(__METHOD__);
-		}
-	}
-	
+{	
 	/**
 	 * @param catalog_persistentdocument_shop $shop
 	 * @param order_CartInfo $cart
@@ -19,6 +8,10 @@ class order_CurrentTaxZoneStrategy
 	 */
 	public function getCurrentTaxZone($shop, $cart)
 	{
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__);
+		}
 		if ($shop === null) {return null;}
 
 		if ($cart === null )
@@ -40,39 +33,64 @@ class order_CurrentTaxZoneStrategy
 		
 		if ($addressInfo !== null && $addressInfo->shippingAddress !== null)
 		{
-			$countryId = $addressInfo->shippingAddress->CountryId;
+			$countryId = intval($addressInfo->shippingAddress->CountryId);		
+			$country = ($countryId > 0) ? DocumentHelper::getDocumentInstanceIfExists($countryId) : null;
 			
-			if ($countryId)
+			if ($country instanceof zone_persistentdocument_country)
 			{	
-				if (isset($this->taxZones[$countryId]))
+				$result = null;	
+				$countryCode = $country->getCode();
+				$depCode = null;
+				
+				if ($countryCode === 'FR')
 				{
-					return $this->taxZones[$countryId];
+					$zipcode = $addressInfo->shippingAddress->Zipcode;
+					if (strlen($zipcode) === 5)
+					{
+						$depCode = substr($zipcode, 0, 2);
+					}
+					
 				}
+				
+				//Check By Code
 				$taxZones = catalog_TaxService::getInstance()->getZonesCodeForBillingArea($billingArea);
 				foreach ($taxZones as $taxZone) 
 				{
-					$zones = catalog_TaxService::getInstance()->getZonesForTaxZone($taxZone);
+					if (strpos($taxZone, $countryCode) === 0)
+					{
+						$result = $taxZone;
+					}
+					
+					if ($depCode == $taxZone && $countryCode == 'FR')
+					{
+						$result = $taxZone;
+						break;
+					}
+				}
+				
+				if ($result)
+				{
+					return $result;
+				}
+				
+				// Check by Country
+				foreach ($taxZones as $taxZone)
+				{
+					$zones = zone_ZoneService::getInstance()->getZonesByCode($taxZone);
 					if ($this->checkCountryIdInZones($zones, $countryId))
 					{
-						$this->taxZones[$countryId] = $taxZone;
 						return $taxZone;
 					}
 				}
 				
 				if ($cart !== null)
 				{
-					//Invalid country No Tax Zone defined
-					if (Framework::isInfoEnabled())
-					{
-						Framework::info(__METHOD__ . " INVALID country $countryId for shop " . $shop->getId());
-					}
-					return null;
+					Framework::error(__METHOD__ . " No taxzone found for country $countryCode in shop " . $shop->getId() . ' use: ' . $billingArea->getDefaultZone());
 				}
 			}
 		}
 		
-		$taxZone = $billingArea->getDefaultZone();
-		return $taxZone;
+		return $billingArea->getDefaultZone();
 	}
 	
 	/**
