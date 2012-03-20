@@ -8,23 +8,21 @@
 
 	<website byTag="default_modules_website_default-website">
 		<topic byLabel="Commande">
-			<page label="Mon panier" id="DetailPanier" byTag="contextual_website_website_modules_order_cart" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
+			<page label="Mon panier" id="DetailPanier" indexingstatus="false"
+				robotsmeta="noindex,nofollow" byTag="contextual_website_website_modules_order_cart">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_Cart" />
 				</changecontent>
 			</page>
-			<page label="Votre panier est vide" navigationVisibility="hidden"
-				byTag="contextual_website_website_modules_order_cart-empty" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
+			<page label="Votre panier est vide" navigationVisibility="hidden" indexingstatus="false"
+				robotsmeta="noindex,nofollow" byTag="contextual_website_website_modules_order_cart-empty">
 				<changecontent for="content-block">
 					<changeblock type="richtext">
 						<![CDATA[<p>Votre panier est vide.</p>]]>
 					</changeblock>
 				</changecontent>
 			</page>
-			<page label="Conditions générales de vente"
-				byTag="contextual_website_website_modules_order_cgv">
+			<page label="Conditions générales de vente" byTag="contextual_website_website_modules_order_cgv">
 				<changecontent for="content-block">
 					<changeblock type="richtext">
 						<![CDATA[<p>Conditions générales de vente...</p>]]>
@@ -41,7 +39,6 @@
 				indexingstatus="false" robotsmeta="noindex,nofollow">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_ShippingStep" />
-					<!-- <changeblock type="modules_customer_AccountPublication" /> -->
 				</changecontent>
 			</page>
 			<page label="Commande - Moyen de paiement" navigationVisibility="hidden" 
@@ -65,8 +62,8 @@
 		</topic>
 		
 		<topic byLabel="Compte client">		
-			<page label="Mes commandes" id="MesCommandes" isIndexPage="true">
-				<tag name="contextual_website_website_modules_order_order-list" />
+			<page label="Mes commandes" isIndexPage="true"
+				byTag="contextual_website_website_modules_order_order-list">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_orderlist" />
 					<changeblock type="modules_order_Creditnotes" />
@@ -79,35 +76,25 @@
 					<changeblock type="modules_order_order" />
 				</changecontent>
 			</page>
-			<page label="Détail d'une expédition" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
-				<tag name="contextual_website_website_modules_order_expedition" />
+			<page label="Détail d'une expédition" navigationVisibility="hidden" indexingstatus="false"
+				robotsmeta="noindex,nofollow" byTag="contextual_website_website_modules_order_expedition">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_ExpeditionDetail" />
 				</changecontent>
 			</page>
-			<page label="Détail d'une expédition virtuelle" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
-				<tag name="contextual_website_website_modules_order_expeditionvirtual" />
+			<page label="Détail d'une expédition virtuelle" navigationVisibility="hidden" indexingstatus="false"
+				robotsmeta="noindex,nofollow" byTag="contextual_website_website_modules_order_expeditionvirtual">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_ExpeditionDetailVirtual" />
 				</changecontent>
 			</page>
-			<page label="Messagerie relative à une commande" navigationVisibility="hidden">
-				<tag name="contextual_website_website_modules_order_order-messages" />
+			<page label="Messagerie relative à une commande" navigationVisibility="hidden"
+				byTag="contextual_website_website_modules_order_order-messages">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_messages" />
 				</changecontent>
 			</page>
-		</topic>		
-		<menus>
-			<menu byTag="contextual_website_website_menu-main">
-				<menuitempage pageid="DetailPanier" />
-			</menu>
-			<menu byTag="contextual_website_website_modules_customer_menu-orders">
-				<menuitempage pageid="MesCommandes" />
-			</menu>
-		</menus>
+		</topic>
 	</website>
 	
 	<binding fileName="modules/order/setup/standardProccess.xml" />

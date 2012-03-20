@@ -72,8 +72,6 @@ class order_MessageService extends f_persistentdocument_DocumentService
 	 */
 	public function getInfosByOrder($order, $includeDetails = false)
 	{
-		$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
-		
 		$infos = array('fromCustomerCount' => 0, 'toCustomerCount' => 0);
 		$messages = $this->getByOrder($order);
 		$infos['totalCount'] = strval(count($messages));
@@ -86,7 +84,7 @@ class order_MessageService extends f_persistentdocument_DocumentService
 			if ($includeDetails)
 			{
 				$messageInfo = array();
-				$messageInfo['date'] = date_DateFormat::format($message->getUICreationdate(), $dateTimeFormat);
+				$messageInfo['date'] = date_Formatter::toDefaultDateTimeBO($message->getUICreationdate());
 				$messageInfo['content'] = $message->getContentAsHtml();
 				if ($message->isSentByCustomer())
 				{

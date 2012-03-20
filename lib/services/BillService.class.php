@@ -618,9 +618,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 		
 		if ($document->getTransactionDate())
 		{
-			$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
-			$dateTimeFormatted = date_DateFormat::format($document->getUITransactionDate(), $dateTimeFormat);
-			
+			$dateTimeFormatted = date_Formatter::toDefaultDateTimeBO($document->getUITransactionDate());			
 			$data['transaction']['transactionDate'] = $dateTimeFormatted;
 			// This one is deprecated
 			$data['properties']['transactionDate'] = $dateTimeFormatted;

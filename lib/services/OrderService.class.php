@@ -57,7 +57,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 * @param order_persistentdocument_order $document
 	 * @return string
 	 */
-	public function getNavigationtitle($document)
+	public function getNavigationLabel($document)
 	{
 		return $document->getOrderNumber();
 	}
@@ -147,8 +147,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$result = array();
 		$informations = array();
 		$informations['reference'] = $order->getOrderNumber();
-		$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
-		$informations['creationdate'] = date_DateFormat::format($order->getUICreationdate(), $dateTimeFormat);
+		$informations['creationdate'] = date_Formatter::toDefaultDateTimeBO($order->getUICreationdate());
 		
 		try 
 		{
@@ -235,8 +234,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		$customer = $order->getCustomer();
 		
-		$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
-
 		$result = array();
 		$result['packageTrackingNumber'] = $order->getPackageTrackingNumber();
 
@@ -273,7 +270,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$informations['website'] = $customer->getWebsite()->getLabel();
 		}
 		$informations['reference'] = $order->getOrderNumber();
-		$informations['creationdate'] = date_DateFormat::format($order->getUICreationdate(), $dateTimeFormat);
+		$informations['creationdate'] = date_Formatter::toDefaultDateTimeBO($order->getUICreationdate());
 		$informations['shippingMode'] = $order->getShippingMode();
 
 		$informations['subTotal'] =  $order->formatPrice($order->getLinesAmountWithTax());
@@ -1355,7 +1352,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$data['financial']['usedCreditNote'] = ($usedCreditNote) ? $document->formatPrice($usedCreditNote) : null;
 			$data['financial']['totalAmount'] = $document->formatPrice($document->getTotalAmountWithTax());			
 			$obs = order_BillService::getInstance();
-			$dateTimeFormat = customer_ModuleService::getInstance()->getUIDateTimeFormat();
 			$bills = $obs->getByOrder($document);
 			if (count($bills))
 			{
@@ -1369,7 +1365,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$data['financial']['paymentStatus'] = $bill->getBoStatusLabel();
 				if ($bill->getTransactionDate())
 				{
-					$data['financial']['paymentStatus'] .= ' '	. date_DateFormat::format($bill->getUITransactionDate(), $dateTimeFormat);
+					$data['financial']['paymentStatus'] .= ' '	. date_Formatter::toDefaultDateTimeBO($bill->getUITransactionDate());
 				}
 			}
 			
@@ -1380,7 +1376,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$data['shipping']['shippingStatus'] = $expedition->getBoStatusLabel();
 				if ($expedition->getShippingDate())
 				{
-					$data['shipping']['shippingStatus'] .= ' ' . date_DateFormat::format($expedition->getUIShippingDate(), $dateTimeFormat);
+					$data['shipping']['shippingStatus'] .= ' ' . date_Formatter::toDefaultDateTimeBO($expedition->getUIShippingDate());
 				}
 			}
 			
