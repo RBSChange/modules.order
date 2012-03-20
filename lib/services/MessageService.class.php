@@ -38,7 +38,7 @@ class order_MessageService extends f_persistentdocument_DocumentService
 	/**
 	 * @see f_persistentdocument_DocumentService::preInsert()
 	 *
-	 * @param mailbox_persistentdocument_message $document
+	 * @param order_persistentdocument_message $document
 	 * @param Integer $parentNodeId
 	 */
 	protected function preInsert($document, $parentNodeId)
@@ -54,7 +54,7 @@ class order_MessageService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param order_persistentdocument_order $order
-	 * @return Array<mailbox_persistentdocument_message>
+	 * @return order_persistentdocument_message[]
 	 */
 	public function getByOrder($order)
 	{
