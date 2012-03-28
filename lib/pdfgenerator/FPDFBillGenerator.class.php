@@ -10,97 +10,112 @@ class order_FPDFBillGenerator {
 	 */
 	public function writePDF($bill, $filePath)
 	{
-		$order = $bill->getOrder();
-		$shop = $order->getShop();
-		$customer = $order->getCustomer();
-		
-		// Instanciation de la classe dérivée
 		$pdf = new order_billToPDF($bill);
 		f_util_FileUtils::writeAndCreateContainer($filePath, $pdf->generatePDF(), f_util_FileUtils::OVERRIDE);
 	}
 }
 
 class order_billToPDF extends FPDF
-{
-	const LEFT_MARGIN = 10;
-	const RIGHT_MARGIN = 10;
-	const TOP_MARGIN = 10;
-	const BOTTOM_MARGIN = 10;
-	
+{	
 	/**
 	 * @var order_persistentdocument_bill
 	 */
-	private $bill;
+	protected $bill;
 
 	/**
 	 * @var string
 	 */
-	private $logoPath;
+	protected $logoPath;
 	
 	/**
 	 * @var string
 	 */
-	private $logoWidth;
+	protected $logoWidth;
 	
 	/**
 	 * @var string
 	 */
-	private $logoHeight;
+	protected $logoHeight;
 	
 	/**
 	 * @var integer
 	 */
-	private $orderLineHeight;
+	protected $orderLineHeight;
 	
 	/**
 	 * @var integer[]
 	 */
-	private $orderLineFillColorRGB;
+	protected $orderLineFillColorRGB;
 	
 	/**
 	 * @var integer[]
 	 */
-	private $orderLineHeaderFillColorRGB;
+	protected $orderLineHeaderFillColorRGB;
 	
 	/**
 	 * @var string[]
 	 */
-	private $billTexts = array();
+	protected $billTexts = array();
 	
 	/**
 	 * @var string[]
 	 */
-	private $merchantAddress = array();
+	protected $merchantAddress = array();
 	
 	/**
 	 * @var string[]
 	 */
-	private $orderLineHeaderTxtAndWidth = array();
+	protected $orderLineHeaderTxtAndWidth = array();
 	
 	/**
 	 * @var string[]
 	 */
-	private $summaryTxt = array();
+	protected $summaryTxtAndWidth = array();
 	
 	/**
 	 * @var integer
 	 */
-	private $productLabelMaxWidth;
+	protected $summaryLineHeight;
 	
 	/**
 	 * @var integer
 	 */
-	private $width;
+	protected $productLabelMaxWidth;
 	
 	/**
-	 * @var integer
+	 * @var array<string label, integer size>
 	 */
-	private $height;
+	protected $customerInfoHeaders = array();
+	
+	/**
+	 * @var float
+	 */
+	protected $addressYAbsolutePosition;
+	
+	/**
+	 * @var float
+	 */
+	protected $addressXAbsolutePosition;
+	
+	/**
+	 * @var float
+	 */
+	protected $bodyYAbsolutePosition;
 	
 	/**
 	 * @var string
 	 */
-	private $currency;
+	protected $font;
+	
+	/**
+	 * @param float[]
+	 */
+	protected $margins = array();
+	
+	public function convertUTF8String($UTF8string)
+	{
+		return mb_convert_encoding($UTF8string, 'CP1252', 'UTF-8');
+	}
 	
 	/**
 	 *
@@ -113,10 +128,7 @@ class order_billToPDF extends FPDF
 	{
 		parent::FPDF($orientation, $unit, $size);
 		if ($bill instanceof order_persistentdocument_bill)
-		{
-			$this->width = (210 - (self::LEFT_MARGIN + self::RIGHT_MARGIN));
-			$this->height = (297 - (self::BOTTOM_MARGIN + self::TOP_MARGIN));
-			
+		{	
 			$this->bill = $bill;
 			$configXMLPath = null;
 			$ref = $bill->getOrder()->getShop()->getCodeReference();
@@ -137,193 +149,263 @@ class order_billToPDF extends FPDF
 			}
 			
 			$configXML = f_util_DOMUtils::fromPath($configXMLPath);
-				
-			$merchantAddressLines = $configXML->getElementsByTagName('merchantAddress')->item(0)->getElementsByTagName('line');
-				
-			foreach ($merchantAddressLines as $merchantLine)
-			{
-				$this->merchantAddress[] = $merchantLine->textContent;
-			}
-			
-			$orderLineHeaders = $configXML->getElementsByTagName('orderLineHeaders')->item(0)->getElementsByTagName('line');
-			
-			foreach ($orderLineHeaders as $orderLineHeader)
-			{
-				/* @var $orderLineHeader DOMNode */
-				$this->orderLineHeaderTxtAndWidth[$orderLineHeader->textContent] = $orderLineHeader->attributes->getNamedItem('size')->nodeValue;
-				if ($orderLineHeader->attributes->getNamedItem('isProductLabel'))
-				{
-					$this->productLabelMaxWidth = $orderLineHeader->attributes->getNamedItem('size')->nodeValue;
-				}
-			}
-			
-			$logoName = $configXML->getElementsByTagName('logo')->item(0)->textContent;
-			$this->logoPath = f_util_FileUtils::buildWebeditPath('media','frontoffice','order', $logoName);
-			$this->logoWidth = $configXML->getElementsByTagName('logo')->item(0)->attributes->getNamedItem('width')->nodeValue;
-			$this->logoHeight = $configXML->getElementsByTagName('logo')->item(0)->attributes->getNamedItem('height')->nodeValue;
-			
-			$billTxts = $configXML->getElementsByTagName('billTexts')->item(0)->childNodes;
-			
-			foreach ($billTxts as $billTxt)
-			{
-				/* @var $billTxt DOMNode */
-				$this->billTexts[$billTxt->localName] = $billTxt->textContent;
-			}
-			
-			$summaryTxts = $configXML->getElementsByTagName('summary')->item(0)->childNodes;
-				
-			foreach ($summaryTxts as $summaryTxt)
-			{
-				/* @var $summaryTxt DOMNode */
-				$this->summaryTxt[] = $summaryTxt->textContent;
-			}
-			
-			$designConfiguration = $configXML->getElementsByTagName('design')->item(0)->attributes;
-			$this->orderLineHeight = $designConfiguration->getNamedItem('orderlineHeight')->nodeValue;
-			$this->orderLineHeaderFillColorRGB = explode(',', $designConfiguration->getNamedItem('orderLineHeaderFillColorRGB')->nodeValue);
-			$this->orderLineFillColorRGB = explode(',', $designConfiguration->getNamedItem('orderLineFillColorRGB')->nodeValue);
-			
-			$this->currency = $this->bill->getCurrency() == 'EUR' ? chr(128) : utf8_decode($this->bill->getCurrency());
-			
+			$this->parseXML($configXML);
 			//FPDF Config
-			$this->SetAutoPageBreak(true, 25);
-
+			$this->SetAutoPageBreak(true, $this->margins[3]);
+			$this->SetMargins($this->margins[0], $this->margins[2], $this->margins[1]);
 		}
 		else
 		{
 			throw new Exception('Invalid parameter $bill give to ' . __CLASS__ . ' constructor');
 		}
 	}
+	
+	/**
+	 * 
+	 * @param DOMDocument $configXML
+	 */
+	protected function parseXML($configXML)
+	{
+		$positions = $configXML->getElementsByTagName('positions')->item(0)->attributes;
+		$this->addressXAbsolutePosition = $positions->getNamedItem('addressXAbsolutePosition')->nodeValue;
+		$this->addressYAbsolutePosition = $positions->getNamedItem('addressYAbsolutePosition')->nodeValue;
+		$this->bodyYAbsolutePosition = $positions->getNamedItem('bodyYAbsolutePosition')->nodeValue;
+		
+		$merchantAddressLines = $configXML->getElementsByTagName('merchantAddress')->item(0)->getElementsByTagName('line');
+		
+		$this->merchantAddress['lines'] = array();
+		foreach ($merchantAddressLines as $merchantLine)
+		{
+			$this->merchantAddress['lines'][] = $merchantLine->textContent;
+		}
+		
+		foreach ($configXML->getElementsByTagName('merchantAddress')->item(0)->childNodes as $merchantAddressInfo)
+		{
+			/* @var $merchantAddressInfo DOMNode */
+			$this->merchantAddress[$merchantAddressInfo->localName] = $merchantAddressInfo->textContent;
+		}
+		
+		$orderLineHeaders = $configXML->getElementsByTagName('orderLineHeaders')->item(0)->getElementsByTagName('line');
+			
+		foreach ($orderLineHeaders as $orderLineHeader)
+		{
+			/* @var $orderLineHeader DOMNode */
+			$this->orderLineHeaderTxtAndWidth[$orderLineHeader->textContent] = $orderLineHeader->attributes->getNamedItem('size')->nodeValue;
+			if ($orderLineHeader->attributes->getNamedItem('isProductLabel'))
+			{
+				$this->productLabelMaxWidth = $orderLineHeader->attributes->getNamedItem('size')->nodeValue;
+			}
+		}
+			
+		$logoName = $configXML->getElementsByTagName('logo')->item(0)->textContent;
+		$this->logoPath = f_util_FileUtils::buildWebeditPath('media','frontoffice','order', $logoName);
+		$this->logoWidth = $configXML->getElementsByTagName('logo')->item(0)->attributes->getNamedItem('width')->nodeValue;
+		$this->logoHeight = $configXML->getElementsByTagName('logo')->item(0)->attributes->getNamedItem('height')->nodeValue;
+			
+		$billTxts = $configXML->getElementsByTagName('billTexts')->item(0)->childNodes;
+			
+		foreach ($billTxts as $billTxt)
+		{
+			/* @var $billTxt DOMNode */
+			$this->billTexts[$billTxt->localName] = $billTxt->textContent;
+		}
+			
+		$summaryTxts = $configXML->getElementsByTagName('priceSummary')->item(0)->childNodes;
+		
+		foreach ($summaryTxts as $summaryTxt)
+		{
+			/* @var $summaryTxt DOMNode */
+			$this->summaryTxtAndWidth[$summaryTxt->textContent] = $summaryTxt->attributes->getNamedItem('size')->nodeValue;
+		}
+		$this->summaryLineHeight = $configXML->getElementsByTagName('priceSummary')->item(0)->attributes->getNamedItem('summaryLineHeight')->nodeValue;
+			
+		$designConfiguration = $configXML->getElementsByTagName('design')->item(0)->attributes;
+		$this->orderLineHeight = $designConfiguration->getNamedItem('orderlineHeight')->nodeValue;
+		$this->orderLineHeaderFillColorRGB = explode(',', $designConfiguration->getNamedItem('orderLineHeaderFillColorRGB')->nodeValue);
+		$this->orderLineFillColorRGB = explode(',', $designConfiguration->getNamedItem('orderLineFillColorRGB')->nodeValue);
+		$this->margins = explode(',', $designConfiguration->getNamedItem('margins')->nodeValue);
+		$this->font = $designConfiguration->getNamedItem('font')->nodeValue;
+			
+		foreach ($configXML->getElementsByTagName('customerInfoHeaders')->item(0)->childNodes as $customerInfo)
+		{
+			/* @var $customerInfo DOMNode */
+			$this->customerInfoHeaders[$customerInfo->textContent] = $customerInfo->attributes->getNamedItem('size')->nodeValue;
+			
+		}
+		
+	}
 
 	function Header()
 	{
+		$y = $this->GetY();
 		// Logo
-		$this->Image($this->logoPath, self::LEFT_MARGIN, self::TOP_MARGIN, $this->logoWidth, $this->logoHeight);
-		// Police Arial bold 15
-		$this->SetFont('Times', 'B', 15);
+		$this->Image($this->logoPath, $this->lMargin, $this->tMargin, $this->logoWidth, $this->logoHeight);
 
-		$title = utf8_decode($this->billTexts['title']);
-		$titleSize = $this->GetStringWidth($title) + 2;
-		// Right shift
-		$this->Cell($this->width - $titleSize);
-		$this->Cell($titleSize, 10, $title, 1, 0, 'C');
-		$this->Ln(12);
-		$billNb = $this->billTexts['billNo'] . ' ' . $this->bill->getLabel();
-		$date = $this->billTexts['date'] . date_Formatter::format($this->bill->getCreationdate());
-		$this->SetFontSize(10);
-		$billInfosSize = 50;
-		//Right shift
-		$this->Cell($this->width - $billInfosSize);
-		$this->MultiCell($billInfosSize, 6, utf8_decode($billNb . PHP_EOL . $date . PHP_EOL . 'Page ' . $this->PageNo() . '/{nb}'), 1, 'L');
+		$this->SetFont($this->font, 'B', 15);
+		$this->Cell($this->logoWidth);
+				
+		$title = $this->convertUTF8String($this->billTexts['title']);
+		$titleSize = $this->GetStringWidth($title);
+		$x = (($this->w) / 2) - ($titleSize / 2);
+		
+		$this->SetX($x);
+		$this->Cell($titleSize, 8, $title, 0, 0, 'C');
+		$this->Ln(9);
+		$this->SetX($x);
+		$this->SetFontSize(8);
+		$this->Cell($titleSize, 4, $this->convertUTF8String($this->billTexts['companyStatus']), 0, 0, 'C');
 		$this->Ln();
-
-		// New line
+		$this->SetX($x);
+		$this->MultiCell($titleSize, 4, $this->convertUTF8String(implode(PHP_EOL, $this->merchantAddress['lines'])), 0, 'C');
 		$this->Ln(10);
+		
+		$x = $this->w - $this->rMargin - 45;
+		$this->SetFontSize(8);
+		$this->SetXY($x, $y);
+		$this->MultiCell(15, 5, 'tel' . PHP_EOL . 'fax' . PHP_EOL . 'e-mail', 0, 'R');
+		$x += 15;
+		$addressInfosTxt = $this->convertUTF8String(
+			$this->merchantAddress['tel'] . PHP_EOL . 
+			$this->merchantAddress['fax'] . PHP_EOL .
+			$this->merchantAddress['email']
+		);
+		$width = 30;
+		$this->SetXY($x, $y);
+		$this->MultiCell($width, 5, $addressInfosTxt, 0, 'R');
+		$this->SetX($x);
+		$this->SetFontSize(9);
+		$this->Cell(30, 5, $this->convertUTF8String($this->billTexts['page']) . $this->PageNo() . '/{nb}', 0, 0, 'R');
+		$this->ln(20);
 	}
 
 	function Footer()
 	{
-		// Positionning at 1,5 cm of bottom
-		$this->SetY(-15);
-		// Police Arial italic 8
-		$this->SetFont('Times', 'I', 8);
-		// Page number
-		$this->Cell(0, 10, $this->billTexts['footer'], 0, 0, 'C');
+		$this->SetY(- $this->margins[3]);
+		$this->SetFont($this->font, '', 6);
+		$footerTop = $this->convertUTF8String($this->billTexts['footerTop']);
+		$this->Cell($this->GetStringWidth($footerTop), 5, $footerTop);
+		$this->Ln();
+		$frameSize = $this->w - $this->rMargin - $this->lMargin;
+		$this->MultiCell($frameSize, 3, $this->convertUTF8String($this->billTexts['footerFramed']), 1, 'C');
+		$this->SetFontSize(7);
+		$this->MultiCell($frameSize, 3, $this->convertUTF8String($this->billTexts['footer']), 0, 'C');
 	}
 
+	protected function generateBillInfo()
+	{
+		$this->SetFontSize(13);
+		$this->setFillColorByHeader();
+		$billNb = $this->convertUTF8String($this->billTexts['billNo']) . ' ' . $this->convertUTF8String($this->bill->getLabel());
+		$this->Cell($this->GetStringWidth($billNb) + 2, 10, $billNb, 1, 0, 'J', true);
+		$date = $this->convertUTF8String($this->billTexts['date'] . date_Formatter::toDefaultDateTime($this->bill->getUICreationdate()));
+		$this->Ln(15);
+		$yBillingAddress = $this->GetY();
+		
+		//Addresses
+		$w = 75;
+		$h = 5;
+		$this->SetXY($this->addressXAbsolutePosition, $this->addressYAbsolutePosition);
+		$this->SetFont($this->font, '', 12);
+		$this->Ln();
+		$this->SetX($this->w / 2);
+		$this->generateAddressCell($this->bill->getAddress(), $w, $h);
+		$this->Ln();
+		
+		$this->Cell($this->GetStringWidth($date), 10, $date);
+		$this->ln(15);
+	}
+	
+	protected function generateCustomerInfos()
+	{
+		$widthWithoutMargin = $this->w - $this->lMargin - $this->rMargin;
+		//Sum of width must be equal to $this->w
+		if (round(array_sum($this->customerInfoHeaders)) != round($widthWithoutMargin))
+		{
+			Framework::error(__CLASS__ . ': sum of customer info headers columns is not equal to the fixed width. Your customer info headers columns doesn\'t have the good size');
+		}
+		
+		$this->SetFontSize(10);
+		$columnsWidth = array();
+		foreach ($this->customerInfoHeaders as $label => $size)
+		{
+			$this->Cell($size, 5, $this->convertUTF8String($label), 1, 0, 'C', true);
+			$columnsWidth[] = $size;
+		}
+		$this->Ln();
+		$this->Cell($columnsWidth[0], 5, $this->convertUTF8String($this->bill->getOrder()->getCustomer()->getCodeReference()), 1, 0, 'C');
+		$this->Cell($columnsWidth[1], 5, $this->convertUTF8String($this->bill->getOrder()->getOrderNumber()), 1, 0, 'C');
+		/* @var $expedition order_persistentdocument_expedition */
+		
+		$this->Ln(10);
+	}
+	
 	public function generatePDF()
 	{
 		$this->AliasNbPages();
 		$this->AddPage();
-		$this->SetFont('Times', '', 12);
-
-		//Address
-		$w = 50;
-		$h = 5;
-		$y = $this->GetY();
-		$this->generateAddressCell($this->bill->getAddress(), $w, $h);
-		$this->SetXY(($this->width + self::LEFT_MARGIN) - $w, $y);
-		$this->MultiCell($w, $h, utf8_decode(implode(PHP_EOL, $this->merchantAddress)), 1);
-		
-		$this->Cell(70, 10, utf8_decode($this->billTexts['customerReferenceTxt'] . $this->bill->getOrder()->getCustomer()->getCodeReference()));
-
-		$this->Ln(15);
-
-		$orderLines = $this->bill->getOrder()->getLineArray();
-
-		$this->MultiCell($this->width, 10, $this->billTexts['orderLineTxt'], 1, 'L');
-
-
-		//Order line headers
-		//Colors
-		$this->SetFillColor(
-			$this->orderLineHeaderFillColorRGB[0], 
-			$this->orderLineHeaderFillColorRGB[1], 
-			$this->orderLineHeaderFillColorRGB[2]
-		);
-		
-		//Sum of width must be equal to $this->width
-		if (array_sum($this->orderLineHeaderTxtAndWidth) !== $this->width)
-		{
-			Framework::error(__CLASS__ . ': sum of order lines columns is not equal to the fixed width. Your orderlines columns doesn\'t have the good size');
-		}
-		
-		$orderLineHeaderTxts = array();
-		foreach ($this->orderLineHeaderTxtAndWidth as $text => $width)
-		{
-			$this->Cell($width, 8, utf8_decode($text), 1, 0, 'C', true);
-			$orderLineWidth[] = $width;
-		}
-		$this->ln();
-		//Order lines
-		$this->SetFillColor(
-			$this->orderLineFillColorRGB[0], 
-			$this->orderLineFillColorRGB[1], 
-			$this->orderLineFillColorRGB[2]
-		);
-		$fill = false;
-		foreach ($orderLines as $orderLine)
-		{
-			//if page change, replicate the orderLine Header
-			if (($this->GetY() + (2 * self::BOTTOM_MARGIN)) > $this->height)
-			{
-				$this->SetFontSize(10);
-				$this->Ln(10);
-				$this->SetFillColor(
-					$this->orderLineHeaderFillColorRGB[0], 
-					$this->orderLineHeaderFillColorRGB[1], 
-					$this->orderLineHeaderFillColorRGB[2]
-				);
-				foreach ($this->orderLineHeaderTxtAndWidth as $text => $width)
-				{
-					$this->Cell($width, 8, utf8_decode($text), 1, 0, 'C', true);
-				}
-				$this->SetFillColor(
-					$this->orderLineFillColorRGB[0],
-					$this->orderLineFillColorRGB[1],
-					$this->orderLineFillColorRGB[2]
-				);
-				$this->Ln();
-			}
-			$this->SetFontSize(8);
-			$this->generateOrderLineCells($orderLineWidth, $orderLine, $fill);
-
-			$this->Ln();
-			$fill = !$fill;
-		}
-		
-		$this->SetFontSize(8);
+		$this->generateBillInfo();
+		$this->SetY($this->bodyYAbsolutePosition);
+		$this->generateCustomerInfos();
+		$this->generateBody();
 		$this->generateSummary();
 
 		return $this->Output('', 'S');
 	}
 
-	private function generateAddressCell($address, $w = 50, $h = 6, $fontSize = 10)
+	protected function generateBody()
+	{
+		$orderLines = $this->bill->getOrder()->getLineArray();
+		
+		$widthWithoutMargin = $this->w - $this->lMargin - $this->rMargin;
+		//Sum of width must be equal to $this->w
+		if (round(array_sum($this->orderLineHeaderTxtAndWidth)) != round($widthWithoutMargin))
+		{
+			Framework::error(__CLASS__ . ': sum of order lines columns is not equal to the fixed width. Your orderlines columns doesn\'t have the good size: (' . $widthWithoutMargin . 'mm)');
+		}
+		$this->generateOrderLineHeaders();
+		
+		//Order lines
+		$fill = false;
+		$bottom = $this->h - $this->margins[3];
+		foreach ($orderLines as $orderLine)
+		{
+			/* @var $orderLine order_persistentdocument_orderLine */
+			$case = $this->GetY() + $this->orderLineHeight;
+				
+			//if page change, replicate the orderLine Header
+			if ($case > $bottom)
+			{
+				$this->generateOrderLineHeaders();
+			}
+			$this->generateOrderLineCells($orderLine, $fill);
+			$this->Ln();
+			$fill = !$fill;
+		}
+	}
+	
+	protected function generateOrderLineHeaders()
+	{
+		$this->SetFontSize(10);
+		$this->Ln(10);
+		$this->setFillColorByHeader();
+		foreach ($this->orderLineHeaderTxtAndWidth as $text => $width)
+		{
+			$this->Cell($width, 8, $this->convertUTF8String($text), 1, 0, 'C', true);
+		}
+		$this->SetFillColor(
+			$this->orderLineFillColorRGB[0],
+			$this->orderLineFillColorRGB[1],
+			$this->orderLineFillColorRGB[2]
+		);
+		$this->Ln();
+	}
+	
+	protected function generateAddressCell($address, $w = 50, $h = 5, $fontSize = 10)
 	{
 		$this->SetFontSize($fontSize);
 
-		$addressTxt = ($address->getCivility() ? $address->getCivility() . '. ' : '') . $address->getFirstname() . ' ' . $address->getLastname() . PHP_EOL;
-		$addressTxt .= $address->getAddressLine1() . PHP_EOL;
+		$addressCivility = ($address->getCivility() ? $address->getCivility() . '. ' : '') . $address->getFirstname() . ' ' . $address->getLastname() . PHP_EOL;
+		$addressTxt = $address->getAddressLine1() . PHP_EOL;
 		if ($address->getAddressLine2())
 		{
 			$addressTxt .= $address->getAddressLine2() . PHP_EOL;
@@ -333,32 +415,37 @@ class order_billToPDF extends FPDF
 			$addressTxt .= $address->getAddressLine3() . PHP_EOL;
 		}
 		$addressTxt .= $address->getZipCode() . ' ' . $address->getCity() . ' ' . $address->getCountryName() . PHP_EOL;
-		if ($address->getPhone())
-		{
-			$addressTxt .= $address->getPhone() . PHP_EOL;
-		}
-		if ($address->getMobilephone())
-		{
-			$addressTxt .= $address->getMobilephone();
-		}
-		if ($address->getFax())
-		{
-			$addressTxt .= $address->getFax();
-		}
 
-		$this->MultiCell($w, $h, utf8_decode($addressTxt), 1);
+		$x = $this->GetX();
+		$this->SetFont($this->font, 'B');
+		$this->Cell($w, $h, $this->convertUTF8String($addressCivility), 'L');
+		$this->Ln();
+		$this->SetX($x);
+		$this->SetFont($this->font, '');
+		$this->MultiCell($w, $h, $this->convertUTF8String($addressTxt), 'L');
 	}
 	
 	/**
 	 * Design the order lines
-	 * @param string[] $orderLineWidth
 	 * @param order_persistentdocument_orderline $orderLine
 	 * @param boolean $fill
 	 * @param integer $articleMaxLength
 	 */
-	private function generateOrderLineCells($orderLineWidth, $orderLine, $fill, $articleMaxLength = 70)
+	protected function generateOrderLineCells($orderLine, $fill, $articleMaxLength = 70)
 	{
-		$articleText = utf8_decode($orderLine->getProduct()->getLabel());
+		$this->SetFontSize(8);
+		
+		$order = $this->bill->getOrder();
+		
+		$this->SetFillColor(
+			$this->orderLineFillColorRGB[0],
+			$this->orderLineFillColorRGB[1],
+			$this->orderLineFillColorRGB[2]
+		);
+		
+		$orderLineWidth = array_values($this->orderLineHeaderTxtAndWidth);
+		
+		$articleText = $this->convertUTF8String($orderLine->getLabel());
 			
 		//reduce the width of the article name, if there is too large
 		while (($this->GetStringWidth($articleText) + 1) > $this->productLabelMaxWidth)
@@ -366,61 +453,177 @@ class order_billToPDF extends FPDF
 			$articleText = f_util_StringUtils::shortenString($articleText, $articleMaxLength);
 			$articleMaxLength -= 5;
 		}
-		
-		$this->Cell($orderLineWidth[0], $this->orderLineHeight, utf8_decode($orderLine->getQuantity()), 1, 0, 'C', $fill);
+		$this->Cell($orderLineWidth[0], $this->orderLineHeight, $this->convertUTF8String($orderLine->getQuantity()), 1, 0, 'C', $fill);
 		$this->Cell($orderLineWidth[1], $this->orderLineHeight, $articleText, 1, 0, 'L', $fill);
-		$this->Cell($orderLineWidth[2], $this->orderLineHeight, utf8_decode($orderLine->getProduct()->getCodeReference()), 1, 0, 'L', $fill);
-		$this->Cell($orderLineWidth[3], $this->orderLineHeight, utf8_decode($orderLine->getUnitPriceWithoutTax() . ' ') . $this->currency, 1, 0, 'R', $fill);
-		$this->Cell($orderLineWidth[4], $this->orderLineHeight, utf8_decode($orderLine->getAmountWithoutTax() . ' ') . $this->currency, 1, 0, 'R', $fill);
+		$this->Cell($orderLineWidth[2], $this->orderLineHeight, $this->convertUTF8String($orderLine->getProduct()->getCodeReference()), 1, 0, 'L', $fill);
+		$this->Cell($orderLineWidth[3], $this->orderLineHeight, $this->convertUTF8String($order->formatPrice($orderLine->getUnitPriceWithoutTax())), 1, 0, 'R', $fill);
+		$this->Cell($orderLineWidth[4], $this->orderLineHeight, $this->convertUTF8String($order->formatPrice($orderLine->getAmountWithoutTax())), 1, 0, 'R', $fill);
 	}
 	
 	/**
 	 * Generate the total price summary
 	 */
-	private function generateSummary()
+	protected function generateSummary()
 	{
-		$totalSummaryLabel = $this->summaryTxt[0] . PHP_EOL;
-		$totalSummaryValue = $this->bill->getOrder()->getTotalAmountWithoutTax() . ' ' . utf8_encode($this->currency) . PHP_EOL;
-		foreach ($this->bill->getOrder()->getDiscountDataArray() as $discount)
+		$this->SetFontSize(9);
+		$order = $this->bill->getOrder();
+
+		$summaryWidths = array();
+		$summaryTxts = array();
+		foreach ($this->summaryTxtAndWidth as $key => $width)
 		{
-			$totalSummaryLabel .= $discount['label'] . ' HT : ' . PHP_EOL;
-			$totalSummaryValue .= catalog_PriceFormatter::getInstance()->round($discount['valueWithTax']) . ' ' . utf8_encode($this->currency) . PHP_EOL;
-			$totalSummaryLabel .= $discount['label'] . ' TTC : ' . PHP_EOL;
-			$totalSummaryValue .= catalog_PriceFormatter::getInstance()->round($discount['valueWithoutTax']) . ' ' . utf8_encode($this->currency) . PHP_EOL;
-		}
-		$totalSummaryLabel .= $this->summaryTxt[1] . PHP_EOL;
-		$totalSummaryValue .=  $this->bill->getOrder()->getShippingFeesWithoutTax() . ' ' . utf8_encode($this->currency) . PHP_EOL;
-		$totalSummaryLabel .= $this->summaryTxt[2] . PHP_EOL;
-		$totalSummaryValue .=  $this->bill->getOrder()->getShippingFeesWithTax() . ' ' . utf8_encode($this->currency) . PHP_EOL;
-		
-		foreach ($this->bill->getOrder()->getTaxRates() as $rateFormated => $value)
-		{
-			$totalSummaryLabel .= $this->summaryTxt[3] . $rateFormated . ': ' . PHP_EOL;
-			$totalSummaryValue .= catalog_PriceFormatter::getInstance()->round($value) . ' ' . utf8_encode($this->currency) . PHP_EOL;
+			$summaryWidths[] = $width;
+			$summaryTxts[] = $key;
 		}
 		
-		$totalSummaryLabel .= $this->summaryTxt[4] . PHP_EOL;
-		$totalSummaryValue .= $this->bill->getOrder()->getPaymentConnectorLabel() . PHP_EOL;
+		//Summary
+		$totalSummaryLabels = array();
+		$totalSummaryValues = array();
 		
+		$totalSummaryLabels[] = $this->billTexts['subTotal'] . ' ' . $this->billTexts['withoutTax'];
+		$totalSummaryValues[] = $order->formatPrice($order->getLinesAmountWithoutTax());
+		foreach ($order->getFeesDataArrayForDisplay() as $fees)
+		{
+			$totalSummaryLabels[] = $fees['label'] . ' ' . $this->billTexts['withoutTax'];
+			$totalSummaryValues[] =  $fees['valueWithoutTax'];
+		}
+		if (count($order->getDiscountDataArrayForDisplay()))
+		{
+			foreach ($order->getDiscountDataArrayForDisplay() as $discount)
+			{
+				$totalSummaryLabels[] = $discount['label'] . ' ' . $this->billTexts['withoutTax'];
+				$totalSummaryValues[] = $discount['valueWithoutTax'];
+			}
+		}
+		
+		$totalSummaryLabels[] = $this->billTexts['paymentConnector'];
+		$totalSummaryValues[] = $order->getPaymentConnectorLabel();
+		
+		//search the longest text and value element to design summary
+		$txtMaxWidth = 0;
+		foreach ($totalSummaryLabels as $summaryTextElement)
+		{
+			if ($txtMaxWidth < strlen($summaryTextElement))
+			{
+				$txtMaxWidth = strlen($summaryTextElement);
+			}
+		}
+		$valueMaxWidth = 0;
+		foreach ($totalSummaryValues as $summaryValueElement)
+		{
+			if ($valueMaxWidth < strlen($summaryValueElement))
+			{
+				$valueMaxWidth = strlen($summaryValueElement);
+			}
+		}
 		//Summary design
-		$w = 30;
-		$h = 4;
-		$numberOfLine = 7;
+		$w = $txtMaxWidth + $valueMaxWidth;
+		$h = $this->summaryLineHeight;
+		$numberOfLine = count($totalSummaryValues) + 1;
 		
 		//if the block of summary is too big, add a page and design on it
-		if (($this->GetY() + ($numberOfLine * $h)) > $this->height)
+		$summaryBlockSize = $this->GetY() + $this->margins[3] + ($numberOfLine * $h);
+		if ($summaryBlockSize > $this->h)
 		{
 			$this->AddPage();
 		}
 		
+		//headers
+		$this->setFillColorByHeader();
+		$this->Cell($summaryWidths[0], $this->summaryLineHeight, $this->convertUTF8String($summaryTxts[0]), 1, 0, 'C', true);
+		$this->Cell($summaryWidths[1], $this->summaryLineHeight, $this->convertUTF8String($summaryTxts[1]), 1, 0, 'C', true);
+		$this->Cell($summaryWidths[2], $this->summaryLineHeight, $this->convertUTF8String($summaryTxts[2]), 1, 0, 'C', true);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($summaryTxts[3]), 1, 0, 'C', true);
+		$this->Ln();
+		$this->Cell(190, 0, '', 'T');
+		$this->Ln();
 		$y = $this->GetY();
-		$this->MultiCell(($this->width - $w), $h, utf8_decode($totalSummaryLabel), 0, 'R');
-		$this->SetXY(($this->width + self::LEFT_MARGIN) - $w, $y);
-		$this->MultiCell($w, $h, utf8_decode($totalSummaryValue), 0, 'L');
 		
-		$this->SetFont('', 'B', 10);
-		$this->Cell(($this->width - $w), $h, utf8_decode($this->summaryTxt[5]), 0, 0, 'R');
-		$this->Cell($w, $h, utf8_decode($this->bill->getOrder()->getTotalAmountWithTax()) . ' ' . $this->currency, 0, 0, 'L');
+		foreach ($order->getTaxRates() as $rateFormated => $value)
+		{
+			$basePrice = $value / catalog_TaxService::getInstance()->parseRate($rateFormated);
+			$this->Cell($summaryWidths[0], $this->summaryLineHeight, $this->convertUTF8String($rateFormated), 0, 0, 'C');
+			$this->Cell($summaryWidths[1], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($basePrice)), 0, 0, 'C');
+			$this->Cell($summaryWidths[2], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($value)), 0, 0, 'C');
+			$this->Ln();
+		}
+		
+		
+		$x = ($this->w - $this->lMargin) - $summaryWidths[3];
+		$this->SetY($y);
+		
+		foreach ($totalSummaryLabels as $totalSummaryLabel)
+		{
+			$this->SetX($x);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($totalSummaryLabel), 0, 0, 'L');
+			$this->Ln();
+		}
+		$this->SetY($y);
+		while ($numberOfLine)
+		{
+			$this->SetX($x);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
+			$this->Ln();
+			$numberOfLine--;
+		}
+		$this->SetY($y);
+		foreach ($totalSummaryValues as $totalSummaryValue)
+		{
+			$this->SetX($x);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($totalSummaryValue), 0, 0, 'R');
+			$this->Ln();
+		}
+		
+		$this->SetX($x);
+		$this->SetFont($this->font, 'B', 10);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['total'] . ' ' .  $this->billTexts['withoutTax']), 0, 0, 'L');
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithoutTax())), 0, 0, 'R');
+		$this->Ln();
+		
+		$this->SetX($x);
+		$this->SetFont($this->font, 'B', 12);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['total'] . ' ' .  $this->billTexts['withTax']), 0, 0, 'L');
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithTax())), 0, 0, 'R');
+		$this->Ln(10);
+		
+		//borders
+		$this->SetY($y);
+		$countTaxes = count($order->getTaxRates());
+		$countSummaryLines = count($totalSummaryValues) + 2;
+		$h = $countTaxes > $countSummaryLines ? $countTaxes * $this->summaryLineHeight : $countSummaryLines * $this->summaryLineHeight;
+		$this->Cell($summaryWidths[0], $h,'', 1, 0);
+		$this->Cell($summaryWidths[1], $h,'', 1, 0);
+		$this->Cell($summaryWidths[2], $h,'', 1, 0);
+		$this->Cell($summaryWidths[3], $h,'', 1, 0);
+		
+}
+	
+	protected function setFillColorByHeader()
+	{
+		$this->SetFillColor($this->orderLineHeaderFillColorRGB[0], $this->orderLineHeaderFillColorRGB[1], $this->orderLineHeaderFillColorRGB[2]);
+	}
+
+	/**
+	 * @param string $rateFormated
+	 * @return float | null
+	 */
+	protected function getTaxRateByLabel($rateFormated)
+	{
+		$taxes = catalog_TaxService::getInstance()->createQuery()
+		->add(Restrictions::eq('label', $rateFormated))
+		->find();
+		
+		if (count($taxes))
+		{
+			return $taxes[0]->getRate();
+		}
+		return null;		
 	}
 	
 }
