@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fpdf>
+	<!-- margin order : left, right, top, bottom -->
+	<design orderlineHeight="6" orderLineHeaderFillColorRGB="160, 160, 160" orderLineFillColorRGB="220, 220, 220" font="Times" margins="10, 10, 10, 40" topRidghtCellMaxWidth="40"/>
+	<positions addressXAbsolutePosition="10.5" addressYAbsolutePosition="48" bodyYAbsolutePosition="105" />
 	<!-- logo max width and height : 60 and 30 -->
 	<logo width="50" height="7">DEMOPDFLogo.png</logo>
-	<!-- margin order : left, right, top, bottom -->
-	<design orderlineHeight="6" orderLineHeaderFillColorRGB="160, 160, 160" orderLineFillColorRGB="220, 220, 220" font=Times margins="10, 10, 10, 40"/>
-	<positions addressXAbsolutePosition="10.5" addressYAbsolutePosition="48" bodyYAbsolutePosition="105" />
-	<merchantAddress>
-		<line>AEROPARC 1 - 11 Rue Icard</line>
-		<line>STRASBOURG - ENTZHEIM</line>
-		<line>67836 TANNERIES CEDEX</line>
-		<tel>+33 (0)3 88 764 764</tel>
-		<fax>+33 (0)3 88 764 765</fax>
-		<email>compta@rbs.fr</email>
-	</merchantAddress>
 	<billTexts>
 		<title>READY BUSINESS SYSTEM</title>
 		<companyStatus>SA à directoire et CS au capital de 1 738 704 EUR</companyStatus>
@@ -30,20 +22,26 @@
 		<billNo>FACTURE N°</billNo>
 		<date>Date de la commande : </date>
 		<page>Page : </page>
-		<billingAddress>Adresse de facturation</billingAddress>
-		<shippingAddress>Adresse de livraison</shippingAddress>
 		<paymentConnector>Mode de paiement</paymentConnector>
 		<withoutTax>HT</withoutTax>
 		<withTax>TTC</withTax>
 		<subTotal>Total Brut</subTotal>
 		<total>Total Net</total>
 	</billTexts>
-	<!-- sum of customer info headers size must be equal to 190 -->
+	<merchantAddress>
+		<line>AEROPARC 1 - 11 Rue Icard</line>
+		<line>STRASBOURG - ENTZHEIM</line>
+		<line>67836 TANNERIES CEDEX</line>
+		<tel>+33 (0)3 88 764 764</tel>
+		<fax>+33 (0)3 88 764 765</fax>
+		<email>compta@rbs.fr</email>
+	</merchantAddress>
+	<!-- sum of customer info headers size must be equal to 210 - margin left and rigth -->
 	<customerInfoHeaders>
 		<customerId size="95">N° de client</customerId>
 		<orderNumber size="95">N° commande</orderNumber>
 	</customerInfoHeaders>
-	<!-- sum of orderLine headers size must be equal to 190 -->
+	<!-- sum of orderLine headers size must be equal to 210 - margin left and rigth -->
 	<orderLineHeaders>
 		<line size="20">Quantité</line>
 		<line size="80" isProductLabel="true">Article</line>
@@ -51,7 +49,7 @@
 		<line size="30">Prix Unitaire HT</line>
 		<line size="30">Prix Net HT</line>
 	</orderLineHeaders>
-	<!-- sum of summer headers size must be equal to 190 -->
+	<!-- sum of summer headers size must be equal to 210 - margin left and rigth -->
 	<priceSummary summaryLineHeight="5">
 		<line size="15">TVA %</line>
 		<line size="25">Base TVA</line>

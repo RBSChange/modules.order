@@ -112,7 +112,17 @@ class order_billToPDF extends FPDF
 	 */
 	protected $margins = array();
 	
-	public function convertUTF8String($UTF8string)
+	/**
+	 * @param float
+	 */
+	protected $topRidghtCellMaxWidth;
+	
+	/**
+	 * format the text in parameter to the 
+	 * FPDF default format (UTF-8 to CP1252)
+	 * @param string $UTF8string
+	 */
+	protected function convertUTF8String($UTF8string)
 	{
 		return mb_convert_encoding($UTF8string, 'CP1252', 'UTF-8');
 	}
@@ -225,7 +235,8 @@ class order_billToPDF extends FPDF
 		$this->orderLineFillColorRGB = explode(',', $designConfiguration->getNamedItem('orderLineFillColorRGB')->nodeValue);
 		$this->margins = explode(',', $designConfiguration->getNamedItem('margins')->nodeValue);
 		$this->font = $designConfiguration->getNamedItem('font')->nodeValue;
-			
+		$this->topRidghtCellMaxWidth = $designConfiguration->getNamedItem('topRidghtCellMaxWidth')->nodeValue;
+		
 		foreach ($configXML->getElementsByTagName('customerInfoHeaders')->item(0)->childNodes as $customerInfo)
 		{
 			/* @var $customerInfo DOMNode */
@@ -237,7 +248,6 @@ class order_billToPDF extends FPDF
 
 	function Header()
 	{
-		$y = $this->GetY();
 		// Logo
 		$this->Image($this->logoPath, $this->lMargin, $this->tMargin, $this->logoWidth, $this->logoHeight);
 
@@ -259,23 +269,34 @@ class order_billToPDF extends FPDF
 		$this->MultiCell($titleSize, 4, $this->convertUTF8String(implode(PHP_EOL, $this->merchantAddress['lines'])), 0, 'C');
 		$this->Ln(10);
 		
-		$x = $this->w - $this->rMargin - 45;
+		$this->generateTopRightCell();
+		$this->ln(20);
+	}
+	
+	/**
+	 * Design the top right cell
+	 */
+	protected function generateTopRightCell()
+	{
+		$maxWidth = $this->topRidghtCellMaxWidth;
+		$y = $this->tMargin;
+		$x = $this->w - $this->rMargin - $maxWidth;
 		$this->SetFontSize(8);
 		$this->SetXY($x, $y);
-		$this->MultiCell(15, 5, 'tel' . PHP_EOL . 'fax' . PHP_EOL . 'e-mail', 0, 'R');
-		$x += 15;
+		$this->MultiCell(($maxWidth * 0.25), 5, 'tel' . PHP_EOL . 'fax' . PHP_EOL . 'e-mail', 0, 'R');
+		$x += $maxWidth * 0.25;
 		$addressInfosTxt = $this->convertUTF8String(
-			$this->merchantAddress['tel'] . PHP_EOL . 
+			$this->merchantAddress['tel'] . PHP_EOL .
 			$this->merchantAddress['fax'] . PHP_EOL .
 			$this->merchantAddress['email']
 		);
-		$width = 30;
+		$width = $maxWidth * 0.75;
 		$this->SetXY($x, $y);
 		$this->MultiCell($width, 5, $addressInfosTxt, 0, 'R');
-		$this->SetX($x);
 		$this->SetFontSize(9);
-		$this->Cell(30, 5, $this->convertUTF8String($this->billTexts['page']) . $this->PageNo() . '/{nb}', 0, 0, 'R');
-		$this->ln(20);
+		$this->SetX($x - ($maxWidth * 0.25));
+		$pageNbTxt = $this->convertUTF8String($this->billTexts['page']) . $this->PageNo() . '/{nb}';
+		$this->Cell($maxWidth, 5, $pageNbTxt, 0, 0, 'R');
 	}
 
 	function Footer()
@@ -291,6 +312,9 @@ class order_billToPDF extends FPDF
 		$this->MultiCell($frameSize, 3, $this->convertUTF8String($this->billTexts['footer']), 0, 'C');
 	}
 
+	/**
+	 * Design the bill informations
+	 */
 	protected function generateBillInfo()
 	{
 		$this->SetFontSize(13);
@@ -315,6 +339,9 @@ class order_billToPDF extends FPDF
 		$this->ln(15);
 	}
 	
+	/**
+	 * Design the customer informations
+	 */
 	protected function generateCustomerInfos()
 	{
 		$widthWithoutMargin = $this->w - $this->lMargin - $this->rMargin;
@@ -339,6 +366,9 @@ class order_billToPDF extends FPDF
 		$this->Ln(10);
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function generatePDF()
 	{
 		$this->AliasNbPages();
@@ -352,6 +382,9 @@ class order_billToPDF extends FPDF
 		return $this->Output('', 'S');
 	}
 
+	/**
+	 * Design order line headers and order lines
+	 */
 	protected function generateBody()
 	{
 		$orderLines = $this->bill->getOrder()->getLineArray();
@@ -383,6 +416,9 @@ class order_billToPDF extends FPDF
 		}
 	}
 	
+	/**
+	 * Design order line headers
+	 */
 	protected function generateOrderLineHeaders()
 	{
 		$this->SetFontSize(10);
@@ -400,6 +436,13 @@ class order_billToPDF extends FPDF
 		$this->Ln();
 	}
 	
+	/**
+	 * Design an address cell
+	 * @param customer_persistentdocument_address $address
+	 * @param float $w
+	 * @param float $h
+	 * @param integer $fontSize
+	 */
 	protected function generateAddressCell($address, $w = 50, $h = 5, $fontSize = 10)
 	{
 		$this->SetFontSize($fontSize);
@@ -461,7 +504,7 @@ class order_billToPDF extends FPDF
 	}
 	
 	/**
-	 * Generate the total price summary
+	 * Design the total price summary
 	 */
 	protected function generateSummary()
 	{
@@ -535,8 +578,6 @@ class order_billToPDF extends FPDF
 		$this->Cell($summaryWidths[2], $this->summaryLineHeight, $this->convertUTF8String($summaryTxts[2]), 1, 0, 'C', true);
 		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($summaryTxts[3]), 1, 0, 'C', true);
 		$this->Ln();
-		$this->Cell(190, 0, '', 'T');
-		$this->Ln();
 		$y = $this->GetY();
 		
 		foreach ($order->getTaxRates() as $rateFormated => $value)
@@ -607,23 +648,6 @@ class order_billToPDF extends FPDF
 	protected function setFillColorByHeader()
 	{
 		$this->SetFillColor($this->orderLineHeaderFillColorRGB[0], $this->orderLineHeaderFillColorRGB[1], $this->orderLineHeaderFillColorRGB[2]);
-	}
-
-	/**
-	 * @param string $rateFormated
-	 * @return float | null
-	 */
-	protected function getTaxRateByLabel($rateFormated)
-	{
-		$taxes = catalog_TaxService::getInstance()->createQuery()
-		->add(Restrictions::eq('label', $rateFormated))
-		->find();
-		
-		if (count($taxes))
-		{
-			return $taxes[0]->getRate();
-		}
-		return null;		
 	}
 	
 }
