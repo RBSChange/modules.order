@@ -290,7 +290,7 @@ class order_CartService extends BaseService
 	{
 		$shop = $cart->getShop();
 		$billingArea =  $cart->getBillingArea();
-		if ($product->isPublished() && $product->canBeOrdered($shop) && $product->getPrice($shop, $billingArea, $cart->getCustomer(), $quantity) != null)
+		if ($product->isPublished() && $product->canBeAddedToCart($product->getPrice($shop, $billingArea, $cart->getCustomer(), $quantity), $quantity))
 		{
 			$stDoc = catalog_StockService::getInstance()->getStockableDocument($product);
 			if ($stDoc !== null)
