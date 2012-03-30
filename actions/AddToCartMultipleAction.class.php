@@ -56,11 +56,7 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 		}
 		
 		// Redirect.
-		if (!$backUrl)
-		{
-			$backUrl = LinkHelper::getTagUrl('contextual_website_website_modules_order_cart');
-		}
-		HttpController::getInstance()->redirectToUrl($backUrl);
+		HttpController::getInstance()->redirectToUrl($backUrl ? $backUrl : $this->getCartUrl());
 	}
 	
 	/**
@@ -143,15 +139,32 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 				$message = null;
 				break;
 			case 1 :
-				$message = $ls->transFO('m.order.fo.product-label-'.$eventname, array('ucf'), array('label' => f_util_ArrayUtils::firstElement($labels)));
+				$replacements = array('label' => f_util_ArrayUtils::firstElement($labels), 'cartUrl' => $this->getCartUrl());
+				$message = $ls->transFO('m.order.fo.product-label-'.$eventname.'-link', array('ucf'), $replacements);
 				break;
 			default :
-				$lastLabel = array_pop($labels);
-				$firstLabels = implode(', ', $labels);
-				$message = $ls->transFO('m.order.fo.product-labels-'.$eventname, array('ucf'), array('firstLabels' => $firstLabels, 'lastLabel' => $lastLabel));
+				$replacements = array('firstLabels' => implode(', ', $labels), 'lastLabel' => array_pop($labels), 'cartUrl' => $this->getCartUrl());
+				$message = $ls->transFO('m.order.fo.product-labels-'.$eventname.'-link', array('ucf'), $replacements);
 				break;
 		}
 		return $message;
+	}
+	
+	/**
+	 * @var string
+	 */
+	private $cartUrl;
+	
+	/**
+	 * @return string
+	 */
+	protected function getCartUrl()
+	{
+		if ($this->cartUrl === null)
+		{
+			$this->cartUrl = LinkHelper::getTagUrl('contextual_website_website_modules_order_cart');
+		}
+		return $this->cartUrl;
 	}
 	
 	/**

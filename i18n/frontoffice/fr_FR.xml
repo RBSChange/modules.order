@@ -95,6 +95,7 @@
   <key id="total-withtax-abr">Total TTC</key>
   <key id="total-withouttax-abr">Total HT</key>
   <key id="total-tva-abr">TOTAL TVA</key>
+  <key id="total-withouttax-withoutfees-abr">total HT (hors frais)</key>
   <key id="total-withtax-withoutfees-abr">total TTC (hors frais)</key>
   <key id="continue-shopping">je continue mes achats</key>
   <key id="order-button">je commande</key>
@@ -121,7 +122,7 @@
   <key id="coupon-form-help">si vous disposez d'un coupon de réduction vous pouvez l'utiliser en saisissant son code.</key>
   <key id="coupon-use">utiliser</key>
   <key id="coupon-remove">retirer ce coupon</key>
-  <key id="coupon-code">code du coupon</key>
+  <key id="coupon-code">code coupon</key>
   <key id="coupon-not-exist">le code ″{code}″ ne correspond à aucun coupon.</key>
   <key id="coupon-name">coupon de réduction</key>
   <key id="coupon-value">réduction</key>

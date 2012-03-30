@@ -1,29 +1,18 @@
 <ul class="mini-navigation">
 	<li class="print">
-		<a class="link" tal:attributes="href printLink" onclick="accessiblePrint(this); return false;">${trans:m.catalog.frontoffice.print,ucf}</a></li>
-	<li>
-		<a change:link="tag ctx_catalog_favorite-product-list; catalogParam[addCartToList] 'true'">${trans:m.order.frontoffice.add-cart-to-list,ucf}</a>
-	</li>
-	<li>
-		<a change:link="module order; action ContinueShopping; cmpref cart/getShopId">${trans:m.order.frontoffice.continue-shopping,ucf}</a>
+		<a class="link" tal:attributes="href printLink" onclick="accessiblePrint(this); return false;">${trans:m.catalog.frontoffice.print,ucf}</a>
 	</li>
 </ul>
 
 <h1 change:h="">${trans:m.order.frontoffice.my-cart,ucf}</h1>
 
-<div id="cart-errors" class="normal">
-	<tal:block change:block="" module="order" name="CartMessages" handleCantOrderMessage="true" />
-</div>
-
-<form class="" method="post" action="${updateActionUrl}">
-	<p class="normal">
-		<input name="orderParam[shopId]" type="hidden" value="${cart/getShopId}" />
-		<input change:submit="name Refresh" labeli18n="m.order.frontoffice.update-button" />
-	</p>
-	<table class="normal" border="0" summary="${trans:m.order.frontoffice.cart-table-summary,ucf,attr}" tal:define="showTTC shop/getDisplayPriceWithTax; showHT php: !showTTC && shop.getDisplayPriceWithoutTax()">
+<form class="cmxform normal-margin" id="cart-lines" method="post" action="${updateActionUrl}">
+	<tal:block change:block="" module="order" name="CartMessages" handleCantOrderMessage="true" container="" />
+	<tal:block change:block="" module="website" name="messages" container="" />
+	<table class="normal" summary="${trans:m.order.frontoffice.cart-table-summary,ucf,attr}" tal:define="showTTC shop/getDisplayPriceWithTax; showHT php: !showTTC && shop.getDisplayPriceWithoutTax()">
 		<thead>
 			<tr>
-				<th class="first">&nbsp;</th>
+				<th>&#160;</th>
 				<th>${trans:m.order.frontoffice.designation,ucf}</th>
 				<th>${trans:m.order.frontoffice.availability,ucf}</th>
 				<th tal:condition="showHT">
@@ -40,18 +29,18 @@
 				<th tal:condition="showTTC">
 					<abbr title="${trans:m.order.frontoffice.totalprice-with-tax,attr}">${trans:m.order.frontoffice.totalprice-with-tax-abr}</abbr>
 				</th>
-				<th class="last">&nbsp;</th>
+				<th>&#160;</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tal:block tal:repeat="cartLine cart/getCartLineArray">
-				<tr tal:condition="cartLine/getDiscountId" class="row-${repeat/cartLine/odd}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
+				<tr tal:condition="cartLine/getDiscountId" class="${alternateclass:lineId}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
 					<!-- Visual -->
-					<td>
-						<a change:link="document product" tal:condition="product/getDefaultVisual">
-							<img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/small'" />
+					<td tal:define="visual product/getDefaultVisual" class="visual">
+						<a tal:condition="visual" change:link="document product">
+							<img change:media="document visual; format 'modules.catalog.frontoffice/small'" />
 						</a>
-						<tal:block tal:condition="not: product/getDefaultVisual">&nbsp;</tal:block>
+						<tal:block tal:condition="not: visual">&#160;</tal:block>
 					</td>
 	
 					<!-- Désignation / Article -->
@@ -61,51 +50,51 @@
 					<td>${product/getAvailability}</td>
 					
 					<!-- Unit price -->
-					<td class="priceht" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
-					<td class="pricettc" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
+					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
+					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
 	
 					<!-- Quantity -->
-					<td> ${cartLine/getQuantity} </td>
+					<td>${cartLine/getQuantity}</td>
 	
 					<!-- Tax rate -->
 					<td tal:condition="showTTC">${cartLine/getFormattedTaxRate}</td>
 										
 					<!-- Total price -->
-					<td class="priceht" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
-					<td class="pricettc" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
+					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
+					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
 	
 					<!-- Remove link -->
-					<td class="sale">&#160;</td>
+					<td>&#160;</td>
 				</tr>
 				
-				<tr tal:condition="not: cartLine/getDiscountId" class="${php: repeat.cartLine.odd ? 'odd' : 'even'}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
+				<tr tal:condition="not: cartLine/getDiscountId" class="${alternateclass:lineId}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
 					<!-- Visual -->
-					<td>
-						<a change:link="document product" tal:condition="product/getDefaultVisual">
-							<img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/small'" />
+					<td tal:define="visual product/getDefaultVisual" class="visual">
+						<a tal:condition="visual" change:link="document product">
+							<img change:media="document visual; format 'modules.catalog.frontoffice/small'" />
 						</a>
-						<tal:block tal:condition="not: product/getDefaultVisual">&nbsp;</tal:block>
+						<tal:block tal:condition="not: visual">&#160;</tal:block>
 					</td>
 	
 					<!-- Désignation / Article -->
-					<td tal:condition="readonly">${product/getOrderLabelAsHtml}</td>
-					<td tal:condition="not: readonly">
-						${product/getOrderLabelAsHtml} <input type="hidden" tal:define="name string:orderParam[lines][${cartLineIndex}][productId]" tal:attributes="name name; value product/getId" />
-					</td>
+					<td>${product/getOrderLabelAsHtml} <input type="hidden" name="${string:orderParam[lines][${cartLineIndex}][productId]}" value="${product/getId}" /></td>
 	
 					<!-- Disponibilite -->
 					<td>${product/getAvailability}</td>
 					
 					<!-- Unit price -->
-					<td class="priceht" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
-					<td class="pricettc" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
+					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
+					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
 	
 					<!-- Quantity -->
 					<td tal:define="name string:orderParam[lines][${cartLineIndex}][quantity]; update product/updateCartQuantity">
 						<label class="hidden" tal:attributes="for name">${trans:m.order.frontoffice.Quantity,ucf,lab}</label> 
-						<input class="textfield" tal:condition="update" type="text" size="3" name="${name}" value="${cartLine/getQuantity}" />
+						<tal:block tal:condition="update">
+							<input class="textfield" type="text" size="3" name="${name}" value="${cartLine/getQuantity}" />
+							<input type="image" change:img="icon/small/refresh.png" />
+						</tal:block>
 						<tal:block tal:condition="not: update">
-							<input class="textfield" type="hidden" name="${name}" value="${cartLine/getQuantity}" /> ${cartLine/getQuantity}
+							<input type="hidden" name="${name}" value="${cartLine/getQuantity}" /> ${cartLine/getQuantity}
 						</tal:block>
 					</td>
 	
@@ -113,201 +102,174 @@
 					<td tal:condition="showTTC">${cartLine/getFormattedTaxRate}</td>
 										
 					<!-- Total price -->
-					<td class="priceht" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
-					<td class="pricettc" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
+					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
+					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
 						
 					<!-- Remove link -->
-					<td class="sale">
-						<a tal:condition="not: readonly" change:link="module order; action RemoveCartLine; cartLineIndex cartLineIndex; pageref pageref">
+					<td>
+						<a change:link="module order; action RemoveCartLine; cartLineIndex cartLineIndex; pageref pageref">
 							<img change:image="front/cross.gif" alt="${trans:m.order.frontoffice.delete-link,ucf,attr}" />
 						</a>
-						<tal:block tal:condition="readonly">&nbsp;</tal:block>
 					</td>
 				</tr>
 			</tal:block>
 		</tbody>
 	</table>
+	<div class="hidden">
+		<input name="orderParam[shopId]" type="hidden" value="${cart/getShopId}" />
+		<input name="orderParam[website_BlockAction_submit][][Refresh]" type="hidden" value="true" />
+	</div>
+	<p class="buttons nojs">
+		<input change:submit="name Refresh; id refreshCart" labeli18n="m.order.frontoffice.update-button" />
+	</p>
 </form>
 
-<!-- Début : column-two -->
-<div class="column-two">
-	<table class="normal payment-information" border="0">
-		<tr tal:condition="shop/getDisplayPriceWithoutTax">
-			<td>${trans:m.order.frontoffice.sub-total-withouttax-abr,ucf,lab}</td>
-			<td>${cart/getFormattedSubTotalWithoutTax}</td>
-		</tr>
-		<tr tal:condition="shop/getDisplayPriceWithTax">
-			<td>${trans:m.order.frontoffice.sub-total-withtax-abr,ucf,lab}</td>
-			<td>${cart/getFormattedSubTotalWithTax}</td>
-		</tr>
-		
-		<tal:block tal:condition="configuration/getShowTotalWithFees">
-			<!-- Mode d'envoi -->
-			<tr tal:condition="cart/getShippingMode">
-				<td>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</td>
-				<td>${cart/getShippingLabel}</td>
-			</tr>
-			<!-- fees -->
-			<tr tal:repeat="fees cart/getFeesDataArrayForDisplay">	
-				<td>${fees/label} :</td>
-				<td>${fees/valueWithTax}</td>
-			</tr>
-		</tal:block>
-		
-		<!-- discount -->
-		<tr tal:repeat="discount cart/getDiscountDataArrayForDisplay">
-			<td>${discount/label} :</td>
-			<td class="discount">${discount/valueWithTax}</td>
-		</tr>
-		
-		<!-- Montants par taxe -->
-		<tr tal:repeat="PriceByTax cart/getFormattedSubTotalTaxByRate">
-			<td>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</td>
-			<td>${PriceByTax/formattedTaxAmount}</td>
-		</tr>
-		
-		<!-- Total -->
-		<tal:block tal:condition="php: configuration.getShowTotalWithFees() && cart.getShippingModeId()">
-			<tr>
-				<td class="pricetotal" change:translate="modules.order.frontoffice.Total-withtax-withoutfees-abrLabel" />
-				<td class="pricetotal">${cart/getFormattedTotalExcludingFeesWithTax}</td>
-			</tr>
-		</tal:block>	
-		
-		<tal:block tal:condition="php: !configuration.getShowTotalWithFees() || !cart.getShippingModeId()">
-			<tr tal:condition="not:cart/hasCreditNote">	
-				<td class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</td>
-				<td class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</td>
-			</tr>
-			
-			<tal:block tal:condition="cart/hasCreditNote">	
-				<tr>
-					<td class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</td>
-					<td class="pricetotal">${php:cart.formatPrice(cart.getTotalWithTax())}</td>
-				</tr>
-				<tr>
-					<td>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</td>
-					<td>${php:cart.formatPrice(cart.getTotalCreditNoteAmount())}</td>
-				</tr>
-				<tr>
-					<td class="pricetotal">${trans:m.order.frontoffice.creditnote-total,ucf,lab}</td>
-					<td class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</td>
-				</tr>
-			</tal:block>
-		</tal:block>	
-	</table>
-
-	<p class="normal" tal:condition="orderProcess/open">${trans:m.order.frontoffice.cart-help-updatecart,ucf}</p>
-	
-	<ul class="mini-navigation">
-		<li>
-			<a change:link="tag contextual_website_website_modules_catalog_favorite-product-list; catalogParam[addCartToList] 'true'">${trans:m.order.frontoffice.add-cart-to-list,ucf}</a>
-		</li>
-		<li>
-			<a change:link="module order; action ContinueShopping; cmpref cart/getShopId">${trans:m.order.frontoffice.continue-shopping,ucf}</a>
-		</li>
-	</ul>
-</div>
-<!-- Fin : column-two -->
-
-<!-- Début : column-one -->
-<div class="column-one">
-	<div class="productcart-information-block">
-		<form change:form="" tal:condition="cart/useCoupon">
-			<h2 change:h="">${trans:m.order.frontoffice.coupon-name,ucf}</h2>
-			<ul change:errors="relKey coupon"></ul>
-			<tal:block tal:condition="not: cart/hasCoupon">
-				<ol>
-					<li>
-						<input change:textinput="name coupon" size="10" id="billing-coupon-code" labeli18n="m.order.frontoffice.coupon-code" />
-					</li>
-				</ol>
-				<p class="buttons"><input change:submit="name UpdateCoupon" labeli18n="m.order.frontoffice.coupon-use" /></p>		
-			</tal:block>
-			<tal:block tal:condition="cart/hasCoupon">
-				<ol>
-					<li>
-						<label class="nocmx" for="billing-coupon-code">${trans:m.order.frontoffice.coupon-code,ucf,attr,lab} ${cart/getCoupon/getLabel}</label>
-					</li>
-				</ol>
-				<p class="buttons"><input change:submit="name UpdateCoupon" labeli18n="m.order.frontoffice.coupon-remove" id="billing-coupon-code" /></p>		
-			</tal:block>
-		</form>
-		
-		<tal:block tal:condition="configuration/getShowEvaluateShipping">
-			<form change:form="beanClass order_ShippingStepBean; beanName addressInfo" id="evaluateshippingform">
-				<ul change:errors=""></ul>
-				<h2 change:h="">${trans:m.order.document.shippingstepbean.evaluateShipping,ucf}</h2>
-				<p class="normal">${trans:m.order.document.shippingstepbean.evaluateShipping-text,ucf}</p>
-				<ol>
-					<li><input change:field="name shippingAddress.Zipcode" size="30" required="false" /></li>
-					<li><input change:field="name shippingAddress.City" size="30" required="false" /></li>
-					<li><input change:selectinput="name shippingAddress.CountryId" listId="modules_customer/shippingcountry" labeled="true" required="false" /></li>
-				</ol>
-				<p class="buttons">
-					<input change:hiddeninput="name evaluateshipping" value="1" />
-					<input change:submit="name Evaluateshipping" labeli18n="m.order.document.shippingstepbean.evaluateShipping-button" />
-				</p>
-			</form>
-			
-			<tal:block tal:condition="evaluateshipping">
-				<tal:block tal:condition="cart/canSelectShippingModeId" tal:define="shippingModes cart/getShippingModes" > 		
-					<tal:block tal:condition="shippingModes/0">
-						<h3 change:h="">${trans:m.order.document.shippingstepbean.evaluateShipping-results,ucf}</h3>
-						<ul>
-							<li tal:repeat="modeFilter shippingModes">
-								<tal:block tal:define="mode modeFilter/getMode">
-									${mode/getLabel} : 
-									<strong>
-										<tal:block tal:condition="modeFilter/getValueWithTax">${modeFilter/getFormattedValueWithTax}</tal:block>
-										<tal:block tal:condition="not: modeFilter/getValueWithTax">${trans:m.order.frontoffice.freeshipping,ucf}</tal:block>
-									</strong>
-								</tal:block>
+<div class="columns">
+	<!-- Début : column-one -->
+	<div class="column-50">
+		<div class="productcart-information-block">
+			<form change:form="" tal:condition="cart/useCoupon">
+				<fieldset>
+					<legend class="h-2">${trans:m.order.frontoffice.coupon-name,ucf}</legend>
+					<ul change:errors="relKey coupon"></ul>
+					<tal:block tal:condition="not: cart/hasCoupon">
+						<ol>
+							<li>
+								<input change:textinput="name coupon" size="10" id="billing-coupon-code" labeli18n="m.order.frontoffice.coupon-code" />
 							</li>
-						</ul>
+						</ol>
+						<p class="buttons"><input change:submit="name UpdateCoupon" labeli18n="m.order.frontoffice.coupon-use" /></p>		
 					</tal:block>
-					<tal:block tal:condition="not: shippingModes/0">
-						<p class="error">${trans:m.order.document.shippingstepbean.no-shipping-mode,ucf}</p>
+					<tal:block tal:condition="cart/hasCoupon">
+						<ol>
+							<li>
+								<label class="nocmx" for="billing-coupon-code">${trans:m.order.frontoffice.coupon-code,ucf,attr,lab} ${cart/getCoupon/getLabel}</label>
+							</li>
+						</ol>
+						<p class="buttons"><input change:submit="name UpdateCoupon" labeli18n="m.order.frontoffice.coupon-remove" id="billing-coupon-code" /></p>		
 					</tal:block>
-					<div class="cleaner"></div>
-					<br/>
+				</fieldset>
+			</form>
+						
+			<tal:block tal:condition="configuration/getShowEvaluateShipping">
+				<form change:form="beanClass order_ShippingStepBean; beanName addressInfo" id="evaluateshippingform">
+					<fieldset>
+						<legend class="h-2">${trans:m.order.document.shippingstepbean.evaluateShipping,ucf}</legend>
+						<ul change:errors=""></ul>
+						<p class="description">${trans:m.order.document.shippingstepbean.evaluateShipping-text,ucf}</p>
+						<ol>
+							<li><input change:field="name shippingAddress.Zipcode; required false" size="30" /></li>
+							<li><input change:field="name shippingAddress.City; required false" size="30" /></li>
+							<li><input change:selectinput="name shippingAddress.CountryId; required false" listId="modules_customer/shippingcountry" labeled="true" /></li>
+						</ol>
+						<p class="buttons">
+							<input change:hiddeninput="name evaluateshipping" value="1" />
+							<input change:submit="name Evaluateshipping" labeli18n="m.order.document.shippingstepbean.evaluateShipping-button" />
+						</p>
+					</fieldset>				
+				</form>
+				
+				<tal:block tal:condition="evaluateshipping">
+					<tal:block tal:condition="cart/canSelectShippingModeId" tal:define="shippingModes cart/getShippingModes" > 		
+						<tal:block tal:condition="shippingModes/0">
+							<h3 change:h="">${trans:m.order.document.shippingstepbean.evaluateShipping-results,ucf}</h3>
+							<ul>
+								<li tal:repeat="modeFilter shippingModes">
+									<tal:block tal:define="mode modeFilter/getMode">
+										${mode/getLabel} : 
+										<strong>
+											<tal:block tal:condition="modeFilter/getValueWithTax">${modeFilter/getFormattedValueWithTax}</tal:block>
+											<tal:block tal:condition="not: modeFilter/getValueWithTax">${trans:m.order.frontoffice.freeshipping,ucf}</tal:block>
+										</strong>
+									</tal:block>
+								</li>
+							</ul>
+						</tal:block>
+						<tal:block tal:condition="not: shippingModes/0">
+							<p class="error">${trans:m.order.document.shippingstepbean.no-shipping-mode,ucf}</p>
+						</tal:block>
+						<div class="cleaner"></div>
+					</tal:block>
 				</tal:block>
 			</tal:block>
-		</tal:block>
+		</div>
 	</div>
+	<!-- Fin : column-one -->
+	<!-- Début : column-two -->
+	<div class="column-50" tal:define="discounts cart/getDiscountDataArrayForDisplay">
+		<table class="normal payment-information">
+			<tal:block tal:condition="discounts/0">
+				<tr tal:condition="shop/getDisplayPriceWithoutTax">
+					<td>${trans:m.order.frontoffice.sub-total-withouttax-abr,ucf,lab}</td>
+					<td class="price">${cart/getFormattedSubTotalWithoutTax}</td>
+				</tr>
+				<tr tal:condition="shop/getDisplayPriceWithTax">
+					<td>${trans:m.order.frontoffice.sub-total-withtax-abr,ucf,lab}</td>
+					<td class="price">${cart/getFormattedSubTotalWithTax}</td>
+				</tr>
+						
+				<!-- discount -->
+				<tr tal:repeat="discount discounts">
+					<td>${discount/label} :</td>
+					<td class="discount" class="price">${discount/valueWithTax}</td>
+				</tr>
+			</tal:block>
+			
+			<!-- Total -->
+			<tr>
+				<td>${trans:m.order.frontoffice.total-withouttax-withoutfees-abr,ucf,lab}</td>
+				<td class="price">${cart/getFormattedTotalExcludingFeesWithoutTax}</td>
+			</tr>
+			<tr class="big">
+				<td>${trans:m.order.frontoffice.total-withtax-withoutfees-abr,ucf,lab}</td>
+				<td class="price">${cart/getFormattedTotalExcludingFeesWithTax}</td>
+			</tr>
+		</table>
+		<p tal:condition="orderProcess/open">${trans:m.order.frontoffice.cart-help-updatecart,ucf}</p>		
+		<p class="buttons js">
+			<button class="button" onclick="jQuery('#cart-lines').submit();">${trans:m.order.frontoffice.update-button,ucf}</button>
+		</p>
+		<p class="normal" tal:condition="cart/hasCreditNote">Avoirs</p>
+		<ul class="mini-navigation">
+			<li>
+				<a change:link="tag contextual_website_website_modules_catalog_favorite-product-list; catalogParam[addCartToList] 'true'">${trans:m.order.frontoffice.add-cart-to-list,ucf}</a>
+			</li>
+		</ul>
+	</div>
+	<!-- Fin : column-two -->
 </div>
-<!-- Fin : column-one -->
-<div class="cleaner"></div>
 
 <tal:block tal:condition="not: orderProcess/open">
 	<h2 change:h="">${trans:m.order.frontoffice.orderProcess.do-order,ucf}</h2>
-	<p class="error">
-		<tal:block tal:condition="orderProcess/message">${orderProcess/message}</tal:block>
-		<tal:block tal:condition="not: orderProcess/message">${trans:m.order.frontoffice.orderProcess.closed-default-message}</tal:block>
-	</p>
+	<ul class="errors">
+		<li tal:condition="orderProcess/message">${orderProcess/message}</li>
+		<li tal:condition="not: orderProcess/message">${trans:m.order.frontoffice.orderProcess.closed-default-message,ucf}</li>
+	</ul>
 </tal:block>
 <tal:block tal:condition="orderProcess/open">
 	<tal:block tal:condition="cart/isValid">
 		<form change:form="">
-			<h2 change:h="">${trans:m.order.frontoffice.orderProcess.do-order,ucf}</h2>
-			<ul change:errors="relKey cgv"></ul>	
-			<p class="normal"> 
-				${trans:m.order.frontoffice.orderProcess.pre-read-general-sales-conditions,ucf}
-				<a change:link="tag ctx_order_cgv">${trans:m.order.frontoffice.orderProcess.read-general-sales-conditions}</a>
-				${trans:m.order.frontoffice.orderProcess.post-read-general-sales-conditions}
-			</p>		
-			<ol>
-				<li><label change:label="" name="cgv_1" required="true" labeli18n="m.order.frontoffice.orderprocess.cgv"></label> 
-					<input change:checkboxinput="withcolon false" name="cgv" value="true" labeli18n="m.order.frontoffice.orderprocess.cgv-agree" />
-				</li>
-			</ol>
-			<p class="buttons">
-				<input change:submit="name Order" labeli18n="m.order.frontoffice.order-button" />
-			</p>
+			<fieldset>
+				<legend class="h-2">${trans:m.order.frontoffice.orderProcess.do-order,ucf}</legend>
+				<ul change:errors="relKey cgv"></ul>	
+				<p class="normal"> 
+					${trans:m.order.frontoffice.orderProcess.pre-read-general-sales-conditions,ucf}
+					<a change:link="tag ctx_order_cgv">${trans:m.order.frontoffice.orderProcess.read-general-sales-conditions,ucf}</a>
+					${trans:m.order.frontoffice.orderProcess.post-read-general-sales-conditions}
+				</p>		
+				<ol>
+					<li><label change:label="" name="cgv_1" required="true" labeli18n="m.order.frontoffice.orderprocess.cgv"></label> 
+						<input change:checkboxinput="withcolon false" name="cgv" value="true" labeli18n="m.order.frontoffice.orderprocess.cgv-agree" />
+					</li>
+				</ol>
+				<p class="buttons">
+					<input change:submit="name Order" labeli18n="m.order.frontoffice.order-button" />
+					<a class="button secondary" change:link="module order; action ContinueShopping; cmpref cart/getShopId">${trans:m.order.frontoffice.continue-shopping,ucf}</a>
+				</p>
+			</fieldset>			
 		</form>
 	</tal:block>
 </tal:block>
-
 
 <!-- Début : Aide -->
 <tal:block tal:condition="configuration/getShowInstructions">
