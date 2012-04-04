@@ -1,5 +1,0 @@
-Version: 3.5.0
-
-Add default status 'initiated' on order an bill document
-
-Change the default publication status of creditnote from DRAFT to ACTIVE

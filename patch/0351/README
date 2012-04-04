@@ -1,4 +1,0 @@
-Version: 3.5.0
-
-- rename m_marketing_doc_discount to m_order_doc_cartmodifier
-- rename excludeDiscount property on cart modifiers to excludeModifier
