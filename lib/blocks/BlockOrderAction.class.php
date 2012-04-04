@@ -48,10 +48,7 @@ class order_BlockOrderAction extends website_TaggerBlockAction
 		$cs =  order_CartService::getInstance();
 		if ($cs->hasCartInSession())
 		{
-			$theme = Framework::getConfigurationValue("modules/website/jquery-ui-theme", "south-street");
-			$this->getContext()->addStyle("modules.website.jquery-ui.$theme");
 			$this->getContext()->addScript('modules.website.lib.js.jquery-ui-dialog');
-			
 			$cart = $cs->getDocumentInstanceFromSession();
 			$request->setAttribute('cart', $cart);
 		}
