@@ -5,28 +5,28 @@
 
 	<website byTag="default_modules_website_default-website">
 		<topic byLabel="Commande">
-			<page byTag="contextual_website_website_modules_order_stdaddressstep" template-attr="templateHome"
+			<page byTag="contextual_website_website_modules_order_stdaddressstep" template-attr="templateNosidebar"
 				label="Commande - Adresse" navigationtitle="Adresse" navigationVisibility="hidden" 
 				indexingstatus="false" robotsmeta="noindex,nofollow">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_StdAddressStep" />			
 				</changecontent>
 			</page>			
-			<page byTag="contextual_website_website_modules_order_stdshippingstep" template-attr="templateHome"
+			<page byTag="contextual_website_website_modules_order_stdshippingstep" template-attr="templateNosidebar"
 				label="Commande - Livraison" navigationtitle="Livraison" navigationVisibility="hidden" 
 				indexingstatus="false" robotsmeta="noindex,nofollow">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_StdShippingStep" />
 				</changecontent>
 			</page>
-			<page byTag="contextual_website_website_modules_order_stdbillingstep" template-attr="templateHome"
+			<page byTag="contextual_website_website_modules_order_stdbillingstep" template-attr="templateNosidebar"
 				label="Commande - Paiement" navigationtitle="Paiement" navigationVisibility="hidden" 
 				indexingstatus="false" robotsmeta="noindex,nofollow">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_StdBillingStep" />
 				</changecontent>
 			</page>
-			<page byTag="contextual_website_website_modules_order_stdresultstep" template-attr="templateHome"
+			<page byTag="contextual_website_website_modules_order_stdresultstep" template-attr="templateNosidebar"
 				label="Commande - Confirmation" navigationtitle="Confirmation" navigationVisibility="hidden" 
 				indexingstatus="false" robotsmeta="noindex,nofollow">
 				<changecontent for="content-block">

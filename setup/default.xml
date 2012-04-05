@@ -8,7 +8,7 @@
 
 	<website byTag="default_modules_website_default-website">
 		<topic byLabel="Commande">
-			<page label="Mon panier" indexingstatus="false" robotsmeta="noindex,nofollow" template-attr="templateHome"
+			<page label="Mon panier" indexingstatus="false" robotsmeta="noindex,nofollow" template-attr="templateNosidebar"
 				byTag="contextual_website_website_modules_order_cart">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_Cart" />

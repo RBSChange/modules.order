@@ -62,7 +62,8 @@
 					<input change:submit="name UseRegisteredShippingAddress" labeli18n="m.order.document.shippingstepbean.registered-address-select" />
 				</div>
 			</div>
-			<script type="text/javascript" tal:define="blockId configuration/getBlockId">//<![CDATA[
+			<script type="text/javascript" tal:define="blockId configuration/getBlockId">
+				/* <![CDATA[ */
 				jQuery(document).ready(function()
 				{
 					jQuery('#order_shippingStep${blockId}_useSameAddressForBilling_false').bind('click change', function()
@@ -74,7 +75,8 @@
 						jQuery('#order_billingAddressContainer').hide();
 					}			
 				});
-			//]]></script>
+				/* ]]> */
+			</script>
 		</fieldset>
 
 		<tal:block tal:condition="cart/hasPredefinedShippingMode" tal:define="shippingModes cart/getRequiredShippingModes">
