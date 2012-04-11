@@ -132,7 +132,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 		}
 		else
 		{
-			throw new Exception("Invalid configuration: modules/order/billPDFGenerator");
+			throw new Exception("Invalid configuration: modules/order/billPDFGenerator. $className class doesn't exist");
 		}
 	}
 	

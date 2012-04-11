@@ -185,5 +185,10 @@
   <key id="general-informations">informations générales</key>   
   <key id="expedition-status">statut de l'expédition</key>   
   <key id="expedition-lines">produits concernés</key>   
-  <key id="related-order">commande associée</key>   
+  <key id="related-order">commande associée</key>
+  <key id="track">suivi</key>
+  <key id="packet">colis</key>
+  <key id="receive-date">date de réception</key>
+  <key id="delivery-date">date de remise</key>
+  <key id="delivery">bon de livraison</key>
 </i18n>

@@ -7,7 +7,7 @@
 <h1 change:h=""><span>${trans:m.order.frontoffice.shipping-number,ucf}</span> ${expedition/getLabelAsHtml}</h1>
 <h2 change:h="">${trans:m.order.frontoffice.general-informations,ucf}</h2>
 <ul tal:define="shippingMode expedition/getShippingMode" class="normal">
-	<li><span>${trans:m.order.frontoffice.related-order,ucf,lab}</span> <a change:link="document order">${order/getOrderNumber}</a> (${datetime:order/getCreationdate})</li>
+	<li><span>${trans:m.order.frontoffice.related-order,ucf,lab}</span> <a change:link="document order">${order/getOrderNumber}</a> (${datetime:order/getCreationdate}) (<a class="link popup" target="_blank" href="${actionurl:'order', 'GenerateExpedition', cmpref=expedition/getId, attr}">${trans:m.order.frontoffice.delivery,ucf}</a>)</li>
 	<li><span>${trans:m.order.frontoffice.expedition-status,ucf,lab}</span> ${expedition/getStatusLabel}</li>
 	<li><span>${trans:m.order.frontoffice.transport-name,ucf,lab}</span> ${shippingMode/getLabelAsHtml}</li>
 	<li tal:condition="expedition/getShippingDate"><span>${trans:m.order.document.expedition.shippingdate,ucf,lab}</span> ${datetime:expedition/getUIShippingDate}</li>
@@ -36,14 +36,14 @@
 <h2 change:h="">${trans:m.order.frontoffice.expedition-lines,ucf}</h2>
 <tal:block tal:repeat="packetLines packetByExpedition">
 	<ol tal:define="packet packetLines/0">
-		<li tal:condition="packet/getPacketNumber">Colis : ${packet/getPacketNumberAsHtml}</li>
-		<li tal:condition="packet/getTrackingNumber">Suivi : 
+		<li tal:condition="packet/getPacketNumber">${trans:m.order.frontoffice.packet,ucf,lab} ${packet/getPacketNumberAsHtml}</li>
+		<li tal:condition="packet/getTrackingNumber">${trans:m.order.frontoffice.track,ucf,lab} 
 			<a tal:omit-tag="not: packet/getTrackingURL" class="link" target="_blank" href="${packet/getEvaluatedTrackingURL}">${packet/getTrackingNumberAsHtml}</a>
 			<p tal:condition="packet/getTrackingText">${packet/getTrackingTextAsHtml}</p>
 		</li>
-		<li tal:condition="packet/getStatus">Status : ${packet/getStatusLabel}</li>
-		<li tal:condition="packet/getReceiveDate">Date de récéption : ${date:packet/getUIReceiveDate}</li>
-		<li tal:condition="packet/getDeliveryDate">Date de remise : ${date:packet/getUIDeliveryDate}</li>
+		<li tal:condition="packet/getStatus">${trans:m.order.frontoffice.status,ucf,lab} ${packet/getStatusLabel}</li>
+		<li tal:condition="packet/getReceiveDate">${trans:m.order.frontoffice.receive-date,ucf,lab} ${date:packet/getUIReceiveDate}</li>
+		<li tal:condition="packet/getDeliveryDate">${trans:m.order.frontoffice.delivery-date,ucf,lab} ${date:packet/getUIDeliveryDate}</li>
 	</ol>
 	<table class="normal">
 		<thead>

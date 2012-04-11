@@ -3,30 +3,28 @@
  * order_GenerateExpeditionAction
  * @package modules.order.actions
  */
-class order_GenerateExpeditionAction extends generic_LoadJSONAction
+class order_GenerateExpeditionAction extends f_action_BaseAction
 {
+	/**
+	 * @return boolean
+	 */
+	public function isSecure()
+	{
+		return false;
+	}
+	
 	/**
 	 * @param Context $context
 	 * @param Request $request
 	 */
 	public function _execute($context, $request)
 	{
-		$orderPreparation = $this->getDocumentInstanceFromRequest($request);
-		if ($orderPreparation instanceof order_persistentdocument_orderpreparation)
+		$expedition = $this->getDocumentInstanceFromRequest($request);
+		if ($expedition instanceof order_persistentdocument_expedition)
 		{
-			if ($orderPreparation->getPublicationstatus() === 'DRAFT')
-			{
-				$orderPreparation->getDocumentService()->activate($orderPreparation->getId());
-			}
-			$order = $orderPreparation->getOrderInstance();
-			order_ExpeditionService::getInstance()->createForOrderPreparation($orderPreparation);
-			$this->logAction($orderPreparation);
-			$result = $this->exportFieldsData($order, array('shipping'));
+			$fpdf = new order_FPDFExpeditionGenerator($expedition);
+			$fpdf->generatePDF();
 		}
-		else
-		{
-			throw new Exception('Invalid document type: ' . get_class($orderPreparation));
-		} 
-		return $this->sendJSON($result);
+		return View::NONE;
 	}
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fpdf>
+	<!-- margin order : left, right, top, bottom -->
+	<design expeditionlineHeight="6" orderLineHeaderFillColorRGB="160, 160, 160" orderLineFillColorRGB="220, 220, 220" font="Times" margins="10, 10, 10, 40" topRidghtCellMaxWidth="40"/>
+	<positions addressXAbsolutePosition="10.5" addressYAbsolutePosition="48" bodyYAbsolutePosition="105" />
+	<!-- logo max width and height : 60 and 30 -->
+	<logo width="50" height="7">DEMOPDFLogo.png</logo>
+	<expeditionTexts>
+		<title>READY BUSINESS SYSTEM</title>
+		<companyStatus>SA à directoire et CS au capital de 1 738 704 EUR</companyStatus>
+		<footerTop>Clause de réserve de propriété</footerTop>
+		<footerFramed>
+		Toutes marchandises livrées restent la propriété de Ready Business System jusqu'au paiement effectif de l'intégralité du pris,
+		conformement à l'article L621-122 de la loi du 12 mai 1980. Toute somme non règlée à échéance portera intérêt au taux de 1%
+		par mois de retard. Tout litige sera de la compétance des Tribunaux de Strasbourg.
+		</footerFramed>
+		<footer>
+		N° SIRET 40277764300071 RCS Strasbourg B 402 777 643 APE : 6202 - TVA intracom FR 61 402 777 643 - N° Déclaration d'Existance : 42 67 02348 67
+		Banque : LCL - LE CREDIT LYONNAIS - R.I.B : 30002 08571 0000063084Y 21 IBAN : FR78 3000 2085 7100 0006 3084 Y21 SWIFT : CRLYFRPP
+		Banque HSBC - R.I.B : 30056 00260 02602222240 42 IBAN : FR76 3005 6002 6002 6022 2224 042 SWIFT : CCFRFRPP
+		</footer>
+		<expeditionNo>BON DE LIVRAISON N°</expeditionNo>
+		<date>Date de la commande : </date>
+		<page>Page : </page>
+	</expeditionTexts>
+	<merchantAddress>
+		<line>AEROPARC 1 - 11 Rue Icard</line>
+		<line>STRASBOURG - ENTZHEIM</line>
+		<line>67836 TANNERIES CEDEX</line>
+		<tel>+33 (0)3 88 764 764</tel>
+		<fax>+33 (0)3 88 764 765</fax>
+		<email>compta@rbs.fr</email>
+	</merchantAddress>
+	<!-- sum of customer info headers size must be equal to 210 - margin left and rigth -->
+	<customerInfoHeaders>
+		<customerId size="47.5">N° de client</customerId>
+		<orderNumber size="47.5">N° commande</orderNumber>
+		<status size="47.5">Statut de l'expédition</status>
+		<transportName size="47.5">Transporteur</transportName>
+	</customerInfoHeaders>
+	<!-- sum of orderLine headers size must be equal to 210 - margin left and rigth -->
+	<expeditionLineHeaders>
+		<line size="130" isProductLabel="true">Article</line>
+		<line size="40">Référence</line>
+		<line size="20">Quantité</line>
+	</expeditionLineHeaders>
+</fpdf>
