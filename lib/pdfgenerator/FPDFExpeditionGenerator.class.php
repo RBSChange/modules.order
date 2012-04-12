@@ -293,7 +293,7 @@ class order_FPDFExpeditionGenerator extends FPDF
 		$this->setFillColorByHeader();
 		$expeditionNb = $this->convertUTF8String($this->expeditionTexts['expeditionNo']) . ' ' . $this->convertUTF8String($this->expedition->getLabel());
 		$this->Cell($this->GetStringWidth($expeditionNb) + 2, 10, $expeditionNb, 1, 0, 'J', true);
-		$date = $this->convertUTF8String($this->expeditionTexts['date'] . date_Formatter::toDefaultDateTime($this->expedition->getUICreationdate()));
+		$date = $this->convertUTF8String($this->expeditionTexts['date'] . date_Formatter::toDefaultDateTime($this->expedition->getOrder()->getUICreationdate()));
 		$this->Ln(15);
 		$yBillingAddress = $this->GetY();
 	
