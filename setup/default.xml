@@ -29,36 +29,6 @@
 					</changeblock>
 				</changecontent>
 			</page>
-			<page label="Commande - Identification" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
-				<changecontent for="content-block">
-					<changeblock type="modules_order_IdentifyStep" />			
-				</changecontent>
-			</page>			
-			<page label="Commande - Adresse de livraison" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
-				<changecontent for="content-block">
-					<changeblock type="modules_order_ShippingStep" />
-				</changecontent>
-			</page>
-			<page label="Commande - Moyen de paiement" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
-				<changecontent for="content-block">
-					<changeblock type="modules_order_BillingStep" />
-				</changecontent>
-			</page>
-			<page label="Commande - Confirmation" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
-				<changecontent for="content-block">
-					<changeblock type="modules_order_ConfirmStep" />
-				</changecontent>
-			</page>
-			<page label="Commande - Paiement" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
-				<changecontent for="content-block">
-					<changeblock type="modules_order_PaymentStep" />
-				</changecontent>
-			</page>					
 		</topic>
 		
 		<topic byLabel="Compte client">		

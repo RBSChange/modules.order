@@ -4,6 +4,4 @@
  */
 class order_ValidationException extends order_Exception
 {
-
-	
 }

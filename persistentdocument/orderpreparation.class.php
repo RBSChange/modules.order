@@ -11,10 +11,12 @@ class order_persistentdocument_orderpreparation extends order_persistentdocument
 	 */
 	public function isValid()
 	{
-		return parent::isValid()
-			&& $this->isLinesDataValid();
+		return parent::isValid() && $this->isLinesDataValid();
 	}
 	
+	/**
+	 * @return boolean
+	 */
 	protected function isLinesDataValid()
 	{
 		if (count($this->getLinesArray()) == 0)
