@@ -27,6 +27,14 @@
 	<key id="order-partialy-shipped">Commande partiellement expédiée</key>
 	<key id="order-shipped">Commande expédiée</key>
 	<key id="view-my-cart">voir mon panier</key>
+	<key id="general-sales-conditions-help" format="html"><![CDATA[Avant de passer ma commande, je reconnais avoir lu et compris les <a class="link" href="{url}">conditions générales de vente</a>.]]></key>
+	<key id="general-sales-conditions-checkbox-help" format="html"><![CDATA[Merci de <a class="link" href="{url}">consulter les conditions générales de vente</a> et de cocher la case ci-dessous pour pouvoir passer votre commande.]]></key>
+	<key id="write-messages-for-order">envoyer un message relatif à cette commande</key>
+	<key id="messages-for-order">messages relatifs à cette commande</key>
+	<key id="order-number">commande</key>
+	<key id="order-date">datée du</key>
+	<key id="concerned-product">produit concerné</key>
+	<key id="concerned-products">produits concernés</key>
 	
 	<!-- Deprecated -->
 	<key id="product-added">Produit ajouté au panier.</key>

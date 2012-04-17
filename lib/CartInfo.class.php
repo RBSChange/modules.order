@@ -1107,7 +1107,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @return double
+	 * @return float
 	 */
 	public function getTotalCreditNoteAmount()
 	{
@@ -1120,7 +1120,7 @@ class order_CartInfo
 	
 	/**
 	 * @param integer $creditNoteId
-	 * @param double $amount
+	 * @param float $amount
 	 */
 	public function setCreditNoteAmount($creditNoteId, $amount)
 	{
@@ -1141,7 +1141,6 @@ class order_CartInfo
 	
 	/**
 	 * @param integer $creditNoteId
-	 * @param double $amount
 	 */
 	public function removeCreditNote($creditNoteId)
 	{
@@ -1171,6 +1170,21 @@ class order_CartInfo
 		$this->creditNoteInfos = null;
 	}
 	
+	/**
+	 * @return float
+	 */
+	public function getTotalAvailableCreditNoteAmount()
+	{
+		return order_CreditnoteService::getInstance()->getTotalAvailableAmountByCustomer($this->getCustomer());
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getFormattedTotalAvailableCreditNoteAmount()
+	{
+		return $this->formatPrice($this->getTotalAvailableCreditNoteAmount());
+	}
 	
 	//AMOUNT
 		
@@ -1329,7 +1343,7 @@ class order_CartInfo
 	public function getTotalAmount()
 	{
 		return $this->getTotalWithTax() - $this->getTotalCreditNoteAmount();
-	}		
+	}
 
 	/**
 	 * @param double value
@@ -1709,7 +1723,10 @@ class order_CartInfo
 		return $this->getCartService()->refresh($this);
 	}
 	
-	function canBeShipped()
+	/**
+	 * @return boolean
+	 */
+	public function canBeShipped()
 	{
 		if ($this->hasPredefinedShippingMode() && count($this->getRequiredShippingModes()) == 0)
 		{
@@ -1720,6 +1737,20 @@ class order_CartInfo
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * @return float
+	 */
+	public function getTotalProductCount()
+	{
+		$count = 0;
+		foreach ($this->getCartLineArray() as $line)
+		{
+			/* @var $line order_CartLineInfo */
+			$count += $line->getQuantity();
+		}
+		return $count;
 	}
 	
 	// Deprecated.

@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.fo.blocks.stdaddressstep" lcid="fr_FR">
-  <key id="email">e-mail</key>
-  <key id="password">mot de passe</key>
-  <key id="password-validate">confimer le mot de passe</key>
-  
-  <key id="billing-civility">civilité</key>
-  <key id="billing-firstname">prenom</key>
-  <key id="billing-lastname">nom</key>
-  <key id="billing-addressline1">Adresse 1</key>
-  <key id="billing-addressline2">Adresse 2</key>
-  <key id="billing-addressline3">Adresse 3</key>
-  <key id="billing-zipcode">code postal</key>
-  <key id="billing-city">ville</key>
-  <key id="billing-province">etat</key>
-  <key id="billing-country">pays</key>
-  <key id="billing-phone">téléphone</key>
-  
-  <key id="shipping-civility">civilité</key>
-  <key id="shipping-firstname">prenom</key>
-  <key id="shipping-lastname">nom</key>
-  <key id="shipping-addressline1">Adresse 1</key>
-  <key id="shipping-addressline2">Adresse 2</key>
-  <key id="shipping-addressline3">Adresse 3</key>
-  <key id="shipping-zipcode">code postal</key>
-  <key id="shipping-city">ville</key>
-  <key id="shipping-province">etat</key>
-  <key id="shipping-country">pays</key>
-  <key id="shipping-phone">téléphone</key>
+	<key id="email">e-mail</key>
+	<key id="generate-password">générer un mot de passe</key>
+	<key id="generate-password-help">Cette case n'a d'effet que si vous n'avez pas encore de compte.</key>
+	<key id="password">mot de passe</key>
+	<key id="password-help" format="html"><![CDATA[Obligatoire pour se connecter.<br />Obligatoire pour s'inscrire si la case "Générer un mot de passe" n'est pas cochée.]]></key>
+	<key id="password-validate">confimer le mot de passe</key>
+	<key id="password-validate-help">À remplir que lors d'une inscription où la case "Générer un mot de passe" n'est pas cochée.</key>
+
+	<key id="billing-civility">civilité</key>
+	<key id="billing-firstname">prenom</key>
+	<key id="billing-lastname">nom</key>
+	<key id="billing-addressline1">Adresse 1</key>
+	<key id="billing-addressline2">Adresse 2</key>
+	<key id="billing-addressline3">Adresse 3</key>
+	<key id="billing-zipcode">code postal</key>
+	<key id="billing-city">ville</key>
+	<key id="billing-province">etat</key>
+	<key id="billing-country">pays</key>
+	<key id="billing-phone">téléphone</key>
+
+	<key id="shipping-civility">civilité</key>
+	<key id="shipping-firstname">prenom</key>
+	<key id="shipping-lastname">nom</key>
+	<key id="shipping-addressline1">Adresse 1</key>
+	<key id="shipping-addressline2">Adresse 2</key>
+	<key id="shipping-addressline3">Adresse 3</key>
+	<key id="shipping-zipcode">code postal</key>
+	<key id="shipping-city">ville</key>
+	<key id="shipping-province">etat</key>
+	<key id="shipping-country">pays</key>
+	<key id="shipping-phone">téléphone</key>
+
+	<key id="open-session">ouvrir une session</key>
+	<key id="have-account">avez-vous déjà un compte ?</key>
+	<key id="already-have-account">oui, je suis déjà inscrit</key>
+	<key id="not-have-account-yet">non, je ne suis pas encore inscrit</key>
+	<key id="email-or-login">e-mail ou identifiant</key>
 </i18n>

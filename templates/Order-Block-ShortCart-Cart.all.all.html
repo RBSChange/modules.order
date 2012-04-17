@@ -1,15 +1,17 @@
+<tal:block tal:condition="configuration/getShowTotalProductCount"><tal:block tal:define="global count cart/getTotalProductCount" /></tal:block>
+<tal:block tal:condition="not: configuration/getShowTotalProductCount"><tal:block tal:define="global count cart/getCartLineCount" /></tal:block>
 <div class="scroll">
 	<h2 change:h="">
 		${trans:m.order.frontoffice.my-cart,ucf}
 		<span>
-			(<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${cart/getCartLineCount}</a>)
+			(<a tal:omit-tag="not: setLinks" change:link="tag ctx_order_cart">${count}</a>)
 		</span>
 	</h2>
 	<ul>
 		<li>
-			${cart/getCartLineCount}
-			<tal:block tal:condition="php: cart->getCartLineCount() == 1">${trans:m.order.frontoffice.item}</tal:block>
-			<tal:block tal:condition="php: cart->getCartLineCount() gt 1">${trans:m.order.frontoffice.items}</tal:block>
+			${count}
+			<tal:block tal:condition="php: count == 1">${trans:m.order.frontoffice.item}</tal:block>
+			<tal:block tal:condition="php: count gt 1">${trans:m.order.frontoffice.items}</tal:block>
 		</li>
 		<li>
 			<p tal:condition="cart/getShop/getDisplayPriceWithoutTax" class="price">${cart/getFormattedTotalExcludingFeesWithoutTax} <span class="tax-mode">${trans:m.catalog.frontoffice.ht}</span></p>

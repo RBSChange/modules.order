@@ -5,37 +5,18 @@
 	text-align: center;
 }
 
-
 /* Etapes du process de commande */
-.order-process-steps{
-	width: 100%;
-	float: left;
+.process-steps {
 	text-align: center;
-	margin: 40px 0;
 }
-
-.modules-order ul.steps li{
-	border-width: 1px;
-	border-style: solid;
+.process-steps li {
+	border: 1px solid;
 	width: 120px;
 	padding: 10px 4px;
-	margin-right: 4px;
-	
+	margin: 0 4px;
 	display: inline-block;
-	zoom: 1;
-	* display: inline;
 }
-
-.modules-order ul.steps li:last-child{
-	margin-right: 0px;
-}
-
-.modules-order ul.steps li .step{
+.process-steps li .step {
 	font-size: 1.6em;
-	font-weight: bold;
-}
-}
-
-.modules-order .billing p.buttons input.button{
-	vertical-align: baseline;
+	display: block;
 }

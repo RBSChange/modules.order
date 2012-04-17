@@ -1,43 +1,48 @@
-<h2 change:h="">${trans:m.customer.frontoffice.messages-for-order-title,ucf}</h2>
-
 <ul class="mini-navigation">
 	<li>
 		<a change:link="tag ctx_order_order; orderParam[cmpref] order/getId">${trans:m.customer.frontoffice.back-to-order,ucf}</a>
 	</li>
 </ul>
-<h3 change:h="">${trans:m.customer.frontoffice.write-messages-for-order,ucf,orderId=order/getOrderNumber} <tal:block change:datetime="order/getCreationdate;format null" /></h3>
 
-<div class="messages-form">
-	<ul change:messages=""></ul>
-	<ul change:errors=""></ul>
-	
-	<form class="cmxform" method="POST">
+<h1 change:h="">${trans:m.customer.frontoffice.messages-for-order-title,ucf}</h1>
+
+<dl class="inline-items">
+	<dt>${trans:m.order.fo.order-number,ucf}</dt>
+	<dd><a change:link="document order">${order/getOrderNumber}</a></dd>
+	<dt>${trans:m.order.fo.order-date,ucf}</dt>
+	<dd>${datetime:order/getUICreationdate}</dd>
+</dl>
+
+<form change:form="">
+	<fieldset>
+		<legend class="h-2">${trans:m.order.fo.write-messages-for-order,ucf}</legend>
+		<ul change:messages=""></ul>
+		<ul change:errors=""></ul>
 		<ol>
 			<li>
 				<label class="standard" for="comment">${trans:m.customer.frontoffice.your-message,ucf,lab}</label>
 				<textarea rows="10" cols="60" class="textfield" id="comment" name="orderParam[comment]">${comment}</textarea>	
 				<input type="hidden" name="{orderParam[cmpref]}" value="${order/getId}" />	
 			</li>
-			<li class="buttons">
-				<label>&nbsp;</label>
-				<input class="button" value="${trans:m.customer.frontoffice.cancel,ucf,attr}" type="reset" />
-		  		<input class="button" value="${trans:m.customer.frontoffice.send,ucf,attr}" type="submit" />
-			</li>
 		</ol>
-	</form>
-</div>
-<br />
-<h3 change:h="">${trans:m.customer.frontoffice.messages-for-order,ucf,orderId=order/getOrderNumber} <tal:block change:datetime="order/getCreationdate; format null" /></h3>
+		<p class="buttons">
+			<input class="button" value="${trans:m.customer.frontoffice.send,ucf,attr}" type="submit" />
+			<input class="button secondary" value="${trans:m.customer.frontoffice.cancel,ucf,attr}" type="reset" />
+		</p>	
+	</fieldset>
+</form>
 
-<ul tal:condition="messages" class="messagecustomer">
+<h2 change:h="">${trans:m.order.fo.messages-for-order,ucf}</h2>
+
+<ul tal:condition="messages" class="document-list">
 	<tal:block tal:repeat="message messages">
-		<li class="fromcustomer" tal:condition="message/isSentByCustomer">
-			<p><strong>${trans:m.customer.frontoffice.message-sent-by-customer,ucf,companyName=companyName} <tal:block change:datetime="message/getCreationdate; format null" /></strong></p>
-			<blockquote>${message/getContentAsHtml}</blockquote>
+		<li class="fromcustomer ${alternateclass:messageIndex}" tal:condition="message/isSentByCustomer">
+			<p>${trans:m.customer.frontoffice.message-sent-by-customer,ucf,companyName=companyName} ${datetime:message/getUICreationdate}</p>
+			<div>${message/getContentAsHtml}</div>
 		</li>
-		<li class="tocustomer" tal:condition="not: message/isSentByCustomer">
-			<p><strong>${trans:m.customer.frontoffice.message-sent-by-company,ucf,companyName=companyName} <tal:block change:datetime="message/getCreationdate; format null" /></strong></p>
-			<blockquote>${message/getContentAsHtml}</blockquote>
+		<li class="tocustomer ${alternateclass:messageIndex}" tal:condition="not: message/isSentByCustomer">
+			<p>${trans:m.customer.frontoffice.message-sent-by-company,ucf,companyName=companyName} ${datetime:message/getCreationdate}</p>
+			<div>${message/getContentAsHtml}</div>
 		</li>	
 	</tal:block>
 </ul>

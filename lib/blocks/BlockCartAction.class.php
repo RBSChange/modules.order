@@ -6,7 +6,7 @@ class order_BlockCartAction extends website_BlockAction
 	 * @param f_mvc_Response $response
 	 * @return String
 	 */
-	function execute($request, $response)
+	public function execute($request, $response)
 	{
 		if ($this->isInBackoffice())
 		{
@@ -90,11 +90,10 @@ class order_BlockCartAction extends website_BlockAction
 	 * @param f_mvc_Response $response
 	 * @return String
 	 */
-	function executeOrder($request, $response)
+	public function executeOrder($request, $response)
 	{
-		$cgv = $request->getParameter("cgv");
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
-		if ($cgv)
+		if (!$this->getConfiguration()->getShowAcceptationCheckbox() || $request->getParameter('cgv'))
 		{
 			$cart->refresh();
 			if ($cart->isValid())
@@ -108,7 +107,7 @@ class order_BlockCartAction extends website_BlockAction
 		}
 		else
 		{
-			$this->addError(LocaleService::getInstance()->transFO("m.order.frontoffice.must-agree-with-general-sales-conditions-error", array('ucf')), 'cgv');
+			$this->addError(LocaleService::getInstance()->transFO('m.order.frontoffice.must-agree-with-general-sales-conditions-error', array('ucf')), 'cgv');
 		}
 		return $this->execute($request, $response);
 	}
@@ -118,7 +117,7 @@ class order_BlockCartAction extends website_BlockAction
 	 * @param f_mvc_Response $response
 	 * @return String
 	 */
-	function executeRefresh($request, $response)
+	public function executeRefresh($request, $response)
 	{
 		return $this->execute($request, $response);
 	}	
@@ -127,7 +126,7 @@ class order_BlockCartAction extends website_BlockAction
 	 * @param f_mvc_Request $request
 	 * @return array 
 	 */
-	function getEvaluateshippingBeanInfo($request)
+	public function getEvaluateshippingBeanInfo($request)
 	{
 		return array('className' => 'order_ShippingStepBean', 'beanName' => 'bean');
 	}
@@ -138,7 +137,7 @@ class order_BlockCartAction extends website_BlockAction
 	 * @param order_ShippingStepBean $bean
 	 * @return String
 	 */
-	function executeEvaluateshipping($request, $response, $bean)
+	public function executeEvaluateshipping($request, $response, $bean)
 	{
 		$cs =  order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();

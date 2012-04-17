@@ -1,21 +1,21 @@
-<div class="order-process-steps" tal:condition="cart" tal:define="orderProcess cart/getOrderProcess">
-	<ul class="steps">
+<div class="process-steps normal" tal:condition="cart" tal:define="orderProcess cart/getOrderProcess">
+	<ol>
 		<tal:block tal:repeat="step orderProcess/getSteps">
 			<li class="${step/name} ${php: step['current'] ? 'current' : ''}">
-				<span class="step"><a tal:omit-tag="not: step/url" href="${step/url}" class="link">${step/step}</a></span><br />
+				<span class="step"><a tal:omit-tag="not: step/url" href="${step/url}" class="link">${step/step}</a></span>
 				<span class="label"><a tal:omit-tag="not: step/url" href="${step/url}" class="link">${step/label}</a></span>
 			</li>
 		</tal:block>
-	</ul>
+	</ol>
 </div>
-<div class="order-process-steps" tal:condition="orderProcess">
-	<ul class="steps">
+<div class="process-steps normal" tal:condition="orderProcess">
+	<ol>
 		<tal:block tal:repeat="step orderProcess/getSteps">
 			<li class="${step/name} ${php: step['current'] ? 'current' : ''}">
-				<span class="step">${step/step}</span><br />
+				<span class="step">${step/step}</span>
 				<span class="label">${step/label}</span>
 			</li>
 		</tal:block>
-	</ul>
+	</ol>
 </div>
 <div class="cleaner"></div>

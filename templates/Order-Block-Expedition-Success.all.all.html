@@ -1,13 +1,13 @@
 <tal:block tal:define="hasUrl expedition/hasDetailPage">
 	<tal:block tal:condition="hasUrl">
-		<h3 change:h=""><a change:link="document expedition">${trans:m.order.frontoffice.shipping-number,ucf} ${expedition/getLabelAsHtml}</a> (${expedition/getStatusLabel})</h3>
-		<ol class="messages" tal:define="shippingMode expedition/getShippingMode">
+		<h2 change:h=""><a change:link="document expedition">${trans:m.order.frontoffice.shipping-number,ucf} ${expedition/getLabelAsHtml}</a> (${expedition/getStatusLabel})</h2>
+		<ul class="normal" tal:define="shippingMode expedition/getShippingMode">
 			<li><span>${trans:m.order.frontoffice.transport-name,ucf,lab}</span> ${shippingMode/getLabelAsHtml}</li>
-		</ol>		
+		</ul>		
 	</tal:block>
 	<tal:block tal:condition="not: hasUrl">
-		<h3 change:h=""><span>${trans:m.order.frontoffice.shipping-number,ucf}</span> ${expedition/getLabelAsHtml} (${expedition/getStatusLabel})</h3>
-		<ol class="messages" tal:define="shippingMode expedition/getShippingMode">
+		<h2 change:h=""><span>${trans:m.order.frontoffice.shipping-number,ucf}</span> ${expedition/getLabelAsHtml} (${expedition/getStatusLabel})</h2>
+		<ul class="normal" tal:define="shippingMode expedition/getShippingMode">
 			<li><span>${trans:m.order.frontoffice.transport-name,ucf,lab}</span> ${shippingMode/getLabelAsHtml}</li>
 			<li tal:condition="expedition/getTrackingNumber"><span>${trans:m.order.frontoffice.tracking-number,ucf,lab}</span> <a class="link" tal:omit-tag="not:expedition/getTrackingURL" href="${expedition/getTrackingURL}">${expedition/getTrackingNumber}</a></li>
 			<li tal:condition="expedition/getTrackingText"><span>${trans:m.order.frontoffice.tracking-text,ucf,lab}</span> ${expedition/getTrackingTextAsHtml}</li>
@@ -18,6 +18,6 @@
 					<a class="link download" href="${line/getURL}">${trans:m.order.frontoffice.product-download,ucf}</a> ${line/getURLClick} <span>${trans:m.order.frontoffice.product-download-count,ucf}</span>
 				</tal:block>
 			</li>
-		</ol>
+		</ul>
 	</tal:block>
 </tal:block>

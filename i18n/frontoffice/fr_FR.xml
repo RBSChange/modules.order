@@ -22,11 +22,13 @@
   <key id="reference-abbr">référence</key>
   <key id="designation">désignation</key>
   <key id="codereference">code référence</key>
+  <key id="unitprice">prix unitaire</key>
   <key id="unitprice-with-tax">prix unitaire toutes taxes comprise</key>
   <key id="unitprice-with-tax-abr">PU TTC</key>
   <key id="unitprice-without-tax">prix unitaire hors taxes</key>
   <key id="unitprice-without-tax-abr">PU HT</key>
   <key id="availability">disponibilité</key>
+  <key id="totalprice">prix total</key>
   <key id="totalprice-with-tax">prix total toutes taxes comprise</key>
   <key id="totalprice-with-tax-abr">PT TTC</key>
   <key id="totalprice-without-tax">prix total hors taxes</key>
@@ -155,6 +157,7 @@
   <key id="with-fees">port compris</key>
   <key id="without-fees">hors frais de port</key>
   <key id="back-to-previous-step">revenir à l'étape précédente</key>
+  <key id="back-to-cart">revenir à l'étape précédente</key>
   <key id="payment-failed">paiement echoué</key>
   <key id="payment-failed-text">Votre paiement a échoué. Il est possible que les informations bancaires que vous avez fournit soient inexactes.</key>
   <key id="shipping-number">Expedition N°</key>
@@ -186,9 +189,11 @@
   <key id="expedition-status">statut de l'expédition</key>   
   <key id="expedition-lines">produits concernés</key>   
   <key id="related-order">commande associée</key>
+  <key id="status">statut</key>
   <key id="track">suivi</key>
   <key id="packet">colis</key>
   <key id="receive-date">date de réception</key>
   <key id="delivery-date">date de remise</key>
   <key id="delivery">bon de livraison</key>
+  <key id="available-credit-notes">Vous disposez d'un avoir de {value}.</key>
 </i18n>

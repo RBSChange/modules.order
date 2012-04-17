@@ -411,9 +411,9 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * 
 	 * @param customer_persistentdocument_customer $customer
-	 * @param Boolean $includeRepayments
+	 * @param boolean $includeRepayments
+	 * @return order_persistentdocument_creditnote[]
 	 */
 	public function getByCustomer($customer, $includeRepayments = false, $includeUsedCreditNotes = true)
 	{
@@ -431,12 +431,25 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param customer_persistentdocument_customer $customer
+	 * @return order_persistentdocument_creditnote[]
 	 */
 	public function getRepaymentsByCustomer($customer)
 	{
 		$query = $this->createQuery()->add(Restrictions::published())
-					->add(Restrictions::eq('customer', $customer))
-					->add(Restrictions::isNotNull('transactionDate'));
+			->add(Restrictions::eq('customer', $customer))
+			->add(Restrictions::isNotNull('transactionDate'));
 		return $query->find();
+	}
+	
+	/**
+	 * @param customer_persistentdocument_customer $customer
+	 * @return float
+	 */
+	public function getTotalAvailableAmountByCustomer($customer)
+	{
+		$query = $this->createQuery()->add(Restrictions::published())->add(Restrictions::eq('customer', $customer));
+		$query->add(Restrictions::gt('amountNotApplied', 0.000001));
+		$query->setProjection(Projections::sum('amountNotApplied', 'availableAmount'));
+		return f_util_ArrayUtils::firstElement($query->findColumn('availableAmount'));
 	}
 }

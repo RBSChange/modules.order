@@ -7,6 +7,10 @@
   <key id="result">Confirmation</key>
   <key id="next-step">Continuer la commande</key>
   <key id="modify">Modifier</key>
+  <key id="modify-cart">modifier le panier</key>
+  <key id="modify-addresses">modifier les adresses</key>
+  <key id="modify-shipping-mode">modifier le moyen de livraison</key>
+  <key id="summary">récapitulatif</key>
   
   <key id="validate">valider</key>
   <key id="delete-coupon">retirer le code</key>
@@ -19,10 +23,10 @@
   <key id="address-lost-password">mot de passe perdu</key>
   
   <key id="bad-password">mot de passe non valide</key>
-  <key id="invalid-account">Cette email n'est pas un identifiant de compte valide</key>
+  <key id="invalid-account">Cette e-mail n'est pas un identifiant de compte valide</key>
   <key id="invalid-password-validate">Mot de passe non confirmé</key>
   
-  <key id="address-generate-password">generer un mot de passe</key>
+  <key id="address-generate-password">générer un mot de passe</key>
   <key id="address-password-validate">confimer le mot de passe</key>
   
   <key id="address-billing-address-legend">Entrer l'adresse de facturation</key>
@@ -32,13 +36,12 @@
   <key id="address-usesameaddress">Utiliser l'adresse de facturation comme adresse de livraison</key>
   <key id="address-newaddress">Entrer une nouvelle adresse</key>
   
-  
-  
   <key id="required-shippingmode-not-found">Impossible de trouver un transporteur pour les produit suivants.</key>
   <key id="shippingmode-not-found">Impossible de trouver un transporteur.</key>
   <key id="connector-not-found">Impossible de trouver un moyen de paiement</key>
   
   <key id="resume-order-title">Détail de la commande</key>
+  <key id="resume-article-count">Nombre d'articles</key>
   <key id="resume-lines-total">Total des achats</key>
   <key id="resume-evaluated-fees">Frais estimés</key>
   <key id="resume-fees">Frais</key>
@@ -49,12 +52,10 @@
   
   <key id="resume-address-title">Adresses</key>
   <key id="resume-address-billing">Adresse de facturation</key>
-  <key id="resume-address-shipping">Adresse de livraison</key>
-  
+  <key id="resume-address-shipping">Adresse de livraison</key>  
   
   <key id="shipping-title">Moyen de livraison</key>
-  <key id="shipping-select-title">Sélectionner le moyen de livraison</key>
-  
+  <key id="shipping-select-title">Sélectionner le moyen de livraison</key>  
   
   <key id="billing-title">Moyen de paiement</key>
   
@@ -79,4 +80,6 @@
   <key id="result-transaction-id">Référence bancaire</key>
   <key id="result-amount">montant</key>
   <key id="result-invalid-order">Impossible de trouver la référence de votre commande.</key>
+  <key id="invalid-payment-connector">Le mode de paiement est invalide.</key>
+  <key id="update-shipping-mode">mise à jour de votre choix de mode de livraison</key>
 </i18n>

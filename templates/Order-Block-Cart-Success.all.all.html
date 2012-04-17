@@ -155,7 +155,24 @@
 				<form change:form="beanClass order_ShippingStepBean; beanName addressInfo" id="evaluateshippingform">
 					<fieldset>
 						<legend class="h-2">${trans:m.order.document.shippingstepbean.evaluateShipping,ucf}</legend>
-						<ul change:errors=""></ul>
+						<tal:block tal:condition="evaluateshipping">
+							<tal:block tal:condition="cart/canSelectShippingModeId" tal:define="shippingModes cart/getShippingModes" > 		
+								<ul class="messages" tal:condition="shippingModes/0">
+									<li tal:repeat="modeFilter shippingModes">
+										<tal:block tal:define="mode modeFilter/getMode">
+											${mode/getLabel} : 
+											<span class="price">
+												<tal:block tal:condition="modeFilter/getValueWithTax">${modeFilter/getFormattedValueWithTax}  <span class="tax-mode">${trans:m.catalog.frontoffice.ttc,uc}</span></tal:block>
+												<tal:block tal:condition="not: modeFilter/getValueWithTax">${trans:m.order.frontoffice.freeshipping,ucf}</tal:block>
+											</span>
+										</tal:block>
+									</li>
+								</ul>
+								<ul tal:condition="not: shippingModes/0" class="errors">
+									<li>${trans:m.order.document.shippingstepbean.no-shipping-mode,ucf}</li>
+								</ul>
+							</tal:block>
+						</tal:block>
 						<p class="description">${trans:m.order.document.shippingstepbean.evaluateShipping-text,ucf}</p>
 						<ol>
 							<li><input change:field="name shippingAddress.Zipcode; required false" size="30" /></li>
@@ -168,29 +185,6 @@
 						</p>
 					</fieldset>				
 				</form>
-				
-				<tal:block tal:condition="evaluateshipping">
-					<tal:block tal:condition="cart/canSelectShippingModeId" tal:define="shippingModes cart/getShippingModes" > 		
-						<tal:block tal:condition="shippingModes/0">
-							<h3 change:h="">${trans:m.order.document.shippingstepbean.evaluateShipping-results,ucf}</h3>
-							<ul>
-								<li tal:repeat="modeFilter shippingModes">
-									<tal:block tal:define="mode modeFilter/getMode">
-										${mode/getLabel} : 
-										<strong>
-											<tal:block tal:condition="modeFilter/getValueWithTax">${modeFilter/getFormattedValueWithTax}</tal:block>
-											<tal:block tal:condition="not: modeFilter/getValueWithTax">${trans:m.order.frontoffice.freeshipping,ucf}</tal:block>
-										</strong>
-									</tal:block>
-								</li>
-							</ul>
-						</tal:block>
-						<tal:block tal:condition="not: shippingModes/0">
-							<p class="error">${trans:m.order.document.shippingstepbean.no-shipping-mode,ucf}</p>
-						</tal:block>
-						<div class="cleaner"></div>
-					</tal:block>
-				</tal:block>
 			</tal:block>
 		</div>
 	</div>
@@ -229,7 +223,7 @@
 		<p class="buttons js">
 			<button class="button" onclick="jQuery('#cart-lines').submit();">${trans:m.order.frontoffice.update-button,ucf}</button>
 		</p>
-		<p class="normal" tal:condition="cart/hasCreditNote">Avoirs</p>
+		<p class="normal" tal:condition="cart/hasCreditNote">${trans:m.order.frontoffice.available-credit-notes,ucf,value=cart/getFormattedTotalAvailableCreditNoteAmount}</p>
 		<ul class="mini-navigation">
 			<li>
 				<a change:link="tag contextual_website_website_modules_catalog_favorite-product-list; catalogParam[addCartToList] 'true'">${trans:m.order.frontoffice.add-cart-to-list,ucf}</a>
@@ -249,22 +243,23 @@
 <tal:block tal:condition="orderProcess/open">
 	<tal:block tal:condition="cart/isValid">
 		<form change:form="">
-			<fieldset>
+			<fieldset tal:define="generalSalesConditionsURL tagurl:'ctx_order_cgv'">
 				<legend class="h-2">${trans:m.order.frontoffice.orderProcess.do-order,ucf}</legend>
-				<ul change:errors="relKey cgv"></ul>	
-				<p class="normal"> 
-					${trans:m.order.frontoffice.orderProcess.pre-read-general-sales-conditions,ucf}
-					<a change:link="tag ctx_order_cgv">${trans:m.order.frontoffice.orderProcess.read-general-sales-conditions,ucf}</a>
-					${trans:m.order.frontoffice.orderProcess.post-read-general-sales-conditions}
-				</p>		
-				<ol>
-					<li><label change:label="" name="cgv_1" required="true" labeli18n="m.order.frontoffice.orderprocess.cgv"></label> 
-						<input change:checkboxinput="withcolon false" name="cgv" value="true" labeli18n="m.order.frontoffice.orderprocess.cgv-agree" />
-					</li>
-				</ol>
+				<tal:block tal:condition="not: configuration/getShowAcceptationCheckbox">
+					<p class="normal">${trans:m.order.fo.general-sales-conditions-help,ucf,url=generalSalesConditionsURL}</p>
+				</tal:block>
+				<tal:block tal:condition="configuration/getShowAcceptationCheckbox">
+					<ul change:errors="relKey cgv"></ul>
+					<p class="normal">${trans:m.order.fo.general-sales-conditions-checkbox-help,ucf,url=generalSalesConditionsURL}</p>		
+					<ol>
+						<li><label change:label="" name="cgv_1" required="true" labeli18n="m.order.frontoffice.orderprocess.cgv"></label> 
+							<input change:checkboxinput="withcolon false" name="cgv" value="true" labeli18n="m.order.frontoffice.orderprocess.cgv-agree" />
+						</li>
+					</ol>
+				</tal:block>
 				<p class="buttons">
-					<input change:submit="name Order" labeli18n="m.order.frontoffice.order-button" />
-					<a class="button secondary" change:link="module order; action ContinueShopping; cmpref cart/getShopId">${trans:m.order.frontoffice.continue-shopping,ucf}</a>
+					<a class="link" change:link="module order; action ContinueShopping; cmpref cart/getShopId">${trans:m.order.frontoffice.continue-shopping,ucf}</a>
+					<input change:submit="name Order" class="button primary" labeli18n="m.order.frontoffice.order-button" />
 				</p>
 			</fieldset>			
 		</form>

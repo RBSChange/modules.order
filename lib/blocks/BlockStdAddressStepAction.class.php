@@ -5,9 +5,8 @@
  */
 class order_BlockStdAddressStepAction extends website_BlockAction
 {
-	
 	/**
-	 * @see website_BlockAction::getInputViewName()
+	 * @return string
 	 */
 	public function getInputViewName()
 	{
@@ -15,11 +14,9 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	}
 		
 	/**
-	 * @see website_BlockAction::execute()
-	 *
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	public function execute($request, $response)
 	{
@@ -49,14 +46,13 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	}
 	
 	/**
-	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	public function executeAuthenticate($request, $response)
 	{
-		$validationRules = array('email{blank:false;email:true}');
+		$validationRules = array('email{blank:false}');
 		$valid = $this->processValidationRules($validationRules, $request, null);
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
 		if ($valid)
@@ -77,19 +73,39 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 				{
 					if ($user->isPublished())
 					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.bad-password', array('ucf'));
+						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.bad-password', array('ucf', 'html'));
 						$this->addError($error);
 						$this->addErrorForProperty('password', $error);
 						$valid = false;
 					}
 					else
 					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
+						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf', 'html'));
 						$this->addError($error);
 						$this->addErrorForProperty('email', $error);
 						$valid = false;
 					}
 					$user = null;
+				}
+				else
+				{
+					$validationRules = array('email{email:true}');
+					if (intval($request->getParameter('password-generate', 0)) != 1)
+					{
+						$securityLevel = ModuleService::getInstance()->getPreferenceValue('users', 'securitylevel');
+						$validationRules[] = 'password{blank:false;password:' . $securityLevel . '}';
+						$validationRules[] = 'password-validate{blank:false}';
+					}
+					$valid = $this->processValidationRules($validationRules, $request, null);
+					
+					$passwordValidate = $request->getParameter('password-validate');
+					if ($password !== $passwordValidate)
+					{
+						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-password-validate', array('ucf', 'html'));
+						$this->addError($error);
+						$this->addErrorForProperty('password-validate', $error);
+						$valid = false;
+					}
 				}
 			}
 			
@@ -113,10 +129,9 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	}
 	
 	/**
-	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	public function executeUseRegistered($request, $response)
 	{
@@ -140,10 +155,9 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	}
 	
 	/**
-	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */	
 	public function executeNextStep($request, $response)
 	{
@@ -198,7 +212,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 				$user = users_WebsitefrontenduserService::getInstance()->getFrontendUserByLogin($email, $website->getId());
 				if ($user !== null)
 				{
-					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
+					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf', 'html'));
 					$this->addError($error);
 					$this->addErrorForProperty('email', $error);
 					$valid = false;
@@ -209,7 +223,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 					$passwordValidate = $request->getParameter('password-validate');
 					if ($password !== $passwordValidate)	
 					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-password-validate', array('ucf'));
+						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-password-validate', array('ucf', 'html'));
 						$this->addError($error);
 						$this->addErrorForProperty('password-validate', $error);
 						$valid = false;
@@ -225,7 +239,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 					$user = order_OrderProcessService::getInstance()->createNewUser($website, $email, $password, $cart->getAddressInfo()->billingAddress);
 					if ($user === null)
 					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
+						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf', 'html'));
 						$this->addError($error);
 						$this->addErrorForProperty('email', $error);
 						$valid = false;						
@@ -248,7 +262,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 				}
 				else
 				{
-					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
+					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf', 'html'));
 					$this->addError($error);
 					$this->addErrorForProperty('email', $error);
 					$valid = false;	
@@ -260,7 +274,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			{
 				$defaultAddress = $cas->getNewDocumentInstance();
 				$cart->getAddressInfo()->billingAddress->export($defaultAddress);
-				$defaultAddress->setLabel(LocaleService::getInstance()->transFO('m.order.standardprocess.default-address', array('ucf')));
+				$defaultAddress->setLabel(LocaleService::getInstance()->transFO('m.order.standardprocess.default-address', array('ucf', 'html')));
 				$cart->getCustomer()->addAddress($defaultAddress);
 				$cart->getCustomer()->save();
 			}	
@@ -354,8 +368,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 		return array('civility' => 'Title', 'firstname' => 'FirstName', 'lastname' => 'LastName', 
 			 'addressline1' => 'Addressline1', 'addressline2' => 'Addressline2', 'addressline3' => 'Addressline3',
 			 'zipcode' => 'Zipcode', 'city' => 'City', 'province' => 'Province', 'country' => 'CountryId',
-			 'phone' => 'Phone'); 
-			 //'company' => 'Company', 'email' => 'Email','fax' => 'Fax');
+			 'phone' => 'Phone');
 	}
 	
 	/**

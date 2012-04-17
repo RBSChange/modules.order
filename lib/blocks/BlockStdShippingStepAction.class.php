@@ -5,7 +5,6 @@
  */
 class order_BlockStdShippingStepAction extends website_BlockAction
 {
-
 	/**
 	 * @see website_BlockAction::getInputViewName()
 	 */
@@ -14,10 +13,7 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 		return website_BlockView::SUCCESS;
 	}
 
-
 	/**
-	 * @see website_BlockAction::execute()
-	 *
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @return String
@@ -38,7 +34,6 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 	}
 
 	/**
-	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @return String
@@ -67,7 +62,6 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 	}
 
 	/**
-	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @return String

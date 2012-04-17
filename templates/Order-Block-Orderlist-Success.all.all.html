@@ -18,7 +18,7 @@
 				<td><a change:link="document order">${order/getOrderNumber}</a></td>
 				<td>${datetime:order/getUICreationdate}</td>
 				<td>${order/getBillingMode}</td>
-				<td class="pricettc">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
+				<td class="price">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
 				<td>${order/getFoOrderStatusLabel}</td>
 				<td tal:define="bills order/getBillsWithArchive">
 					<tal:block tal:repeat="bill bills">

@@ -48,10 +48,12 @@
   <key id="create-new-address-button">créer une nouvelle adresse de livraison</key>
   <key id="use-this-address">utiliser cette adresse</key>
   <key id="do-order">Passer votre commande</key>
-  <key id="pre-read-general-sales-conditions">merci de</key>
-  <key id="read-general-sales-conditions">consulter les conditions générales de vente</key>
-  <key id="post-read-general-sales-conditions">et de cocher la case ci-dessous pour pouvoir passer votre commande.</key>
   <key id="agree-with-general-sales-conditions">j'accepte les conditions générales de vente</key>
   <key id="cgv">Conditions générales de vente</key>
   <key id="cgv-agree">Accepter</key>
+  
+  <!-- Deprecated -->
+  <key id="pre-read-general-sales-conditions">merci de</key>
+  <key id="read-general-sales-conditions">consulter les conditions générales de vente</key>
+  <key id="post-read-general-sales-conditions">et de cocher la case ci-dessous pour pouvoir passer votre commande.</key>
 </i18n>

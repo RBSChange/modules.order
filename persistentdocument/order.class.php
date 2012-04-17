@@ -766,6 +766,20 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		$this->setGlobalProperty('__addressIdByModeIdArray', $array);
 	}
 	
+	/**
+	 * @return float
+	 */
+	public function getTotalProductCount()
+	{
+		$count = 0;
+		foreach ($this->getLineArray() as $line)
+		{
+			/* @var $line order_persistentdocument_orderline */
+			$count += $line->getQuantity();
+		}
+		return $count;
+	}
+	
 	//DEPRECTAED FUNCTIONS
 
 	/**

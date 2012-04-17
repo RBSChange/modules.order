@@ -6,6 +6,7 @@
 	<block type="modules_order_Cart" icon="cart">
 		<parameters>
 			<parameter name="showEvaluateShipping" type="Boolean" default-value="true" />
+			<parameter name="showAcceptationCheckbox" type="Boolean" default-value="false" />
 			<parameter name="showInstructions" type="Boolean" default-value="false" />
 			<parameter name="useCartEmptyPage" type="Boolean" default-value="true" />
 			<!-- @deprecated -->
@@ -14,20 +15,11 @@
 	</block>
 	<block type="modules_order_ShortCart" icon="cart" afterAll="true">
 		<parameters>
+			<parameter name="showTotalProductCount" type="Boolean" default-value="false" />
 			<!-- @deprecated -->
 			<parameter name="showTotalWithFees" type="Boolean" default-value="false" hidden="true" />
 		</parameters>
 	</block>
-	<block type="modules_order_IdentifyStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Identify-Step;">
-		<parameters>
-			<parameter name="alwaysaskforpassword" type="Boolean" default-value="false" />
-			<parameter name="confirmEmail" type="Boolean" default-value="false" />
-		</parameters>
-	</block>
-	<block type="modules_order_ShippingStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Shipping-Step;" />
-	<block type="modules_order_BillingStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Billing-Step;" />
-	<block type="modules_order_ConfirmStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Confirm-Step;" />
-	<block type="modules_order_PaymentStep" icon="arrow-right-blue" label="&amp;modules.order.bo.general.Order-Payment-Step;" />
 	<block type="modules_order_CartMessages" icon="cart" />
 	<block type="modules_order_Creditnotes" icon="list-block">
 		<parameters>

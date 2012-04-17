@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.blocks.shortcart" lcid="fr_FR">
 	<key id="title">panier en cours (encart)</key>
+	<key id="showtotalproductcount">nombre total de produits</key>
+	<key id="showtotalproductcount-help">Choisissez "non" pour afficher le nombre de lignes dans le panier, "oui" pour afficher le nombre total des produits (somme des quantités).</key>
 </i18n>

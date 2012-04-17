@@ -1,6 +1,9 @@
-<div class="scroll">
-	<h2 change:h=""><a tal:omit-tag="processUrl" class="link" tal:attributes="href processUrl">${trans:m.order.frontoffice.my-cart,ucf}</a></h2>
+<div class="scroll" tal:condition="processUrl">
+	<h2 change:h="">${trans:m.order.frontoffice.my-cart,ucf}</h2>
 	<ul tal:condition="processUrl">
-		<li><a class="link" href="processUrl">${trans:m.order.frontoffice.continue-my-order,ucf}</a></li>
+		<li><a class="link" href="${processUrl}">${trans:m.order.frontoffice.continue-my-order,ucf}</a></li>
 	</ul>
+</div>
+<div tal:condition="not:processUrl">
+	<h2 change:h="">${trans:m.order.frontoffice.my-cart,ucf}</h2>
 </div>

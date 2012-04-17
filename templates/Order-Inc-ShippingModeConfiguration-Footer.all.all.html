@@ -1,51 +1,47 @@
-<div class="resume">
-   	<div class="normal resume-section">
-		<h2 change:h="">${trans:m.order.standardprocess.resume-order-title,ucf}</h2>
-   		<div class="column-one">
-    		<table class="normal payment-information" border="0">	
-				<caption>${trans:m.order.standardprocess.billing-amount-title,ucf}</caption>
-				<tr>
-					<td>${trans:m.order.standardprocess.resume-lines-total,ucf,lab}</td>
-					<td>${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</td>
-				</tr>
-				<tr tal:condition="php:cart.getFeesTotalWithTax() GT 0">
-					<td>${trans:m.order.standardprocess.resume-fees,ucf,lab}</td>
-					<td>${php:cart.formatPrice(cart.getFeesTotalWithTax())}</td>
-				</tr>
-				<tr tal:condition="php:cart.getDiscountTotalWithTax() GT 0">
-					<td>${trans:m.order.standardprocess.resume-discount,ucf,lab}</td>
-					<td>${php:cart.formatPrice(-cart.getDiscountTotalWithTax())}</td>
-				</tr>
-				<tr tal:condition="php:cart.getTotalCreditNoteAmount() GT 0">
-					<td>${trans:m.order.standardprocess.resume-credit-note,ucf,lab}</td>
-					<td>${php:cart.formatPrice(-cart.getTotalCreditNoteAmount())}</td>
-				</tr>
-				<tr>
-					<td class="pricetotal">${trans:m.order.standardprocess.resume-total-ttc,ucf,lab}</td>
-					<td class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</td>
-				</tr>
-			</table>
-			<p><a class="link" href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify}</a></p>
-		</div>
-		<div class="cleaner"></div>
-   	</div>
-   	<div class="normal resume-section">
-   		<h2 change:h="">${trans:m.order.standardprocess.resume-address-title,ucf}</h2>
-    	<ol class="ecom-adresses">
-			<li class="even">
-				<dl>
-					<dt>${trans:m.order.standardprocess.resume-address-shipping,ucf}</dt>
-					<dd tal:repeat="line shippingAddress">${line}</dd>
-					<dd><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify}</a></dd>
-				</dl>
-			</li>
-			<li class="odd">
-				<dl>
-					<dt>${trans:m.order.standardprocess.resume-address-billing,ucf}</dt>
-					<dd tal:repeat="line billingAddress">${line}</dd>
-					<dd><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify}</a></dd>
-				</dl>
-			</li>
-		</ol>
+<div class="summary">
+	<h2 change:h="">${trans:m.order.standardprocess.summary,ucf}</h2>
+	<div class="normal section">
+		<table class="normal payment-information">	
+			<caption class="h-3">${trans:m.order.standardprocess.billing-amount-title,ucf}</caption>
+			<tr>
+				<td>${trans:m.order.standardprocess.resume-article-count,ucf,lab}</td>
+				<td>${cart/getTotalProductCount}</td>
+			</tr>
+			<tr>
+				<td>${trans:m.order.standardprocess.resume-lines-total,ucf,lab}</td>
+				<td>${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</td>
+			</tr>
+			<tr tal:condition="php:cart.getFeesTotalWithTax() GT 0">
+				<td>${trans:m.order.standardprocess.resume-fees,ucf,lab}</td>
+				<td>${php:cart.formatPrice(cart.getFeesTotalWithTax())}</td>
+			</tr>
+			<tr tal:condition="php:cart.getDiscountTotalWithTax() GT 0">
+				<td>${trans:m.order.standardprocess.resume-discount,ucf,lab}</td>
+				<td>${php:cart.formatPrice(-cart.getDiscountTotalWithTax())}</td>
+			</tr>
+			<tr tal:condition="php:cart.getTotalCreditNoteAmount() GT 0">
+				<td>${trans:m.order.standardprocess.resume-credit-note,ucf,lab}</td>
+				<td>${php:cart.formatPrice(-cart.getTotalCreditNoteAmount())}</td>
+			</tr>
+			<tr>
+				<td class="pricetotal">${trans:m.order.standardprocess.resume-total-ttc,ucf,lab}</td>
+				<td class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</td>
+			</tr>
+		</table>
+		<p class="buttons"><a class="link" href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify-cart,ucf}</a></p>
+	</div>
+	<div class="normal section">
+		<h3 change:h="">${trans:m.order.standardprocess.resume-address-shipping,ucf}</h3>
+		<ul class="address normal-margin">
+			<li tal:repeat="line shippingAddress">${line}</li>
+		</ul>
+		<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
+	</div>
+	<div class="normal section">
+		<h3 change:h="">${trans:m.order.standardprocess.resume-address-billing,ucf}</h3>
+		<ul class="address normal-margin">
+			<li tal:repeat="line billingAddress">${line}</li>
+		</ul>
+		<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
 	</div>
 </div>
