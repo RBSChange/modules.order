@@ -13,4 +13,7 @@
 	
 	<key id="applicationpriority">priorité d'application</key>
 	<key id="applicationpriority-help">les priorités les plus élevées sont appliquées en premier.</key>
+	
+	<key id="billingarea">zone de facturation</key>
+	<key id="billingarea-help">zone de facturation du panier</key>
 </i18n>

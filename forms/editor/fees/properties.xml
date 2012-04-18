@@ -9,8 +9,28 @@
 		<field name="applicationPriority" />
 	</section>
 	<section labeli18n="modules.order.document.fees.Application-conditions">
+		<fieldinput name="shop" type="hidden" />
+		<field name="billingArea" required="true" />
 		<field name="startpublicationdate" hidehelp="true" />
 		<field name="endpublicationdate" hidehelp="true" />
 		<field name="query" type="objectfilter" allow="order/cart,order/cartfees::checkValue" hidehelp="true" />
 	</section>
+	<xul>
+		<javascript>	
+			<constructor><![CDATA[
+				var me = this;
+				this.addEventListener('panelInitializeComplete', function () { me.updateBillingArea(); }, true);
+			]]></constructor>
+			
+			<method name="updateBillingArea">
+				<body><![CDATA[
+					var shop = this.fields.shop;
+					var billingArea = this.fields.billingArea;
+					billingArea.setAttribute('nocache', 'true');
+					billingArea.replaceItems({shopId: shop.value});
+					billingArea.removeAttribute('nocache');	
+				]]></body>
+			</method>
+		</javascript>
+	</xul>
 </panel>

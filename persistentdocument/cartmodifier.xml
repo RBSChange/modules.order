@@ -6,6 +6,7 @@
     <add name="excludeModifier" type="modules_order/cartmodifier" max-occurs="-1"/>
     <add name="description" type="XHTMLFragment"/>
     <add name="applicationPriority" type="Integer" default-value="0"/>
+    <add name="billingArea" type="modules_catalog/billingarea" from-list="modules_catalog/billingareabyshop" />
   </properties>
   <statuses default="DRAFT"/>
   <serializedproperties/>

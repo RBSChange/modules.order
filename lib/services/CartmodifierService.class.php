@@ -53,6 +53,26 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
+	 * @param order_persistentdocument_cartmodifier $document
+	 * @param Integer $parentNodeId Parent node ID where to save the document.
+	 * @return void
+	 */
+	protected function preInsert($document, $parentNodeId)
+	{
+		$document->setInsertInTree(false);
+		if ($document->getShop() === null)
+		{
+			$shop = catalog_persistentdocument_shop::getInstanceById($parentNodeId); 
+			$document->setShop($shop);
+		}
+		
+		if ($document->getBillingArea() === null)
+		{
+			$document->setBillingArea($document->getShop()->getDefaultBillingArea());
+		}		
+	}
+	
+	/**
 	 * @param order_CartInfo $cart
 	 */
 	public function refreshModifiersForCart($cart)
@@ -73,6 +93,7 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 		$newModifiers = array();				
 		$query = $this->createQuery()->add(Restrictions::published())
 			->add(Restrictions::eq('shop', $cart->getShop()))
+			->add(Restrictions::eq('billingArea', $cart->getBillingArea()))
 			->add(Restrictions::eq('exclusive', true))
 			->addOrder(Order::desc('applicationPriority'))
 			->addOrder(Order::asc('id'));
@@ -99,6 +120,7 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 			$exludeModifier = array();
 			$query = $this->createQuery()->add(Restrictions::published())
 				->add(Restrictions::eq('shop', $cart->getShop()))
+				->add(Restrictions::eq('billingArea', $cart->getBillingArea()))
 				->add(Restrictions::eq('exclusive', false))
 				->add(Restrictions::isNotEmpty('excludeModifier'))
 				->addOrder(Order::desc('applicationPriority'))
@@ -127,6 +149,7 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 	
 			$query = $this->createQuery()->add(Restrictions::published())
 				->add(Restrictions::eq('shop', $cart->getShop()))
+				->add(Restrictions::eq('billingArea', $cart->getBillingArea()))
 				->add(Restrictions::eq('exclusive', false))
 				->add(Restrictions::isEmpty('excludeModifier'))
 				->addOrder(Order::desc('applicationPriority'))

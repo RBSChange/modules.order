@@ -56,21 +56,6 @@ class order_FeesService extends order_CartmodifierService
 	}
 	
 	/**
-	 * @param order_persistentdocument_fees $document
-	 * @param Integer $parentNodeId Parent node ID where to save the document.
-	 * @return void
-	 */
-	protected function preInsert($document, $parentNodeId)
-	{
-		parent::preInsert($document, $parentNodeId);
-		$document->setInsertInTree(false);
-		if ($document->getShop() === null)
-		{
-			$document->setShop(catalog_persistentdocument_shop::getInstanceById($parentNodeId));
-		}
-	}
-
-	/**
 	 * @param string $applicationStrategy
 	 * @return order_FeesApplicationStrategy
 	 */
@@ -272,6 +257,7 @@ class order_FeesService extends order_CartmodifierService
 		$label = LocaleService::getInstance()->transFO('m.order.frontoffice.shipping-fees', array('ucf', 'lab')) . ' ' . $shippingfilter->getLabel();
 		$fees->setLabel($label);
 		$fees->setShop($shippingfilter->getShop());
+		$fees->setBillingArea($shippingfilter->getBillingArea());
 		$fees->setStartpublicationdate($shippingfilter->getStartpublicationdate());
 		$fees->setEndpublicationdate($shippingfilter->getEndpublicationdate());
 		$fees->setPublicationstatus($shippingfilter->getPublicationstatus());
