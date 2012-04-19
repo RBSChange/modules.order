@@ -1,10 +1,10 @@
-<h2 change:h="">${trans: m.order.fo.add-to-cart,ucf}</h2>
-
-<p class="normal">${message}</p>
-
 <form change:form="" method="post">
-	<p class="buttons">
-		<input change:submit="" name="clear" class="button" value="${trans: m.order.fo.confirm,ucf}" />
-		<a href="${backurl}" class="button">${trans: m.order.fo.cancel,ucf}</a>
+	<fieldset>
+		<legend class="h-1">${trans: m.order.fo.add-to-cart,ucf}</legend>
+		<p class="normal">${message}</p>
+		<p class="buttons">
+		<input change:submit="" name="clear" class="button primary" value="${trans: m.order.fo.confirm,ucf}" />
+		<a href="${backurl}" class="button secondary">${trans: m.order.fo.cancel,ucf}</a>
 	</p>
+	</fieldset>
 </form>
