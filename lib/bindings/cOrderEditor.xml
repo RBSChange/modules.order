@@ -347,7 +347,7 @@
 						{
 							propspanel.showTextMessage("${transui:m.order.bo.actions.GeneratingBillDone,ucf,js}");
 							rowNode.mDataRow.archive = result.contents.url;
-							this.setCellArchiveValue(rowNode.childNodes[3], rowNode.mDataRow);
+							this.setCellArchiveValue(rowNode.childNodes[4], rowNode.mDataRow);
 						}
 						else
 						{

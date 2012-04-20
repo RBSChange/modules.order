@@ -13,9 +13,9 @@ class order_PrintOrderMessagesView extends f_view_BaseView
 	{
 		$this->setTemplateName('Order-Action-PrintOrder-Messages');
 		$this->includeStyle();
-		
-		$this->setAttribute('companyName', Framework::getCompanyName());
+		/* @var $order order_persistentdocument_order */
 		$order = $request->getAttribute('order');
+		
 		$this->setAttribute('order', $order);
 		$this->setAttribute('messages', order_MessageService::getInstance()->getByOrder($order));
 	}

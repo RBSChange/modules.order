@@ -11,6 +11,7 @@ class order_BlockMessagesAction extends website_BlockAction
 	 */
 	function execute($request, $response)
 	{
+		/* @var $order order_persistentdocument_order */
 		$order = $this->getDocumentParameter();
 		if ($order === null)
 		{
@@ -36,7 +37,6 @@ class order_BlockMessagesAction extends website_BlockAction
 			}
 		}
 		
-		$request->setAttribute('companyName', Framework::getCompanyName());
 		$request->setAttribute('order', $order);
 		$request->setAttribute('messages', order_MessageService::getInstance()->getByOrder($order));
 		return website_BlockView::SUCCESS;

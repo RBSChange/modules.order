@@ -37,11 +37,11 @@
 <ul tal:condition="messages" class="document-list">
 	<tal:block tal:repeat="message messages">
 		<li class="fromcustomer ${alternateclass:messageIndex}" tal:condition="message/isSentByCustomer">
-			<p>${trans:m.customer.frontoffice.message-sent-by-customer,ucf,companyName=companyName} ${datetime:message/getUICreationdate}</p>
+			<p>${trans:m.customer.frontoffice.message-sent-by-customer,ucf} ${datetime:message/getUICreationdate}</p>
 			<div>${message/getContentAsHtml}</div>
 		</li>
 		<li class="tocustomer ${alternateclass:messageIndex}" tal:condition="not: message/isSentByCustomer">
-			<p>${trans:m.customer.frontoffice.message-sent-by-company,ucf,companyName=companyName} ${datetime:message/getCreationdate}</p>
+			<p>${trans:m.customer.frontoffice.message-sent-by-company,ucf} ${datetime:message/getUICreationdate}</p>
 			<div>${message/getContentAsHtml}</div>
 		</li>	
 	</tal:block>

@@ -12,6 +12,7 @@
 				<contextaction name="activate" />
 				<contextaction name="deactivated" />
 				<contextaction name="reactivate" />
+        		<contextaction name="duplicate" />
 			</contextactions>
 		</model>
 	</models>

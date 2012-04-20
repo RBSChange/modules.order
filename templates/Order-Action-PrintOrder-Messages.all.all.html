@@ -6,32 +6,32 @@
 		<style tal:replace="cssInclusion" />
 	</head>
 	<body>
-		<h1 change:h=""><tal:block change:translate="modules.order.bo.print.Messages-for-order; orderNumber order/getOrderNumber" /></h1>
+		<h1 change:h="">${transui:m.order.bo.print.messages-for-order,ucf,orderNumber=order/getOrderNumber}</h1>
 		
 		<dl>
-			<dd change:translate="modules.order.bo.print.DateLabel" />
-			<dt><span change:datetime="order/getCreationdate; formatI18n framework.date.date.default-datetime-format" /></dt>
-			<dd change:translate="modules.order.bo.print.CustomerLabel" />
+			<dd>${transui:m.order.bo.print.date,ucf,lab}</dd>
+			<dt>${datetime:order/getUICreationdate}</dt>
+			<dd>${transui:m.order.bo.print.customer,ucf,lab}</dd>
 			<dt>${order/getCustomer/getUser/getFullname}</dt>
-			<dd change:translate="modules.order.bo.print.StatusLabel" />
+			<dd>${transui:m.order.bo.print.status,ucf,lab}</dd>
 			<dt>${order/getFoOrderStatusLabel}</dt>
 		</dl>
 		
 		<div class="cleaner"></div>
 		
-		<h2 change:h="" change:translate="modules.order.bo.print.Messages-list"></h2>
+		<h2 change:h="">${trans:m.order.bo.print.messages-list,ucf}</h2>
 		<ul tal:condition="messages" class="messagecustomer">
 			<tal:block tal:repeat="message messages">
-				<li class="fromcustomer" tal:condition="message/isSentByCustomer">
-					<p><strong><tal:block change:translate="modules.customer.frontoffice.Message-sent-by-customer; companyName companyName" /> <tal:block change:datetime="message/getCreationdate; formatI18n framework.date.date.default-datetime-format" /></strong></p>
+				<li class="fromcustomer ${alternateclass:messageIndex}" tal:condition="message/isSentByCustomer">
+					<p><strong>${trans:m.customer.frontoffice.message-sent-by-customer,ucf} ${datetime:message/getUICreationdate}</strong></p>
 					<blockquote>${message/getContentAsHtml}</blockquote>
 				</li>
-				<li class="tocustomer" tal:condition="not: message/isSentByCustomer">
-					<p><strong><tal:block change:translate="modules.customer.frontoffice.Message-sent-by-company; companyName companyName" /> <tal:block change:datetime="message/getCreationdate; formatI18n framework.date.date.default-datetime-format" /></strong></p>
+				<li class="tocustomer ${alternateclass:messageIndex}" tal:condition="not: message/isSentByCustomer">
+					<p><strong>${trans:m.customer.frontoffice.message-sent-by-company,ucf} ${datetime:message/getUICreationdate}</strong></p>
 					<blockquote>${message/getContentAsHtml}</blockquote>
 				</li>	
 			</tal:block>
 		</ul>
-		<p tal:condition="not: messages" change:translate="modules.customer.frontoffice.No-message-for-this-order"></p>
+		<p tal:condition="not: messages">${trans:m.customer.frontoffice.no-message-for-this-order,ucf}</p>
 	</body>
 </html>

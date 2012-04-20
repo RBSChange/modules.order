@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd" 
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd"
     model-version="1.0" publish-on-day-change="false" backoffice-indexable="false" has-url="false">
 	<properties>
-		<add name="content" type="XHTMLFragment" min-occurs="1" />
+		<add name="content" type="LongString" min-occurs="1" />
 		<add name="order" type="modules_order/order" min-occurs="1" inverse="true" />
 		<add name="sender" type="modules_users/user" min-occurs="1" inverse="true" />
 	</properties>

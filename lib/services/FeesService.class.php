@@ -56,6 +56,18 @@ class order_FeesService extends order_CartmodifierService
 	}
 	
 	/**
+	 * this method is call before save the duplicate document.
+	 * @param order_persistentdocument_fees $newDocument
+	 * @param order_persistentdocument_fees $originalDocument
+	 * @param Integer $parentNodeId
+	 */
+	protected function preDuplicate($newDocument, $originalDocument, $parentNodeId)
+	{
+		$newDocument->setLabel(LocaleService::getInstance()->transBO('m.generic.backoffice.duplicate-prefix', array('ucf'), array('number' => '')) . ' ' . $originalDocument->getLabel());
+		$newDocument->setPublicationstatus(f_persistentdocument_PersistentDocument::STATUS_DEACTIVATED);
+	}
+	
+	/**
 	 * @param string $applicationStrategy
 	 * @return order_FeesApplicationStrategy
 	 */
