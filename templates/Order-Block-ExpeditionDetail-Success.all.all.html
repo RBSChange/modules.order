@@ -10,7 +10,7 @@
 		<h2 change:h="">${trans:m.order.frontoffice.general-informations,ucf}</h2>
 		<dl tal:define="shippingMode expedition/getShippingMode" class="inline-items normal-margin">
 			<dt>${trans:m.order.frontoffice.related-order,ucf}</dt>
-			<dd><a change:link="document order">${order/getOrderNumber}</a> (${datetime:order/getUICreationdate}) (<a class="link popup" target="_blank" href="${actionurl:'order', 'GenerateExpedition', cmpref=expedition/getId, attr}">${trans:m.order.frontoffice.delivery,ucf}</a>)</dd>
+			<dd><a change:link="document order">${order/getOrderNumber}</a> (${datetime:order/getUICreationdate}) (<a class="link popup" target="_blank" href="${actionurl:'order', 'PrintExpedition', cmpref=expedition/getId, attr}">${trans:m.order.frontoffice.delivery,ucf}</a>)</dd>
 			<dt>${trans:m.order.frontoffice.expedition-status,ucf}</dt>
 			<dd>${expedition/getStatusLabel}</dd>
 			<dt>${trans:m.order.frontoffice.transport-name,ucf}</dt>
