@@ -75,16 +75,16 @@
 				<p class="buttons"><a class="link" href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify-cart,ucf}</a></p>
 			</div>
 			<div class="normal section">
-				<h3 change:h="">${trans:m.order.standardprocess.resume-address-shipping,ucf}</h3>
+				<h3 change:h="">${trans:m.order.standardprocess.resume-address-billing,ucf}</h3>
 				<ul class="address normal-margin">
-					<li tal:repeat="line shippingAddress">${line}</li>
+					<li tal:repeat="line billingAddress">${line}</li>
 				</ul>
 				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
 			</div>
 			<div class="normal section">
-				<h3 change:h="">${trans:m.order.standardprocess.resume-address-billing,ucf}</h3>
+				<h3 change:h="">${trans:m.order.standardprocess.resume-address-shipping,ucf}</h3>
 				<ul class="address normal-margin">
-					<li tal:repeat="line billingAddress">${line}</li>
+					<li tal:repeat="line shippingAddress">${line}</li>
 				</ul>
 				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
 			</div>
