@@ -1,15 +1,15 @@
-<form change:form="">
+<form change:form="" onsubmit="jQuery(this).find('.visibility-hidden :input').val('');">
 	<fieldset>
 		<legend class="h-1">${trans:m.order.fo.blocks.stdaddressstep.open-session,ucf}</legend>
 		<ul change:errors=""></ul>
 		<ol>
 			<li class="js">
-				<input change:booleaninput="name haveAccount; withcolon false" value="true" id="orderauth-have-account-field" labeli18n="m.order.fo.blocks.stdaddressstep.have-account" trueLabeli18n="m.order.fo.blocks.stdaddressstep.already-have-account" falseLabeli18n="m.order.fo.blocks.stdaddressstep.not-have-account-yet" />
+				<input change:booleaninput="name haveAccount; withcolon false" default-value="true" id="orderauth-have-account-field" labeli18n="m.order.fo.blocks.stdaddressstep.have-account" trueLabeli18n="m.order.fo.blocks.stdaddressstep.already-have-account" falseLabeli18n="m.order.fo.blocks.stdaddressstep.not-have-account-yet" />
 			</li>
 			<li>
 				<label change:label="name email; required true" class="shown-without-account js" labeli18n="m.order.fo.blocks.stdaddressstep.email"></label>
 				<label change:label="name email; required true" class="shown-with-account" labeli18n="m.order.fo.blocks.stdaddressstep.email-or-login"></label>
-				<input change:textinput="name email" id="address-email" autocorrect="off" autocapitalize="off" />
+				<input change:textinput="name email" id="orderauth-email-field" autocorrect="off" autocapitalize="off" />
 			</li>
 			<li class="visible-without-account">
 				<input change:checkboxinput="name password-generate; standalone true" id="orderauth-generate-password-field" checked="checked" value="1" labeli18n="m.order.standardprocess.address-generate-password" />
@@ -33,23 +33,32 @@
 <script type="text/javascript" >
 	/* <![CDATA[ */
 	jQuery('#orderauth-generate-password-field').change(function () {
-		jQuery('.visible-without-generate-password').css('visibility', (this.checked ? 'hidden' : 'visible'));
+		if (this.checked)
+		{
+			jQuery('.visible-without-generate-password').addClass('visibility-hidden');
+		}
+		else
+		{
+			jQuery('.visible-without-generate-password').removeClass('visibility-hidden');
+		}
 	});
 	
 	jQuery('#orderauth-have-account-field_true').change(function () {
 		jQuery('.shown-without-account').hide();
 		jQuery('.shown-with-account').show();
-		jQuery('.visible-without-account').css('visibility', 'hidden');
-		jQuery('.visible-with-account').css('visibility', 'visible');
-	}).change();
+		jQuery('.visible-without-account').addClass('visibility-hidden');
+		jQuery('.visible-with-account').removeClass('visibility-hidden');
+	});
 	
 	jQuery('#orderauth-have-account-field_false').change(function () {
 		jQuery('.shown-without-account').show();
 		jQuery('.shown-with-account').hide();
-		jQuery('.visible-without-account').css('visibility', 'visible');
-		jQuery('.visible-with-account').css('visibility', 'hidden');
+		jQuery('.visible-without-account').removeClass('visibility-hidden');
+		jQuery('.visible-with-account').addClass('visibility-hidden');
 		jQuery('#orderauth-generate-password-field').change();
 	});
 	
+	jQuery('#orderauth-have-account-field_true:checked').change();
+	jQuery('#orderauth-have-account-field_false:checked').change();	
 	/* ]]> */
 </script>

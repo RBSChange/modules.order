@@ -148,16 +148,19 @@ class order_OrderProcessService extends BaseService
 	 * @param order_AddressBean $address
 	 * @return users_persistentdocument_websitefrontenduser
 	 */
-	public function createNewUser($website, $email, $password, $address)
+	public function createNewUser($website, $email, $password, $address = null)
 	{
 		$tm = $this->getTransactionManager();
 		try
 		{
 			$tm->beginTransaction();
 			$user = users_WebsitefrontenduserService::getInstance()->getNewDocumentInstance();
-			$user->setTitleid((intval($address->Title) > 0) ? intval($address->Title) : null);
-			$user->setFirstname($address->FirstName);
-			$user->setLastname($address->LastName);
+			if ($address !== null)
+			{
+				$user->setTitleid((intval($address->Title) > 0) ? intval($address->Title) : null);
+				$user->setFirstname($address->FirstName);
+				$user->setLastname($address->LastName);
+			}
 			$user->setLogin($email);
 			$user->setEmail($email);
 			if ($password !== null)

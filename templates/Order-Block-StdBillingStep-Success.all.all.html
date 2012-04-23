@@ -84,9 +84,7 @@
 				</ul>
 				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
 			</div>
-			
-			
-	   		<div tal:condition="cart/getShippingModeId" class="normal section">
+			<div tal:condition="cart/getShippingModeId" class="normal section">
 				<h3 change:h="">${trans:m.order.standardprocess.shipping-title,ucf}</h3>
 				<ul class="normal-margin">
 					<li>${cart/getShippingResumeAsHtml}</li>
