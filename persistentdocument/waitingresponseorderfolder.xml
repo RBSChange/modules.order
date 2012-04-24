@@ -3,6 +3,6 @@
 	xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd"
 	model-version="1.0" extend="modules_generic/folder">
 	<properties>
-		<add name="label" type="String" default-value="waitingresponseorderfolder" />
+		<add name="label" type="String" default-value="m.order.document.waitingresponseorderfolder.document-name" />
 	</properties>
 </document>
