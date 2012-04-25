@@ -21,7 +21,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		return LocaleService::getInstance()->transFO('m.order.frontoffice.status.' . $this->getOrderStatus(), array('ucf', 'html'));
 	}
 	
-	
 	/**
 	 * @return string
 	 */
@@ -29,8 +28,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	{
 		return LocaleService::getInstance()->transFO('m.order.fo.order-' . order_ExpeditionService::getInstance()->evaluateGlobalStatusForOrder($this));
 	}
-		
-		
+	
 	/**
 	 * @param float $value
 	 * @return string
@@ -90,7 +88,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		
 		//Deprecated remove in 4.0
 		return $this->getSubTotalTaxInfoArray();
-
 	}
 	
 	/**
@@ -111,6 +108,9 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		return $this->getOrderProperty($propertyName);
 	}
 	
+	/**
+	 * @var array
+	 */
 	private $globalPropertiesArray;
 	
 	/**
@@ -210,8 +210,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			$this->setCouponId(null);
 		}
 	}
-	
-	
 	
 	/**
 	 * @return array<id => integer, code => string, valueWithTax => double, valueWithoutTax => double>
@@ -476,6 +474,14 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	/**
 	 * @return string
 	 */
+	public function getShippingModeLabelAsHtml()
+	{
+		return f_util_HtmlUtils::textToHtml($this->getShippingModeLabel());
+	}
+	
+	/**
+	 * @return string
+	 */
 	public function getShippingModeCode()
 	{
 		$result = array();
@@ -490,7 +496,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			if ($shippingMode) {$result[] = $shippingMode->getCode();}
 		}
 
-		
 		$shippingDataArray = $this->getShippingDataArray();
 		if (is_array($shippingDataArray))
 		{

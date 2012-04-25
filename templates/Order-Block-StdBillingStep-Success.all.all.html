@@ -25,7 +25,7 @@
 			<fieldset>
 				<legend class="h-2">${trans:m.order.standardprocess.billing-title,ucf}</legend>
 				<ul change:errors="relKey paymentFilter"></ul>		
-				<ol id="paymentselector" style="clear: both" tal:condition="paymentFilters">
+				<ol id="paymentselector" tal:condition="paymentFilters">
 					<li tal:repeat="paymentFilter cart/getPaymentConnectors">
 						<input change:radioinput="name paymentFilterId; withcolon false" id="paymentFilter" value="${paymentFilter/getId}" label="${paymentFilter/getConnector/getSelectionAsHtml}" />
 					</li>

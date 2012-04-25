@@ -31,7 +31,7 @@
   
   <key id="address-billing-address-legend">Entrer l'adresse de facturation</key>
   <key id="address-shipping-address-legend">Sélectionner l'adresse de livraison</key>
-  <key id="address-registered">adresse enregistré</key>
+  <key id="address-registered">adresse enregistrée</key>
   <key id="address-select">sélectioner l'adresse</key>
   <key id="address-usesameaddress">Utiliser l'adresse de facturation comme adresse de livraison</key>
   <key id="address-newaddress">Entrer une nouvelle adresse</key>
