@@ -70,7 +70,6 @@ class order_CartLineInfo
 		return $this->productId;
 	}
 	
-
 	/**
 	 * @param Integer $productId
 	 */
@@ -474,6 +473,7 @@ class order_CartLineInfo
 	public function setPropertiesArray($properties)
 	{
 		$this->properties = $properties;
+		$this->key = null;
 	}
 
 	/**
@@ -501,6 +501,7 @@ class order_CartLineInfo
 	public function setProperties($key, $value)
 	{
 		$this->properties[$key] = $value;
+		$this->key = null;
 	}
 	
 	/**
@@ -511,6 +512,7 @@ class order_CartLineInfo
 		if (is_array($array))
 		{
 			$this->properties = array_merge($this->properties, $array);
+			$this->key = null;
 		}
 	}
 	

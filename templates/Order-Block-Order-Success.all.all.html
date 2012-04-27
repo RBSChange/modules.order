@@ -73,7 +73,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr tal:repeat="line order/getLineArray" class="${php: repeat.line.odd ? 'odd' : 'even'}">
+		<tr tal:repeat="line order/getLineArray" class="${alternateclass:lineId}">
 			<td change:include="module 'order'; template 'Order-Inc-OrderLine'; type 'html'; shop shop; order order; line line" />
 		</tr>
 	</tbody>

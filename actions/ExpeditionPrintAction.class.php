@@ -40,7 +40,7 @@ class order_ExpeditionPrintAction extends f_action_BaseAction
 		} 
 		catch (Exception $e)
 		{
-			Framework::fatal($e);
+			Framework::exception($e);
 		}
 		return View::NONE;
 	}

@@ -259,7 +259,6 @@ class order_ModuleService extends ModuleBaseService
 	{
 		if ($configuredNotif instanceof notification_persistentdocument_notification)
 		{
-			Framework::fatal(__METHOD__ . ' -> '. $configuredNotif->getCodename());
 			if ($order instanceof order_persistentdocument_order)
 			{
 				$configuredNotif->registerCallback($order->getDocumentService(), 'getNotificationParameters', $order);

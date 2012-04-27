@@ -35,58 +35,36 @@
 		<tbody>
 			<tal:block tal:repeat="cartLine cart/getCartLineArray">
 				<tr tal:condition="cartLine/getDiscountId" class="${alternateclass:lineId}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
-					<!-- Visual -->
 					<td tal:define="visual product/getDefaultVisual" class="visual">
 						<a tal:condition="visual" change:link="document product">
 							<img change:media="document visual; format 'modules.catalog.frontoffice/small'" />
 						</a>
 						<tal:block tal:condition="not: visual">&#160;</tal:block>
 					</td>
-	
-					<!-- Désignation / Article -->
-					<td>${cartLine/getDiscountDetail}<br />${product/getOrderLabelAsHtml}</td>
-	
-					<!-- Disponibilite -->
+					<td class="product-infos">${cartLine/getDiscountDetail}<br />${product/getOrderLabelAsHtml}</td>
 					<td>${product/getAvailability}</td>
-					
-					<!-- Unit price -->
 					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
 					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
-	
-					<!-- Quantity -->
 					<td>${cartLine/getQuantity}</td>
-	
-					<!-- Tax rate -->
 					<td tal:condition="showTTC">${cartLine/getFormattedTaxRate}</td>
-										
-					<!-- Total price -->
 					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
 					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
-	
-					<!-- Remove link -->
 					<td>&#160;</td>
 				</tr>
-				
 				<tr tal:condition="not: cartLine/getDiscountId" class="${alternateclass:lineId}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
-					<!-- Visual -->
 					<td tal:define="visual product/getDefaultVisual" class="visual">
 						<a tal:condition="visual" change:link="document product">
 							<img change:media="document visual; format 'modules.catalog.frontoffice/small'" />
 						</a>
 						<tal:block tal:condition="not: visual">&#160;</tal:block>
 					</td>
-	
-					<!-- Désignation / Article -->
-					<td>${product/getOrderLabelAsHtml} <input type="hidden" name="${string:orderParam[lines][${cartLineIndex}][productId]}" value="${product/getId}" /></td>
-	
-					<!-- Disponibilite -->
+					<td class="product-infos">
+						<a tal:condition="product/isConfigurable" change:link="document product/getConfigurationPage; cartLineIndex cartLineIndex" title="${trans:m.catalog.fo.configurate-product,ucf,attr}"><img change:img="icon/small/edit.png" alt="${trans:m.catalog.fo.configurate-product,ucf,attr}" /></a>
+						${product/getOrderLabelAsHtml} <input type="hidden" name="${string:orderParam[lines][${cartLineIndex}][productId]}" value="${product/getId}" />
+					</td>
 					<td>${product/getAvailability}</td>
-					
-					<!-- Unit price -->
 					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
 					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
-	
-					<!-- Quantity -->
 					<td tal:define="name string:orderParam[lines][${cartLineIndex}][quantity]; update product/updateCartQuantity">
 						<label class="hidden" tal:attributes="for name">${trans:m.order.frontoffice.Quantity,ucf,lab}</label> 
 						<tal:block tal:condition="update">
@@ -97,15 +75,9 @@
 							<input type="hidden" name="${name}" value="${cartLine/getQuantity}" /> ${cartLine/getQuantity}
 						</tal:block>
 					</td>
-	
-					<!-- Tax rate -->
 					<td tal:condition="showTTC">${cartLine/getFormattedTaxRate}</td>
-										
-					<!-- Total price -->
 					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
 					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
-						
-					<!-- Remove link -->
 					<td>
 						<a change:link="module order; action RemoveCartLine; cartLineIndex cartLineIndex; pageref pageref">
 							<img change:image="front/cross.gif" alt="${trans:m.order.frontoffice.delete-link,ucf,attr}" />
