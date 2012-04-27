@@ -22,6 +22,7 @@
 			<page byTag="contextual_website_website_modules_order_stdbillingstep" template-attr="templateNosidebar"
 				label="Commande - Paiement" navigationtitle="Paiement" navigationVisibility="hidden" 
 				indexingstatus="false" robotsmeta="noindex,nofollow">
+				<documenturl url="/website/Commande-Paiement.html" />
 				<changecontent for="content-block">
 					<changeblock type="modules_order_StdBillingStep" />
 				</changecontent>
