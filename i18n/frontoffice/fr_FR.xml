@@ -51,7 +51,8 @@
   <key id="cart-validation-error-removed-an-article">Un article de votre panier n'était plus référencé dans notre base de donnée. La ligne le concernant a donc été supprimée.</key>
   <key id="cart-validation-error-replaced-this-article">L'article {articleLabel} n'est plus disponible. Une autre référence du même produit a été selectionné à la place.</key>
   <key id="cart-validation-error-replaced-an-article">Un article de votre panier n'était plus référencé dans notre base de donnée. Une autre référence du même produit a été selectionné à la place.</key>
-  <key id="cart-validation-error-unavailable-article-quantity">L'article {articleLabel} n'est pas disponible pour une quantité de : {quantity} {unit}. La quantité actuellement disponible est {availableQuantity} {availableUnit}.</key>
+  <key id="cart-validation-error-unavailable-article-quantity" updated="true">L'article {articleLabel} n'est pas disponible pour une quantité de : {quantity}. La quantité actuellement disponible est {availableQuantity}.</key>
+  <key id="cart-validation-error-min-quantity">L'article {articleLabel} n'est pas commandable pour une quantité inférieure à {minQuantity} or vous n'en avez sélectionné que {quantity}.</key>
   <key id="cart-validation-error-custom-discount-line-not-valid">La ligne {cartLineLabel} n'est plus disponible, elle a donc été supprimée.</key>
   <key id="cart-validation-error-unavailable-coupon-modificator">le coupon de code ″{code}″ est invalide.</key>
   <key id="cart-validation-error-removed-this-coupon-modificator">le coupon ″{label}″ de code ″{code}″ n'est plus valide. La référence le concernant a donc été supprimée.</key>

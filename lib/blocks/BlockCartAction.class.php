@@ -33,21 +33,15 @@ class order_BlockCartAction extends website_BlockAction
 		{
 			if ($this->getConfiguration()->getUseCartEmptyPage())
 			{
-				try
+				$emptyCartPage = TagService::getInstance()->getDocumentByContextualTag(
+					'contextual_website_website_modules_order_cart-empty',
+					website_WebsiteModuleService::getInstance()->getCurrentWebsite(),
+					false
+				);
+				if ($emptyCartPage !== null && $emptyCartPage->getId() != $pageId)
 				{
-					$emptyCartPage = TagService::getInstance()->getDocumentByContextualTag(
-						'contextual_website_website_modules_order_cart-empty',
-						website_WebsiteModuleService::getInstance()->getCurrentWebsite()
-					);
-					if ($emptyCartPage->getId() != $pageId)
-					{
-						$url = LinkHelper::getDocumentUrl($emptyCartPage);
-						HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
-					}
-				}
-				catch (TagException $e)
-				{
-					Framework::warn($e->getMessage());
+					$url = LinkHelper::getDocumentUrl($emptyCartPage);
+					HttpController::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 				}
 			}
 			$shop = catalog_ShopService::getInstance()->getCurrentShop();
