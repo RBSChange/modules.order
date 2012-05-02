@@ -41,7 +41,7 @@
   <key id="connector-not-found">Impossible de trouver un moyen de paiement</key>
   
   <key id="resume-order-title">Détail de la commande</key>
-  <key id="resume-article-count">Nombre d'articles</key>
+  <key id="resume-article-count">articles</key>
   <key id="resume-lines-total">Total des achats</key>
   <key id="resume-evaluated-fees">Frais estimés</key>
   <key id="resume-fees">Frais</key>
