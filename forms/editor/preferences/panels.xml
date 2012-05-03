@@ -2,5 +2,6 @@
 <panels>
 	<panel name="resume" />
 	<panel name="properties"/>
+	<panel name="publication"/>
 	<panel name="history" />
 </panels>

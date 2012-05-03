@@ -29,6 +29,10 @@
 		<property name="needsAnswer" labeli18n="modules.order.bo.doceditor.property.NeedsAnswer" />
 	</section>		
 	
+	<section flex="1" name="urlrewriting" labeli18n="modules.uixul.bo.doceditor.section.Urlrewriting" image="{IconsBase}/small/urlrewriting.png">
+		<property name="currenturl" labeli18n="modules.uixul.bo.doceditor.property.Currenturl" class="link" />
+	</section>
+	
 	<section name="history" linkedtab="history" actiontexti18n="modules.uixul.bo.doceditor.section.action.View"
 		labeli18n="modules.uixul.bo.doceditor.section.History" image="{IconsBase}/small/history.png">
 		<property name="modificationdate" labeli18n="modules.uixul.bo.doceditor.property.Modificationdate"/>

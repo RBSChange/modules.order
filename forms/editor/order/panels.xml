@@ -5,5 +5,6 @@
 	<panel name="financial" icon="price" labeli18n="m.order.bo.doceditor.tab.financial" />
 	<panel name="shipping" icon="redirection" labeli18n="m.order.bo.doceditor.tab.shipping" />
 	<panel name="messages" icon="mail" labeli18n="m.order.bo.doceditor.tab.messages" />
+	<panel name="publication"/>
 	<panel name="history" /> 
 </panels>
