@@ -680,10 +680,10 @@ class order_CartService extends BaseService
 		{
 			/* @var $cartLine order_CartLineInfo */
 			$product = $cartLine->getProduct();
-			if ($product->getEffectiveMinOrderQuantity() > $cartLine->getQuantity())
+			if ($product->getMinOrderQuantity() > $cartLine->getQuantity())
 			{
 				$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
-					'quantity' => $cartLine->getQuantity(), 'minQuantity' => $product->getEffectiveMinOrderQuantity());
+					'quantity' => $cartLine->getQuantity(), 'minQuantity' => $product->getMinOrderQuantity());
 				$cart->addPersistentErrorMessage(LocaleService::getInstance()->transFO('m.order.frontoffice.cart-validation-error-min-quantity', array('ucf'), $replacements));
 			}
 		}
