@@ -233,6 +233,7 @@ class order_FeesService extends order_CartmodifierService
 	/**
 	 * @param catalog_persistentdocument_shippingfilter $shippingfilter
 	 * @param string $strategyClassName
+	 * @throws Exception
 	 * @return order_persistentdocument_fees
 	 */
 	public function generateDefaultForShippingFilter($shippingfilter, $strategyClassName = null)
@@ -241,16 +242,16 @@ class order_FeesService extends order_CartmodifierService
 		{
 			try 
 			{
-				$this->tm->beginTransaction();
+				$this->getTransactionManager()->beginTransaction();
 				$fees = $this->getNewDefaultFees($shippingfilter, $strategyClassName);
 				$fees->save();	
 				$shippingfilter->setFeesId($fees->getId());
 				$shippingfilter->save();		
-				$this->tm->commit();
+				$this->getTransactionManager()->commit();
 			} 
 			catch (Exception $e) 
 			{
-				$this->tm->rollBack($e);
+				throw $this->getTransactionManager()->rollBack($e);
 			}
 		}
 		return $this->getDocumentInstance($shippingfilter->getFeesId());
