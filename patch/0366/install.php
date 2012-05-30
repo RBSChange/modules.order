@@ -72,7 +72,7 @@ class order_patch_0366 extends patch_BasePatch
 		{
 			$this->log('Migrate Expeditions chunk: ' . $index);
 			$batch = 'modules/order/patch/0366/migrateExpeditions.php';
-			$result = f_util_System::execHTTPScript($batch, $chunk);
+			$result = f_util_System::execScript($batch, $chunk);
 			$this->log($result);	
 		}
 		
@@ -86,7 +86,7 @@ class order_patch_0366 extends patch_BasePatch
 			if (count($chunk))
 			{
 				$batch = 'modules/order/patch/0366/migrateExpeditionsLines.php';
-				$result = f_util_System::execHTTPScript($batch, $chunk);
+				$result = f_util_System::execScript($batch, $chunk);
 				$this->log($result);
 			}
 			if (count($chunk) != 10) {break;}				

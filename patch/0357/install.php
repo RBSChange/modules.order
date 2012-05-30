@@ -28,7 +28,7 @@ class order_patch_0357 extends patch_BasePatch
 		$chunkSize = 50;	
 		while ($documentId >= 0)
 		{		
-			$output = f_util_System::execHTTPScript($scriptPath, array($documentId, $chunkSize));
+			$output = f_util_System::execScript($scriptPath, array($documentId, $chunkSize));
 			if (!is_numeric($output))
 			{
 				$chunkInfo = __METHOD__ . " Error on processsing chunck start at $documentId size $chunkSize. ($output)";

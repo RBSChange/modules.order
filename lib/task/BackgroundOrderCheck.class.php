@@ -14,7 +14,7 @@ class order_BackgroundOrderCheck extends task_SimpleSystemTask
 		foreach ($documentsArray as $chunk)
 		{
 			$this->plannedTask->ping();
-			$result = f_util_System::execHTTPScript($script, $chunk);
+			$result = f_util_System::execScript($script, $chunk);
 			if ($result != 'OK')
 			{
 				$errors[] = $result;
