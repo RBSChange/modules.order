@@ -519,7 +519,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			}
 			else
 			{
-				$this->setActivePublicationStatusInfo($document, '&modules.order.document.bill.Not-validated;');	
+				$this->setActivePublicationStatusInfo($document, 'm.order.document.bill.not-validated');	
 			}
 		}
 		return false;
