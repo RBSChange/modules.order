@@ -7,11 +7,13 @@ row[linetype="cart-line"]:nth-child(even){
 section[messageType="fromCustomer"] groupbox{
 	border: 1px solid #6a6!important;
 	-moz-border-radius: 5px!important;
+	border-radius: 5px!important;
 	background-color: #efe!important;
 }
 section[messageType="toCustomer"] groupbox{
 	border: 1px solid #66a!important;
 	-moz-border-radius: 5px!important;
+	border-radius: 5px!important;
 	background-color: #eef!important;
 }
 section[messageType="toCustomer"] groupbox div,
@@ -21,6 +23,7 @@ section[messageType="fromCustomer"] groupbox div{
 groupbox.messageForm{
 	border: 1px solid #bbb!important;
 	-moz-border-radius: 5px!important;
+	border-radius: 5px!important;
 	background-color: #f9f9f9!important;
 }
 div[anonid="content"]{
