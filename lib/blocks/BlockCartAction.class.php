@@ -171,7 +171,7 @@ class order_BlockCartAction extends website_BlockAction
 				if ($currentCoupon === null)
 				{		
 					$request->setAttribute('coupon', '');
-					$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-coupon', array('ucf'), array('code' => $couponCode)), 
+					$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-coupon', array('ucf', 'html'), array('code' => $couponCode)), 
 						'coupon');
 				}
 			}
