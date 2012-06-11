@@ -65,9 +65,9 @@
 	<key id="payedordersfilter-label">les commandes ayant au moins une facture payée</key>
 	<key id="payedordersfilter-text">les commandes ayant au moins une facture payée</key>
 	<key id="containedproductorderfilter-label">présence d'un produit</key>
-	<key id="containedproductorderfilter-text">contenant au moins l'un des produits {product}</key>
+	<key id="containedproductorderfilter-text">les commandes contenant au moins l'un des produits {product}</key>
 	<key id="paymentstatusorderfilter-label">statut du paiement</key>
-	<key id="paymentstatusorderfilter-text">contenant ayant {restriction} facture {status}</key>
+	<key id="paymentstatusorderfilter-text">les commandes ayant {restriction} facture {status}</key>
 	<key id="paymentstatuscustomerfilter-label">statut du paiement des commandes</key>
 	<key id="paymentstatuscustomerfilter-text">les clients qui ont au moins {count} commandes avec {restriction} facture {status}</key>
 </i18n>
