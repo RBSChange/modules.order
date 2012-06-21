@@ -6,6 +6,11 @@
 class order_BlockStdBillingStepAction extends website_BlockAction
 {
 	/**
+	 * @var integer
+	 */
+	protected $trivialErrorCount = 0;
+	
+	/**
 	 * @see website_BlockAction::getInputViewName()
 	 */
 	public function getInputViewName()
@@ -63,6 +68,7 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 				if ($currentCoupon === null)
 				{		
 					$request->setAttribute('coupon', '');
+					$this->trivialErrorCount++;
 					$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-coupon', array('ucf'), array('code' => $couponCode)), 
 						'coupon');
 				}
@@ -172,7 +178,15 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 		$request->setAttribute('showPrice', $request->getAttribute('showPriceWithTax') || $request->getAttribute('showPriceWithoutTax')); 
 		
 		$this->setResumeInfoFromCart($request, $cart);
-		$request->setAttribute('canContinue', !$this->hasErrors());	
+		$request->setAttribute('canContinue',  $this->canContinue());	
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	protected function canContinue()
+	{
+		return (count($this->getErrors()) - $this->trivialErrorCount) == 0;
 	}
 	
 	/**
