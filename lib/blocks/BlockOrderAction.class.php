@@ -7,7 +7,7 @@ class order_BlockOrderAction extends website_TaggerBlockAction
 	/**
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	public function execute($request, $response)
 	{
@@ -42,19 +42,32 @@ class order_BlockOrderAction extends website_TaggerBlockAction
 		$bills = order_BillService::getInstance()->getByOrder($order);	
 		$request->setAttribute('bills', $bills);
 		
-		$expeditions = order_ExpeditionService::getInstance()->getByOrderForDisplay($order);
-		
+		$expeditions = order_ExpeditionService::getInstance()->getByOrderForDisplay($order);		
 		$request->setAttribute('expeditions', $expeditions);
+		
+		$cs =  order_CartService::getInstance();
+		if ($cs->hasCartInSession())
+		{
+			$this->getContext()->addScript('modules.website.lib.js.jquery-ui-dialog');
+			$cart = $cs->getDocumentInstanceFromSession();
+			$request->setAttribute('cart', $cart);
+		}
 		return website_BlockView::SUCCESS;
 	}
 	
 	/**
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	public function executeAddToCart($request, $response)
 	{
+		if ($request->getParameter('clearCart') == '1')
+		{
+			$cs =  order_CartService::getInstance();
+			$cart = $cs->getDocumentInstanceFromSession();
+			$cs->clearCart($cart);
+		}
 		$order = $this->getCurrentOrder();
 		order_OrderService::getInstance()->appendOrderToCart($order);
 		return website_BlockView::NONE;

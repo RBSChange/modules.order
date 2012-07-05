@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.doceditor" lcid="fr_FR">
 	<key id="confirm-cancelation">En annulant cette commande, le montant des produits non-expédiés sera recrédité au client sous forme d'avoir. Attention, cette opération est irréversible.</key>
 	<key id="cancelation-in-progress">annulation de cette commande en cours.</key>
@@ -6,7 +6,7 @@
 	<key id="customer">client</key>
 	<key id="order">commande</key>
 	<key id="bills">factures</key>
-	<key id="expeditions">expeditions</key>
+	<key id="expeditions">expéditions</key>
 	<key id="actions">Actions</key>
 	<key id="creditnotes">Avoirs</key>
 	<key id="returns">retours</key>

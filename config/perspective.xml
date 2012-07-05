@@ -1,13 +1,15 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <perspective>
 	<models>
 		<model name="modules_generic/rootfolder">
 			<children>
 				<child model="modules_generic/folder" />
 				<child model="modules_order/smartfolder" />
+				<child model="modules_order/waitingresponseorderfolder" />
 			</children>
 			<drops>
 				<drop model="modules_order/smartfolder" action="move" />
+				<drop model="modules_order/waitingresponseorderfolder" action="move" />
 			</drops>
 			<contextactions>
 				<contextaction name="edit" />
@@ -21,11 +23,11 @@
 				<child model="modules_order/order" from="function" />
 			</children>
 			<columns>
-				<column name="formattedTotalAmountWithTax" flex="1" labeli18n="m.order.bo.general.column.totalamountwithtax" />
-				<column name="orderStatusLabel" flex="2" labeli18n="m.order.bo.general.column.orderstatus" />
-				<column name="customer" flex="4" />
-				<column name="date" flex="1" />
-				<column name="lastMessageDate" flex="1" />
+				<column name="formattedTotalAmountWithTax" flex="1" label="TotalAmountWithTax" />
+				<column name="orderStatusLabel" flex="2" label="OrderStatus" />
+				<column name="customer" flex="4" labeli18n="m.order.bo.general.column.customer" />
+				<column name="date" flex="1" labeli18n="m.order.bo.general.column.date" />
+				<column name="lastMessageDate" flex="1" labeli18n="m.order.bo.general.column.lastmessagedate" />
 			</columns>
 			<contextactions>
 				<contextaction name="openFolder" />
@@ -36,11 +38,11 @@
 				<child model="modules_order/order" from="function" />
 			</children>
 			<columns>
-				<column name="formattedTotalAmountWithTax" flex="1" labeli18n="m.order.bo.general.column.totalamountwithtax" />
-				<column name="orderStatusLabel" flex="1" labeli18n="m.order.bo.general.column.orderstatus" />
-				<column name="customer" flex="4" />
-				<column name="date" flex="2" />
-				<column name="lastMessageDate" flex="2" />
+				<column name="formattedTotalAmountWithTax" flex="1" label="TotalAmountWithTax" />
+				<column name="orderStatusLabel" flex="1" label="OrderStatus" />
+				<column name="customer" flex="4" labeli18n="m.order.bo.general.column.customer" />
+				<column name="date" flex="2" labeli18n="m.order.bo.general.column.date" />
+				<column name="lastMessageDate" flex="2" labeli18n="m.order.bo.general.column.lastmessagedate" />
 			</columns>
 			<contextactions>
 				<contextaction name="edit" />
@@ -63,6 +65,21 @@
 				<contextaction name="reactivate" />
 			</contextactions>
 		</model>
+		<model name="modules_order/waitingresponseorderfolder">
+			<children>
+				<child model="modules_order/order" from="function" />
+			</children>
+			<columns>
+				<column name="formattedTotalAmountWithTax" flex="1" label="TotalAmountWithTax" />
+				<column name="orderStatusLabel" flex="2" label="OrderStatus" />
+				<column name="customer" flex="4" labeli18n="m.order.bo.general.column.customer" />
+				<column name="date" flex="1" labeli18n="m.order.bo.general.column.date" />
+				<column name="lastMessageDate" flex="1" labeli18n="m.order.bo.general.column.lastmessagedate" />
+			</columns>
+			<contextactions>
+				<contextaction name="openFolder" />
+			</contextactions>
+		</model>
 	</models>
 	<toolbar>
 		<toolbarbutton name="edit" />
@@ -73,8 +90,8 @@
 		<action name="edit" single="true" permission="Load" icon="edit" labeli18n="m.uixul.bo.actions.edit" />
 		<action name="delete" permission="Delete" icon="delete" labeli18n="m.uixul.bo.actions.delete" />
 		<action name="cancelOrder" permission="CancelOrder" icon="reject" labeli18n="m.order.bo.actions.cancelorder" />
-		<action name="createSmartfolder" single="true" permission="Insert_smartfolder" icon="create-folder"
-			labeli18n="m.order.bo.actions.create-smartfolder" />
+		<action name="createSmartfolder" single="true" permission="Insert_smartfolder" icon="create-folder" labeli18n="m.order.bo.actions.create-smartfolder" />
 		<action name="openTreeNodeOrder" single="true" permission="Order" icon="sort" labeli18n="m.uixul.bo.actions.set-children-order" />
+		<action name="createOrderpreparation" single="true" permission="Insert_orderpreparation" icon="add" />
 	</actions>
 </perspective>

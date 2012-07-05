@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.smartfolder" lcid="en_GB">
-  <include id="m.filter.document.queryfolder"/>
+	<include id="m.filter.document.queryfolder" />
 </i18n>

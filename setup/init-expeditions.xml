@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <script>
 	<binding fileName="modules/notification/persistentdocument/import/notification_binding.xml" />
-		
-	<systemfolder module="notification" relatedmodule="order">			
-		<notification codename="modules_order/expedition_canceled"
-			label="Expédition annulée"
-			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {packageNumber}, {trackingNumber}, {expeditionDetail}, {website-url}"
-			subject="Expédition annulée sur votre commande numéro {orderId} sur le site {website-url}"
-			header="&lt;strong&gt;Expédition annulée sur votre commande numéro {orderId}&lt;/strong&gt;"
-			body="&lt;p&gt;{packageNumber}&lt;/p&gt;&lt;p&gt;{trackingNumber}&lt;/p&gt;&lt;p&gt;{expeditionDetail}&lt;/p&gt;"
-			template="default" />
-			
-		<notification codename="modules_order/expedition_shipped"
-			label="Expédition effectuée"
-			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {packageNumber}, {trackingNumber}, {expeditionDetail}, {website-url}"
-			subject="Expédition effectuée sur votre commande numéro {orderId} sur le site {website-url}"
-			header="&lt;strong&gt;Expédition effectuée sur votre commande numéro {orderId}&lt;/strong&gt;"
-			body="&lt;p&gt;{packageNumber}&lt;/p&gt;&lt;p&gt;{trackingNumber}&lt;/p&gt;&lt;p&gt;{expeditionDetail}&lt;/p&gt;"
-			template="default" />
+	<systemfolder module="notification" relatedmodule="order">
+		<notification codename="modules_order/expedition_canceled" label="Expédition annulée" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {packageNumber}, {trackingNumber}, {expeditionDetail}, {website-url}" subject="Expédition annulée sur votre commande numéro {orderId} sur le site {website-url}" header="&lt;strong&gt;Expédition annulée sur votre commande numéro {orderId}&lt;/strong&gt;" body="&lt;p&gt;{packageNumber}&lt;/p&gt;&lt;p&gt;{trackingNumber}&lt;/p&gt;&lt;p&gt;{expeditionDetail}&lt;/p&gt;" template="default" />
+		<notification codename="modules_order/expedition_shipped" label="Expédition effectuée" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {packageNumber}, {trackingNumber}, {expeditionDetail}, {website-url}" subject="Expédition effectuée sur votre commande numéro {orderId} sur le site {website-url}" header="&lt;strong&gt;Expédition effectuée sur votre commande numéro {orderId}&lt;/strong&gt;" body="&lt;p&gt;{packageNumber}&lt;/p&gt;&lt;p&gt;{trackingNumber}&lt;/p&gt;&lt;p&gt;{expeditionDetail}&lt;/p&gt;" template="default" />
 	</systemfolder>
 </script>

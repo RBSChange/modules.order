@@ -25,7 +25,7 @@ class order_persistentdocument_fees extends order_persistentdocument_feesbase
 	}
 	
 	/**
-	 * @param String $applicationstrategy
+	 * @param string $applicationstrategy
 	 * @return void
 	 */	
 	public function setApplicationstrategy($applicationstrategy)

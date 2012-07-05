@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.shippingstepbean" lcid="en_GB">
-  <key id="usesameaddressforbilling">Use your shipping address</key>
-  <key id="select">Continue</key>
-  <key id="shippingmode-error">The chosen shipping method is invalid</key>
-  <key id="delivery-address-legend">Shipping Address</key>
-  <key id="delivery-address-text">To make sure that your package arrives without problems, please fill in the form below.</key>
-  <key id="billing-address-legend">Billing address</key>
-  <key id="billing-address-text">You can select a billing address that is different from the shipping address, or use the same address.</key>
-  <key id="choose-delivery-legend">Choose the shipping method</key>
-  <key id="choose-delivery-text">Please select the shipping method for your order from the list below.</key>
-  <key id="no-shipping-mode">There are no shipping methods available for the information entered.</key>
-  <key id="registered-address-text">Use a predefined address from your account</key>
-  <key id="registered-address-choose">[Select]</key>
-  <key id="registered-address-select">Use this address</key>
-  <key id="evaluateshipping">evaluate the shipping fees</key>
-  <key id="evaluateshipping-button">evaluate</key>
-  <key id="evaluateshipping-results">Shipping fees for your basket</key>
-  <key id="evaluateshipping-text">In order to evaluate the shipping fees for your basket, please provide your postal code, town, or country.</key>
-  <key id="fixed-shipping-mode">Predefined shipping method</key>
-  <key id="shipping-invalid-address">Invalid shipping address</key>
+	<key id="usesameaddressforbilling">Use your shipping address</key>
+	<key id="select">Continue</key>
+	<key id="shippingmode-error">The chosen shipping method is invalid</key>
+	<key id="delivery-address-legend">Shipping Address</key>
+	<key id="delivery-address-text">To make sure that your package arrives without problems, please fill in the form below.</key>
+	<key id="billing-address-legend">Billing address</key>
+	<key id="billing-address-text">You can select a billing address that is different from the shipping address, or use the same address.</key>
+	<key id="choose-delivery-legend">Choose the shipping method</key>
+	<key id="choose-delivery-text">Please select the shipping method for your order from the list below.</key>
+	<key id="no-shipping-mode">There are no shipping methods available for the information entered.</key>
+	<key id="registered-address-text">Use a predefined address from your account</key>
+	<key id="registered-address-choose">[Select]</key>
+	<key id="registered-address-select">Use this address</key>
+	<key id="evaluateshipping">evaluate the shipping fees</key>
+	<key id="evaluateshipping-button">evaluate</key>
+	<key id="evaluateshipping-results">Shipping fees for your basket</key>
+	<key id="evaluateshipping-text">In order to evaluate the shipping fees for your basket, please provide your postal code, town, or country.</key>
+	<key id="fixed-shipping-mode">Predefined shipping method</key>
+	<key id="shipping-invalid-address">Invalid shipping address</key>
 </i18n>

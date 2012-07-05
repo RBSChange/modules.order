@@ -7,10 +7,11 @@ class order_BlockMessagesAction extends website_BlockAction
 	/**
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	function execute($request, $response)
 	{
+		/* @var $order order_persistentdocument_order */
 		$order = $this->getDocumentParameter();
 		if ($order === null)
 		{
@@ -25,18 +26,17 @@ class order_BlockMessagesAction extends website_BlockAction
 				$sender = users_UserService::getInstance()->getCurrentFrontEndUser();
 				if ($order->getDocumentService()->sendMessageFromCustomer($order, $content, $sender))
 				{
-					$this->addMessage(f_Locale::translate('&modules.order.frontoffice.Success-sending-message;'));
+					$this->addMessage(LocaleService::getInstance()->trans('m.order.frontoffice.success-sending-message', array('ucf')));
 					$request->setAttribute('comment', '');
 				}
 				else
 				{
-					$this->addError(f_Locale::translate('&modules.order.frontoffice.Error-sending-message;'));
+					$this->addError(LocaleService::getInstance()->trans('m.order.frontoffice.error-sending-message', array('ucf')));
 					$request->setAttribute('comment', $content);
 				}
 			}
 		}
 		
-		$request->setAttribute('companyName', Framework::getCompanyName());
 		$request->setAttribute('order', $order);
 		$request->setAttribute('messages', order_MessageService::getInstance()->getByOrder($order));
 		return website_BlockView::SUCCESS;

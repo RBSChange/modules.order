@@ -19,6 +19,7 @@ class order_AddToCartAction extends change_Action
 		$product = $this->getProductFromRequest($request);
 		$quantity = $this->getQuantityFromRequest($request);
 		$backUrl = $request->getParameter('backurl');
+		$cartUrl = LinkHelper::getTagUrl('contextual_website_website_modules_order_cart');
 		
 		// Configurate the product.
 		$product->getDocumentService()->updateProductFromRequestParameters($product, $request->getParameters());
@@ -38,17 +39,14 @@ class order_AddToCartAction extends change_Action
 			// Add.
 			if ($cs->addProductToCart($cart, $product, $quantity, $shop))
 			{
-				$cart->addSuccessMessage(LocaleService::getInstance()->transFO('m.order.fo.product-added', array('ucf')));
+				$replacements = array('label' => $product->getLabelAsHtml(), 'cartUrl' => $cartUrl);
+				$cart->addSuccessMessage(LocaleService::getInstance()->trans('m.order.fo.product-label-added-link', array('ucf', 'html'), $replacements));
 				$cart->refresh();
 			}
 		}
 		
 		// Redirect.
-		if (!$backUrl)
-		{
-			$backUrl = LinkHelper::getTagUrl('contextual_website_website_modules_order_cart');
-		}
-		change_Controller::getInstance()->redirectToUrl($backUrl);
+		change_Controller::getInstance()->redirectToUrl($backUrl ? $backUrl : $cartUrl);
 	}
 	
 	/**

@@ -48,7 +48,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @param String $propertyName
+	 * @param string $propertyName
 	 * @param Mixed $value serializable data.
 	 */
 	public function setGlobalProperty($propertyName, $value)
@@ -58,7 +58,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 
 	/**
-	 * @param String $propertyName
+	 * @param string $propertyName
 	 * @return Mixed
 	 */
 	public function getGlobalProperty($propertyName)
@@ -102,7 +102,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function showCommentLink()
 	{
@@ -110,7 +110,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 		
 	/**
-	 * @param String $name
+	 * @param string $name
 	 * @param Array $properties
 	 * @return mixed
 	 */
@@ -136,7 +136,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 
 	/**
-	 * @param String $propertyName
+	 * @param string $propertyName
 	 * @param mixed $value
 	 * @param Array $properties
 	 */
@@ -162,7 +162,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @return Double
+	 * @return float
 	 */
 	public function getBaseUnitPriceWithoutTax()
 	{
@@ -170,7 +170,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @return Double
+	 * @return float
 	 */
 	public function getBaseUnitPriceWithTax()
 	{
@@ -178,7 +178,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getGenCode()
 	{
@@ -186,36 +186,37 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @return Double
+	 * @return float
 	 */
 	public function getTaxAmount()
 	{
 		return $this->getGlobalProperty('taxAmount');
 	}
 	/**
-	 * @param Double $taxAmount
+	 * @param float $taxAmount
 	 */
 	public function setTaxAmount($taxAmount)
 	{
 		$this->setGlobalProperty('taxAmount', $taxAmount);
 	}
-	
+			
 	/**
-	 * @return String
+	 * @return string
 	 */
-	public function getTaxCode()
+	public function getTaxCategory()
 	{
-		return $this->getGlobalProperty('taxCode');
+		return $this->getGlobalProperty('taxCategory');
 	}
 	/**
-	 * @param String $taxCode
+	 * @param string $taxCategory
 	 */
-	public function setTaxCode($taxCode)
+	public function setTaxCategory($taxCategory)
 	{
-		$this->setGlobalProperty('taxCode', $taxCode);
-	}	
+		$this->setGlobalProperty('taxCategory', $taxCategory);
+	}
+	
 	/**
-	 * @return Double
+	 * @return float
 	 */
 	public function getTaxRate()
 	{
@@ -223,7 +224,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @param Double $taxRate
+	 * @param float $taxRate
 	 */
 	public function setTaxRate($taxRate)
 	{
@@ -231,7 +232,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @param Double $baseUnitPriceWithoutTax
+	 * @param float $baseUnitPriceWithoutTax
 	 */
 	public function setBaseUnitPriceWithoutTax($baseUnitPriceWithoutTax)
 	{
@@ -239,7 +240,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @param Double $baseUnitPriceWithTax
+	 * @param float $baseUnitPriceWithTax
 	 */
 	public function setBaseUnitPriceWithTax($baseUnitPriceWithTax)
 	{
@@ -247,7 +248,7 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	}
 	
 	/**
-	 * @param String $genCode
+	 * @param string $genCode
 	 */
 	public function setGenCode($genCode)
 	{
@@ -285,4 +286,54 @@ class order_persistentdocument_orderline extends order_persistentdocument_orderl
 	{
 		return  $this->getGlobalProperty('orderLabelAsHtml');
 	}
+	
+	/**
+	 * @return integer
+	 */
+	public function getShippingModeId()
+	{
+		return $this->getGlobalProperty('shippingModeId');
+	}	
+	
+	// Deprecated.
+	
+	/**
+	 * @deprecated (will be removed in 4.0)
+	 */
+	public function getTaxCode()
+	{
+		return $this->getGlobalProperty('taxCode');
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0)
+	 */
+	public function setTaxCode($taxCode)
+	{
+		$this->setGlobalProperty('taxCode', $taxCode);
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0)
+	 */	
+	public function getSynchronizedProduct()
+	{
+		throw new Exception(__METHOD__ .' is removed');
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0)
+	 */
+	public function getArticleId()
+	{
+		throw new Exception(__METHOD__ .' is removed');
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0)
+	 */
+	public function setArticleId($articleId)
+	{
+		throw new Exception(__METHOD__ .' is removed');
+	}	
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sections>
-  <section labeli18n="modules.marketing.bo.strategy.freeshipping.Section">
- 	 <field name="strategylabel" type="text" />
-     <field name="boValueJSON" type="price" required="true" 
-			labeli18n="modules.catalog.document.price.Value" hidehelp="true">
+	<section labeli18n="m.marketing.bo.strategy.freeshipping.section">
+		<field name="strategylabel" type="text" />
+		<field name="boValueJSON" type="price" required="true" 
+			labeli18n="m.catalog.document.price.value" hidehelp="true">
 			<constraint name="min" parameter="0" />
 	</field>
-  </section>
+	</section>
 </sections>

@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.process" lcid="de_DE">
-  <key id="identify">Identification</key>
-  <key id="shipping">Lieferanschrift</key>
-  <key id="billing">Zahlungsart</key>
-  <key id="confirm">Bestätigung</key>
-  <key id="payment">Zahlung</key>
+	<key id="identify">Identification</key>
+	<key id="shipping">Lieferanschrift</key>
+	<key id="billing">Zahlungsart</key>
+	<key id="confirm">Bestätigung</key>
+	<key id="payment">Zahlung</key>
 </i18n>

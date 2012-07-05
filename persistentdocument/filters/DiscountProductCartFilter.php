@@ -17,7 +17,7 @@ class order_DiscountProductCartFilter extends order_LinesCartFilterBase
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

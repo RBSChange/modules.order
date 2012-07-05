@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.general.tags" lcid="fr_FR">
-  <key id="cart">Détail du panier</key>
-  <key id="cart-empty">Panier vide</key>
-  <key id="cgv">conditions générales de vente</key>
-  <key id="order">détail d'une commande</key>
-  <key id="order-list">mes commandes</key>
-  <key id="order-messages">messagerie</key>
+	<key id="cart">Détail du panier</key>
+	<key id="cart-empty">Panier vide</key>
+	<key id="cgv">conditions générales de vente</key>
+	<key id="order">détail d'une commande</key>
+	<key id="order-list">mes commandes</key>
+	<key id="order-messages">messagerie</key>
 </i18n>

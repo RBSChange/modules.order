@@ -1,13 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.fees" lcid="fr_FR">
-	<include id="m.order.document.cartmodifier"/>
-  	<key id="document-name">frais</key>
+	<include id="m.order.document.cartmodifier" />
+	<key id="document-name">frais</key>
 	<key id="query">conditions</key>
 	<key id="applicationstrategy">Action des frais</key>
 	<key id="applicationstrategy-help">Indique la facon dont les frais àgissent sur le panier</key>
-  
-  	<key id="strategy-default-shipping">frais de livraison fixe</key>
-  	<key id="strategy-cart-price-shipping">frais de livraison degressif en fonction de montant des lignes du panier</key>
-
-  	<key id="application-conditions">conditions d'applications</key>
+	<key id="strategy-default-shipping">frais de livraison fixe</key>
+	<key id="strategy-cart-price-shipping">frais de livraison degressif en fonction de montant des lignes du panier</key>
+	<key id="application-conditions">conditions d'applications</key>
 </i18n>

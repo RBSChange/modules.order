@@ -13,22 +13,33 @@ class order_StandardOrderProcess extends order_OrderProcess
 		parent::__construct();
 	}
 	
-	
+	/**
+	 * @return string
+	 */
 	public function getAddressStepUrl()
 	{
 		return $this->getStepURL('Address');
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function getShippingStepUrl()
 	{
 		return $this->getStepURL('Shipping');
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function getBillingStepUrl()
 	{
 		return $this->getStepURL('Billing');
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function getResultStepUrl()
 	{
 		return $this->getStepURL('Result');

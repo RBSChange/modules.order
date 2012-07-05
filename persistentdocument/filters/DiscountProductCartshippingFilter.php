@@ -2,7 +2,7 @@
 class order_DiscountProductCartshippingFilter extends order_DiscountProductCartFilter
 {
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

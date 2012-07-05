@@ -1,23 +1,10 @@
 <?php
-class order_OrderProcessService extends BaseService 
+/**
+ * @package modules.order
+ * @method order_OrderProcessService getInstance()
+ */
+class order_OrderProcessService extends change_BaseService 
 {
-	/**
-	 * @var order_OrderProcessService
-	 */
-	private static $instance;
-		
-	/**
-	 * @return order_OrderProcessService
-	 */
-	public static function getInstance()
-	{
-		if (self::$instance === null)
-		{
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
-	
 	/**
 	 * @return order_OrderProcess
 	 */
@@ -149,7 +136,7 @@ class order_OrderProcessService extends BaseService
 	 * @param order_AddressBean $address
 	 * @return users_persistentdocument_user
 	 */
-	public function createNewUser($website, $email, $password, $address)
+	public function createNewUser($website, $email, $password, $address = null)
 	{
 		$tm = $this->getTransactionManager();
 		try
@@ -165,20 +152,24 @@ class order_OrderProcessService extends BaseService
 			else
 			{
 				$user->setGeneratepassword(true);
-			}			
+			}
+	
 			$group = $website->getGroup();
 			$user->addGroups($group);
-			$user->save();	
-					
+			$user->save();
+			
 			$profile = users_UsersprofileService::getInstance()->getNewDocumentInstance();
-			$profile->setAccessor($user);		
-			$profile->setTitleid((intval($address->Title) > 0) ? intval($address->Title) : null);
-			$profile->setFirstname($address->FirstName);
-			$profile->setLastname($address->LastName);
+			$profile->setAccessor($user);
+			if ($address !== null)
+			{
+				$profile->setTitleid((intval($address->Title) > 0) ? intval($address->Title) : null);
+				$profile->setFirstname($address->FirstName);
+				$profile->setLastname($address->LastName);
+			}
 			$profile->setRegisteredwebsiteid($website->getId());
 			$profile->save();
 			
-			$user->activate();			
+			$user->activate();
 			$tm->commit();
 		}
 		catch (Exception $e)

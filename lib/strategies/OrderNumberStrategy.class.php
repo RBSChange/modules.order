@@ -6,7 +6,7 @@ interface order_OrderNumberStrategy
 {
 	/**
 	 * @param order_persistentdocument_order $order
-	 * @return String
+	 * @return string
 	 */
 	public function generate($order);
 }
@@ -51,7 +51,7 @@ class order_OrderNumberGenerator
 	
 	/**
 	 * @param order_persistentdocument_order $order
-	 * @return String
+	 * @return string
 	 */
 	public function generate($order)
 	{
@@ -75,19 +75,30 @@ class order_OrderNumberGenerator
 	 * @return string
 	 */
 	protected function generateDefault($order)
-	{
-		Framework::info(__METHOD__);
-		$year = ($order->getCreationdate()) ? substr($order->getCreationdate(), 0, 4) : date("Y");
-		$beginDate = date_Converter::convertDateToGMT($year.'-01-01 00:00:00');
-		$endDate = date_Converter::convertDateToGMT(($year+1).'-01-01 00:00:00');
-
-		$orderCount = $order->getDocumentService()->createQuery()
-			->add(Restrictions::ge("creationdate", $beginDate))
-			->add(Restrictions::lt("creationdate", $endDate))
-			->setProjection(Projections::rowCount("orderCount"))->findColumn("orderCount");
-		$newCount = strval($orderCount[0]+1);
-		$newCount = str_pad($newCount, 8, '0', STR_PAD_LEFT);
-		return $year.$newCount;
+	{	
+		$baseNumber = '' . date_Calendar::getInstance()->getYear();
+		
+		$os = $order->getDocumentService();
+		$result = $os->createQuery()->setProjection(Projections::property('orderNumber', 'orderNumber'))
+			->add(Restrictions::like('orderNumber', $baseNumber, MatchMode::START()))
+			->setMaxResults(1)
+			->addOrder(Order::desc('orderNumber'))
+			->findColumn('orderNumber');
+	
+		$nextNumber = 1;
+		if (is_array($result) && count($result))
+		{
+			if (preg_match('/^[0-9]{4}([0-9]+)$/', $result[0], $matches))
+			{
+				$nextNumber = intval(end($matches)) + 1;
+			}
+		}
+		$number = $baseNumber . str_pad($nextNumber, 8, '0', STR_PAD_LEFT);
+		if (Framework::isInfoEnabled())
+		{		
+			Framework::info(__METHOD__ . ' ' . $number);
+		}
+		return $number;
 	}
 }
 
@@ -95,14 +106,19 @@ class order_OrderNumberSequenceStrategy implements order_OrderNumberStrategy
 {
 	/**
 	 * @param order_persistentdocument_order $order
-	 * @return String
+	 * @return string
 	 */
 	public function generate($order)
 	{
-		Framework::info(__METHOD__);
 		$orderCount = $order->getDocumentService()->createQuery()
 			->setProjection(Projections::rowCount("orderCount"))->findColumn("orderCount");
 		$newCount = strval($orderCount[0]+1);
-		return str_pad($newCount, 10, '0', STR_PAD_LEFT);
+		$number = str_pad($newCount, 10, '0', STR_PAD_LEFT);
+		
+		if (Framework::isInfoEnabled())
+		{
+			Framework::info(__METHOD__ . ' ' . $number);
+		}
+		return $number;
 	}
 }

@@ -1,29 +1,11 @@
 <?php
 /**
- * order_FeesService
  * @package modules.order
+ * @method order_FeesService getInstance()
  */
 class order_FeesService extends order_CartmodifierService
 {
-	
 	const DEFAULT_SHIPPING_STRATEGY = 'order_DefaultShippingStrategy';
-	
-	/**
-	 * @var order_FeesService
-	 */
-	private static $instance;
-
-	/**
-	 * @return order_FeesService
-	 */
-	public static function getInstance()
-	{
-		if (self::$instance === null)
-		{
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
 
 	/**
 	 * @return order_persistentdocument_fees
@@ -41,7 +23,7 @@ class order_FeesService extends order_CartmodifierService
 	 */
 	public function createQuery()
 	{
-		return $this->pp->createQuery('modules_order/fees');
+		return $this->getPersistentProvider()->createQuery('modules_order/fees');
 	}
 	
 	/**
@@ -52,24 +34,21 @@ class order_FeesService extends order_CartmodifierService
 	 */
 	public function createStrictQuery()
 	{
-		return $this->pp->createQuery('modules_order/fees', false);
+		return $this->getPersistentProvider()->createQuery('modules_order/fees', false);
 	}
 	
 	/**
-	 * @param order_persistentdocument_fees $document
-	 * @param Integer $parentNodeId Parent node ID where to save the document.
-	 * @return void
+	 * this method is call before save the duplicate document.
+	 * @param order_persistentdocument_fees $newDocument
+	 * @param order_persistentdocument_fees $originalDocument
+	 * @param integer $parentNodeId
 	 */
-	protected function preInsert($document, $parentNodeId)
+	protected function preDuplicate($newDocument, $originalDocument, $parentNodeId)
 	{
-		parent::preInsert($document, $parentNodeId);
-		$document->setInsertInTree(false);
-		if ($document->getShop() === null)
-		{
-			$document->setShop(catalog_persistentdocument_shop::getInstanceById($parentNodeId));
-		}
+		$newDocument->setLabel(LocaleService::getInstance()->trans('m.generic.backoffice.duplicate-prefix', array('ucf'), array('number' => '')) . ' ' . $originalDocument->getLabel());
+		$newDocument->setPublicationstatus(f_persistentdocument_PersistentDocument::STATUS_DEACTIVATED);
 	}
-
+	
 	/**
 	 * @param string $applicationStrategy
 	 * @return order_FeesApplicationStrategy
@@ -160,18 +139,18 @@ class order_FeesService extends order_CartmodifierService
 		{
 			$key = $element->getAttribute('labeli18n');
 			$element->removeAttribute('labeli18n');
-			$element->setAttribute('label', LocaleService::getInstance()->transBO($key, array('ucf', 'attr')));
+			$element->setAttribute('label', LocaleService::getInstance()->trans($key, array('ucf', 'attr')));
 		}
 		else if (!$element->hasAttribute('label'))
 		{
 			$key = strtolower('m.' . $moduleName.'.bo.strategy.'. $panelName . '-' . $name);
-			$element->setAttribute('label', LocaleService::getInstance()->transBO($key, array('ucf', 'attr')));
+			$element->setAttribute('label', LocaleService::getInstance()->trans($key, array('ucf', 'attr')));
 		}
 		
 		if (!$element->hasAttribute('hidehelp'))
 		{
 			$key = strtolower('m.' . $moduleName.'.bo.strategy.'. $panelName . '-' . $name  . '-help');
-			$help = LocaleService::getInstance()->transBO($key, array('ucf'));
+			$help = LocaleService::getInstance()->trans($key, array('ucf'));
 			if ($help !== $key)
 			{
 				$element->setAttribute('shorthelp', $help);
@@ -201,7 +180,7 @@ class order_FeesService extends order_CartmodifierService
 		$element = $elementArray[0];
 		if ($element->hasAttribute('labeli18n'))
 		{
-			return LocaleService::getInstance()->transBO($element->getAttribute('labeli18n'), array('ucf', 'attr'));
+			return LocaleService::getInstance()->trans($element->getAttribute('labeli18n'), array('ucf', 'attr'));
 		}
 		else if ($element->hasAttribute('label'))
 		{
@@ -210,7 +189,7 @@ class order_FeesService extends order_CartmodifierService
 		else if ($element->hasAttribute('name'))
 		{
 			$key = strtolower('m.' .  self::$applicationStrategy->getEditorModuleName().'.bo.strategy.'. self::$applicationStrategy->getEditorDefinitionPanelName() . '-' . $element->getAttribute('name'));
-			return LocaleService::getInstance()->transBO($key, array('ucf', 'attr'));
+			return LocaleService::getInstance()->trans($key, array('ucf', 'attr'));
 		}
 		return '';
 	}
@@ -218,7 +197,7 @@ class order_FeesService extends order_CartmodifierService
 	
 	/**
 	 * @param order_persistentdocument_fees $document
-	 * @param String[] $propertiesName
+	 * @param string[] $propertiesName
 	 * @param Array $datas
 	 */
 	public function addFormProperties($document, $propertiesName, &$datas)
@@ -233,6 +212,7 @@ class order_FeesService extends order_CartmodifierService
 	/**
 	 * @param catalog_persistentdocument_shippingfilter $shippingfilter
 	 * @param string $strategyClassName
+	 * @throws Exception
 	 * @return order_persistentdocument_fees
 	 */
 	public function generateDefaultForShippingFilter($shippingfilter, $strategyClassName = null)
@@ -241,16 +221,16 @@ class order_FeesService extends order_CartmodifierService
 		{
 			try 
 			{
-				$this->tm->beginTransaction();
+				$this->getTransactionManager()->beginTransaction();
 				$fees = $this->getNewDefaultFees($shippingfilter, $strategyClassName);
 				$fees->save();	
 				$shippingfilter->setFeesId($fees->getId());
 				$shippingfilter->save();		
-				$this->tm->commit();
+				$this->getTransactionManager()->commit();
 			} 
 			catch (Exception $e) 
 			{
-				$this->tm->rollBack($e);
+				throw $this->getTransactionManager()->rollBack($e);
 			}
 		}
 		return $this->getDocumentInstance($shippingfilter->getFeesId());
@@ -269,9 +249,10 @@ class order_FeesService extends order_CartmodifierService
 		$fees->setApplicationstrategy($strategyClassName);
 		$strategy = $fees->getStrategyInstance();
 		
-		$label = LocaleService::getInstance()->transFO('m.order.frontoffice.shipping-fees', array('ucf', 'lab')) . ' ' . $shippingfilter->getLabel();
+		$label = LocaleService::getInstance()->trans('m.order.frontoffice.shipping-fees', array('ucf', 'lab')) . ' ' . $shippingfilter->getLabel();
 		$fees->setLabel($label);
 		$fees->setShop($shippingfilter->getShop());
+		$fees->setBillingArea($shippingfilter->getBillingArea());
 		$fees->setStartpublicationdate($shippingfilter->getStartpublicationdate());
 		$fees->setEndpublicationdate($shippingfilter->getEndpublicationdate());
 		$fees->setPublicationstatus($shippingfilter->getPublicationstatus());

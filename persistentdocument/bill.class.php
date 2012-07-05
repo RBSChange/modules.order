@@ -6,21 +6,44 @@
 class order_persistentdocument_bill extends order_persistentdocument_billbase implements payment_Order
 {
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getStatusLabel()
 	{
-		return LocaleService::getInstance()->transFO('m.order.frontoffice.status.bill.' . $this->getStatus(), array('ucf', 'html'));
+		return LocaleService::getInstance()->trans('m.order.frontoffice.status.bill.' . $this->getStatus(), array('ucf', 'html'));
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getBoStatusLabel()
 	{
-		return LocaleService::getInstance()->transBO('m.order.frontoffice.status.bill.' . $this->getStatus(), array('ucf', 'html'));
+		return LocaleService::getInstance()->trans('m.order.frontoffice.status.bill.' . $this->getStatus(), array('ucf', 'html'));
 	}
-		
+	
+	/**
+	 * @deprecated 
+	 * @return string
+	 */
+	public function getArchiveBoURL()
+	{
+		if (!$this->getDocumentService()->generateBillIsActive())
+		{
+			return "-2";
+		}
+		if ($this->getStatus() != order_BillService::SUCCESS)
+		{
+			return "-1";
+		}
+		if ($this->getArchive() !== null)
+		{
+			$actionUrl = LinkHelper::getUIActionLink("media", "BoDisplay");
+			$actionUrl->setQueryParameter('cmpref', $this->getArchive()->getId());
+			return $actionUrl->getUrl();
+		}
+		return "";
+	}
+	
 	/**
 	 * @param double $value
 	 * @return string
@@ -241,7 +264,7 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	function getClientIp()
 	{
@@ -249,35 +272,10 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	}
 	
 	/**
-	 * @param String $ip
+	 * @param string $ip
 	 */
 	function setClientIp($ip)
 	{
 		return $this->setMeta('clientip', $ip);
-	}
-	
-	// Deprecated
-	
-	/**
-	 * @deprecated 
-	 * @return string
-	 */
-	public function getArchiveBoURL()
-	{
-		if (!$this->getDocumentService()->generateBillIsActive())
-		{
-			return "-2";
-		}
-		if ($this->getStatus() != order_BillService::SUCCESS)
-		{
-			return "-1";
-		}
-		if ($this->getArchive() !== null)
-		{
-			$actionUrl = LinkHelper::getUIActionLink("media", "BoDisplay");
-			$actionUrl->setQueryParameter('cmpref', $this->getArchive()->getId());
-			return $actionUrl->getUrl();
-		}
-		return "";
 	}
 }

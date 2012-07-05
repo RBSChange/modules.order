@@ -1,49 +1,89 @@
 <?xml version="1.0"?>
 <actions>
-  <action name="cancelOrder">
-    <parameter name="listWidget"/>
-    <body><![CDATA[
+	<action name="onModuleInit">
+		<body><![CDATA[
+			this.executeJSON("CheckModuleInit", {cmpref: this.mRootFolderId, lang:Context.W_LANG});
+		]]></body>
+	</action>
+
+	<action name="onCheckModuleInitSuccess">
+		<parameter name="result" />
+		<body><![CDATA[
+			if (result.contents.generateDefaultExpedition)
+			{
+				this.setAttribute("generateDefaultExpedition", "true");
+			}
+			if (result.contents.useOrderPreparation)
+			{
+				this.setAttribute("useOrderPreparation", "true");
+			}
+		]]></body>
+	</action>
+
+	<action name="onCheckModuleInitError">
+		<parameter name="result" />
+		<body><![CDATA[
+			wCore.warn("order.onCheckModuleInitError");
+		]]></body>
+	</action>
+
+	<action name="cancelOrder">
+		<parameter name="listWidget" />
+		<body><![CDATA[
 			var docs = listWidget.getSelectedItems();
 			if (docs.length == 1)
 			{
 				var doc = docs[0];
 				var ids = [doc.id];
-				var locale = new wLocale("&modules.order.bo.actions.Cancel-order-confirm-message;");
-				locale.setAttribute('order', doc.label);
-				locale.setAttribute('customer', doc.customer);
-				locale.setAttribute('date', doc.date);
+				var msg = "${trans:m.order.bo.actions.cancel-order-confirm-message,ucf,js}";
+				msg = msg.replace(/\{order\}/, doc.label);
+				msg = msg.replace(/\{customer\}/, doc.customer);
+				msg = msg.replace(/\{date\}/, doc.date);
 			}
 			else
 			{
 				var ids = listWidget.getSelectedIds();
-				var locale = new wLocale("&modules.order.bo.actions.Cancel-multiple-orders-confirm-message;");
-				locale.setAttribute('count', ids.length);
+				var msg = "${trans:m.order.bo.actions.cancel-multiple-orders-confirm-message,ucf,js}";
+				msg = msg.replace(/\{count\}/, ids.length);
 			}
 
-			var lang = this.getContextLang(listWidget);
-			if (confirm(locale.toString()))
+			if (confirm(msg))
 			{
-				this.executeJSON("CancelOrder", { cmpref: ids, lang: lang });
+				this.executeJSON("CancelOrder", { cmpref: ids, lang: Context.W_LANG});
 			}
 		]]></body>
-  </action>
-  <action name="cancelOrderIsActive">
-    <parameter name="itemData"/>
-    <body><![CDATA[
+	</action>
+	<action name="cancelOrderIsActive">
+		<parameter name="itemData" />
+		<body><![CDATA[
 			return itemData.canBeCanceled;
 		]]></body>
-  </action>
-  <action name="createSmartfolder">
-    <parameter name="listWidget"/>
-    <body><![CDATA[
+	</action>
+
+	<action name="createSmartfolder">
+		<parameter name="listWidget" />
+		<body><![CDATA[
 			this.createDocumentEditor('modules_order_smartfolder', listWidget.getSelectedItems()[0].id);
 		]]></body>
-  </action>
-  
-   <action name="createCreditNoteForOrder">
-   <parameter name="params"/>
-  	 <body><![CDATA[
-  	 	this.createDocumentEditor(params[2], params[3]);
-	]]></body>
-  </action>
+	</action>
+
+	<action name="createCreditNoteForOrder">
+		<parameter name="params" />
+		<body><![CDATA[
+			this.createDocumentEditor(params[2], params[3]);
+		]]></body>
+	</action>
+
+	<action name="createOrderpreparation">
+		<parameter name="listWidget" />
+		<body><![CDATA[
+			this.createDocumentEditor('modules_order_orderpreparation', listWidget.getSelectedItems()[0].id);
+		]]></body>
+	</action>
+	<action name="createOrderpreparationIsActive">
+		<parameter name="itemData" />
+		<body><![CDATA[
+			return this.hasAttribute("useOrderPreparation") && this.getAttribute("useOrderPreparation") === "true";
+		]]></body>
+	</action>
 </actions>

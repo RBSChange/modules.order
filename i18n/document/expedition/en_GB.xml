@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.expedition" lcid="en_GB">
-  <key id="document-name">shipment</key>
-  <key id="generating">Generating the shipment…</key>
-  <key id="label">number</key>
-  <key id="label-help">This is the shipment number.</key>
-  <key id="shippingdate">Shipment date</key>
-  <key id="trackingnumber">Package number</key>
-  <key id="trackingnumber-help">This is the package number used by the courier.</key>
-  <key id="trackingtext">Shipping status</key>
-  <key id="trackingtext-help">Shipping status</key>
-  <key id="transporteur">courier</key>
-  <key id="transporteur-help">This is the name of the courier.</key>
+	<key id="document-name">shipment</key>
+	<key id="generating">Generating the shipment…</key>
+	<key id="label">number</key>
+	<key id="label-help">This is the shipment number.</key>
+	<key id="shippingdate">Shipment date</key>
+	<key id="trackingnumber">Package number</key>
+	<key id="trackingnumber-help">This is the package number used by the courier.</key>
+	<key id="trackingtext">Shipping status</key>
+	<key id="trackingtext-help">Shipping status</key>
+	<key id="transporteur">courier</key>
+	<key id="transporteur-help">This is the name of the courier.</key>
 </i18n>

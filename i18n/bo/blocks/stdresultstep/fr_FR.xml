@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.blocks.stdresultstep" lcid="fr_FR">
-  <key id="title">Processus standard : Résultat paiement</key>
+	<key id="title">Processus standard : Résultat paiement</key>
 </i18n>

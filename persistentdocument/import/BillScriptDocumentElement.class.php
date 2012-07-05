@@ -5,15 +5,15 @@
  */
 class order_BillScriptDocumentElement extends import_ScriptDocumentElement
 {
-    /**
-     * @return order_persistentdocument_bill
-     */
-    protected function initPersistentDocument()
-    {
-    	return order_BillService::getInstance()->initializeByOrderForPayment($this->getOrderDocument());
-    }
-    
-    /**
+	/**
+	 * @return order_persistentdocument_bill
+	 */
+	protected function initPersistentDocument()
+	{
+		return order_BillService::getInstance()->initializeByOrderForPayment($this->getOrderDocument());
+	}
+	
+	/**
 	 * @return f_persistentdocument_PersistentDocumentModel
 	 */
 	protected function getDocumentModel()

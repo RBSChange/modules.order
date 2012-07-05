@@ -2,33 +2,25 @@
 <script>
 	<binding fileName="modules/website/persistentdocument/import/website_binding.xml" />
 	<binding fileName="modules/order/persistentdocument/import/order_binding.xml" />
-
 	<website byTag="default_modules_website_default-website">
-		<topic byLabel="Processus de commande">
-			<page byTag="contextual_website_website_modules_order_stdaddressstep" template-attr="templateHome"
-				label="Commande - Adresse" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
+		<topic byLabel="Commande">
+			<page byTag="contextual_website_website_modules_order_stdaddressstep" template-attr="templateNosidebar" label="Commande - Adresse" navigationtitle="Adresse" navigationVisibility="hidden" indexingstatus="false" robotsmeta="noindex,nofollow">
 				<changecontent for="content-block">
-					<changeblock type="modules_order_StdAddressStep" />			
+					<changeblock type="modules_order_StdAddressStep" />
 				</changecontent>
-			</page>			
-			<page byTag="contextual_website_website_modules_order_stdshippingstep" template-attr="templateHome"
-				label="Commande - Livraison" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
+			</page>
+			<page byTag="contextual_website_website_modules_order_stdshippingstep" template-attr="templateNosidebar" label="Commande - Livraison" navigationtitle="Livraison" navigationVisibility="hidden" indexingstatus="false" robotsmeta="noindex,nofollow">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_StdShippingStep" />
 				</changecontent>
 			</page>
-			<page byTag="contextual_website_website_modules_order_stdbillingstep" template-attr="templateHome"
-				label="Commande - Paiement" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
+			<page byTag="contextual_website_website_modules_order_stdbillingstep" template-attr="templateNosidebar" label="Commande - Paiement" navigationtitle="Paiement" navigationVisibility="hidden" indexingstatus="false" robotsmeta="noindex,nofollow">
+				<documenturl url="/website/Commande-Paiement.html" />
 				<changecontent for="content-block">
 					<changeblock type="modules_order_StdBillingStep" />
 				</changecontent>
 			</page>
-			<page byTag="contextual_website_website_modules_order_stdresultstep" template-attr="templateHome"
-				label="Commande - Confirmation" navigationVisibility="hidden" 
-				indexingstatus="false" robotsmeta="noindex,nofollow">
+			<page byTag="contextual_website_website_modules_order_stdresultstep" template-attr="templateNosidebar" label="Commande - Confirmation" navigationtitle="Confirmation" navigationVisibility="hidden" indexingstatus="false" robotsmeta="noindex,nofollow">
 				<changecontent for="content-block">
 					<changeblock type="modules_order_StdResultStep" />
 				</changecontent>

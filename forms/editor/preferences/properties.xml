@@ -16,12 +16,10 @@
 		<field name="orderProcessClosedEndDate" />
 		<field name="orderProcessClosedDateMessage" />
 	</section>
-	
 	<section labeli18n="m.order.bo.general.temporarily-closing">
 		<field name="orderProcessClosed" />
 		<field name="orderProcessClosedMessage" />
 	</section>
-	
 	<section labeli18n="m.order.bo.general.allowed-customers">
 		<field name="orderProcessAllowedCustomer" />
 	</section>

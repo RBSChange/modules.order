@@ -11,7 +11,7 @@ class order_OrdersContainingBrandFilter extends f_persistentdocument_DocumentFil
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

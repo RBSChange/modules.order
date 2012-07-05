@@ -1,11 +1,6 @@
-<div class="ecom-block">
-	<h3 change:h="">
-		<strong tal:content="trans:m.order.frontoffice.my-cart,ucf,lab"></strong>
-		<small tal:content="trans:m.order.frontoffice.empty,ucf"></small>
-	</h3>
-	<div class="content">
-		<div tal:condition="setLinks" class="cartsummary-link">
-			<a class="link" change:link="tag ctx_order_cart" tal:content="trans:m.order.frontoffice.my-cart,ucf"></a>
-		</div>
-	</div>
+<div class="scroll">
+	<h2 change:h="">${trans:m.order.frontoffice.my-cart,ucf} <span>(${trans:m.order.frontoffice.empty})</span></h2>	
+	<ul>
+		<li><a change:link="tag ctx_order_cart">${trans:m.order.frontoffice.cart-empty,ucf}</a></li>
+	</ul>
 </div>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.documentfilters.parameter" lcid="en_GB">
-  <key id="cart-product">product</key>
-  <key id="cart-cumulative-quantity">cumulative quantity</key>
+	<key id="cart-product">product</key>
+	<key id="cart-cumulative-quantity">cumulative quantity</key>
 </i18n>

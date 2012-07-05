@@ -15,4 +15,7 @@
   <binding name="creditnote" className="order_CreditnoteScriptDocumentElement"/>
   <binding name="cartmodifier" className="order_CartmodifierScriptDocumentElement"/>
   <binding name="fees" className="order_FeesScriptDocumentElement"/>
+  <binding name="shippingaddress" className="order_ShippingaddressScriptDocumentElement"/>
+  <binding name="waitingresponseorderfolder" className="order_WaitingresponseorderfolderScriptDocumentElement"/>
+  <binding name="orderpreparation" className="order_OrderpreparationScriptDocumentElement"/>
 </script>

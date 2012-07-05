@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<module>
 		<visible>true</visible>
@@ -10,32 +10,33 @@
 		<modulesCatalogProductSuggestionFeeder>
 			<entry name="1">order_OrderedTogetherProductFeeder</entry>
 		</modulesCatalogProductSuggestionFeeder>
-		
 		<!-- In normal cases, genPDF needs genNumber.
 		If genPDF is setted to true and genNumber to false,
 		be sure some code set the orderNumber in OrderService::preInsert() -->
 		<entry name="genNumber">true</entry>
 		<entry name="genBill">false</entry>
-		<entry name="odtphp2pdfURL">http://odtphp2pdf.rd.devlinux.france.rbs.fr</entry>
-		
+		<entry name="billPDFGenerator">order_FPDFBillGenerator</entry>
+		<!-- 
+		<entry name="billPDFGenerator">order_ODTBillGenerator</entry>
+		 -->
 		<!-- 
 			<entry name="orderNumberStrategyClass">order_OrderNumberSequenceStrategy</entry>
 			<entry name="billNumberStrategyClass">order_BillNumberYearSequenceStrategy</entry>
 			<entry name="expeditionNumberStrategyClass">order_ExpeditionOrderNumberStrategy</entry>
 			<entry name="creditNoteNumberStrategyClass">order_CreditNoteNumberYearSequenceStrategy</entry>
-		  -->
-
-		<!--  Generation de l'expedition par défaut pour les commandes payés --> 
+			<entry name="packetNumberStrategyClass"></entry>
+			<entry name="orderPreparationNumberStrategyClass"></entry>
+			-->
+		<!--	Generation de l'expedition par défaut pour les commandes payés -->
 		<entry name="generateDefaultExpedition">true</entry>
-		
-		<!-- Durrée maximum en minutes d'une facture en publicationstatus DRAFT avant son annulation --> 
+		<!-- Utilisation de bon de preparation -->
+		<entry name="useOrderPreparation">false</entry>
+		<!-- Durrée maximum en minutes d'une facture en publicationstatus DRAFT avant son annulation -->
 		<entry name="maxDraftBillAge">60</entry>
-		
 		<orderProcess>
 			<entry name="default">order_OrderProcess</entry>
 		</orderProcess>
 	</project>
-		
 	<modules>
 		<catalog>
 			<entry name="currentTaxZoneStrategyClass">order_CurrentTaxZoneStrategy</entry>

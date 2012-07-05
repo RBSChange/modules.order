@@ -2,7 +2,7 @@
 class order_FirstOrderCartFilter extends order_LinesCartFilterBase
 {	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

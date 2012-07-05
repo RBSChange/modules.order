@@ -32,4 +32,15 @@ class order_persistentdocument_cartmodifier extends order_persistentdocument_car
 	{
 		return $this->getDocumentService()->updateOrder($this, $order, $discountInfo);
 	}
+	
+	
+	//Back office editor
+	/**
+	 * @return string
+	 */	
+	public function getBillingAreaColumnLabel()
+	{
+		$ba = $this->getBillingArea();
+		return $ba ? $ba->getTreeNodeLabel() : '-';
+	}
 }

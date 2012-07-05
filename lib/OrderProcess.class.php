@@ -147,7 +147,7 @@ class order_OrderProcess
 		$ls = LocaleService::getInstance();
 		while ($name !== null)
 		{
-			$result[$name] = array('name' => $name, 'step' => $step, 'current'=> false, 'label' => $ls->transFO('m.order.' .$this->name . '.' . $name, array('ucf')));
+			$result[$name] = array('name' => $name, 'step' => $step, 'current'=> false, 'label' => $ls->trans('m.order.' .$this->name . '.' . $name, array('ucf')));
 			if ($name == $this->getCurrentStep())
 			{
 				$result[$name]['current'] = true;
@@ -178,5 +178,15 @@ class order_OrderProcess
 	public function getOrderProcessURL()
 	{
 		return order_OrderProcessService::getInstance()->getOrderProcessURL($this);
+	}
+
+	// Deprecated.
+
+	/**
+	 * @deprecated (will be removed in 4.0) use order_OrderProcessService::getInstance()->loadFromSession()
+	 */
+	public static function getInstance()
+	{
+		return order_OrderProcessService::getInstance()->loadFromSession();
 	}
 }

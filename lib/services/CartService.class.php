@@ -1,30 +1,12 @@
 <?php
 /**
- * order_CartService
  * @package modules.order
+ * @method order_CartService getInstance()
  */
-class order_CartService extends BaseService
+class order_CartService extends change_BaseService
 {
 	const CART_SESSION_NAMESPACE = 'order_cart';
 	const CARTLINE_NUMBER_LIMIT = 100;
-	
-	/**
-	 * Singleton
-	 * @var order_CartService
-	 */
-	private static $instance = null;
-	
-	/**
-	 * @return order_CartService
-	 */
-	public static function getInstance()
-	{
-		if (is_null(self::$instance))
-		{
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
 	
 	/**
 	 * @return boolean
@@ -33,7 +15,7 @@ class order_CartService extends BaseService
 	{
 		$session = change_Controller::getInstance()->getContext()->getUser();
 		$key = $this->getSessionKey('CartInfo');
-		$cart = change_Controller::getInstance()->getStorage()->readForUser($key);
+		$cart = change_Controller::getInstance()->getStorage()->read($key);
 		return ($cart instanceof order_CartInfo);
 	}
 	
@@ -45,7 +27,7 @@ class order_CartService extends BaseService
 		if ($this->hasCartInSession())
 		{
 			$session = change_Controller::getInstance()->getContext()->getUser();
-			$cart = change_Controller::getInstance()->getStorage()->readForUser($this->getSessionKey('CartInfo'));
+			$cart = change_Controller::getInstance()->getStorage()->read($this->getSessionKey('CartInfo'));
 			$this->clearCartIfNeeded($cart);
 		}
 		else
@@ -182,7 +164,7 @@ class order_CartService extends BaseService
 			$this->resetCartOrder($cart);
 		}
 
-		change_Controller::getInstance()->getStorage()->writeForUser($this->getSessionKey('CartInfo'), $cart);
+		change_Controller::getInstance()->getStorage()->write($this->getSessionKey('CartInfo'), $cart);
 		
 		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
 		if ($customer !== null)
@@ -214,7 +196,7 @@ class order_CartService extends BaseService
 	/**
 	 * @param order_CartInfo $cart
 	 * @param catalog_persistentdocument_product $product
-	 * @param Double $quantity
+	 * @param float $quantity
 	 * @return boolean
 	 */
 	public function addProductToCart($cart, $product, $quantity = 1)
@@ -234,7 +216,7 @@ class order_CartService extends BaseService
 		// Check if the product we're trying to add to the cart is not already there with a quantity than can't be changed.
 		if (!$product->updateCartQuantity() && $this->getCartLineByKey($cart, $cartLineKey) !== null )
 		{
-			$cart->addTransientErrorMessage($ls->transFO('m.order.frontoffice.cart-validation-quantity-fixed-for-product', array('ucf')));
+			$cart->addTransientErrorMessage($ls->trans('m.order.frontoffice.cart-validation-quantity-fixed-for-product', array('ucf')));
 			return false;
 		}
 		
@@ -245,7 +227,7 @@ class order_CartService extends BaseService
 		}
 		catch (Exception $e)
 		{
-			$cart->addTransientErrorMessage($ls->transFO('m.order.frontoffice.cart-validation-error-max-lines'));
+			$cart->addTransientErrorMessage($ls->trans('m.order.frontoffice.cart-validation-error-max-lines'));
 			return false;
 		}
 		
@@ -288,7 +270,8 @@ class order_CartService extends BaseService
 	private function validateProduct($cart, $product, $quantity)
 	{
 		$shop = $cart->getShop();
-		if ($product->isPublished() && $product->canBeOrdered($shop) && $product->getPrice($shop, $cart->getCustomer(), $quantity) != null)
+		$billingArea =  $cart->getBillingArea();
+		if ($product->isPublished() && $product->canBeAddedToCart($product->getPrice($shop, $billingArea, $cart->getCustomer(), $quantity)))
 		{
 			$stDoc = catalog_StockService::getInstance()->getStockableDocument($product);
 			if ($stDoc !== null)
@@ -296,9 +279,8 @@ class order_CartService extends BaseService
 				if (!$shop->getAllowOrderOutOfStock() && !catalog_StockService::getInstance()->isAvailable($product, $quantity))
 				{
 					$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
-						'quantity' => $quantity, 'unit' => '', 
-						'availableQuantity' => $stDoc->getCurrentStockQuantity(), 'availableUnit' => '');
-					$cart->addPersistentErrorMessage(LocaleService::getInstance()->transFO('m.order.frontoffice.cart-validation-error-unavailable-article-quantity', array('ucf'), $replacements));
+						'quantity' => $quantity, 'availableQuantity' => $stDoc->getCurrentStockQuantity());
+					$cart->addTransientErrorMessage(LocaleService::getInstance()->trans('m.order.frontoffice.cart-validation-error-unavailable-article-quantity', array('ucf'), $replacements));
 					return false;					
 				}
 			}
@@ -306,7 +288,7 @@ class order_CartService extends BaseService
 		}
 		
 		$replacements = array('articleLabel' => $product->getLabelAsHtml());
-		$cart->addTransientErrorMessage(LocaleService::getInstance()->transFO('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
+		$cart->addTransientErrorMessage(LocaleService::getInstance()->trans('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
 		return false;
 	}
 	
@@ -359,9 +341,9 @@ class order_CartService extends BaseService
 	 * method.
 	 *
 	 * @param order_CartInfo $cart
-	 * @param Integer $cartLineIndex
+	 * @param integer $cartLineIndex
 	 * @param catalog_persistentdocument_product $product
-	 * @param Double $quantity
+	 * @param float $quantity
 	 * @param Array<String, Mixed> $properties
 	 */
 	public function updateLine($cart, $cartLineIndex, $product, $quantity, $properties = array())
@@ -382,7 +364,7 @@ class order_CartService extends BaseService
 	 * method.
 	 *
 	 * @param order_CartInfo $cart
-	 * @param Integer $cartLineInfoIndex
+	 * @param integer $cartLineInfoIndex
 	 */
 	public function removeLine($cart, $cartLineIndex)
 	{
@@ -444,22 +426,25 @@ class order_CartService extends BaseService
 	 */
 	protected function refreshCartPrice($cart)
 	{
-		$cartLines = $cart->getCartLineArray();
 		$shop = $cart->getShop();
 		if ($shop)
 		{
-			$cart->setTaxZone(catalog_TaxService::getInstance()->getCurrentTaxZone($shop, $cart));
+			$billingArea = $shop->getCurrentBillingArea(true);
+			$cart->setBillingArea($billingArea);
+			$cart->setTaxZone(catalog_TaxService::getInstance()->getCurrentTaxZone($shop, $cart, true));
+			$cartLines = $cart->getCartLineArray();
+			$customer = $cart->getCustomer();
+			foreach ($cartLines as $cartLine)
+			{
+				$product = $cartLine->getProduct();
+				$price = $product->getPrice($shop, $billingArea, $customer, $cartLine->getQuantity());
+				$cartLine->importPrice($price);
+			}
 		}
 		else
 		{
 			$cart->setTaxZone(null);
-		}
-		$customer = $cart->getCustomer();
-		foreach ($cartLines as $cartLine)
-		{
-			$product = $cartLine->getProduct();
-			$price = $product->getPrice($shop, $customer, $cartLine->getQuantity());
-			$cartLine->importPrice($price);			
+			$cart->setCartLineArray(array());
 		}
 	}
 	
@@ -522,11 +507,10 @@ class order_CartService extends BaseService
 		
 		foreach ($cart->getCartLineArray() as $cartLineInfo) 
 		{
-			$value = $cartLineInfo->getTotalValueWithTax() - $cartLineInfo->getTotalValueWithoutTax();
-			if ($value > 0)
+			/* @var $cartLineInfo order_CartLineInfo */
+			$valueWithTax += $cartLineInfo->getTotalValueWithTax();			
+			foreach ($cartLineInfo->getTaxArray() as $rateKey => $value)
 			{
-				$rateKey = $cartLineInfo->getFormattedTaxCode();
-				$valueWithTax += $cartLineInfo->getTotalValueWithTax();
 				if (isset($result[$rateKey]))
 				{
 					$result[$rateKey] += $value;
@@ -535,15 +519,16 @@ class order_CartService extends BaseService
 				{
 					$result[$rateKey] = $value;
 				}
-			}
+			}			
 		}
 		
 		foreach ($cart->getFeesArray() as $fees)
 		{
+			/* @var $fees order_CartModifierInfo */
 			$value = $fees->getValueWithTax() - $fees->getValueWithoutTax();
 			if ($value > 0)
 			{
-				$rateKey = $fees->getFormattedTaxCode();
+				$rateKey = $fees->getFormattedTaxRate();
 				$valueWithTax += $fees->getValueWithTax();
 				
 				if (isset($result[$rateKey]))
@@ -554,7 +539,7 @@ class order_CartService extends BaseService
 				{
 					$result[$rateKey] = $value;
 				}
-			}			
+			}
 		}
 		
 		$totalTax = array_sum($result);
@@ -605,7 +590,7 @@ class order_CartService extends BaseService
 			}
 			else
 			{
-				$cart->setCoupon(null);						
+				$cart->setCoupon(null);
 			}
 		}
 	}
@@ -617,20 +602,17 @@ class order_CartService extends BaseService
 	 * Check if the qiantities are valid.
 	 *
 	 * @param order_CartInfo $cart
-	 * @return Boolean
+	 * @return boolean
 	 * @throws order_ValidationException
 	 */
 	protected function validateCart($cart)
 	{
-		// Clear error messages (error message are re-generated by this method each times it is called.
+		// Clear persistent error messages (they are re-generated by this method each times it is called).
 		$cart->clearPersistentErrorMessages();	
 			
 		// If there are lines, clean them.
-		$cartLines = $cart->getCartLineArray();
 		$removeCartLineIndex = array();
-		$stockService = catalog_StockService::getInstance();
-				
-		foreach ($cartLines as $index => $cartLine)
+		foreach ($cart->getCartLineArray() as $index => $cartLine)
 		{
 			if (!in_array($index, $removeCartLineIndex))
 			{
@@ -661,17 +643,29 @@ class order_CartService extends BaseService
 		}
 		$cart->removeCartLines($removeCartLineIndex);
 		
-		$unavailableProducts = $stockService->validateCart($cart);
-		
+		// Check stocks.
+		$unavailableProducts = catalog_StockService::getInstance()->validateCart($cart);
 		foreach ($unavailableProducts as $productInfo)
 		{
 			$product = $productInfo[0];
 			$stDoc = catalog_StockService::getInstance()->getStockableDocument($product);
 			$stockQuantity = $stDoc !== null ? $stDoc->getCurrentStockQuantity() : 0;
 			$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
-					'quantity' => $productInfo[1], 'unit' => '', 
-					'availableQuantity' => $stockQuantity, 'availableUnit' => '');
-			$cart->addPersistentErrorMessage(LocaleService::getInstance()->transFO('m.order.frontoffice.cart-validation-error-unavailable-article-quantity', array('ucf'), $replacements));
+				'quantity' => $productInfo[1], 'availableQuantity' => $stockQuantity);
+			$cart->addPersistentErrorMessage(LocaleService::getInstance()->trans('m.order.frontoffice.cart-validation-error-unavailable-article-quantity', array('ucf'), $replacements));
+		}
+		
+		// Check minimum quantities.
+		foreach ($cart->getCartLineArray() as $index => $cartLine)
+		{
+			/* @var $cartLine order_CartLineInfo */
+			$product = $cartLine->getProduct();
+			if ($product->getMinOrderQuantity() > $cartLine->getQuantity())
+			{
+				$replacements = array('articleLabel' => $product->getLabelAsHtml(), 
+					'quantity' => $cartLine->getQuantity(), 'minQuantity' => $product->getMinOrderQuantity());
+				$cart->addPersistentErrorMessage(LocaleService::getInstance()->trans('m.order.frontoffice.cart-validation-error-min-quantity', array('ucf'), $replacements));
+			}
 		}
 		
 		return count($cart->getPersistentErrorMessages()) == 0 && count($cart->getTransientErrorMessages()) == 0;
@@ -680,7 +674,7 @@ class order_CartService extends BaseService
 	/**
 	 * @param order_CartLineInfo $cartLine
 	 * @param order_CartInfo $cart
-	 * @return Boolean
+	 * @return boolean
 	 */
 	protected function validateCartLine($cartLine, $cart)
 	{
@@ -695,7 +689,7 @@ class order_CartService extends BaseService
 				if ($compiledProduct === null || ((!$compiledProduct->isPublished()) && ($compiledProduct->getPublicationCode() != 5)))
 				{
 					$replacements = array('articleLabel' => $product->getLabelAsHtml());
-					$cart->addTransientErrorMessage($ls->transFO('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
+					$cart->addTransientErrorMessage($ls->trans('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
 					return false;
 				}
 				return true;
@@ -709,13 +703,13 @@ class order_CartService extends BaseService
 		if ($product !== null)
 		{
 			$replacements = array('articleLabel' => $product->getLabelAsHtml());
-			$cart->addTransientErrorMessage($ls->transFO('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
+			$cart->addTransientErrorMessage($ls->trans('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
 		}
 		return false;
 	}
 		
 	/**
-	 * @return Integer
+	 * @return integer
 	 */
 	protected function getCartLineNumberLimit()
 	{
@@ -776,7 +770,7 @@ class order_CartService extends BaseService
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	protected function getSessionKey($catalogId)
 	{
@@ -785,7 +779,7 @@ class order_CartService extends BaseService
 				
 	/**
 	 * @param order_CartInfo $cart
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function validateBillingAddress($cart)
 	{
@@ -793,14 +787,14 @@ class order_CartService extends BaseService
 		if ($countryId)
 		{
 			$country = zone_persistentdocument_country::getInstanceById($countryId);
-			return zone_ZoneService::getInstance()->isCountryInZone($country, $cart->getShop()->getBillingZone());
+			return zone_ZoneService::getInstance()->isCountryInZone($country, $cart->getBillingArea()->getBillingAddressZone());
 		}
 		return false;
 	}
 	
 	/**
 	 * @param order_CartInfo $cart
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function validateShippingAddress($cart)
 	{
@@ -814,7 +808,7 @@ class order_CartService extends BaseService
 	 * and there is no validation errors.
 	 *
 	 * @param order_CartInfo $cart
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function canOrder($cart)
 	{
@@ -847,7 +841,7 @@ class order_CartService extends BaseService
 		$currentWebsite = website_WebsiteService::getInstance()->getCurrentWebsite();
 		if ($currentWebsite->getId() != $shop->getWebsite()->getId())
 		{
-			$cart->addTransientErrorMessage($ls->transFO('m.order.fo.shop-in-other-website', array('ucf')));
+			$cart->addTransientErrorMessage($ls->trans('m.order.fo.shop-in-other-website', array('ucf')));
 			return false;
 		}
 		
@@ -871,7 +865,7 @@ class order_CartService extends BaseService
 				$paramsToRedirect['website_BlockAction_submit']['cart'] = array();
 			}
 			$paramsToRedirect['website_BlockAction_submit']['cart']['confirmClear'] = true;
-			$paramsToRedirect['message'] = $ls->transFO('m.order.fo.confirm-incompatible-shop', array('ucf'));
+			$paramsToRedirect['message'] = $ls->trans('m.order.fo.confirm-incompatible-shop', array('ucf'));
 			
 			// Get the page tag to redirect.
 			if (isset($paramsToRedirect['confirmPageTag']))
@@ -961,10 +955,25 @@ class order_CartService extends BaseService
 			if ($added)
 			{
 				$key = ($recup) ? 'm.order.frontoffice.cart-recup' : 'm.order.frontoffice.cart-fusion';
-				$sessionCart->addSuccessMessage(LocaleService::getInstance()->transBO($key, array('ucf')));
+				$sessionCart->addSuccessMessage(LocaleService::getInstance()->trans($key, array('ucf')));
 			}
 		}
 		
 		$this->refresh($sessionCart);
+	}
+	
+	// Deprecated
+	
+	/**
+	 * @deprecated (will be removed in 4.0) use addProductToCart
+	 */
+	public function addProduct($product, $quantity, $properties = array())
+	{
+		$cart = $this->getDocumentInstanceFromSession();
+		if (!$this->addProductToCart($cart, $product, $quantity))
+		{
+			throw new order_Exception('Unable-to-add-product-to-cart');
+		}
+		return $cart;
 	}
 }

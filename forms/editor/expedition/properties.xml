@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <panel>
-  <section labeli18n="m.uixul.bo.doceditor.fieldsgroup.title">
-    <field name="trackingText"/>
-  </section>
+	<section labeli18n="m.uixul.bo.doceditor.fieldsgroup.title">
+		<field name="trackingText" />
+		<field name="deliveryDate" />
+	</section>
+	<section labeli18n="m.order.document.expedition.lines-section">
+		<fieldinput name="boExplinesJSON" type="namedgridlist" flex="1" />
+	</section>
 </panel>

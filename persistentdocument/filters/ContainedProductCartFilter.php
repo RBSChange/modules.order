@@ -5,7 +5,7 @@ class order_ContainedProductCartFilter extends order_LinesCartFilterBase
 	{
 		parent::__construct();
 		$info = new BeanPropertyInfoImpl('product', BeanPropertyType::DOCUMENT, 'catalog_persistentdocument_product');
-		$info->setLabelKey('&modules.order.bo.documentfilters.parameter.cart-product;');
+		$info->setLabelKey('m.order.bo.documentfilters.parameter.cart-product');
 		$parameter = new f_persistentdocument_DocumentFilterValueParameter($info);
 		$parameter->setCustomPropertyAttribute('product', 'dialog', 'productselector');
 		$allow = DocumentHelper::expandAllowAttribute('[modules_catalog_product],[modules_catalog_declinedproduct]');
@@ -13,13 +13,13 @@ class order_ContainedProductCartFilter extends order_LinesCartFilterBase
 		$this->setParameter('product', $parameter);
 
 		$info = new BeanPropertyInfoImpl('quantity', BeanPropertyType::INTEGER);
-		$info->setLabelKey('&modules.order.bo.documentfilters.parameter.cart-cumulative-quantity;');
+		$info->setLabelKey('m.order.bo.documentfilters.parameter.cart-cumulative-quantity');
 		$parameter = f_persistentdocument_DocumentFilterRestrictionParameter::getNewInstance($info);
 		$this->setParameter('quantity', $parameter);
 	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{
@@ -44,7 +44,8 @@ class order_ContainedProductCartFilter extends order_LinesCartFilterBase
 				}
 				else if (($product = $line->getProduct()) instanceof catalog_persistentdocument_productdeclination)
 				{
-					$productId = $product->getRelatedDeclinedProduct()->getId();
+					/* @var $product catalog_persistentdocument_productdeclination */
+					$productId = $product->getDeclinedproduct()->getId();
 					if (in_array($productId, $productIds))
 					{
 						$quantity += $line->getQuantity();

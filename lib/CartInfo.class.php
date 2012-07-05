@@ -11,7 +11,7 @@ class order_CartInfo
 	
 	protected function getCheckSum()
 	{
-		$keys = array($this->shopId, $this->customerId, $this->getCartLineCount());
+		$keys = array($this->shopId, $this->customerId, $this->billinAreaId, $this->taxZone, $this->getCartLineCount());
 		foreach ($this->getCartLineArray() as $cartLine) 
 		{
 			$keys[] = $cartLine->getKey();
@@ -74,7 +74,7 @@ class order_CartInfo
 	//SHOP INFORMATION
 	
 	/**
-	 * @var Integer
+	 * @var integer
 	 */
 	private $shopId = null;
 
@@ -84,6 +84,11 @@ class order_CartInfo
 	 */
 	private $taxZone;
 	
+	
+	/**
+	 * @var integer
+	 */
+	private $billinAreaId = null;
 	
 	/**
 	 * @return string
@@ -142,7 +147,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return Integer
+	 * @return integer
 	 */
 	public function getShopId()
 	{
@@ -150,7 +155,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param Integer $shopId
+	 * @param integer $shopId
 	 */
 	public function setShopId($shopId)
 	{
@@ -164,7 +169,7 @@ class order_CartInfo
 	{
 		if ($this->shopId !== null)
 		{
-			return  catalog_persistentdocument_shop::getInstanceById($this->shopId);
+			return catalog_persistentdocument_shop::getInstanceById($this->shopId);
 		}
 		else 
 		{
@@ -179,13 +184,13 @@ class order_CartInfo
 	{
 		if ($shop === null)
 		{
-			$this->taxZone = null;
 			$this->shopId = null;
+			$this->setBillingArea(null);
 		}
 		else if ($shop instanceof catalog_persistentdocument_shop)
 		{
 			$this->shopId = $shop->getId();
-			$this->taxZone = $shop->getDefaultTaxZone();
+			$this->setBillingArea($shop->getCurrentBillingArea(true));
 		}
 		else 
 		{
@@ -194,15 +199,50 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return zone_persistentdocument_zone
+	 * @return integer || null
 	 */
-	public function getBillingZone()
+	public function getBillingAreaId()
 	{
-		return $this->getShop()->getBillingZone();
+		return $this->billinAreaId;
 	}
 	
+	/**
+	 * @return catalog_persistentdocument_billingarea
+	 */
+	public function getBillingArea()
+	{
+		if ($this->billinAreaId !== null)
+		{
+			return catalog_persistentdocument_billingarea::getInstanceById($this->billinAreaId);
+		}
+		else
+		{
+			return $this->getShop()->getCurrentBillingArea();
+		}
+	}
 	
-	
+	/**
+	 * @param catalog_persistentdocument_billingarea $billingArea
+	 */
+	public function setBillingArea($billingArea)
+	{
+		if ($billingArea === null)
+		{
+			$this->billinAreaId = null;
+			$this->taxZone = null;
+			
+		}
+		else if ($billingArea instanceof catalog_persistentdocument_billingarea)
+		{
+			$this->billinAreaId = $billingArea->getId();		
+			$this->taxZone = $billingArea->getDefaultZone();
+		}
+		else
+		{
+			throw new Exception('Invalid shop');
+		}
+	}
+		
 	//ORDER MANIPULATION
 
 	/**
@@ -235,7 +275,6 @@ class order_CartInfo
 		return $this->orderId ? order_persistentdocument_order::getInstanceById($this->orderId) : null;
 	}
 	
-	
 	//CART DETAIL MANIPULATION
 
 	/**
@@ -260,7 +299,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @return Integer
+	 * @return integer
 	 */
 	public function getCartLineCount()
 	{
@@ -268,7 +307,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function isEmpty()
 	{
@@ -277,7 +316,7 @@ class order_CartInfo
 
 	/**
 	 * @param integer $index
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function hasCartLine($index)
 	{
@@ -411,7 +450,7 @@ class order_CartInfo
 	private $addressInfo;
 	
 	/**
-	 * @return Integer
+	 * @return integer
 	 */
 	public function getShippingAddressId()
 	{
@@ -419,7 +458,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param Integer shippingAddressId
+	 * @param integer shippingAddressId
 	 */
 	public function setShippingAddressId($shippingAddressId)
 	{
@@ -427,7 +466,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return Integer
+	 * @return integer
 	 */
 	public function getBillingAddressId()
 	{
@@ -435,7 +474,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param Integer billingAddressId
+	 * @param integer billingAddressId
 	 */
 	public function setBillingAddressId($billingAddressId)
 	{
@@ -514,7 +553,7 @@ class order_CartInfo
 			foreach ($shippingArray[$shippingModeId]['lines'] as $index) 
 			{
 				$result[] = $this->getCartLine($index);
-			}	
+			}
 		}
 		return $result;
 	}
@@ -534,7 +573,7 @@ class order_CartInfo
 			}
 		}
 		return $result;
-	}	
+	}
 	
 	/**
 	 * @param integer $shippingModeId;
@@ -557,14 +596,14 @@ class order_CartInfo
 		{
 			$this->shippingArray[$shippingModeId]['filter'] = array(
 				'id' => $filter->getId(), 
-			    'modeId' => $filter->getMode()->getId(),
+				'modeId' => $filter->getMode()->getId(),
 				'feesId' => $filter->getFeesId()
 			);
 			if ($shippingModeId == 0 && $this->getAddressInfo())
 			{
 				$this->getAddressInfo()->shippingFilterId = $filter->getId();
 			}
-		}	
+		}
 	}
 
 	/**
@@ -592,7 +631,7 @@ class order_CartInfo
 	}	
 	
 	/**
-	 * @return Integer
+	 * @return integer
 	 */
 	public function getShippingModeId()
 	{
@@ -605,7 +644,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return Integer
+	 * @return integer
 	 */
 	public function getShippingFilterId()
 	{
@@ -627,12 +666,21 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getShippingLabel()
 	{
 		$mode = $this->getShippingMode();	
 		return $mode ? $mode->getLabel() : null;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getShippingResumeAsHtml()
+	{
+		$mode = $this->getShippingMode();
+		return $mode ? $mode->getResumeAsHtml($this): null;
 	}
 	
 	//Payment Mode
@@ -643,7 +691,7 @@ class order_CartInfo
 	private $billingModeId = null;
 	
 	/**
-	 * @return Integer
+	 * @return integer
 	 */
 	public function getBillingModeId()
 	{
@@ -651,7 +699,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param Integer billingModeId
+	 * @param integer billingModeId
 	 */
 	public function setBillingModeId($billingModeId)
 	{
@@ -682,7 +730,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getBillingLabel()
 	{
@@ -697,7 +745,7 @@ class order_CartInfo
 	private $customerId = null;
 
 	/**
-	 * @return Integer
+	 * @return integer
 	 */
 	public function getCustomerId()
 	{
@@ -705,7 +753,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param Integer customerId
+	 * @param integer customerId
 	 */
 	public function setCustomerId($customerId)
 	{
@@ -1057,7 +1105,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @return double
+	 * @return float
 	 */
 	public function getTotalCreditNoteAmount()
 	{
@@ -1070,7 +1118,7 @@ class order_CartInfo
 	
 	/**
 	 * @param integer $creditNoteId
-	 * @param double $amount
+	 * @param float $amount
 	 */
 	public function setCreditNoteAmount($creditNoteId, $amount)
 	{
@@ -1091,7 +1139,6 @@ class order_CartInfo
 	
 	/**
 	 * @param integer $creditNoteId
-	 * @param double $amount
 	 */
 	public function removeCreditNote($creditNoteId)
 	{
@@ -1121,6 +1168,21 @@ class order_CartInfo
 		$this->creditNoteInfos = null;
 	}
 	
+	/**
+	 * @return float
+	 */
+	public function getTotalAvailableCreditNoteAmount()
+	{
+		return order_CreditnoteService::getInstance()->getTotalAvailableAmountByCustomer($this->getCustomer());
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getFormattedTotalAvailableCreditNoteAmount()
+	{
+		return $this->formatPrice($this->getTotalAvailableCreditNoteAmount());
+	}
 	
 	//AMOUNT
 		
@@ -1279,24 +1341,19 @@ class order_CartInfo
 	public function getTotalAmount()
 	{
 		return $this->getTotalWithTax() - $this->getTotalCreditNoteAmount();
-	}		
-	
-	public function formatPrice($value)
-	{
-		return $this->getShop()->formatPrice($value);
 	}
-	
+
 	/**
 	 * @param double value
 	 * @return string
 	 */
-	private function formatValue($value)
+	public function formatPrice($value)
 	{
-		return $this->getShop()->formatPrice($value);
+		return $this->getBillingArea()->formatPrice($value);
 	}
-
+	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getFormattedSubTotalWithTax()
 	{
@@ -1304,7 +1361,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getFormattedSubTotalWithoutTax()
 	{
@@ -1312,7 +1369,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getFormattedDiscountTotalWithTax()
 	{
@@ -1331,39 +1388,39 @@ class order_CartInfo
 	
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getFormattedTotalExcludingFeesWithoutTax()
 	{
 		return $this->formatPrice($this->getTotalExcludingFeesWithoutTax());
-	}	
+	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getFormattedTotalExcludingFeesWithTax()
 	{
 		return $this->formatPrice($this->getTotalExcludingFeesWithTax());
-	}	
+	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getFormattedTotalWithoutTax()
 	{
 		return $this->formatPrice($this->getTotalWithoutTax());
-	}	
+	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getFormattedTotalWithTax()
 	{
 		return $this->formatPrice($this->getTotalWithTax());
-	}	
+	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getFormattedTotalTax()
 	{
@@ -1394,7 +1451,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param String $message
+	 * @param string $message
 	 */
 	public function addSuccessMessage($message)
 	{
@@ -1415,7 +1472,7 @@ class order_CartInfo
 	{
 		$this->successMessages = array();
 	}
-		
+	
 	/**
 	 * @var Array<String>
 	 */
@@ -1438,7 +1495,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @param String $message
+	 * @param string $message
 	 * @return void
 	 */
 	public function addPersistentErrorMessage($message)
@@ -1483,7 +1540,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @param String $message
+	 * @param string $message
 	 * @return void
 	 */
 	public function addTransientErrorMessage($message)
@@ -1507,7 +1564,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return Boolean
+	 * @return boolean
 	 */
 	public function isValid()
 	{
@@ -1538,8 +1595,8 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param String $key
-	 * @return Boolean
+	 * @param string $key
+	 * @return boolean
 	 */
 	public function hasProperties($key)
 	{
@@ -1547,7 +1604,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param String $key
+	 * @param string $key
 	 * @return Mixed
 	 */
 	public function getProperties($key)
@@ -1556,7 +1613,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param String $key
+	 * @param string $key
 	 * @param Mixed $value
 	 */
 	public function setProperties($key, $value)
@@ -1664,7 +1721,10 @@ class order_CartInfo
 		return $this->getCartService()->refresh($this);
 	}
 	
-	function canBeShipped()
+	/**
+	 * @return boolean
+	 */
+	public function canBeShipped()
 	{
 		if ($this->hasPredefinedShippingMode() && count($this->getRequiredShippingModes()) == 0)
 		{
@@ -1677,7 +1737,37 @@ class order_CartInfo
 		return true;
 	}
 	
+	/**
+	 * @return float
+	 */
+	public function getTotalProductCount()
+	{
+		$count = 0;
+		foreach ($this->getCartLineArray() as $line)
+		{
+			/* @var $line order_CartLineInfo */
+			$count += $line->getQuantity();
+		}
+		return $count;
+	}
+	
 	// Deprecated.
+	
+	/**
+	 * @deprecated
+	 */
+	public function getBillingZone()
+	{
+		return $this->getBillingArea()->getBillingAddressZone();
+	}
+	
+	/**
+	 * @deprecated use formatPrice
+	 */
+	private function formatValue($value)
+	{
+		return $this->getBillingArea()->formatPrice($value);
+	}
 
 	/**
 	 * @deprecated
@@ -1687,6 +1777,22 @@ class order_CartInfo
 		Framework::warn(f_util_ProcessUtils::getBackTrace());
 		return $this->getFeesTotalWithTax();
 	}
+
+	/**
+	 * @deprecated
+	 */
+	function getFormattedShippingPriceWithTax()
+	{
+		return $this->formatPrice($this->getShippingPriceWithTax());
+	}	
+	
+	/**
+	 * @deprecated
+	 */
+	function getFormattedShippingPriceWithoutTax()
+	{
+		return $this->formatPrice($this->getShippingPriceWithTax());
+	}
 	
 	/**
 	 * @deprecated
@@ -1694,5 +1800,133 @@ class order_CartInfo
 	public function getFormattedTotalAmount()
 	{
 		return $this->formatPrice($this->getTotalAmount());
+	}
+	
+	/**
+	 * @deprecated use getFormattedShippingPriceWithTax
+	 */
+	function getFormatedShippingPriceWithTax()
+	{
+		return $this->getFormattedShippingPriceWithTax();
+	}	
+	
+	/**
+	 * @deprecated use getFormattedShippingPriceWithoutTax
+	 */
+	function getFormatedShippingPriceWithoutTax()
+	{
+		return $this->getFormattedShippingPriceWithoutTax();
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0) use getPersistentErrorMessages
+	 */
+	public function getErrorMessageArray()
+	{
+		return $this->getPersistentErrorMessages();
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) use setPersistentErrorMessages
+	 */
+	public function setErrorMessageArray($messages)
+	{
+		$this->setPersistentErrorMessages($messages);
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function hasErrorMessage($key)
+	{
+		return isset($this->persistentErrorMessages[$key]);
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function getErrorMessage($key)
+	{
+		return $this->persistentErrorMessages[$key];
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function setErrorMessage($key, $value)
+	{
+		$this->persistentErrorMessages[$key] = $value;
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0) use addPersistentErrorMessage
+	 */
+	public function addErrorMessage($message)
+	{
+		$this->addPersistentErrorMessage($message);
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0) use clearPersistentErrorMessages
+	 */
+	public function clearErrorMessages()
+	{
+		$this->clearPersistentErrorMessages();
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) use getTransientErrorMessages
+	 */
+	public function getWarningMessageArray()
+	{
+		return $this->getTransientErrorMessages();
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) use setTransientErrorMessages
+	 */
+	public function setWarningMessageArray($messages)
+	{
+		$this->setTransientErrorMessages($messages);
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function hasWarningMessage($key)
+	{
+		return isset($this->transientErrorMessages[$key]);
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement
+	 */
+	public function getWarningMessage($key)
+	{
+		return $this->transientErrorMessages[$key];
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) with no replacement 
+	 */
+	public function setWarningMessage($key, $value)
+	{
+		$this->transientErrorMessages[$key] = $value;
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) use addTransientErrorMessage
+	 */
+	public function addWarningMessage($message)
+	{
+		$this->addTransientErrorMessage($message);
+	}
+
+	/**
+	 * @deprecated (will be removed in 4.0) use clearTransientErrorMessages
+	 */
+	public function clearWarningMessages()
+	{
+		$this->clearTransientErrorMessages();
 	}
 }

@@ -5,22 +5,18 @@
 		<sectionrow labeli18n="m.order.bo.general.reference" id="reference" />
 		<sectionrow labeli18n="m.order.bo.general.date" id="creationdate" />
 		<section class="customer" />
-		<field name="commentadmin" type="longtext" />	
-	</section>	
-	
-	<section labeli18n="m.order.bo.general.order-details" >
-		<section class="orderlines"/>
+		<field name="commentadmin" type="longtext" />
 	</section>
-	
+	<section labeli18n="m.order.bo.general.order-details">
+		<section class="orderlines" />
+	</section>
 	<section labeli18n="m.order.bo.general.coupon" class="couponSection">
 		<sectionrow labeli18n="m.order.bo.general.coupon-name" id="couponSectionName" />
 		<sectionrow labeli18n="m.order.bo.general.coupon-code" id="couponSectionCode" />
 	</section>
-		
 	<section labeli18n="m.order.bo.doceditor.section.discounts" class="discountsSection">
 		<section class="discountlines" />
 	</section>
-	
 	<section labeli18n="m.order.bo.general.amount">
 		<sectionrow labeli18n="m.order.bo.general.sub-total" id="subTotal" />
 		<sectionrow labeli18n="m.order.frontoffice.coupon-name" id="couponName" />
@@ -32,83 +28,24 @@
 		<sectionrow labeli18n="m.order.bo.doceditor.property.used-credit-note" id="usedCreditNote" />
 		<sectionrow labeli18n="m.order.bo.general.total-to-pay" id="totalAmount" />
 	</section>
-
 	<xul>
 		<javascript>
 			<constructor><![CDATA[
-				// Cancel order button.
-				this.mCancelOrderButton = this.addActionButton("${transui:m.order.bo.actions.cancel-order,ucf}", wToolkit.getIcon('reject', 'small'));
 				var me = this;
-				this.mCancelOrderButton.addEventListener('command', function(event) {me.onCancelOrder();}, true);			
-				this.extendMethod("updateCommandsUI", this.updateCancelOrderUI);
 				this.extendMethod("fireInitializeComplete", this.initializeExtra);				
-				this.addEventListener("gridInitialised", function (event) {return me.onGridInitialised(event);}, true);
+				this.addEventListener("gridInitialised", function (event) { return me.onGridInitialised(event); }, true);
+				
+				// Print order button.
+				var button = this.addActionButton("${trans:m.order.bo.actions.view-printable-version,ucf,js}", "{IconsBase}/small/printer.png");
+				button.addEventListener('command', function () { me.printOrder(); }, true);
 			]]></constructor>
-			
 			<field name="mPropIds">["website", "reference", "creationdate",
 				"subTotal", "couponName", "shippingFees", "billingMode", "billingFees",
 				"tvaAmounts", "discountTotal", "usedCreditNote", "totalAmount",
 				"couponSectionName", "couponSectionCode"]</field>
-			
-			<field name="mCancelOrderButton">null</field>
-			<field name="mCanBeCanceled">false</field>
-			
 			<field name="mOrderlines">null</field>
 			<field name="mDiscountLines">null</field>
-			
 			<field name="mInitData">null</field>
-
-			<method name="updateCancelOrderUI">
-				<parameter name="event" />
-				<body><![CDATA[
-					this.mCancelOrderButton.disabled = (this.modified || !this.mCanBeCanceled);
-				]]></body>
-			</method>
-
-			<method name="onCancelOrder">
-				<parameter name="event" />
-				<body><![CDATA[
-					this.lockCommandsUI();
-					if (confirm("${transui:m.order.bo.doceditor.confirm-cancelation,ucf}"))
-					{
-						this.showTextMessage("${transui:m.order.bo.doceditor.cancelation-in-progress,ucf}");
-						this.documentEditor.executeServerAction('properties', 'CancelOrder');
-					}
-				]]></body>
-			</method>
-			
-			<method name="getCancelOrderParameters">
-				<body><![CDATA[
-					var documentInfos = this.documentEditor.documentInfos;
-					var attributes = {
-						action: 'CancelOrderJSON',
-						cmpref: this.mDocumentId, 
-						lang : this.mLang,
-						documentversion: this.mRevision,
-						documentproperties: this.mFieldNames.join(',')
-					};
-					return attributes;
-				]]></body>
-			</method>
-			
-			<method name="fireCancelOrderComplete">
-				<parameter name="result" />
-				<body><![CDATA[			
-					if (result.status == "OK")
-					{
-						this.modified = false;						
-						this.documentEditor.clearTabs();
-						//wCore.debug('fireCancelOrderComplete' + wCore.dump(result));						
-						this.fireInitializeComplete(result);						
-						this.showTextMessage("&modules.order.bo.doceditor.message.Order-canceled;");
-					}
-					else
-					{
-						this.showErrorMessage(result.contents.errorMessage);					
-					}
-				]]></body>
-			</method>
-				
 			<method name="onGridInitialised">
 				<parameter name="event" />
 				<body><![CDATA[	
@@ -139,10 +76,9 @@
 					}		
 				]]></body>
 			</method>
-						
 			<method name="initializeExtra">
 				<parameter name="result" />
-				<body><![CDATA[	
+				<body><![CDATA[
 					if (result.status != 'OK')
 					{
 						this.mInitData = null;
@@ -151,9 +87,6 @@
 					
 					this.mInitData = result.contents;					
 					var informations = this.mInitData.informations;
-					this.mCanBeCanceled = informations['canBeCanceled'];
-					wCore.debug ('initializeExtra mCanBeCanceled ' + this.mCanBeCanceled);
-					this.updateCancelOrderUI();
 					
 					for each (var name in this.mPropIds)
 					{
@@ -200,7 +133,13 @@
 					else
 					{
 						document.getAnonymousElementByAttribute(this, 'class', 'discountsSection').removeAttribute('collapsed');
-					}	
+					}
+				]]></body>
+			</method>
+			<method name="printOrder">
+				<body><![CDATA[
+					var url = wCore.buildServerUrl('order', 'PrintOrder', { mode: 'Properties', cmpref: this.documentEditor.documentid, lang: this.documentEditor.vo });												
+					wToolkit.openurl(url);
 				]]></body>
 			</method>
 		</javascript>

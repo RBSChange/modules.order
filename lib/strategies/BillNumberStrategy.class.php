@@ -6,7 +6,7 @@ interface order_BillNumberStrategy
 {
 	/**
 	 * @param order_persistentdocument_bill $bill
-	 * @return String
+	 * @return string
 	 */
 	public function generate($bill);
 }
@@ -51,7 +51,7 @@ class order_BillNumberGenerator
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
-	 * @return String
+	 * @return string
 	 */
 	public function generate($bill)
 	{
@@ -76,7 +76,6 @@ class order_BillNumberGenerator
 	 */
 	protected function generateDefault($bill)
 	{
-		Framework::info(__METHOD__);
 		$billCount = $bill->getDocumentService()->createQuery()
 			->add(Restrictions::ne('publicationstatus', 'DRAFT'))
 			->setProjection(Projections::rowCount("billCount"))
@@ -89,11 +88,10 @@ class order_BillNumberYearSequenceStrategy implements order_BillNumberStrategy
 {
 	/**
  	 * @param order_persistentdocument_bill $bill
-	 * @return String
+	 * @return string
 	 */
 	public function generate($bill)
 	{
-		Framework::info(__METHOD__);
 		$year = ($bill->getCreationdate()) ? substr($bill->getCreationdate(), 0, 4) : date("Y");
 		$beginDate = date_Converter::convertDateToGMT($year.'-01-01 00:00:00');
 		$endDate = date_Converter::convertDateToGMT(($year+1).'-01-01 00:00:00');

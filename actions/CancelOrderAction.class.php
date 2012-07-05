@@ -18,7 +18,7 @@ class order_CancelOrderAction extends change_JSONAction
 			}
 		}
 		return $this->sendJSON(array('message' => 
-        	LocaleService::getInstance()->transBO('m.order.bo.actions.cancel-order-success', 
-        		array(), array('OrderNumbers' => implode("\n ", $labels)))));
+			LocaleService::getInstance()->trans('m.order.bo.actions.cancel-order-success', 
+				array(), array('OrderNumbers' => implode("\n ", $labels)))));
 	}
 }

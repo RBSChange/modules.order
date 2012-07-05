@@ -10,46 +10,46 @@ class order_CartFilter extends order_LinesCartFilterBase
 		if ($this->getDocumentModelName() == 'order/cart')
 		{
 			$beanprop = new BeanPropertyInfoImpl('totalAmount', 'Double');
-			$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-totalAmount;');
+			$beanprop->setLabelKey('m.order.bo.documentfilters.cart-totalamount');
 			$parameter->addAllowedProperty('totalAmount', $beanprop);
 			
 			$beanprop = new BeanPropertyInfoImpl('totalAmountWithTax', 'Double');
-			$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-totalAmountWithTax;');
+			$beanprop->setLabelKey('m.order.bo.documentfilters.cart-totalamountwithtax');
 			$parameter->addAllowedProperty('totalAmountWithTax', $beanprop);
 			
 			$beanprop = new BeanPropertyInfoImpl('totalAmountWithoutTax', 'Double');
-			$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-totalAmountWithoutTax;');
+			$beanprop->setLabelKey('m.order.bo.documentfilters.cart-totalamountwithouttax');
 			$parameter->addAllowedProperty('totalAmountWithoutTax', $beanprop);
 			
 			if (ModuleService::getInstance()->isInstalled('marketing'))
 			{
 				$beanprop = new BeanPropertyInfoImpl('coupon', 'modules_marketing/coupon');
-				$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-Coupon;');
+				$beanprop->setLabelKey('m.order.bo.documentfilters.cart-coupon');
 				$parameter->addAllowedProperty('coupon', $beanprop);
 			}
 		}
 		
 		$beanprop = new BeanPropertyInfoImpl('linesAmountWithTax', 'Double');
-		$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-linesAmountWithTax;');
+		$beanprop->setLabelKey('m.order.bo.documentfilters.cart-linesamountwithtax');
 		$parameter->addAllowedProperty('linesAmountWithTax', $beanprop);
 		
 		$beanprop = new BeanPropertyInfoImpl('linesAmountWithoutTax', 'Double');
-		$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-linesAmountWithoutTax;');
+		$beanprop->setLabelKey('m.order.bo.documentfilters.cart-linesamountwithouttax');
 		$parameter->addAllowedProperty('linesAmountWithoutTax', $beanprop);
 		
 		$beanprop = new BeanPropertyInfoImpl('lineCount', 'Integer');
-		$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-lineCount;');
+		$beanprop->setLabelKey('m.order.bo.documentfilters.cart-linecount');
 		$parameter->addAllowedProperty('lineCount', $beanprop);
 		
 		$beanprop = new BeanPropertyInfoImpl('productCount', 'Integer');
-		$beanprop->setLabelKey('&modules.order.bo.documentfilters.Cart-productCount;');
+		$beanprop->setLabelKey('m.order.bo.documentfilters.cart-productcount');
 		$parameter->addAllowedProperty('productCount', $beanprop);
 
 		$this->setParameter('cart', $parameter);
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

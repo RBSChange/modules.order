@@ -1,23 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.creditnote" lcid="fr_FR">
-  <include id="m.generic.document.document"/>
-  <key id="document-name">creditnote</key>
-  <key id="label">Numéro de l'avoir</key>
-  <key id="label-help">Numéro de l'avoir</key>
-  <key id="ordernumber">Numéro de facture</key>
-  <key id="ordernumber-help">Numéro de facture</key>
-  <key id="amount">Montant</key>
-  <key id="amount-help">Montant de l'avoir</key>
-  <key id="maxamount">Maximum</key>
-  <key id="customer">Client</key>
-  <key id="customer-help">Client</key>
-  <key id="amountnotapplied">Montant non réstitué</key>
-  <key id="amountnotapplied-help">Montant de l'avoir non encore restitué au client</key>
-  
-  <key id="manual-recredit">remboursement manuel</key>
-  <key id="recredit-dialog-title">remboursement</key>
-  <key id="transactionid">Identifiant du remboursement</key>
-  <key id="transactiondate">date du remboursement</key>
-  <key id="transactiontext">détail du remboursement</key>
-  <key id="recredit-action">marquer remboursé</key>
+	<include id="m.generic.document.document" />
+	<key id="document-name">avoir</key>
+	<key id="label">Numéro de l'avoir</key>
+	<key id="label-help">Numéro de l'avoir</key>
+	<key id="ordernumber">Numéro de facture</key>
+	<key id="ordernumber-help">Numéro de facture</key>
+	<key id="amount">Montant</key>
+	<key id="amount-help">Montant de l'avoir</key>
+	<key id="maxamount">Maximum</key>
+	<key id="customer">Client</key>
+	<key id="customer-help">Client</key>
+	<key id="amountnotapplied">Montant non restitué</key>
+	<key id="amountnotapplied-help">Montant de l'avoir non encore restitué au client</key>
+	<key id="manual-recredit">remboursement manuel</key>
+	<key id="recredit-dialog-title">remboursement</key>
+	<key id="transactionid">Identifiant du remboursement</key>
+	<key id="transactiondate">date du remboursement</key>
+	<key id="transactiontext">détail du remboursement</key>
+	<key id="recredit-action">marquer remboursé</key>
 </i18n>

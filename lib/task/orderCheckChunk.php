@@ -1,7 +1,8 @@
 <?php
+$controller = change_Controller::newInstance("controller_ChangeController");
 $tm = f_persistentdocument_TransactionManager::getInstance();
 $rc = RequestContext::getInstance();
-foreach ($arguments as $id) 
+foreach ($_POST['argv'] as $id) 
 {
 	try
 	{

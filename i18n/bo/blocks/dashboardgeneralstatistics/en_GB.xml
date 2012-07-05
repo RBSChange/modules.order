@@ -1,15 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.blocks.dashboardgeneralstatistics" lcid="en_GB">
-  <key id="title">shop orders</key>
-  <key id="shop">shop</key>
-  <key id="shop-help">Select the shop that you want to display statistics for.</key>
-  <key id="columns">columns</key>
-  <key id="column-month">month</key>
-  <key id="column-orders">orders</key>
-  <key id="column-amount">total amount</key>
-  <key id="column-todeliver">to deliver</key>
-  <key id="columns-help">Check the columns to display.</key>
-  <key id="statistics-for-shop">shop order statistics</key>
-  <key id="usecharts">use charts</key>
-  <key id="usecharts-help">Set it to "yes" to display the statistics as a chart. Set it to "no" to display them as a table.</key>
+	<key id="title">shop orders</key>
+	<key id="shop">shop</key>
+	<key id="shop-help">Select the shop that you want to display statistics for.</key>
+	<key id="columns">columns</key>
+	<key id="column-month">month</key>
+	<key id="column-orders">orders</key>
+	<key id="column-amount">total amount</key>
+	<key id="column-todeliver">to deliver</key>
+	<key id="columns-help">Check the columns to display.</key>
+	<key id="statistics-for-shop">shop order statistics</key>
+	<key id="usecharts">use charts</key>
+	<key id="usecharts-help">Set it to "yes" to display the statistics as a chart. Set it to "no" to display them as a table.</key>
 </i18n>

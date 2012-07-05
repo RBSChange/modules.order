@@ -11,7 +11,6 @@ class order_UpdateCartAction extends change_Action
 		$cartService = order_CartService::getInstance();
 		$cart = $cartService->getDocumentInstanceFromSession();
 
-
 		// -- Lines management.
 		if (array_key_exists('lines', $moduleParams))
 		{
@@ -28,14 +27,14 @@ class order_UpdateCartAction extends change_Action
 				$quantity = array_key_exists('quantity', $cartLine) ? $cartLine['quantity'] : null;
 				if (!is_numeric($quantity) || $quantity != intval($quantity))
 				{
-					$cart->addTransientErrorMessage(LocaleService::getInstance()->transFO('m.order.frontoffice.invalid-quantity', array('ucf'), array('quantity' => $quantity)));
+					$cart->addTransientErrorMessage(LocaleService::getInstance()->trans('m.order.frontoffice.invalid-quantity', array('ucf'), array('quantity' => $quantity)));
 					continue;
 				}
 				$quantity = intval($quantity);
 				
 				$productId = array_key_exists('productId', $cartLine) ? $cartLine['productId'] : null;
 				if ($productId !== null)
-				{	
+				{
 					$product = catalog_persistentdocument_product::getInstanceById($productId);
 					$cartService->updateLine($cart, $index, $product, $quantity);
 				}
@@ -45,15 +44,15 @@ class order_UpdateCartAction extends change_Action
 		
 		$pageId = $request->getParameter('pageref', null);
 		if (is_numeric($pageId))
-		{	
+		{
 			$url = LinkHelper::getDocumentUrl(DocumentHelper::getDocumentInstance($pageId, 'modules_website/page'));
 			$context->getController()->redirectToUrl(str_replace('&amp;', '&', $url));
-			return change_View::NONE;	
+			return change_View::NONE;
 		}
-			
+		
 		$context->getController()->forward('website', 'Error404');
-		return change_View::NONE;		
-	}	
+		return change_View::NONE;
+	}
 	
 	/**
 	 * @return boolean
@@ -61,5 +60,5 @@ class order_UpdateCartAction extends change_Action
 	public function isSecure()
 	{
 		return false;
-	}	
+	}
 }

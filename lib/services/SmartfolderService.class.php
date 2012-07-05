@@ -1,27 +1,10 @@
 <?php
 /**
- * order_SmartfolderService
- * @package order
+ * @package modules.order
+ * @method order_SmartfolderService getInstance()
  */
 class order_SmartfolderService extends filter_QueryfolderService
 {
-	/**
-	 * @var order_SmartfolderService
-	 */
-	private static $instance;
-
-	/**
-	 * @return order_SmartfolderService
-	 */
-	public static function getInstance()
-	{
-		if (self::$instance === null)
-		{
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
-
 	/**
 	 * @return order_persistentdocument_smartfolder
 	 */
@@ -38,7 +21,7 @@ class order_SmartfolderService extends filter_QueryfolderService
 	 */
 	public function createQuery()
 	{
-		return $this->pp->createQuery('modules_order/smartfolder');
+		return $this->getPersistentProvider()->createQuery('modules_order/smartfolder');
 	}
 	
 	/**
@@ -49,7 +32,15 @@ class order_SmartfolderService extends filter_QueryfolderService
 	 */
 	public function createStrictQuery()
 	{
-		return $this->pp->createQuery('modules_order/smartfolder', false);
+		return $this->getPersistentProvider()->createQuery('modules_order/smartfolder', false);
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0) use getVirtualChildrenAt
+	 */
+	public function getOrders($folder)
+	{
+		return f_persistentdocument_DocumentFilterService::getInstance()->getQueryIntersectionFromJson($folder->getQuery())->find();
 	}
 	
 	/**

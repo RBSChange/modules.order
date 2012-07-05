@@ -56,7 +56,7 @@ class order_BlockDashboardGeneralStatisticsAction extends dashboard_BlockDashboa
 				$producer = new order_ShopBasicStatisticsProducer();
 				$chart = new f_chart_BarChart($producer->getDataTable(array('shopId' => $shopId, 'mode' => $columnName)));
 				$chart->setGrid(new f_chart_Grid(0, 20));
-				$charts[] = array('chart' => $chart, 'title' => f_Locale::translateUI("&modules.order.bo.blocks.dashboardgeneralstatistics.Column-$columnName;"));
+				$charts[] = array('chart' => $chart, 'title' => LocaleService::getInstance()->trans('m.order.bo.blocks.dashboardgeneralstatistics.column-'.$columnName, array('ucf')));
 			}
 			$request->setAttribute('charts', $charts);
 		}
@@ -71,15 +71,19 @@ class order_BlockDashboardGeneralStatisticsAction extends dashboard_BlockDashboa
 	 */
 	private function initPreviousMonthDates(&$fromDate, &$toDate, $monthCount = 1)
 	{
-		$fromDate = date_Calendar::now()->sub(date_Calendar::MONTH, $monthCount);
+		$fromDate = date_Converter::convertDateToLocal(date_Calendar::now());
+		$fromDate->sub(date_Calendar::MONTH, $monthCount);
 		$fromDate->setDay(1);
 		$fromDate->setSecond(0);
 		$fromDate->setMinute(0);
 		$fromDate->setHour(0);
-		$toDate = date_Calendar::now()->sub(date_Calendar::MONTH, $monthCount);
+		$fromDate = date_Converter::convertDateToGMT($fromDate);
+		$toDate = date_Converter::convertDateToLocal(date_Calendar::now());
+		$toDate->sub(date_Calendar::MONTH, $monthCount);
 		$toDate->setDay($toDate->getDaysInMonth());
 		$toDate->setSecond(59);
 		$toDate->setMinute(59);
 		$toDate->setHour(23);
+		$toDate = date_Converter::convertDateToGMT($toDate);
 	}
 }

@@ -1,5 +1,5 @@
 <script type="text/javascript">
-// <![CDATA[
+	/* <![CDATA[ */
 	jQuery(document).ready(function() {
 		var selectShippingFilter = function()
 		{
@@ -9,131 +9,142 @@
 		jQuery('#shipping-filters input[type=radio]').change(selectShippingFilter);
 		jQuery('#shipping-updatemode-cnt').hide();
 	});
-//]]>
+	/* ]]> */
 </script>
 
-<div class="orderprocess shipping">
-    <tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-NavigationTop'; type 'html';cart cart" />
-    <div class="main">
+<tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-NavigationTop'; type 'html';cart cart" />
+<div class="columns">
+	<div class="column-75">
 		<form change:form="">
 			<fieldset tal:condition="hasPredefinedShippingMode">
 				<legend>${trans:m.order.document.shippingstepbean.fixed-shipping-mode,ucf}</legend>
-				<ol>
-					<li tal:repeat="modeFilter requiredShippingFilters">
-						<img tal:condition="modeFilter/getMode/getVisual" change:media="document modeFilter/getMode/getVisual; format 'modules.media.frontoffice/thumbnail'" />	
-						<span tal:condition="not: modeFilter/getMode/getVisual">${structure modeFilter/getMode/getLabelAsHtml}</span> 
-						<span>
-							<tal:block tal:condition="modeFilter/getValueWithTax"> (${modeFilter/getFormattedValueWithTax})</tal:block>
-							<tal:block tal:condition="not: modeFilter/getValueWithTax"> (${trans:m.order.frontoffice.freeshipping,ucf})</tal:block>
-						</span>
-						<p>${structure modeFilter/getMode/getDescriptionAsHtml}</p>
-						<ul tal:define="cartLines php:cart.getCartLineArrayByShippingMode(modeFilter.getMode())">
-							<li tal:repeat="cartLine cartLines">${structure cartLine/getProduct/getLabelAsHtml}</li>
-						</ul>  
-					</li>
-				</ol>
-				<div class="cleaner"></div>
-				<tal:block tal:condition="requiredShippingModeErrors">
-					<ul change:errors="relKey requiredShippingMode"></ul>
-					<ol>
-						<li tal:repeat="mode requiredShippingModeErrors">
-							<img tal:condition="mode/getVisual" change:media="document mode/getVisual; format 'modules.media.frontoffice/thumbnail'" />	
-							<span tal:condition="not: mode/getVisual">${mode/getLabel}</span>
-							<p>${structure mode/getDescriptionAsHtml}</p>
-							<ul tal:define="cartLines php:cart.getCartLineArrayByShippingMode(mode)">
-								<li tal:repeat="cartLine cartLines">${structure cartLine/getProduct/getLabelAsHtml}</li>
-							</ul>  						
-						</li>
-					</ol>
-				</tal:block>				
+				<table class="normal">
+					<tr tal:repeat="modeFilter requiredShippingFilters" class="${alternateclass:lineIndex}">
+						<tal:block tal:define="mode modeFilter/getMode">
+							<td>
+								${structure mode/getLabelAsHtml}
+								<tal:block tal:condition="mode/getDescription">
+									<div class="description ctoggle" tal:condition="mode/hasLongDescription">
+										<div class="short">${structure mode/getShortDescriptionAsHtml}</div>
+										<div class="full">${structure mode/getDescriptionAsHtml}</div>
+									</div>
+									<div class="description" tal:condition="not:mode/hasLongDescription">${structure mode/getDescriptionAsHtml}</div>
+								</tal:block>
+								<dl class="inline-list" tal:define="cartLines php:cart.getCartLineArrayByShippingMode(modeFilter.getMode())">
+									<dt tal:condition="php:count(cartLine) LE 1">${trans:m.order.fo.concerned-product,ucf}</dt>
+									<dt tal:condition="php:count(cartLine) GT 1">${trans:m.order.fo.concerned-products,ucf,lab}</dt>
+									<dd tal:repeat="cartLine cartLines">${structure cartLine/getProduct/getLabelAsHtml}<span class="punctuation" tal:condition="not:repeat/cartLine/end">, </span></dd>
+								</dl>
+							</td>
+							<td class="price mode-price">
+								<tal:block tal:condition="modeFilter/getValueWithTax">${modeFilter/getFormattedValueWithTax} <span class="tax-mode">${trans:m.catalog.frontoffice.ttc,uc}</span></tal:block>
+								<tal:block tal:condition="not: modeFilter/getValueWithTax">${trans:m.order.frontoffice.freeshipping,ucf}</tal:block>
+							</td>
+							<td class="mode-visual">
+								<img tal:condition="mode/getVisual" change:media="document mode/getVisual; format 'modules.order.frontoffice/mode-logo'" />
+							</td>
+						</tal:block>
+					</tr>
+					<tr tal:condition="requiredShippingModeErrors" class="${alternateclass:lineIndex}">
+						<td colspan="3" tal:repeat="mode requiredShippingModeErrors">
+							<ul class="errors"><li>${trans:m.order.standardprocess.required-shippingmode-not-found,ucf}</li></ul>
+							<dl class="inline-list" tal:define="cartLines php:cart.getCartLineArrayByShippingMode(mode)">
+								<dt tal:condition="php:count(cartLine) LE 1">${trans:m.order.fo.concerned-product,ucf}</dt>
+								<dt tal:condition="php:count(cartLine) GT 1">${trans:m.order.fo.concerned-products,ucf,lab}</dt>
+								<dd tal:repeat="cartLine cartLines">${structure cartLine/getProduct/getLabelAsHtml}<span class="punctuation" tal:condition="not:repeat/cartLine/end">, </span></dd>
+							</dl>
+						</td>
+					</tr>
+				</table>
 			</fieldset>
 	
-			<fieldset tal:condition="canSelectShippingMode"> 
+			<fieldset tal:condition="canSelectShippingMode">
 				<legend>${trans:m.order.document.shippingstepbean.choose-delivery-legend,ucf}</legend>	
 				<ul change:errors="relKey shippingFilters"></ul>
 				<tal:block tal:condition="shippingFilters">
 					<p class="normal">${trans:m.order.document.shippingstepbean.choose-delivery-text,ucf}</p>
-					<table id="shipping-filters" class="selector" width="100%">
+					<table id="shipping-filters" class="normal">
 						<tr tal:repeat="modeFilter shippingFilters">
-							<td>
-								<input change:radioinput="name shippingFilterId" id="shippingFilter" value="${modeFilter/getId}" />
-								<label tal:condition="modeFilter/getMode/getVisual" class="nocmx" for="shippingFilter_${modeFilter/getId}" >
-									<img change:media="document modeFilter/getMode/getVisual; format 'modules.media.frontoffice/thumbnail'" />
-								</label>
-								<label tal:condition="not: modeFilter/getMode/getVisual" class="nocmx" for="shippingFilter_${modeFilter/getId}">${structure modeFilter/getMode/getLabelAsHtml}</label> 
-							</td>
-							<td>
-								<span>
-									<tal:block tal:condition="modeFilter/getValueWithTax"> (${modeFilter/getFormattedValueWithTax})</tal:block>
-									<tal:block tal:condition="not: modeFilter/getValueWithTax"> (${trans:m.order.frontoffice.freeshipping,ucf})</tal:block>
-								</span>
-							</td>
-							<td>${structure modeFilter/getMode/getDescriptionAsHtml}</td>
+							<tal:block tal:define="mode modeFilter/getMode">
+								<td>
+									<label class="nocmx" for="shippingFilter_${modeFilter/getId}"><input change:radioinput="name shippingFilterId" id="shippingFilter" value="${modeFilter/getId}" labeled="false" /> ${structure mode/getLabelAsHtml}</label>
+									<tal:block tal:condition="mode/getDescription">
+										<div class="description ctoggle" tal:condition="mode/hasLongDescription">
+											<div class="short">${structure mode/getShortDescriptionAsHtml}</div>
+											<div class="full">${structure mode/getDescriptionAsHtml}</div>
+										</div>
+										<div class="description" tal:condition="not:mode/hasLongDescription">${structure mode/getDescriptionAsHtml}</div>
+									</tal:block>
+								</td>
+								<td class="price mode-price">
+									<tal:block tal:condition="modeFilter/getValueWithTax">${modeFilter/getFormattedValueWithTax} <span class="tax-mode">${trans:m.catalog.frontoffice.ttc,uc}</span></tal:block>
+									<tal:block tal:condition="not: modeFilter/getValueWithTax">${trans:m.order.frontoffice.freeshipping,ucf}</tal:block>
+								</td>
+								<td class="mode-visual">
+									<img tal:condition="mode/getVisual" change:media="document mode/getVisual; format 'modules.order.frontoffice/mode-logo'" />
+								</td>
+							</tal:block>
 						</tr>
 					</table>
-					<p id="shipping-updatemode-cnt">Mise à jour de votre choix de mode de livraison
-						<input change:submit="name updateMode" id="shipping-updatemode" label="${trans:m.order.standardprocess.validate,ucf}" />
+					<p id="shipping-updatemode-cnt" class="buttons">
+						<input change:submit="name updateMode" id="shipping-updatemode" label="${trans:m.order.standardprocess.update-shipping-mode,ucf}" />
 					</p>
 				</tal:block>
 			</fieldset>
-			
-			<p class="buttons" tal:condition="canContinue">
-				<input change:submit="name nextStep" id="next-step" label="${trans:m.order.standardprocess.next-step,ucf}" />
-			</p>	
-			<p class="buttons" tal:condition="not: canContinue">
+
+			<p class="buttons">
 				<a change:actionlink="" block="${cart/getOrderProcess/getPreviousBlockType}">${trans:m.order.frontoffice.back-to-previous-step,ucf}</a>
+				<input tal:condition="canContinue" change:submit="name nextStep" class="button primary" id="next-step" label="${trans:m.order.standardprocess.next-step,ucf}" />
 			</p>
 		</form>
 	</div>	
-    <div class="resume">
-    	<div class="normal resume-section">
-			<h2 change:h="">${trans:m.order.standardprocess.resume-order-title,ucf}</h2>
-    		<div class="column-one">
-	    		<table class="normal payment-information" border="0">	
-					<caption>${trans:m.order.standardprocess.billing-amount-title,ucf}</caption>
+	<div class="column-25">
+		<div class="summary">
+			<h2 change:h="">${trans:m.order.standardprocess.summary,ucf}</h2>
+			<div class="normal section">
+				<table class="normal payment-information">	
+					<caption class="h-3">${trans:m.order.standardprocess.billing-amount-title,ucf}</caption>
+					<tr>
+						<td>${trans:m.order.standardprocess.resume-article-count,ucf,lab}</td>
+						<td>${cart/getTotalProductCount}</td>
+					</tr>
 					<tr>
 						<td>${trans:m.order.standardprocess.resume-lines-total,ucf,lab}</td>
-						<td>${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</td>
+						<td class="price">${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</td>
 					</tr>
 					<tr tal:condition="php:cart.getFeesTotalWithTax() GT 0">
 						<td>${trans:m.order.standardprocess.resume-fees,ucf,lab}</td>
-						<td>${php:cart.formatPrice(cart.getFeesTotalWithTax())}</td>
+						<td class="price">${php:cart.formatPrice(cart.getFeesTotalWithTax())}</td>
 					</tr>
 					<tr tal:condition="php:cart.getDiscountTotalWithTax() GT 0">
 						<td>${trans:m.order.standardprocess.resume-discount,ucf,lab}</td>
-						<td>${php:cart.formatPrice(-cart.getDiscountTotalWithTax())}</td>
+						<td class="price">${php:cart.formatPrice(-cart.getDiscountTotalWithTax())}</td>
 					</tr>
 					<tr tal:condition="php:cart.getTotalCreditNoteAmount() GT 0">
 						<td>${trans:m.order.standardprocess.resume-credit-note,ucf,lab}</td>
-						<td>${php:cart.formatPrice(-cart.getTotalCreditNoteAmount())}</td>
+						<td class="price">${php:cart.formatPrice(-cart.getTotalCreditNoteAmount())}</td>
 					</tr>
 					<tr>
-						<td class="pricetotal">${trans:m.order.standardprocess.resume-total-ttc,ucf,lab}</td>
-						<td class="pricetotal">${php:cart.formatPrice(cart.getTotalAmount())}</td>
+						<td>${trans:m.order.standardprocess.resume-total-ttc,ucf,lab}</td>
+						<td class="price">${php:cart.formatPrice(cart.getTotalAmount())}</td>
 					</tr>
 				</table>
-				<p><a class="link" href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify}</a></p>
+				<p class="buttons"><a class="link" href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify-cart,ucf}</a></p>
 			</div>
-			<div class="cleaner"></div>
-    	</div>
-    	<div class="normal resume-section">
-    		<h2 change:h="">${trans:m.order.standardprocess.resume-address-title,ucf}</h2>
-	    	<ol class="ecom-adresses">
-				<li class="even">
-					<dl>
-						<dt>${trans:m.order.standardprocess.resume-address-shipping,ucf}</dt>
-						<dd tal:repeat="line shippingAddress">${line}</dd>
-						<dd><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify}</a></dd>
-					</dl>
-				</li>
-				<li class="odd">
-					<dl>
-						<dt>${trans:m.order.standardprocess.resume-address-billing,ucf}</dt>
-						<dd tal:repeat="line billingAddress">${line}</dd>
-						<dd><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify}</a></dd>
-					</dl>
-				</li>
-			</ol>
+			<div class="normal section">
+				<h3 change:h="">${trans:m.order.standardprocess.resume-address-billing,ucf}</h3>
+				<ul class="address normal-margin">
+					<li tal:repeat="line billingAddress">${line}</li>
+				</ul>
+				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
+			</div>
+			<div class="normal section">
+				<h3 change:h="">${trans:m.order.standardprocess.resume-address-shipping,ucf}</h3>
+				<ul class="address normal-margin">
+					<li tal:repeat="line shippingAddress">${line}</li>
+				</ul>
+				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
+			</div>
 		</div>
-    </div>
+	</div>
 </div>

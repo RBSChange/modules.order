@@ -1,68 +1,22 @@
-/* Etapes du process de commande */
-.order-process-steps{
-	width: 100%;
-	float: left;
+.modules-order .payment-information tr td {
+	text-align: right;
+}
+.modules-order td.visual {
 	text-align: center;
-	margin: 40px 0;
 }
 
-.modules-order ul.steps li{
-	border-width: 1px;
-	border-style: solid;
+/* Etapes du process de commande */
+.process-steps {
+	text-align: center;
+}
+.process-steps li {
+	border: 1px solid;
 	width: 120px;
 	padding: 10px 4px;
-	margin-right: 4px;
-	
+	margin: 0 4px;
 	display: inline-block;
-	zoom: 1;
-	* display: inline;
 }
-
-.modules-order ul.steps li:last-child{
-	margin-right: 0px;
-}
-
-.modules-order ul.steps li .step{
+.process-steps li .step {
 	font-size: 1.6em;
-	font-weight: bold;
-}
-
-.modules-order .pricetotal{
-	font-size: 1.4em;
-	font-weight:bold;
-}
-
-.modules-order .column-one{
-	float: left;
 	display: block;
-	width: 49%;
-}
-
-.modules-order .column-two{
-	float: right;
-	display: block;
-	width: 49%;
-}
-
-.modules-order table.payment-information tr td{
-	border: none;
-	text-align: right;
-	border-top-width: 1px;
-	border-top-style: solid;
-}
-
-.modules-order blockquote dl{
-	margin-left: 20px;
-}
-
-.modules-order blockquote dd{
-	margin-bottom: 10px;
-}
-
-.modules-order-Cart label.option-label{
-	width: auto;
-}
-
-.modules-order .billing p.buttons input.button{
-	vertical-align: baseline;
 }

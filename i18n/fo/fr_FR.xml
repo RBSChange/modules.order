@@ -1,16 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.fo" lcid="fr_FR">
 	<key id="back-to-cart">revenir à mon panier</key>
-	<key id="add-to-cart">ajouter à mon panier</key>
-	<key id="product-label-added">le produit {label} a bien été ajouté à votre panier.</key>
-	<key id="product-labels-added">les produits {firstLabels} et {lastLabel} ont bien été ajoutés à votre panier.</key>
-	<key id="product-label-not-added">le produit {label} n'a pas pu être ajouté à votre panier.</key>
-	<key id="product-labels-not-added">les produits {firstLabels} et {lastLabel} n'ont pas pu être ajoutés à votre panier.</key>
+	<key id="add-to-cart">ajouter au panier</key>
+	<key id="product-label-added">Le produit {label} a bien été ajouté à votre panier.</key>
+	<key id="product-label-added-link" format="html"><![CDATA[Le produit {label} a bien été ajouté à <a class="link" href="{cartUrl}">votre panier</a>.]]></key>
+	<key id="product-labels-added">Les produits {firstLabels} et {lastLabel} ont bien été ajoutés à votre panier.</key>
+	<key id="product-labels-added-link" format="html"><![CDATA[Les produits {firstLabels} et {lastLabel} ont bien été ajoutés à <a class="link" href="{cartUrl}">votre panier</a>.]]></key>
+	<key id="product-label-not-added">Le produit {label} n'a pas pu être ajouté à votre panier.</key>
+	<key id="product-label-not-added-link" format="html"><![CDATA[Le produit {label} n'a pas pu être ajouté à <a class="link" href="{cartUrl}">votre panier</a>.]]></key>
+	<key id="product-labels-not-added">Les produits {firstLabels} et {lastLabel} n'ont pas pu être ajoutés à votre panier.</key>
+	<key id="product-labels-not-added-link" format="html"><![CDATA[Les produits {firstLabels} et {lastLabel} n'ont pas pu être ajoutés à <a class="link" href="{cartUrl}">votre panier</a>.]]></key>
 	<key id="confirm-incompatible-shop">Votre panier contient déjà un ou plusieurs produits d'une autre boutique. Ajouter ce produit au panier retirera les autres. Confirmez-vous l'ajout au panier ?</key>
 	<key id="confirm">confirmer</key>
 	<key id="cancel">annuler</key>
 	<key id="add-to-cart-confirm">annuler</key>
-	<key id="product-added">Produit ajouté au panier.</key>
 	<key id="cant-create-order">Impossible de créer la commande.</key>
 	<key id="shop-in-other-website">Votre précédent panier n'a pas pu être restauré car il contenait des produit d'une boutique d'un autre site.</key>
+	<key id="mixed-tax">mixte</key>
+	<key id="no-tax">-</key>
+	<key id="for-following-products">concerne les produits suivants</key>
+	<key id="for-complete-order">concerne l'ensemble de la commande</key>
+	<key id="configure-mode">configuration de la livraison par {mode}</key>
+	<key id="order-nothing">non pertinant</key>
+	<key id="order-valid">Commande validée</key>
+	<key id="order-preparation">Commande en préparation</key>
+	<key id="order-partialy-shipped">Commande partiellement expédiée</key>
+	<key id="order-shipped">Commande expédiée</key>
+	<key id="view-my-cart">voir mon panier</key>
+	<key id="general-sales-conditions-help" format="html"><![CDATA[Avant de passer ma commande, je reconnais avoir lu et compris les <a class="link" href="{url}">conditions générales de vente</a>.]]></key>
+	<key id="general-sales-conditions-checkbox-help" format="html"><![CDATA[Merci de <a class="link" href="{url}">consulter les conditions générales de vente</a> et de cocher la case ci-dessous pour pouvoir passer votre commande.]]></key>
+	<key id="write-messages-for-order">envoyer un message relatif à cette commande</key>
+	<key id="messages-for-order">messages relatifs à cette commande</key>
+	<key id="order-number">commande</key>
+	<key id="order-date">datée du</key>
+	<key id="concerned-product">produit concerné</key>
+	<key id="concerned-products">produits concernés</key>
+	<!-- Deprecated -->
+	<key id="product-added">Produit ajouté au panier.</key>
 </i18n>

@@ -5,15 +5,15 @@
  */
 class order_ExpeditionlineScriptDocumentElement extends import_ScriptDocumentElement
 {
-    /**
-     * @return order_persistentdocument_expeditionline
-     */
-    protected function initPersistentDocument()
-    {
-    	return order_ExpeditionlineService::getInstance()->getNewDocumentInstance();
-    }
-    
-    /**
+	/**
+	 * @return order_persistentdocument_expeditionline
+	 */
+	protected function initPersistentDocument()
+	{
+		return order_ExpeditionlineService::getInstance()->getNewDocumentInstance();
+	}
+	
+	/**
 	 * @return f_persistentdocument_PersistentDocumentModel
 	 */
 	protected function getDocumentModel()

@@ -1,8 +1,6 @@
-<div class="ecom-block">
-	<h3 change:h="">
-		<strong tal:content="trans:m.order.frontoffice.my-cart,ucf,lab"></strong>
-	</h3>
-	<div class="content">
-		<p tal:content="trans:m.order.frontoffice.nocurrentshop,ucf"></p>
-	</div>
+<div class="scroll">
+	<h2 change:h="">${trans:m.order.frontoffice.my-cart,ucf}</h2>
+	<ul>
+		<li>${trans:m.order.frontoffice.nocurrentshop,ucf}</li>
+	</ul>	
 </div>

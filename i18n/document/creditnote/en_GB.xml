@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.creditnote" lcid="en_GB">
-  <include id="m.generic.document.document"/>
-  <key id="document-name">Credit note</key>
-  <key id="amount">Amount</key>
-  <key id="amount-help">Amount of credit</key>
-  <key id="transactionid">Refund identifier</key>
-  <key id="transactiondate">Refund date</key>
-  <key id="amountnotapplied">Amount not refunded</key>
-  <key id="amountnotapplied-help">Amount of credit not yet refunded to the customer</key>
-  <key id="customer">Customer</key>
-  <key id="customer-help">Customer</key>
-  <key id="label">Credit number</key>
-  <key id="label-help">Credit number</key>
-  <key id="manual-recredit">Manual refund</key>
-  <key id="maxamount">Maximum</key>
-  <key id="ordernumber">Invoice number</key>
-  <key id="ordernumber-help">Invoice number</key>
-  <key id="recredit-action">mark as refunded</key>
-  <key id="recredit-dialog-title">refund</key>
-  <key id="transactiontext">refund details</key>
+	<include id="m.generic.document.document" />
+	<key id="document-name">Credit note</key>
+	<key id="amount">Amount</key>
+	<key id="amount-help">Amount of credit</key>
+	<key id="transactionid">Refund identifier</key>
+	<key id="transactiondate">Refund date</key>
+	<key id="amountnotapplied">Amount not refunded</key>
+	<key id="amountnotapplied-help">Amount of credit not yet refunded to the customer</key>
+	<key id="customer">Customer</key>
+	<key id="customer-help">Customer</key>
+	<key id="label">Credit number</key>
+	<key id="label-help">Credit number</key>
+	<key id="manual-recredit">Manual refund</key>
+	<key id="maxamount">Maximum</key>
+	<key id="ordernumber">Invoice number</key>
+	<key id="ordernumber-help">Invoice number</key>
+	<key id="recredit-action">mark as refunded</key>
+	<key id="recredit-dialog-title">refund</key>
+	<key id="transactiontext">refund details</key>
 </i18n>

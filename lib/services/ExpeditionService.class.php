@@ -1,30 +1,13 @@
 <?php
 /**
- * order_ExpeditionService
  * @package modules.order
+ * @method order_ExpeditionService getInstance()
  */
 class order_ExpeditionService extends f_persistentdocument_DocumentService
 {
 	const PREPARE = "prepare";
 	const SHIPPED = "shipped";	
 	const CANCELED = "canceled";	
-	
-	/**
-	 * @var order_ExpeditionService
-	 */
-	private static $instance;
-
-	/**
-	 * @return order_ExpeditionService
-	 */
-	public static function getInstance()
-	{
-		if (self::$instance === null)
-		{
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
 
 	/**
 	 * @return order_persistentdocument_expedition
@@ -42,7 +25,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	public function createQuery()
 	{
-		return $this->pp->createQuery('modules_order/expedition');
+		return $this->getPersistentProvider()->createQuery('modules_order/expedition');
 	}
 	
 	/**
@@ -53,7 +36,18 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	public function createStrictQuery()
 	{
-		return $this->pp->createQuery('modules_order/expedition', false);
+		return $this->getPersistentProvider()->createQuery('modules_order/expedition', false);
+	}
+	
+	/**
+	 * @param integer $orderId
+	 * @return boolean
+	 */
+	public function existForOrderId($orderId)
+	{
+		$result = order_ExpeditionlineService::getInstance()->createQuery()->setProjection(Projections::count('id', 'countId'))
+		->add(Restrictions::eq('orderId', $orderId))->findColumn('countId');
+		return is_array($result) && $result[0] > 0;
 	}
 	
 	/**
@@ -99,22 +93,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	public function getLinesForDisplay($expedition)
 	{
-		$lines = array();
-		if ($expedition->getUseOrderlines())
-		{
-			foreach ($expedition->getOrder()->getLineArray() as $line) 
-			{
-				$expLine = order_ExpeditionlineService::getInstance()->getNewDocumentInstance();
-				$expLine->setLabel($line->getLabel());
-				$expLine->setQuantity($line->getQuantity());
-				$expLine->setOrderlineid($line->getId());
-				$lines[] = $expLine;	
-			}
-		}
-		else
-		{
-			$lines = $expedition->getLineArray();
-		}
+		$lines = $expedition->getLineArray();
 		
 		$shippmentMode = $expedition->getShippingMode();
 		if ($shippmentMode)
@@ -162,6 +141,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		$params = array(
 			'packageNumber' => $trackingNumber,
 			'trackingNumber' => $expedition->getTrackingNumberAsHtml(),
+			'expeditionUrl' => LinkHelper::getDocumentUrl($expedition, $expedition->getOrder()->getLang()),
 			'expeditionDetail' => $template->execute()
 		);
 		
@@ -201,11 +181,11 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		{
 			if ($shippingModeId == 0)
 			{
-				$shippingMode = DocumentHelper::getDocumentInstance($order->getShippingModeId(), 'modules_shipping/mode'); 
+				$shippingMode = shipping_persistentdocument_mode::getInstanceById($order->getShippingModeId()); 
 			}
 			else
 			{
-				$shippingMode = DocumentHelper::getDocumentInstance($shippingModeId, 'modules_shipping/mode'); 
+				$shippingMode = shipping_persistentdocument_mode::getInstanceById($shippingModeId); 
 			}
 			
 			$expedition = $this->generateForShippingMode($order, $shippingMode, $datas['lines']);
@@ -219,6 +199,79 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			}
 		}
 		return $result;
+	}
+	
+	/**
+	 * @param order_persistentdocument_orderpreparation $orderpreparation
+	 * @return order_persistentdocument_expedition[]
+	 */
+	public function createForOrderPreparation($orderpreparation)
+	{
+		$expeditions = array();
+		try 
+		{
+			$this->getTransactionManager()->beginTransaction();
+			$order = $orderpreparation->getOrderInstance();
+			$defaultShippingModeId = intval($order->getShippingModeId());
+						
+			foreach ($orderpreparation->getLinesArray() as $lineInfo)
+			{
+				$orderLineId = 	$lineInfo['id'];
+				$quantity = $lineInfo['quantity'];
+				$orderLine = order_persistentdocument_orderline::getInstanceById($orderLineId);
+				$shippingModeId = intval($orderLine->getShippingModeId());
+				if ($shippingModeId <= 0) {$shippingModeId = $defaultShippingModeId;}
+				
+				if (isset($expeditions[$shippingModeId]))
+				{
+					$expedition = $expeditions[$shippingModeId];
+				}
+				else
+				{
+					$expedition = $this->getNewDocumentInstance();
+					$expeditions[$shippingModeId] = $expedition;
+					$expedition->setOrder($order);
+					
+					//$expedition->setBill(null);
+					//$expedition->setAmount(0);
+					
+					$expedition->setStatus(self::PREPARE);
+					$addressId = $order->getAddressIdByModeId($shippingModeId);
+					$address = ($addressId) ?  order_persistentdocument_shippingaddress::getInstanceById($addressId) : $order->getShippingAddress();
+					$expedition->setAddress($address);
+					$expedition->setShippingModeId(($shippingModeId) ? $shippingModeId : null);
+					
+					if ($shippingModeId)
+					{
+						$shippingMode = shipping_persistentdocument_mode::getInstanceById($shippingModeId);
+						$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);
+					}
+				}
+				
+				$expLine = $this->getNewExpeditionLine();
+				$expLine->setLabel($orderLine->getLabel());
+				$expLine->setQuantity($quantity);
+				$expLine->setOrderId($order->getId());
+				$expLine->setOrderlineid($orderLineId);	
+				$expLine->setTrackingURL($expedition->getOriginalTrackingURL());
+				$expedition->addLine($expLine);
+			}
+			
+			foreach ($expeditions as $expedition) 
+			{
+				$expedition->setLabel(order_ExpeditionNumberGenerator::getInstance()->generate($expedition));
+				$this->save($expedition);
+			}
+			
+			$orderpreparation->getDocumentService()->file($orderpreparation->getId());
+			$this->getTransactionManager()->commit();
+		} 
+		catch (Exception $e) 
+		{
+			$this->getTransactionManager()->rollBack($e);
+			throw $e;
+		}
+		return $expeditions;
 	}
 	
 	/**
@@ -261,29 +314,37 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		
 		if (count($lines) > 0)
 		{
+			$addressId = $order->getAddressIdByModeId($shippingMode->getId());
+			$address = ($addressId) ? order_persistentdocument_shippingaddress::getInstanceById($addressId):  $order->getShippingAddress();
 			$expedition = $this->getNewDocumentInstance();
 			$expedition->setOrder($order);
 			$expedition->setStatus(self::PREPARE);
-			$expedition->setAddress($order->getShippingAddress());
+			$expedition->setAddress($address);
 			$expedition->setLabel(order_ExpeditionNumberGenerator::getInstance()->generate($expedition));
-			Framework::info('Add Expedition ' . $expedition->getLabel() . ' for order '. $order->getId() . ' => ' . $order->getOrderNumber());
-			$expedition->setUseOrderlines(false);
+			$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);
 			foreach ($lines as $id => $qtt) 
 			{
-				$line = DocumentHelper::getDocumentInstance($id);
-				Framework::info('Add Line ' . $line->getLabel() . ' '. $id . ' => ' . $qtt);
-				$expLine = order_ExpeditionlineService::getInstance()->getNewDocumentInstance();
+				$line = order_persistentdocument_orderline::getInstanceById($id);
+				$expLine = $this->getNewExpeditionLine();
 				$expLine->setLabel($line->getLabel());
 				$expLine->setQuantity($qtt);
-				$expLine->setOrderlineid($id);
+				$expLine->setOrderId($order->getId());
+				$expLine->setOrderlineid($id);	
+				$expLine->setTrackingURL($expedition->getOriginalTrackingURL());
 				$expedition->addLine($expLine);
-			}	
-			
-			$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);		
+			}		
 			return $expedition;
 		}
 		return null;
 	}	
+	
+	/**
+	 * @return order_persistentdocument_expeditionline
+	 */
+	public function getNewExpeditionLine()
+	{
+		return order_ExpeditionlineService::getInstance()->getNewDocumentInstance();
+	}
 	
 	/**
 	 * @param order_persistentdocument_order $order
@@ -307,23 +368,13 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		
 		$expedition->setAmount($order->getShippingFeesWithTax());
 		$expedition->setTax($order->getShippingFeesWithTax() - $order->getShippingFeesWithoutTax());
-		$expedition->setTaxCode($order->getShippingModeTaxCode());
+		$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);
 		
 		$previouslines = array();
 		foreach ($previousExpeditions as $previousExpedition) 
 		{
 			$this->getOrderLineIds($previousExpedition, $previouslines);
 		}
-		
-		if (count($previouslines) == 0)
-		{
-			$expedition->setUseOrderlines(true);	
-			$expedition->setLabel(order_ExpeditionNumberGenerator::getInstance()->generate($expedition));
-			$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);
-			return $expedition;			
-		}
-		
-		$expedition->setUseOrderlines(false);
 		foreach ($order->getLineArray() as $line) 
 		{
 			$qtt = $line->getQuantity();
@@ -335,17 +386,18 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			{
 				continue;
 			}
-			$expLine = order_ExpeditionlineService::getInstance()->getNewDocumentInstance();
+			$expLine = $this->getNewExpeditionLine();
 			$expLine->setLabel($line->getLabel());
 			$expLine->setQuantity($qtt);
-			$expLine->setOrderlineid($line->getId());
+			$expLine->setOrderId($order->getId());
+			$expLine->setOrderlineid($line->getId());	
+			$expLine->setTrackingURL($expedition->getOriginalTrackingURL());
 			$expedition->addLine($expLine);
 		}
 		
 		if ($expedition->getLineCount() > 0)
 		{
-			$expedition->setLabel(order_ExpeditionNumberGenerator::getInstance()->generate($expedition));
-			$shippingMode->getDocumentService()->completeExpedtionForMode($expedition, $shippingMode);	
+			$expedition->setLabel(order_ExpeditionNumberGenerator::getInstance()->generate($expedition));	
 			return $expedition;
 		}
 		return null;
@@ -357,13 +409,6 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	private function getOrderLineIds($expedition, &$array)
 	{
-		if ($expedition->getUseOrderlines())
-		{
-			foreach ($expedition->getOrder()->getLineArray() as $line) 
-			{
-				$array[$line->getId()] = $line->getQuantity();
-			}
-		}
 		foreach ($expedition->getLineArray() as $line) 
 		{
 			if (isset($array[$line->getOrderlineid()]))
@@ -398,7 +443,8 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	private function buildBoRow($expedition)
 	{
-		$trackingNumber = $expedition->getTrackingNumber();
+		$trackingNumbers = $this->getTrackingNumbers($expedition);
+		$packetNumbers = $this->getPacketNumbers($expedition);
 		$result = array(
 			'id' => $expedition->getId(),
 			'lang' => $expedition->getLang(),
@@ -406,11 +452,48 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			'st' => $expedition->getStatus(),
 			'status' => $expedition->getBoStatusLabel(),
 			'label' => $expedition->getLabel(),
-			'trackingnumber' => $trackingNumber,
-			'trackingurl' => ($trackingNumber) ? $expedition->getTrackingURL() : null,
-			'transporteur' => $expedition->getTransporteur()
+			'trackingnumber' => (count($trackingNumbers)) ? implode(', ', $trackingNumbers) : '',
+			'trackingurl' => (count($trackingNumbers))? $expedition->getTrackingURL() : null,
+			'transporteur' => $expedition->getTransporteur(),
+			'packetnumber' => (count($packetNumbers)) ? implode(', ', $packetNumbers) : ''
 		);		
 		return $result;
+	}
+	
+	/**
+	 * @param order_persistentdocument_expedition $expedition
+	 * @return string[]
+	 */
+	public function getPacketNumbers($expedition)
+	{
+		$packetNumbers = array();
+		foreach ($expedition->getLineArray() as $line)
+		{
+			/* @var $line order_persistentdocument_expeditionline */
+			if ($line->getPacketNumber())
+			{
+				$packetNumbers[$line->getPacketNumber()] = true;
+			}
+		}
+		return array_keys($packetNumbers);
+	}
+	
+	/**
+	 * @param order_persistentdocument_expedition $expedition
+	 * @return string[]
+	 */
+	public function getTrackingNumbers($expedition)
+	{
+		$trackingNumbers = array();
+		foreach ($expedition->getLineArray() as $line)
+		{
+			/* @var $line order_persistentdocument_expeditionline */
+			if ($line->getTrackingNumber())
+			{
+				$trackingNumbers[$line->getTrackingNumber()] = true;
+			}
+		}
+		return array_keys($trackingNumbers);
 	}
 	
 	/**
@@ -430,13 +513,23 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
+	 * @return string
+	 */
+	protected function getDefaultCancelTextMessage()
+	{
+		$user = users_UserService::getInstance()->getCurrentUser();
+		$name = ($user !== null) ? $user->getFullname() : 'Anonymous';
+		return LocaleService::getInstance()->trans('m.order.document.expedition.cancel-by', array('ucf'), array('name' => $name));
+	}
+	
+	
+	/**
 	 * @param order_persistentdocument_expedition $expedition
 	 * @return array
 	 */
 	public function cancelExpeditionFromBo($expedition)
 	{
-		$backendUser = users_UserService::getInstance()->getCurrentBackEndUser();
-		$message = 'Cancel by :' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN');
+		$message = $this->getDefaultCancelTextMessage();
 		$this->cancelExpedition($expedition, $message);
 		return $this->buildBoRow($expedition);
 	}
@@ -451,16 +544,16 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	{
 		try
 		{
-			$this->tm->beginTransaction();
+			$this->getTransactionManager()->beginTransaction();
 			$expedition->setShippingDate(null);
 			$expedition->setStatus(self::CANCELED);
 			$expedition->setTrackingText($message);
 			$this->save($expedition);
-			$order = $expedition->getOrder();
+			
+			$order = $expedition->getOrder();		
 			order_ModuleService::getInstance()->sendCustomerNotification('modules_order/expedition_canceled', $order, $expedition->getBill(), $expedition);
 			
-			$nextExpedition = $this->createForOrder($order);
-			if ($nextExpedition === null)
+			if ($this->isCompleteForOrder($order))
 			{
 				if ($this->hasShippedExpeditionFromOrder($order))
 				{
@@ -469,13 +562,17 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 				else
 				{
 					order_OrderService::getInstance()->cancelOrder($order);
-				}	
+				}
 			}
-			$this->tm->commit();
+			elseif (order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
+			{
+				$this->createForOrder($order);
+			}
+			$this->getTransactionManager()->commit();
 		}
 		catch (Exception $e)
 		{
-			$this->tm->rollBack($e);
+			$this->getTransactionManager()->rollBack($e);
 			throw $e;
 		}		
 	}
@@ -487,10 +584,9 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	public function cancelPrepareByOrder($order)
 	{
 		$query = $this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::eq('status', self::PREPARE));
+		$message = $this->getDefaultCancelTextMessage();
 		foreach ($query->find() as $expedition)
 		{
-			$backendUser = users_UserService::getInstance()->getCurrentBackEndUser();
-			$message = 'Cancel by :' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN');
 			$expedition->setShippingDate(null);
 			$expedition->setStatus(self::CANCELED);
 			$expedition->setTrackingText($message);
@@ -502,7 +598,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 * @param order_persistentdocument_order $order
 	 * @return boolean
 	 */
-	protected function hasShippedExpeditionFromOrder($order)
+	public function hasShippedExpeditionFromOrder($order)
 	{
 		$result = $this->createQuery()
 			->add(Restrictions::eq('order', $order))
@@ -515,13 +611,15 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 * @param order_persistentdocument_expedition $expedition
 	 * @param string $shippingDate
 	 * @param string $trackingNumber
+	 * @param string $packetNumber
 	 * @return array
 	 */
-	public function shipExpeditionFromBo($expedition, $shippingDate, $trackingNumber)
+	public function shipExpeditionFromBo($expedition, $shippingDate, $trackingNumber, $packetNumber = null)
 	{
 		if ($expedition->getStatus() == self::PREPARE	&& f_util_StringUtils::isNotEmpty($shippingDate))
 		{
-			$this->shipExpedition($expedition, date_Converter::convertDateToGMT($shippingDate), $trackingNumber);
+			$message = null;
+			$this->shipExpedition($expedition, date_Converter::convertDateToGMT($shippingDate), $trackingNumber, null, $packetNumber);
 		}
 		return $this->buildBoRow($expedition);
 	}	
@@ -531,8 +629,9 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 * @param string $shippingDate
 	 * @param string $trackingNumber
 	 * @param string $message
+	 * @param string $packetNumber
 	 */
-	public function shipExpedition($expedition, $shippingDate, $trackingNumber, $message = null)
+	public function shipExpedition($expedition, $shippingDate, $trackingNumber, $message = null, $packetNumber = null)
 	{
 		if ($expedition->getStatus() == self::PREPARE)
 		{
@@ -540,32 +639,61 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			{
 				$shippingDate = date_Calendar::getInstance()->toString();
 			}
+			$tm = $this->getTransactionManager();
 			
 			try 
 			{
-				$this->tm->beginTransaction();				
+				$tm->beginTransaction();
+				if ($packetNumber == null) 
+				{
+					$packetNumber = order_PacketNumberGenerator::getInstance()->generate($expedition);
+				}
 				$expedition->setStatus(self::SHIPPED);
 				$expedition->setTrackingText($message);
 				$expedition->setTrackingNumber($trackingNumber);
+				$expedition->setPacketNumber($packetNumber);			
 				$expedition->setShippingDate($shippingDate);
+				
+				$mode = $expedition->getShippingMode();
+				$sms = $mode->getDocumentService();
+				$sms->completeExpeditionForShipping($mode, $expedition);
+				
+				$trackingNumber = $expedition->getTrackingNumber();
+				$shippingDate =  $expedition->getShippingDate();
+				$packetNumber =  $expedition->getPacketNumber();
+				
+				foreach ($expedition->getLineArray() as $expeditionLine) 
+				{
+					/* @var $expeditionLine order_persistentdocument_expeditionline */
+					if ($expeditionLine->getShippingDate() == null) {$expeditionLine->setShippingDate($shippingDate);}
+					if ($expeditionLine->getTrackingNumber() == null) {$expeditionLine->setTrackingNumber($trackingNumber);}
+					if ($expeditionLine->getPacketNumber() == null) {$expeditionLine->setPacketNumber($packetNumber);}
+					
+					if ($expeditionLine->isModified())
+					{
+						$expeditionLine->save();
+					}
+				}
+						
 				$this->save($expedition);	
 				$order = $expedition->getOrder();
 				
-				// Handle notifications by shipping mode.
-				$ms = order_ModuleService::getInstance();
-				$codeName = 'modules_order/expedition_shipped';
-				$suffix = $expedition->getTransporteur();
-				$ms->sendCustomerSuffixedNotification($codeName, $suffix, $order, $expedition->getBill(), $expedition);
-				$nextExpedition = $this->createForOrder($order);
-				if ($nextExpedition === null)
+				$completlyShipped = (($expedition->getStatus() === self::SHIPPED) && $this->isCompleteForOrder($order));				
+				$sms->sendShippedNotification($mode, $expedition, $completlyShipped);
+				
+				if ($completlyShipped)
 				{
-					order_OrderService::getInstance()->completeOrder($order);	
+					order_OrderService::getInstance()->completeOrder($order);
 				}
-				$this->tm->commit();
+				elseif (order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
+				{
+					$this->createForOrder($order);
+				}
+				$tm->commit();
 			}
 			catch (Exception $e)
 			{
-				$this->tm->rollBack($e);
+				$tm->rollBack($e);
 				throw $e;
 			}
 		}
@@ -575,6 +703,223 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		}
 	}
 	
+	/**
+	 * Return true if all orderline as SHIPPED or CANCELED
+	 * @param order_persistentdocument_order $order
+	 * @return boolean
+	 */
+	public function isCompleteForOrder($order)
+	{
+		$result = array();
+		foreach ($order->getLineArray() as $orderline) 
+		{
+			/* @var $orderline order_persistentdocument_orderline */
+			$result[intval($orderline->getId())] = array('id' => $orderline->getId(), 'quantity' => $orderline->getQuantity());
+		}
+		
+		$rows = order_ExpeditionlineService::getInstance()->createQuery()
+				->setProjection(Projections::groupProperty('orderlineid', 'id'), Projections::sum('quantity', 'quantity'))
+				->add(Restrictions::eq('orderId', $order->getId()))
+				->add(Restrictions::in('expedition.status', array(self::SHIPPED, self::CANCELED)))
+				->find();
+	
+		foreach ($rows as $rowInfo) 
+		{
+			$orderlineid = intval($rowInfo['id']);
+			if (isset($result[$orderlineid]))
+			{
+				$newQtt = $result[$orderlineid]['quantity'] - $rowInfo['quantity'];
+				if ($newQtt > 0)
+				{
+					$result[$orderlineid]['quantity'] = $newQtt;
+				}
+				else
+				{
+					unset($result[$orderlineid]);
+				}
+			}
+		}		
+		return count($result) == 0;
+	}
+	
+	/**
+	 * Retour ordeline witgh quantity not present in expedition
+	 * @param order_persistentdocument_order $order
+	 * @return array<'id' => orderLineId, 'quantity' => integer>
+	 */	
+	public function getOrderLinesWithNotExpedition($order)
+	{
+		$result = array();
+		foreach ($order->getLineArray() as $orderline)
+		{
+			/* @var $orderline order_persistentdocument_orderline */
+			$result[intval($orderline->getId())] = array('id' => $orderline->getId(), 'quantity' => $orderline->getQuantity());
+		}
+		
+		$rows = order_ExpeditionlineService::getInstance()->createQuery()
+		->setProjection(Projections::groupProperty('orderlineid', 'id'), Projections::sum('quantity', 'quantity'))
+		->add(Restrictions::eq('orderId', $order->getId()))
+		->find();
+
+		foreach ($rows as $rowInfo)
+		{
+			
+			$orderlineid = intval($rowInfo['id']);
+			if (isset($result[$orderlineid]))
+			{
+				$newQtt = $result[$orderlineid]['quantity'] - $rowInfo['quantity'];
+				if ($newQtt > 0)
+				{
+					$result[$orderlineid]['quantity'] = $newQtt;
+				}
+				else
+				{
+					unset($result[$orderlineid]);
+				}
+			}
+		}
+		return array_values($result);
+	}
+	
+	/**
+	 * Finalize all expeditions for order
+	 * Create a canceled expedition if needed for unexpedied orderline
+	 * Cancel all prepered expedition
+	 * @param order_persistentdocument_order $order
+	 * @return order_persistentdocument_expedition[] Modified expedition
+	 */
+	public function cleanUpExpeditionsForOrder($order)
+	{
+		$result = array();
+		$tm = $this->getTransactionManager();
+		try
+		{
+			$tm->beginTransaction();
+			$lineInfos = $this->getOrderLinesWithNotExpedition($order);
+			if (count($lineInfos))
+			{
+				$canceledExp = $this->getNewDocumentInstance();
+				$canceledExp->setOrder($order);
+				$canceledExp->setStatus(self::CANCELED);
+				$canceledExp->setLabel(self::CANCELED);
+					
+				foreach ($lineInfos as $lineInfo)
+				{
+					$orderLineId = 	$lineInfo['id'];
+					$quantity = $lineInfo['quantity'];
+					$orderLine = order_persistentdocument_orderline::getInstanceById($orderLineId);
+					$expLine = $this->getNewExpeditionLine();
+					$expLine->setLabel($orderLine->getLabel());
+					$expLine->setQuantity($quantity);
+					$expLine->setOrderId($order->getId());
+					$expLine->setOrderlineid($orderLineId);			
+					$canceledExp->addLine($expLine);				
+				}
+				$this->save($canceledExp);
+				$result[] = $canceledExp;
+			}
+			
+			$preparedExpeditions = $this->createQuery()
+				->add(Restrictions::eq('status', self::PREPARE))->find();
+			
+			foreach ($preparedExpeditions as $value)
+			{
+				/* @var $value order_persistentdocument_expedition */
+				$value->setShippingDate(null);
+				$value->setPacketNumber(null);
+				$value->setTrackingNumber(null);
+				foreach ($value->getLineArray() as $line)
+				{
+					/* @var $line order_persistentdocument_expeditionline */
+					$line->setShippingDate(null);
+					$line->setPacketNumber(null);
+					$line->setTrackingNumber(null);
+					if ($line->isModified())
+					{
+						$line->save();
+					}
+				}
+				$value->setStatus(self::CANCELED);
+				$this->save($value);
+				$result[] = $value;
+			}			
+			$tm->commit();
+		} 
+		catch (Exception $e) 
+		{
+			$tm->rollback($e);
+			throw $e;
+		}
+		return $result;
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 * @return string [nothing|valid|preparation|partialy-shipped|shipped]
+	 */
+	public function evaluateGlobalStatusForOrder($order)
+	{
+		$value = 'nothing';
+		if ($order->getOrderStatus() === order_OrderService::COMPLETE)
+		{
+			$value = 'shipped';
+		}
+		elseif ($order->getOrderStatus() === order_OrderService::IN_PROGRESS)
+		{
+			
+			if (order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
+			{
+				$value = 'preparation';
+			}
+			else
+			{
+				$value = 'valid';
+			}
+			
+			$expArray = $this->getByOrder($order);
+			if (count($expArray))
+			{
+				$value = ($this->hasShippedExpeditionFromOrder($order)) ? 'partialy-shipped' : 'preparation';
+			}
+			elseif (order_ModuleService::getInstance()->useOrderPreparationEnabled())
+			{
+				if (count(order_OrderpreparationService::getInstance()->getByOrder($order)))
+				{
+					$value = 'preparation';
+				}
+			}
+		} 
+		return $value;
+	}
+	
+
+	/**
+	 * @param string $packetNumber
+	 * @param string $expeditionStatus (prepare|shipped|canceled)
+	 * @param string $packetStatus (in_transit|received|delivered)
+	 * @return order_persistentdocument_expedition[]
+	 */
+	public function getByPacketNumber($packetNumber, $expeditionStatus = null, $packetStatus = null)
+	{
+		if (empty($packetNumber))
+		{
+			return array();
+		}
+		
+		$query = $this->createQuery();
+		if ($expeditionStatus !== null)
+		{
+			$query->add(Restrictions::eq('status', $expeditionStatus));
+		}		
+		
+		$lineQuery = $query->createCriteria('line')->add(Restrictions::eq('packetNumber', $packetNumber, true));
+		if ($packetStatus !== null)
+		{
+			$lineQuery->add(Restrictions::eq('status', $packetStatus));
+		}	
+		return $query->find();
+	}	
+		
 	/**
 	 * @param order_persistentdocument_expedition $document
 	 * @param string $forModuleName
@@ -592,21 +937,175 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		);
 		
 		$resume['properties']['status'] = array('label' => $document->getBoStatusLabel());
+		
 		if ($document->getStatus() == self::PREPARE)
 		{
 			$resume['properties']['status']['rowData'] = JsonService::getInstance()->encode($this->buildShipExpeditionDialogParams($document));
 		}
 		
+		$addressData = array();
+		$address = $document->getAddress();
+		if ($address instanceof customer_persistentdocument_address)
+		{
+			$addressData['label'] = $address->getLabel();
+			$addressData['email'] = $address->getEmail();
+			$addressData['company'] = $address->getCompany();
+			$addressData['addressLine1'] = $address->getAddressLine1();
+			$addressData['addressLine2'] = $address->getAddressLine2();
+			$addressData['addressLine3'] = $address->getAddressLine3();
+			$addressData['zipCode'] = $address->getZipCode();
+			$addressData['city'] = $address->getCity();
+			$addressData['province'] = $address->getProvince();
+			$addressData['country'] = $address->getCountryName();
+			$addressData['phone'] = $address->getPhone();
+			$addressData['fax'] = $address->getFax();
+			$addressData['mobilephone'] = $address->getMobilephone();
+		}
+		$resume['address'] = $addressData;
+		
 		$resume['lines'] = array();
 		foreach ($this->getLinesForDisplay($document) as $line)
 		{
+			/* @var $line order_persistentdocument_expeditionline */
 			$resume['lines'][] = array(
+				'id' => $line->getId(),
 				'label' => $line->getLabel(),
 				'quantity' => $line->getQuantity(),
-				'codeReference' => $line->getCodeReference()
+				'codeReference' => $line->getCodeReference(),
+				'packetnumber'=> $line->getPacketNumber(),
 			);
 		}
 		
 		return $resume;
+	}
+	
+	/**
+	 * @param order_persistentdocument_expedition $document
+	 * @return website_persistentdocument_page or null
+	 */
+	public function getDisplayPage($document)
+	{
+		if ($document->isPublished())
+		{
+			$mode = $document->getShippingMode();
+			$page = null;
+			if ($mode instanceof shipping_persistentdocument_mode)
+			{
+				$page = $mode->getDocumentService()->getDisplayPageForExpedition($mode, $document);
+			}
+						
+			if ($page === null)
+			{
+				if (customer_CustomerService::getInstance()->getCurrentCustomer() === $document->getOrder()->getCustomer())
+				{
+					return parent::getDisplayPage($document);
+				}
+			}
+			elseif ($page !== false)
+			{
+				return $page;
+			} 
+		}
+		return null;
+	}
+	
+	/**
+	 * @param order_persistentdocument_expedition $expedition
+	 * @param order_persistentdocument_expeditionline[] $lines
+	 * @param string $date
+	 * @param string $message
+	 * @return order_persistentdocument_expeditionline[] lines marked received
+	 */
+	public function receiveLines($expedition, $lines, $date = null, $message = null)
+	{
+		$linesReceived = array();		
+		if ($date === null)
+		{
+			$date = date_Calendar::getInstance()->toString();
+		}
+		
+		$tm = $this->getTransactionManager();
+		try
+		{
+			$tm->beginTransaction();
+			foreach ($lines as $line)
+			{
+				/* @var $line order_persistentdocument_expeditionline */
+				if ($line->getStatus() === order_ExpeditionlineService::IN_TRANSIT && $expedition->getIndexofLine($line) >= 0)
+				{
+					$line->setStatus(order_ExpeditionlineService::RECEIVED);
+					$line->setDescription($message);
+					$line->setReceiveDate($date);
+					$line->save();
+					$linesReceived[] = $line;
+				}
+			}
+			
+			$shipped = true;
+			foreach ($expedition->getLineArray() as $line)
+			{
+				/* @var $line order_persistentdocument_expeditionline */
+				if ($line->getStatus() === order_ExpeditionlineService::IN_TRANSIT)
+				{
+					$shipped = false;
+					break;
+				}
+			}
+			
+			if ($shipped && $expedition->getStatus() === self::PREPARE)
+			{
+				$this->shipExpedition($expedition, $date, $expedition->getTrackingNumber(), null, $expedition->getPacketNumber());
+			}
+			$tm->commit();
+		} 
+		catch (Exception $e) 
+		{
+			$tm->rollback($e);
+			throw $e;
+		}
+		
+		return $linesReceived;
+	}	
+	
+	/**
+	 * @param order_persistentdocument_expedition $expedition
+	 * @param order_persistentdocument_expeditionline[] $lines
+	 * @param string $date
+	 * @param string $message
+	 * @return order_persistentdocument_expeditionline[] lines marked delivered
+	 */	
+	public function deliverLines($expedition, $lines, $date = null, $message = null)
+	{
+		$linesDelivered = array();
+		
+		if ($date === null)
+		{
+			$date = date_Calendar::getInstance()->toString();
+		}
+		$tm = $this->getTransactionManager();
+		try
+		{
+			$tm->beginTransaction();
+			foreach ($lines as $line)
+			{
+				/* @var $line order_persistentdocument_expeditionline */
+				if ($line->getStatus() === order_ExpeditionlineService::RECEIVED && $expedition->getIndexofLine($line) >= 0)
+				{
+					$line->setStatus(order_ExpeditionlineService::DELIVERED);
+					$line->setDescription($message);
+					$line->setDeliveryDate($date);
+					$line->save();
+					$linesDelivered[] = $line;
+				}
+			}
+			$tm->commit();
+		}
+		catch (Exception $e)
+		{
+			$tm->rollback($e);
+			throw $e;
+		}
+		
+		return $linesDelivered;		
 	}
 }

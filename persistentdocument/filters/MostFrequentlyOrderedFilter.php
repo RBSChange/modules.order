@@ -4,13 +4,13 @@ class order_MostFrequentlyOrderedFilter extends f_persistentdocument_DocumentFil
 	public function __construct()
 	{
 		$info = new BeanPropertyInfoImpl('maxcount', 'Integer');
-		$info->setLabelKey('&modules.order.bo.documentfilters.parameter.max-count;');
+		$info->setLabelKey('m.order.bo.documentfilters.parameter.max-count');
 		$parameter = new f_persistentdocument_DocumentFilterValueParameter($info);
 		$this->setParameter('maxcount', $parameter);
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

@@ -1,5 +1,5 @@
 <!-- Désignation / référence -->
-<td tal:define="product line/getProduct">
+<td tal:define="product line/getProduct" class="product-infos">
 	${structure line/getLabelAsHtml}
 	<br/>
 	${line/getCodeReference}
@@ -12,12 +12,12 @@
 </td>
 
 <!-- PU HT/TCC -->
-<td class="priceht" tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getUnitPriceWithoutTax())}</td>
-<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getUnitPriceWithTax())}</td>
+<td class="price" tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getUnitPriceWithoutTax())}</td>
+<td class="price" tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getUnitPriceWithTax())}</td>
 
 <!-- Quantity -->
-<td>${line/getQuantity}</td> 
+<td>${line/getQuantity}</td>
 
 <!-- PT HT/TTC -->
-<td class="priceht" tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getAmountWithoutTax())}</td>
-<td class="pricettc" tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getAmountWithTax())}</td>
+<td class="price" tal:condition="shop/getDisplayPriceWithoutTax">${php:order.formatPrice(line.getAmountWithoutTax())}</td>
+<td class="price" tal:condition="shop/getDisplayPriceWithTax">${php:order.formatPrice(line.getAmountWithTax())}</td>

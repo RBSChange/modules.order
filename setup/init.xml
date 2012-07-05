@@ -4,139 +4,56 @@
 	<binding fileName="modules/notification/persistentdocument/import/notification_binding.xml" />
 	<binding fileName="modules/generic/persistentdocument/import/generic_binding.xml" />
 	<binding fileName="modules/order/persistentdocument/import/order_binding.xml" />
-	
 	<rootfolder module="preferences">
-		<orderpreferences />
+		<orderpreferences/>
 	</rootfolder>
-	
-	<systemfolder module="list" relatedmodule="order">	
-		<staticlist listid="modules_order/orderstatuses" label="&amp;modules.order.frontoffice.list.Order-statuses;">
-			<staticitem label="&amp;modules.order.frontoffice.status.Initiated;" value="initiated" />
-			<staticitem label="&amp;modules.order.frontoffice.status.In_progress;" value="in_progress" />
-			<staticitem label="&amp;modules.order.frontoffice.status.Canceled;" value="canceled" />
-			<staticitem label="&amp;modules.order.frontoffice.status.Complete;" value="complete" />
+	<systemfolder module="list" relatedmodule="order">
+		<staticlist listid="modules_order/orderstatuses" label="m.order.frontoffice.list.order-statuses">
+			<staticitem label="m.order.frontoffice.status.initiated" value="initiated" />
+			<staticitem label="m.order.frontoffice.status.in_progress" value="in_progress" />
+			<staticitem label="m.order.frontoffice.status.canceled" value="canceled" />
+			<staticitem label="m.order.frontoffice.status.complete" value="complete" />
 		</staticlist>
-		
-		<staticlist listid="modules_order/billstatuses" label="&amp;modules.order.frontoffice.list.Bill-statuses;">
-			<staticitem label="&amp;modules.order.frontoffice.status.bill.Initiated;" value="initiated" />
-			<staticitem label="&amp;modules.order.frontoffice.status.bill.Waiting;" value="waiting" />
-			<staticitem label="&amp;modules.order.frontoffice.status.bill.Success;" value="success" />
-			<staticitem label="&amp;modules.order.frontoffice.status.bill.Failed;" value="failed" />
+		<staticlist listid="modules_order/billstatuses" label="m.order.frontoffice.list.bill-statuses">
+			<staticitem label="m.order.frontoffice.status.bill.initiated" value="initiated" />
+			<staticitem label="m.order.frontoffice.status.bill.waiting" value="waiting" />
+			<staticitem label="m.order.frontoffice.status.bill.success" value="success" />
+			<staticitem label="m.order.frontoffice.status.bill.failed" value="failed" />
 		</staticlist>
-		
-		<staticlist listid="modules_order/expeditionstatuses" label="&amp;modules.order.frontoffice.list.Expedition-statuses;">
-			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Prepare;" value="prepare" />
-			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Shipped;" value="shipped" />
-			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Delivered;" value="delivered" />
-			<staticitem label="&amp;modules.order.frontoffice.status.expedition.Canceled;" value="canceled" />
+		<staticlist listid="modules_order/expeditionstatuses" label="m.order.frontoffice.list.expedition-statuses">
+			<staticitem label="m.order.frontoffice.status.expedition.prepare" value="prepare" />
+			<staticitem label="m.order.frontoffice.status.expedition.shipped" value="shipped" />
+			<staticitem label="m.order.frontoffice.status.expedition.delivered" value="delivered" />
+			<staticitem label="m.order.frontoffice.status.expedition.canceled" value="canceled" />
 		</staticlist>
-		
-		<staticlist listid="modules_order/qttfilter" 
-			label="Quantité de produit concerné par le filtre"
-			description="Quantité de produit concerné par le filtre">
-			<staticitem label="&amp;modules.order.bo.documentfilters.Qttfilter-one;" value="ONE" />
-			<staticitem label="&amp;modules.order.bo.documentfilters.Qttfilter-all;" value="ALL" />
-			<staticitem label="&amp;modules.order.bo.documentfilters.Qttfilter-none;" value="NONE" />
+		<staticlist listid="modules_order/qttfilter" label="Quantité de produit concerné par le filtre">
+			<staticitem label="m.order.bo.documentfilters.qttfilter-one" value="ONE" />
+			<staticitem label="m.order.bo.documentfilters.qttfilter-all" value="ALL" />
+			<staticitem label="m.order.bo.documentfilters.qttfilter-none" value="NONE" />
 		</staticlist>
-		
-		<staticlist listid="modules_order/dashboardshopstatisticscolums" 
-			label="Colonnes de statistiques"
-			description="Colones disponibles dnas le block du tableau de bord affichant les statistiques de commandes d'une boutique.">
-			<staticitem label="&amp;modules.order.bo.blocks.dashboardgeneralstatistics.column-orders;" value="orders" />
-			<staticitem label="&amp;modules.order.bo.blocks.dashboardgeneralstatistics.column-amount;" value="amount" />
-			<staticitem label="&amp;modules.order.bo.blocks.dashboardgeneralstatistics.column-toDeliver;" value="toDeliver" />
+		<staticlist listid="modules_order/dashboardshopstatisticscolums" label="Colonnes de statistiques" description="Colones disponibles dans le block du tableau de bord affichant les statistiques de commandes d'une boutique.">
+			<staticitem label="m.order.bo.blocks.dashboardgeneralstatistics.column-orders" value="orders" />
+			<staticitem label="m.order.bo.blocks.dashboardgeneralstatistics.column-amount" value="amount" />
+			<staticitem label="m.order.bo.blocks.dashboardgeneralstatistics.column-todeliver" value="toDeliver" />
 		</staticlist>
 	</systemfolder>
-	
 	<systemfolder module="notification" relatedmodule="order">
-		<notification codename="modules_order/bill_waiting"
-			label="Commande enregistrée"
-			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}"
-			subject="Votre commande sur le site {website-url} est enregistrée"
-			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
-			body="Votre commande d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt; a été enregistrée sous le numéro &lt;em&gt;{orderId}&lt;/em&gt;."
-			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
-			template="default" />
-			
-		<notification codename="modules_order/bill_success"
-			label="Paiement accepté"
-			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}"
-			subject="Le paiement de votre commande {orderId} sur le site {website-url} est validé"
-			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
-			body="Nous avons le plaisir de vous informer que le paiement concernant votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;validé&lt;/strong&gt; par notre banque."
-			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
-			template="default" />			
-			
-		<notification codename="modules_order/bill_failed"
-			label="Paiement refusé"
-			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}"
-			subject="Le paiement de votre commande {orderId} sur le site {website-url} a été refusé"
-			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
-			body="Nous avons le regret de vous informer que le paiement concernant votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;refusé&lt;/strong&gt; par notre banque."
-			footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
-			template="default" />
-			
-		<notification codename="modules_order/order_canceled"
-			label="Commande annulée"
-			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {website-url}"
-			subject="Votre commande {orderId} sur le site {website-url} a été annulée"
-			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
-			body="Nous avons le regret de vous informer que votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;annulée&lt;/strong&gt;."
-			footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
-			template="default" />
-			
-		<notification codename="modules_order/order_complete"
-			label="Commande complètement expédiée"
-			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {website-url}"
-			subject="Votre commande {orderId} sur le site {website-url} est complètement expédiée"
-			header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;"
-			body="Nous avons le plaisir de vous informer que votre commande &lt;em&gt;{orderId}&lt;/em&gt; est désormais complètement expédiée."
-			footer="&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
-			template="default" />
-			
-		<notification codename="modules_order/bill_admin_success"
-			label="Nouvelle commande (administrateur)"
-			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}"
-			subject="Nouvelle commande : numéro : {orderId}, client : {fullname}, montant : {orderAmount}"
-			header="&lt;strong&gt;Une nouvelle commande est validée et payée.&lt;/strong&gt;"
-			body="&lt;dl&gt;&lt;dt&gt;Numéro de commande&lt;/dt&gt;&lt;dd&gt;{orderId}&lt;/dd&gt;&lt;dt&gt;Montant&lt;/dt&gt;&lt;dd&gt;{orderAmount}&lt;/dd&gt;&lt;dt&gt;Client&lt;/dt&gt;&lt;dd&gt;{fullname}&lt;/dd&gt;&lt;/dl&gt;."
-			template="default" />
-			
-		<notification codename="modules_order/bill_admin_waiting"
-			label="Nouvelle commande en attente de confirmation de paiement (administrateur)"
-			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}"
-			subject="Nouvelle commande : numéro : {orderId}, client : {fullname}, montant : {orderAmount}"
-			header="&lt;strong&gt;Une nouvelle commande est en attente de confirmation de paiement &lt;/strong&gt;"
-			body="&lt;dl&gt;&lt;dt&gt;Numéro de commande&lt;/dt&gt;&lt;dd&gt;{orderId}&lt;/dd&gt;&lt;dt&gt;Montant&lt;/dt&gt;&lt;dd&gt;{orderAmount}&lt;/dd&gt;&lt;dt&gt;Client&lt;/dt&gt;&lt;dd&gt;{fullname}&lt;/dd&gt;&lt;/dl&gt;.&lt;br/&gt;&lt;strong&gt;Vous pourrez être amené à confirmer le paiement de cette commande dans le backoffice de RBS Change.&lt;/strong&gt;"
-			template="default" />
-
-		<notification codename="modules_order/messageFromCustomer"
-			label="Message envoyé par un client"
-			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {content}, {website-url}"
-			subject="Message à propos de la commande numéro : {orderId}, client : {fullname}"
-			header="&lt;strong&gt;Message à propos de la commande numéro {orderId}.&lt;/strong&gt;"
-			body="&lt;p&gt;{content}&lt;/p&gt;"
-			template="default" />
-			
-		<notification codename="modules_order/messageToCustomer"
-			label="Message envoyé à un client"
-			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {content}, {website-url}"
-			subject="Message à propos de votre commande numéro {orderId} sur le site {website-url}"
-			header="&lt;strong&gt;Message à propos de la commande numéro {orderId}.&lt;/strong&gt;"
-			body="&lt;p&gt;{content}&lt;/p&gt;"
-			template="default" />
-			
+		<notification codename="modules_order/bill_waiting" label="Commande enregistrée" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}" subject="Votre commande sur le site {website-url} est enregistrée" header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;" body="Votre commande d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt; a été enregistrée sous le numéro &lt;em&gt;{orderId}&lt;/em&gt;." footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;" template="default" />
+		<notification codename="modules_order/bill_success" label="Paiement accepté" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}" subject="Le paiement de votre commande {orderId} sur le site {website-url} est validé" header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;" body="Nous avons le plaisir de vous informer que le paiement concernant votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;validé&lt;/strong&gt; par notre banque." footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;" template="default" />
+		<notification codename="modules_order/bill_failed" label="Paiement refusé" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}" subject="Le paiement de votre commande {orderId} sur le site {website-url} a été refusé" header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;" body="Nous avons le regret de vous informer que le paiement concernant votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;refusé&lt;/strong&gt; par notre banque." footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;" template="default" />
+		<notification codename="modules_order/order_canceled" label="Commande annulée" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {website-url}" subject="Votre commande {orderId} sur le site {website-url} a été annulée" header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;" body="Nous avons le regret de vous informer que votre commande &lt;em&gt;{orderId}&lt;/em&gt;, d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt;, a été &lt;strong&gt;annulée&lt;/strong&gt;." footer="&lt;p&gt;&lt;strong&gt;Nous vous invitons à nous contacter au plus vite par téléphone.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;" template="default" />
+		<notification codename="modules_order/order_complete" label="Commande complètement expédiée" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {website-url}" subject="Votre commande {orderId} sur le site {website-url} est complètement expédiée" header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;" body="Nous avons le plaisir de vous informer que votre commande &lt;em&gt;{orderId}&lt;/em&gt; est désormais complètement expédiée." footer="&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;" template="default" />
+		<notification codename="modules_order/bill_admin_success" label="Nouvelle commande (administrateur)" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}" subject="Nouvelle commande : numéro : {orderId}, client : {fullname}, montant : {orderAmount}" header="&lt;strong&gt;Une nouvelle commande est validée et payée.&lt;/strong&gt;" body="&lt;dl&gt;&lt;dt&gt;Numéro de commande&lt;/dt&gt;&lt;dd&gt;{orderId}&lt;/dd&gt;&lt;dt&gt;Montant&lt;/dt&gt;&lt;dd&gt;{orderAmount}&lt;/dd&gt;&lt;dt&gt;Client&lt;/dt&gt;&lt;dd&gt;{fullname}&lt;/dd&gt;&lt;/dl&gt;." template="default" />
+		<notification codename="modules_order/bill_admin_waiting" label="Nouvelle commande en attente de confirmation de paiement (administrateur)" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}" subject="Nouvelle commande : numéro : {orderId}, client : {fullname}, montant : {orderAmount}" header="&lt;strong&gt;Une nouvelle commande est en attente de confirmation de paiement &lt;/strong&gt;" body="&lt;dl&gt;&lt;dt&gt;Numéro de commande&lt;/dt&gt;&lt;dd&gt;{orderId}&lt;/dd&gt;&lt;dt&gt;Montant&lt;/dt&gt;&lt;dd&gt;{orderAmount}&lt;/dd&gt;&lt;dt&gt;Client&lt;/dt&gt;&lt;dd&gt;{fullname}&lt;/dd&gt;&lt;/dl&gt;.&lt;br/&gt;&lt;strong&gt;Vous pourrez être amené à confirmer le paiement de cette commande dans le backoffice de RBS Change.&lt;/strong&gt;" template="default" />
+		<notification codename="modules_order/messageFromCustomer" label="Message envoyé par un client" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {content}, {website-url}" subject="Message à propos de la commande numéro : {orderId}, client : {fullname}" header="&lt;strong&gt;Message à propos de la commande numéro {orderId}.&lt;/strong&gt;" body="&lt;p&gt;{content}&lt;/p&gt;" template="default" />
+		<notification codename="modules_order/messageToCustomer" label="Message envoyé à un client" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {content}, {website-url}" subject="Message à propos de votre commande numéro {orderId} sur le site {website-url}" header="&lt;strong&gt;Message à propos de la commande numéro {orderId}.&lt;/strong&gt;" body="&lt;p&gt;{content}&lt;/p&gt;" template="default" />
 		<attribute name="header"><![CDATA[<strong>Cher(chère) {receiverFullName},</strong>]]></attribute>
 		<attribute name="body"><![CDATA[Un montant de {repaymentAmount} vous a été remboursé manuellement concernant l'avoir numéro {creditNoteLabel}.<br /><br />Précisions complémentaires : {creditNoteTransactionText}]]></attribute>
-		<notification codename="modules_order/reCreditNote"
-			label="Remboursement manuel d'un avoir"
-			availableparameters="{repaymentAmount}, {creditNoteLabel}, {creditNoteAmountNotApplied}, {creditNoteEndDate}, {creditNoteTransactionDate}, {creditNoteTransactionText}, {receiverFirstName}, {receiverLastName}, {receiverFullName}, {receiverTitle}, {receiverEmail}"
-			subject="Remboursement de l'avoir numéro {creditNoteLabel}"
-			header-attr="" body-attr="" template="default" />
+		<notification codename="modules_order/reCreditNote" label="Remboursement manuel d'un avoir" availableparameters="{repaymentAmount}, {creditNoteLabel}, {creditNoteAmountNotApplied}, {creditNoteEndDate}, {creditNoteTransactionDate}, {creditNoteTransactionText}, {receiverFirstName}, {receiverLastName}, {receiverFullName}, {receiverTitle}, {receiverEmail}" subject="Remboursement de l'avoir numéro {creditNoteLabel}" header-attr="" body-attr="" template="default" />
 	</systemfolder>
-		
 	<rootfolder module="order">
-		<smartfolder byLabel="Commandes des dernières 24 heures" query='[{"class":"order_CreationDateOrderFilter","parameters":{"count":[null,null,"1"],"unit":[null,null,"day"]}}]' />
-		<smartfolder byLabel="Commandes des sept derniers jours" query='[{"class":"order_CreationDateOrderFilter","parameters":{"count":[null,null,"1"],"unit":[null,null,"week"]}}]' />
+		<waitingresponseorderfolder byLabel="m.order.document.waitingresponseorderfolder.document-name" />
+		<smartfolder byLabel="Commandes des dernières 24 heures" query="[{&quot;class&quot;:&quot;order_CreationDateOrderFilter&quot;,&quot;parameters&quot;:{&quot;count&quot;:[null,null,&quot;1&quot;],&quot;unit&quot;:[null,null,&quot;day&quot;]}}]" />
+		<smartfolder byLabel="Commandes des sept derniers jours" query="[{&quot;class&quot;:&quot;order_CreationDateOrderFilter&quot;,&quot;parameters&quot;:{&quot;count&quot;:[null,null,&quot;1&quot;],&quot;unit&quot;:[null,null,&quot;week&quot;]}}]" />
 	</rootfolder>
 </script>

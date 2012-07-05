@@ -10,13 +10,14 @@ class order_SommeProductAttributeFilter extends order_LinesCartFilterBase
 		$attributesDef = ($attributeFolder) ? $attributeFolder->getAttributes() : array();
 		foreach ($attributesDef as $attributeDef)
 		{
-			if ($attributeDef['type'] == 'text')
+			/* @var $attributeDef catalog_AttributeDefinition */
+			if ($attributeDef->getType() == 'text')
 			{
 				continue;
 			}
-			$name = $attributeDef['code'];
+			$name = $attributeDef->getCode();
 			$beanprop = new BeanPropertyInfoImpl($name, 'Double');
-			$beanprop->setLabelKey($attributeDef['label']);
+			$beanprop->setLabelKey($attributeDef->getLabel());
 			$parameter->addAllowedProperty($name, $beanprop);
 			$parameter->setAllowedRestrictions($name, array('ge', 'gt', 'le', 'lt'));
 		}
@@ -24,7 +25,7 @@ class order_SommeProductAttributeFilter extends order_LinesCartFilterBase
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

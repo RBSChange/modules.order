@@ -1,7 +1,6 @@
-<h2 change:h="" tal:content="trans:m.order.frontoffice.cart-empty,ucf"></h2>
-<p tal:content="trans:m.order.frontoffice.cart-empty-info1,ucf"></p>
+<h1 change:h="">${trans:m.order.frontoffice.cart-empty,ucf}</h1>
+<p>${trans:m.order.frontoffice.cart-empty-info1,ucf}</p>
 <p>
-	<tal:block tal:content="trans:m.order.frontoffice.cart-empty-info21,ucf" />
- 	<a tal:condition="shop" change:link="document shop"	title="${trans:m.order.frontoffice.hrefcatalogtitle,attr}"
- 		tal:content="trans:m.order.frontoffice.cart-empty-info22"></a>.
+	${trans:m.order.frontoffice.Cart-empty-info21,ucf}
+ 	<a tal:condition="shop" change:link="document shop"	title="${trans:m.order.frontoffice.hrefcatalogtitle,ucf}">${trans:modules.order.frontoffice.cart-empty-info22}</a>.
 </p>

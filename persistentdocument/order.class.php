@@ -6,29 +6,36 @@
 class order_persistentdocument_order extends order_persistentdocument_orderbase
 {
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getBoOrderStatusLabel()
 	{
-		return LocaleService::getInstance()->transBO('m.order.frontoffice.status.' . $this->getOrderStatus(), array('ucf', 'html'));
+		return LocaleService::getInstance()->trans('m.order.frontoffice.status.' . $this->getOrderStatus(), array('ucf', 'html'));
 	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getFoOrderStatusLabel()
 	{
-		return LocaleService::getInstance()->transFO('m.order.frontoffice.status.' . $this->getOrderStatus(), array('ucf', 'html'));
+		return LocaleService::getInstance()->trans('m.order.frontoffice.status.' . $this->getOrderStatus(), array('ucf', 'html'));
 	}
-		
+	
 	/**
-	 * @param double $value
+	 * @return string
+	 */
+	public function getLogisticStatusLabel()
+	{
+		return LocaleService::getInstance()->trans('m.order.fo.order-' . order_ExpeditionService::getInstance()->evaluateGlobalStatusForOrder($this));
+	}
+	
+	/**
+	 * @param float $value
 	 * @return string
 	 */
 	public function formatPrice($value)
 	{
-		$priceFormat = $this->getPriceFormat();
-		return catalog_PriceHelper::applyFormat($value, $priceFormat ? $priceFormat : "%s €");
+		return catalog_PriceFormatter::getInstance()->applyFormat($value, $this->getPriceFormat(), $this->getCurrencyCode(), $this->getLang());
 	}
 	
 	/**
@@ -48,9 +55,25 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
+	 * @return string
+	 */
+	public function getTaxZone()
+	{
+		return $this->getGlobalProperty('taxZone');
+	}
+	
+	/**
+	 * @param string $taxZone
+	 */
+	public function setTaxZone($taxZone)
+	{
+		return $this->setGlobalProperty('taxZone', $taxZone);
+	}	
+		
+	/**
 	 * @return Array<String, Array<String, String>>
 	 */
-	public function getSubTotalTaxInfoArray()
+	public function getTotalTaxInfoArray()
 	{
 		$taxInfoArray = array();
 		$taxRates = $this->getTaxRates();
@@ -63,46 +86,12 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			return $taxInfoArray;
 		}
 		
-		//Old Tax evaluation
-		foreach ($this->getLineArray() as $line)
-		{
-			if (!isset($taxInfoArray[$line->getTaxCode()]))
-			{
-				$taxInfoArray[$line->getTaxCode()] = array('formattedTaxRate' => catalog_PriceHelper::formatTaxRate($line->getTaxRate()), 'taxAmount' => 0);
-			}
-			$taxInfoArray[$line->getTaxCode()]['taxAmount'] += $line->getTaxAmount();
-		}
-		return $taxInfoArray;
+		//Deprecated remove in 4.0
+		return $this->getSubTotalTaxInfoArray();
 	}
 	
 	/**
-	 * @return Array<String, Array<String, String>>
-	 */
-	public function getTotalTaxInfoArray()
-	{
-		$taxInfoArray = $this->getSubTotalTaxInfoArray();
-		$this->completeTaxInfoArrayWithShippingFees($taxInfoArray);
-		return $taxInfoArray;
-	}
-	
-	/**
-	 * @param Array $taxInfoArray
-	 */
-	private function completeTaxInfoArrayWithShippingFees(&$taxInfoArray)
-	{		
-		$taxCode = $this->getOrderProperty('shippingModeTaxCode');
-		if ($taxCode)
-		{
-			if (!isset($taxInfoArray[$taxCode]))
-			{
-				$taxInfoArray[$taxCode] = array('taxAmount' => 0, 'formattedTaxRate' => catalog_PriceHelper::formatTaxRate($this->getOrderProperty('shippingModeTaxRate')));
-			}
-			$taxInfoArray[$taxCode]['taxAmount'] += ($this->getShippingFeesWithTax() - $this->getShippingFeesWithoutTax());
-		}
-	}
-	
-	/**
-	 * @param String $propertyName
+	 * @param string $propertyName
 	 * @param Mixed $value serializable data.
 	 */
 	public function setGlobalProperty($propertyName, $value)
@@ -111,7 +100,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @param String $propertyName
+	 * @param string $propertyName
 	 * @return Mixed
 	 */
 	public function getGlobalProperty($propertyName)
@@ -119,10 +108,13 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		return $this->getOrderProperty($propertyName);
 	}
 	
+	/**
+	 * @var array
+	 */
 	private $globalPropertiesArray;
 	
 	/**
-	 * @param String $name
+	 * @param string $name
 	 * @return mixed
 	 */
 	private function getOrderProperty($propertyName)
@@ -151,7 +143,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @param String $propertyName
+	 * @param string $propertyName
 	 * @param mixed $value
 	 */
 	private function setOrderProperty($propertyName, $value)
@@ -183,7 +175,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function getShop()
 	{
-		return DocumentHelper::getDocumentInstance($this->getShopId(), 'modules_catalog/shop');
+		return catalog_persistentdocument_shop::getInstanceById($this->getShopId());
 	}
 	
 	/**
@@ -199,12 +191,11 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function getWebsite()
 	{
-		return DocumentHelper::getDocumentInstance($this->getWebsiteId(), 'modules_website/website');
+		return website_persistentdocument_website::getInstanceById($this->getWebsiteId());
 	}
 	
 	/**
-	 * @param array $couponData
-	 * @example array<id => integer, code => string, valueWithTax => double, valueWithoutTax => double>
+	 * @param array $couponData For example: array<id => integer, code => string, valueWithTax => double, valueWithoutTax => double>
 	 */
 	public function setCouponData($couponData)
 	{
@@ -219,8 +210,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			$this->setCouponId(null);
 		}
 	}
-	
-	
 	
 	/**
 	 * @return array<id => integer, code => string, valueWithTax => double, valueWithoutTax => double>
@@ -263,8 +252,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @param array $discountDataArray
-	 * @example array<array<id => integer, label => string, valueWithTax => double, valueWithoutTax => double>>
+	 * @param array $discountDataArray For example: array<array<id => integer, label => string, valueWithTax => double, valueWithoutTax => double>> 
 	 */
 	public function setDiscountDataArray($discountDataArray)
 	{
@@ -293,8 +281,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @param array $feesDataArray
-	 * @example array<array<id => integer, label => string, valueWithTax => double, valueWithoutTax => double>>
+	 * @param array $feesDataArray For example array<array<id => integer, label => string, valueWithTax => double, valueWithoutTax => double>> 
 	 */
 	public function setFeesDataArray($feesDataArray)
 	{
@@ -310,7 +297,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		if (!is_array($result))
 		{
 			//TODO Default Sheaping Info
-			$label = LocaleService::getInstance()->transFO('m.order.frontoffice.shipping-fees', array('ucf', 'lab'));
+			$label = LocaleService::getInstance()->trans('m.order.frontoffice.shipping-fees', array('ucf', 'lab'));
 			$result = array(array('id' => 0, 'label' => $label,  
 				'valueWithTax' => $this->getShippingFeesWithTax(), 
 				'valueWithoutTax' => $this->getShippingFeesWithoutTax()));
@@ -363,8 +350,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @param array $taxDataArray
-	 * @example array<rateFormated => value>
+	 * @param array $taxDataArray For example: array<rateFormated => value> 
 	 */
 	public function setTaxDataArray($taxDataArray)
 	{
@@ -488,6 +474,14 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	/**
 	 * @return string
 	 */
+	public function getShippingModeLabelAsHtml()
+	{
+		return f_util_HtmlUtils::textToHtml($this->getShippingModeLabel());
+	}
+	
+	/**
+	 * @return string
+	 */
 	public function getShippingModeCode()
 	{
 		$result = array();
@@ -502,7 +496,6 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			if ($shippingMode) {$result[] = $shippingMode->getCode();}
 		}
 
-		
 		$shippingDataArray = $this->getShippingDataArray();
 		if (is_array($shippingDataArray))
 		{
@@ -585,7 +578,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @return Double
+	 * @return float
 	 */
 	public function getLinesAmountWithTax()
 	{
@@ -598,7 +591,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @return Double
+	 * @return float
 	 */
 	public function getLinesAmountWithoutTax()
 	{
@@ -653,8 +646,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function canBeCanceled()
 	{
-		$orderStatus = $this->getOrderStatus();
-		return $orderStatus == order_OrderService::IN_PROGRESS;
+		return $this->getDocumentService()->canBeCanceled($this);
 	}
 	
 	/**
@@ -668,11 +660,9 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			->add(Restrictions::isNotNull('archive'))
 			->find();
 	}
-	
-
 		
 	/**
-	 * @example array<creditNoteId => amount>
+	 * @return array For example: array<creditNoteId => amount>
 	 */
 	public function getCreditNoteDataArray()
 	{
@@ -685,8 +675,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
-	 * @param array $creditNoteDataArray
-	 * @example array<creditNoteId => amount>
+	 * @param array $creditNoteDataArray For example: array<creditNoteId => amount> 
 	 */
 	public function setCreditNoteDataArray($creditNoteDataArray)
 	{
@@ -722,6 +711,81 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
+	 * @return customer_persistentdocument_address
+	 */
+	public function getShippingAddress()
+	{
+		$address = parent::getShippingAddress();
+		if ($address === null)
+		{
+			$data = f_util_ArrayUtils::firstElement($this->getShippingDataArray());
+			$mId = $data['filter']['modeId'];
+			$addressId = $this->getAddressIdByModeId($mId);
+			if (intval($addressId))
+			{
+				$address = DocumentHelper::getDocumentInstanceIfExists($addressId);
+			}
+		}
+		return ($address !== null) ? $address : $this->getBillingAddress();
+	}
+		
+	/**
+	 * @param array $addressIdByModeIdArray
+	 * For exemple array<modeId => addressId>
+	 */
+	private function setAddressIdByModeIdArray($addressIdByModeIdArray)
+	{
+		$this->setGlobalProperty('__addressIdByModeIdArray', $addressIdByModeIdArray);
+	}
+	
+	/**
+	 * @param integer $modeId
+	 * @return integer
+	 */
+	public function getAddressIdByModeId($modeId)
+	{
+		$array = $this->getGlobalProperty('__addressIdByModeIdArray');
+		if (is_array($array) && isset($array[$modeId]))
+		{
+			return $array[$modeId];
+		}
+		return null;
+	}
+
+	/**
+	 * @param integer $modeId
+	 * @param integer $addressId
+	 */
+	public function setAddressIdByModeId($modeId, $addressId)
+	{
+		$array = $this->getGlobalProperty('__addressIdByModeIdArray');
+		if ($addressId !== null)
+		{
+			if (!is_array($array)) { $array = array(); }
+			$array[$modeId] = $addressId;
+		}
+		elseif (is_array($array) && isset($array[$modeId]))
+		{
+			unset($array[$modeId]);
+		}
+		$this->setGlobalProperty('__addressIdByModeIdArray', $array);
+	}
+	
+	/**
+	 * @return float
+	 */
+	public function getTotalProductCount()
+	{
+		$count = 0;
+		foreach ($this->getLineArray() as $line)
+		{
+			/* @var $line order_persistentdocument_orderline */
+			$count += $line->getQuantity();
+		}
+		return $count;
+	}
+	
+	/**
 	 * @return string
 	 */
 	public function getTreeNodeLabel()
@@ -729,17 +793,65 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		return $this->getOrderNumber();
 	}
 	
-	// Deprecated
+	//DEPRECTAED FUNCTIONS
+
+	/**
+	 * @deprecated use getBoOrderStatusLabel or getFoOrderStatusLabel
+	 */
+	public function getOrderStatusLabel()
+	{
+		return $this->getFoOrderStatusLabel();
+	}
+		
+	/**
+	 * @deprecated use getCreationdate or getUICreationdate
+	 */
+	public function getOrderDate()
+	{
+		return $this->getCreationdate();
+	}
 	
 	/**
-	 * @deprecated
+	 * @deprecated 
+	 */
+	private $currentBill;
+	
+	/**
+	 * @deprecated 
+	 */
+	private function getCurrentBill()
+	{
+		if ($this->currentBill === null)
+		{
+			$billArray = $this->getBillArrayInverse();
+			$this->currentBill = $billArray[0];
+		}
+		return $this->currentBill;
+	}
+			
+	/**
+	 * @deprecated  use getPaymentConnectorLabel
+	 */
+	public function getBillingMode()
+	{
+		return $this->getPaymentConnectorLabel();
+	}
+	
+	/**
+	 * @deprecated use getPaymentConnectorCode
+	 */
+	public function getBillingModeCodeReference()
+	{
+		return $this->getPaymentConnectorCode();
+	}
+			
+	/**
 	 * @var order_persistentdocument_expedition
 	 */
 	private $currentExpedition;
 	
 	/**
 	 * @deprecated 
-	 * @return order_persistentdocument_expedition
 	 */
 	private function getCurrentExpedition()
 	{
@@ -750,6 +862,15 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		}
 		return $this->currentExpedition ? $this->currentExpedition : null;
 	}	
+		
+	/**
+	 * @deprecated 
+	 */
+	public function getShippingModeCodeReference()
+	{
+		$sD = $this->getShippingModeDocument();
+		return $sD ? $sD->getCodeReference() : null;
+	}	
 
 	/**
 	 * @deprecated 
@@ -759,12 +880,83 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		$exp = $this->getCurrentExpedition();
 		return $exp ? $exp->getTrackingNumber() : null;
 	}
-		
+	
+	/**
+	 * @deprecated 
+	 */
+	public function getPackageTrackingURL()
+	{
+		$exp = $this->getCurrentExpedition();
+		return $exp ? $exp->getTrackingURL() : null;
+	}
+	
+	/**
+	 * @deprecated use getShippingModeLabel
+	 */
+	public function getShippingMode()
+	{
+		return $this->getShippingModeLabel();
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public function setShippingModeTaxCode($shippingModeTaxCode)
+	{
+		$this->setOrderProperty('shippingModeTaxCode', $shippingModeTaxCode);
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public function setShippingModeTaxRate($shippingModeTaxRate)
+	{
+		$this->setOrderProperty('shippingModeTaxRate', $shippingModeTaxRate);
+	}
+	
 	/**
 	 * @deprecated
 	 */
 	public function getShippingModeTaxCode()
 	{
 		return $this->getOrderProperty('shippingModeTaxCode');
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public function getShippingModeTaxRate()
+	{
+		return $this->getOrderProperty('shippingModeTaxRate');
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public function getSubTotalTaxInfoArray()
+	{
+		$taxInfoArray = array();
+		$ts = catalog_TaxService::getInstance();
+		foreach ($this->getLineArray() as $line)
+		{
+			/* @var $line order_persistentdocument_orderline */
+			$formatedTaxRate = $ts->formatRate($line->getTaxRate());
+			if (!isset($taxInfoArray[$formatedTaxRate]))
+			{
+				$taxInfoArray[$formatedTaxRate] = array('formattedTaxRate' => $formatedTaxRate, 'taxAmount' => 0);
+			}
+			$taxInfoArray[$formatedTaxRate]['taxAmount'] += $line->getTaxAmount();
+		}
+	
+		if ($this->getShippingModeTaxCode())
+		{
+			$formatedTaxRate = $ts->formatRate($this->getShippingModeTaxRate());
+			if (!isset($taxInfoArray[$formatedTaxRate]))
+			{
+				$taxInfoArray[$formatedTaxRate] = array('taxAmount' => 0, 'formattedTaxRate' => $formatedTaxRate);
+			}
+			$taxInfoArray[$formatedTaxRate]['taxAmount'] += ($this->getShippingFeesWithTax() - $this->getShippingFeesWithoutTax());
+		}
+		return $taxInfoArray;
 	}
 }

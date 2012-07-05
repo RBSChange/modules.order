@@ -5,7 +5,6 @@
  */
 class order_BlockStdBillingStepAction extends website_BlockAction
 {
-	
 	/**
 	 * @see website_BlockAction::getInputViewName()
 	 */
@@ -15,11 +14,9 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 	}
 	
 	/**
-	 * @see website_BlockAction::execute()
-	 *
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	public function execute($request, $response)
 	{
@@ -35,22 +32,6 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 		$op = $cart->getOrderProcess();
 		$op->setCurrentStep('Billing');
 		
-		
-		if (!$this->hasErrors())
-		{
-			/**
-			if (count($request->getAttribute('paymentFilters')) === 1)
-			{
-				$order = $this->generateOrderForCart($cart);
-				if ($order !== null)
-				{	
-					$this->setRequestOrderParams($request, $cart, $order);
-					return 'Payment';
-				}
-			}
-			*/
-		}
-		
 		$this->setRequestParams($request, $cart);
 		return $this->getInputViewName();
 	}
@@ -59,11 +40,10 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */	
 	public function executeUpdateCoupon($request, $response)
 	{
-		
 		$couponCode = trim(strval($request->getParameter('coupon')));
 		$cs = order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();
@@ -76,7 +56,6 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 		} 
 		else
 		{
-			
 			if (f_util_StringUtils::isNotEmpty($couponCode))
 			{
 				$coupon = customer_CouponService::getInstance()->getByCode($couponCode);
@@ -84,7 +63,7 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 				if ($currentCoupon === null)
 				{		
 					$request->setAttribute('coupon', '');
-					$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-coupon', array('ucf'), array('code' => $couponCode)), 
+					$this->addError(LocaleService::getInstance()->trans('m.order.standardprocess.invalid-coupon', array('ucf'), array('code' => $couponCode)), 
 						'coupon');
 				}
 			}
@@ -98,7 +77,7 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */	
 	public function executeNextStep($request, $response)
 	{
@@ -107,7 +86,7 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 		$paymentFilterId = intval($request->getParameter('paymentFilterId', 0));
 		if ($paymentFilterId == 0)
 		{
-			$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.payment-connector-not-selected'), 'paymentFilter');
+			$this->addError(LocaleService::getInstance()->trans('m.order.standardprocess.payment-connector-not-selected'), 'paymentFilter');
 		}
 		else
 		{
@@ -119,7 +98,7 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 			else
 			{
 				$cart->setBillingMode(null);
-				$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-payment-connector'), "paymentFilter");
+				$this->addError(LocaleService::getInstance()->trans('m.order.standardprocess.invalid-payment-connector'), "paymentFilter");
 			}
 		}
 		
@@ -186,7 +165,7 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 		else
 		{
 			$cart->setBillingModeId(null);
-			$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.connector-not-found'), 'paymentFilter');
+			$this->addError(LocaleService::getInstance()->trans('m.order.standardprocess.connector-not-found'), 'paymentFilter');
 		}
 		$request->setAttribute('showPriceWithTax', $cart->getShop()->getDisplayPriceWithTax());	
 		$request->setAttribute('showPriceWithoutTax',  $cart->getShop()->getDisplayPriceWithoutTax());	
@@ -228,8 +207,8 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 			if ($address->Addressline2) {$result[] = $address->Addressline2;}
 			if ($address->Addressline3) {$result[] = $address->Addressline3;}
 			$result[] = $address->Zipcode . ' ' . $address->City;
-			if ($address->Province) {$result[] = $address->Province;};
-			if ($address->CountryId) {$result[] = DocumentHelper::getDocumentInstance($address->CountryId)->getLabel();};
+			if ($address->Province) {$result[] = $address->Province;}
+			if ($address->CountryId) {$result[] = DocumentHelper::getDocumentInstance($address->CountryId)->getLabel();}
 			return $result;
 		}
 		return null;

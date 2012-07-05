@@ -4,9 +4,9 @@ class order_BlockCartAction extends website_BlockAction
 	/**
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
-	function execute($request, $response)
+	public function execute($request, $response)
 	{
 		if ($this->isInBackoffice())
 		{
@@ -33,21 +33,15 @@ class order_BlockCartAction extends website_BlockAction
 		{
 			if ($this->getConfiguration()->getUseCartEmptyPage())
 			{
-				try
+				$emptyCartPage = TagService::getInstance()->getDocumentByContextualTag(
+					'contextual_website_website_modules_order_cart-empty',
+					website_WebsiteService::getInstance()->getCurrentWebsite(),
+					false
+				);
+				if ($emptyCartPage !== null && $emptyCartPage->getId() != $pageId)
 				{
-					$emptyCartPage = TagService::getInstance()->getDocumentByContextualTag(
-						'contextual_website_website_modules_order_cart-empty',
-						website_WebsiteService::getInstance()->getCurrentWebsite()
-					);
-					if ($emptyCartPage->getId() != $pageId)
-					{
-						$url = LinkHelper::getDocumentUrl($emptyCartPage);
-						change_Controller::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
-					}
-				}
-				catch (TagException $e)
-				{
-					Framework::warn($e->getMessage());
+					$url = LinkHelper::getDocumentUrl($emptyCartPage);
+					change_Controller::getInstance()->redirectToUrl(str_replace('&amp;', '&', $url));
 				}
 			}
 			$shop = catalog_ShopService::getInstance()->getCurrentShop();
@@ -88,13 +82,12 @@ class order_BlockCartAction extends website_BlockAction
 	/**
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
-	function executeOrder($request, $response)
+	public function executeOrder($request, $response)
 	{
-		$cgv = $request->getParameter("cgv");
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
-		if ($cgv)
+		if (!$this->getConfiguration()->getShowAcceptationCheckbox() || $request->getParameter('cgv'))
 		{
 			$cart->refresh();
 			if ($cart->isValid())
@@ -108,7 +101,7 @@ class order_BlockCartAction extends website_BlockAction
 		}
 		else
 		{
-			$this->addError(LocaleService::getInstance()->transFO("m.order.frontoffice.must-agree-with-general-sales-conditions-error", array('ucf')), 'cgv');
+			$this->addError(LocaleService::getInstance()->trans('m.order.frontoffice.must-agree-with-general-sales-conditions-error', array('ucf')), 'cgv');
 		}
 		return $this->execute($request, $response);
 	}
@@ -116,20 +109,29 @@ class order_BlockCartAction extends website_BlockAction
 	/**
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
-	function executeRefresh($request, $response)
+	public function executeRefresh($request, $response)
 	{
 		return $this->execute($request, $response);
 	}	
 	
 	/**
 	 * @param f_mvc_Request $request
+	 * @return array 
+	 */
+	public function getEvaluateshippingBeanInfo($request)
+	{
+		return array('className' => 'order_ShippingStepBean', 'beanName' => 'bean');
+	}
+	
+	/**
+	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @param order_ShippingStepBean $bean
-	 * @return String
+	 * @return string
 	 */
-	function executeEvaluateshipping($request, $response, order_ShippingStepBean $bean)
+	public function executeEvaluateshipping($request, $response, $bean)
 	{
 		$cs =  order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();
@@ -151,7 +153,7 @@ class order_BlockCartAction extends website_BlockAction
 	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */	
 	public function executeUpdateCoupon($request, $response)
 	{
@@ -171,7 +173,7 @@ class order_BlockCartAction extends website_BlockAction
 				if ($currentCoupon === null)
 				{		
 					$request->setAttribute('coupon', '');
-					$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-coupon', array('ucf'), array('code' => $couponCode)), 
+					$this->addError(LocaleService::getInstance()->trans('m.order.standardprocess.invalid-coupon', array('ucf', 'html'), array('code' => $couponCode)), 
 						'coupon');
 				}
 			}
@@ -182,7 +184,7 @@ class order_BlockCartAction extends website_BlockAction
 	/**
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	public function executeConfirmClear($request, $response)
 	{
@@ -192,7 +194,7 @@ class order_BlockCartAction extends website_BlockAction
 	/**
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	public function executeClear($request, $response)
 	{

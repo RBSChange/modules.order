@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.billingstepbean" lcid="en_GB">
-  <key id="refresh">Add</key>
-  <key id="removecoupon">Remove</key>
-  <key id="select">Continue</key>
-  <key id="invalid-coupon-code">The coupon code {coupon} does not match a valid coupon.</key>
-  <key id="transaction-amount-overview-legend">Payment method</key>
-  <key id="transaction-amount-overview-text">Please find information on the transaction you want to perform below. Please choose the payment method that you want to use. At the end of this step, you will be able to view a summary of your order and make the payment.</key>
-  <key id="transaction-amount-overview-head">Transaction information</key>
-  <key id="mops-legend">Available payment methods</key>
-  <key id="no-valid-mop">No valid payment methods are available for your order.</key>
+	<key id="refresh">Add</key>
+	<key id="removecoupon">Remove</key>
+	<key id="select">Continue</key>
+	<key id="invalid-coupon-code">The coupon code {coupon} does not match a valid coupon.</key>
+	<key id="transaction-amount-overview-legend">Payment method</key>
+	<key id="transaction-amount-overview-text">Please find information on the transaction you want to perform below. Please choose the payment method that you want to use. At the end of this step, you will be able to view a summary of your order and make the payment.</key>
+	<key id="transaction-amount-overview-head">Transaction information</key>
+	<key id="mops-legend">Available payment methods</key>
+	<key id="no-valid-mop">No valid payment methods are available for your order.</key>
 </i18n>

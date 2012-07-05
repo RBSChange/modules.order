@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.doceditor.tab" lcid="en_GB">
-  <key id="messages">messaging system</key>
-  <key id="financial">payment</key>
-  <key id="shipping">shipping</key>
-  <key id="strategy">strategy</key>
+	<key id="messages">messaging system</key>
+	<key id="financial">payment</key>
+	<key id="shipping">shipping</key>
+	<key id="strategy">strategy</key>
 </i18n>

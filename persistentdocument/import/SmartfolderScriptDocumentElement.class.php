@@ -5,15 +5,15 @@
  */
 class order_SmartfolderScriptDocumentElement extends import_ScriptDocumentElement
 {
-    /**
-     * @return order_persistentdocument_smartfolder
-     */
-    protected function initPersistentDocument()
-    {
-    	return order_SmartfolderService::getInstance()->getNewDocumentInstance();
-    }
-    
-    /**
+	/**
+	 * @return order_persistentdocument_smartfolder
+	 */
+	protected function initPersistentDocument()
+	{
+		return order_SmartfolderService::getInstance()->getNewDocumentInstance();
+	}
+	
+	/**
 	 * @return f_persistentdocument_PersistentDocumentModel
 	 */
 	protected function getDocumentModel()

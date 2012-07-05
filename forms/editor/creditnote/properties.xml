@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <panel>
-  <section labeli18n="m.uixul.bo.doceditor.fieldsgroup.title">
-    <field name="orderNumber" type="text" disabled="true" labeli18n="m.order.document.creditnote.ordernumber" />
-    <field name="customer" disabled="true" />
-    <field name="label" required="false" />
-  </section>
+	<section labeli18n="m.uixul.bo.doceditor.fieldsgroup.title">
+		<field name="orderNumber" type="text" disabled="true" labeli18n="m.order.document.creditnote.ordernumber" />
+		<field name="customer" disabled="true" />
+		<field name="label" required="false" />
+	</section>
 	<xul>
-		<javascript>	
+		<javascript>
 			<constructor><![CDATA[
 				this.extendMethod("fireInitializeComplete", this.initializeExtra);				
 			]]></constructor>
-										
 			<method name="initializeExtra">
 				<parameter name="result" />
 				<body><![CDATA[	
@@ -20,13 +19,6 @@
 						this.mInitData = null;
 						return;
 					}
-					/*
-					wCore.debug(wCore.dump(result));
-					var s = result.contents.currencySymbol;
-					this.fields.amount.setAttribute('currency', s);
-					this.fields.amount.setAttribute('mode', "${transui:m.order.document.creditnote.maxamount,ucf,space,js}" + result.contents.maxAmount + s);					
-					this.fields.amountNotApplied.setAttribute('currency', s);
-					*/
 				]]></body>
 			</method>
 		</javascript>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.doceditor.panel.properties" lcid="fr_FR">
-  <key id="view-customer">voir le client</key>
-  <key id="view-order">voir la commande</key>
+	<key id="view-customer">voir le client</key>
+	<key id="view-order">voir la commande</key>
 </i18n>

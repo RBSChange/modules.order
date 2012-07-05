@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<panel>	
-	<section name="properties" linkedtab="properties" labeli18n="m.uixul.bo.doceditor.section.properties" 
-		image="{IconsBase}/small/edit-properties.png">
-		<property name="label" labeli18n="m.uixul.bo.doceditor.property.label" />
-		<property name="author" labeli18n="m.uixul.bo.doceditor.property.author" />
-		<property name="creationdate" labeli18n="m.uixul.bo.doceditor.property.creationdate" />
-	</section>			
-</panel>

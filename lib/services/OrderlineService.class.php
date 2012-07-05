@@ -1,27 +1,10 @@
 <?php
 /**
- * order_OrderlineService
  * @package modules.order
+ * @method order_OrderlineService getInstance()
  */
 class order_OrderlineService extends f_persistentdocument_DocumentService
 {
-	/**
-	 * @var order_OrderlineService
-	 */
-	private static $instance;
-
-	/**
-	 * @return order_OrderlineService
-	 */
-	public static function getInstance()
-	{
-		if (self::$instance === null)
-		{
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
-
 	/**
 	 * @return order_persistentdocument_orderline
 	 */
@@ -36,7 +19,7 @@ class order_OrderlineService extends f_persistentdocument_DocumentService
 	 */
 	public function createQuery()
 	{
-		return $this->pp->createQuery('modules_order/orderline');
+		return $this->getPersistentProvider()->createQuery('modules_order/orderline');
 	}
 
 	/**
@@ -82,8 +65,8 @@ class order_OrderlineService extends f_persistentdocument_DocumentService
 		$orderLine->setAmountWithTax($cpf->round($cartLine->getTotalValueWithTax(), $currencyCode));
 		$orderLine->setAmountWithoutTax($cpf->round($cartLine->getTotalValueWithoutTax(), $currencyCode));
 		
-		$orderLine->setTaxCode($cartLine->getTaxCode());
-		$orderLine->setTaxRate($cartLine->getTaxRate());		
+		$orderLine->setTaxCategory($cartLine->getTaxCategory());
+		$orderLine->setTaxRate(catalog_TaxService::getInstance()->getTaxRateByValue($cartLine->getValueWithTax(), $cartLine->getValueWithoutTax()));		
 		$orderLine->setTaxAmount($cartLine->getTotalTax());
 		
 		$cartLineProperties = $cartLine->getPropertiesArray();

@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.bill" lcid="fr_FR">
-  <key id="document-name">facture</key>
-  <key id="label">numéro</key>
-  <key id="label-help">numéro de la facture</key>
-  <key id="amount">montant</key>
-  <key id="amount-help">montant</key>
-  <key id="transactionid">numéro de la transaction</key>
-  <key id="transactionid-help">identifiant de la transaction banquaire ou numero du cheque</key>
-  <key id="transactiontext">Texte</key>
-  <key id="transactiontext-help">Texte afficher au client</key>
-  <key id="transactiondate">Date</key>
-  <key id="transactiondate-help">Date de la transaction</key>
-  <key id="status">statut</key>
-  <key id="archive">version PDF</key>
-  <key id="not-validated">Le paiment n'est pas encore validé</key>
+	<key id="document-name">facture</key>
+	<key id="label">numéro</key>
+	<key id="label-help">numéro de la facture</key>
+	<key id="amount">montant</key>
+	<key id="amount-help">montant</key>
+	<key id="transactionid">numéro de la transaction</key>
+	<key id="transactionid-help">identifiant de la transaction bancaire ou numéro du chèque</key>
+	<key id="transactiontext">Texte</key>
+	<key id="transactiontext-help">Texte afficher au client</key>
+	<key id="transactiondate">Date</key>
+	<key id="transactiondate-help">Date de la transaction</key>
+	<key id="status">statut</key>
+	<key id="archive">version PDF</key>
+	<key id="not-validated">Le paiement n'est pas encore validé</key>
 </i18n>

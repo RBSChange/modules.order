@@ -10,54 +10,60 @@
 </ul>
 
 <h1 change:h="">
-	${trans:m.order.frontoffice.order-number-title,orderNumber=order/getOrderNumber}
-	(${order/getFoOrderStatusLabel})
+	${trans:m.order.frontoffice.order-number-title,ucf,orderNumber=order/getOrderNumber}
 </h1>
+
+<dl class="inline-items">
+	<dt>${trans:m.order.fo.order-date,ucf}</dt>
+	<dd>${datetime:order/getUICreationdate}</dd>
+	<dt>${trans:m.order.frontoffice.status,ucf}</dt>
+	<dd>${order/getFoOrderStatusLabel}</dd>
+</dl>
 
 <div class="cleaner"></div>
 
-<ol class="ecom-adresses">
-	<li class="even">
-		<dl tal:define="address order/getShippingAddress">
-			<dt>${trans:m.order.frontoffice.shippingaddress,ucf}</dt>
-				<dd>${address/getTitle/getLabel} ${address/getFirstname} ${address/getLastname}</dd>
-				<dd>${address/getAddressLine1}</dd>
-				<dd tal:condition="address/getAddressLine2">${address/getAddressLine2}</dd>
-				<dd tal:condition="address/getAddressLine3">${address/getAddressLine3}</dd>
-				<dd>${address/getZipcode} ${address/getCity}</dd>
-				<dd tal:condition="address/getProvince">${address/getProvince}</dd>
-				<dd>${address/getCountry/getLabel}</dd>
-				<dd tal:condition="address/getPhone">${address/getPhone}</dd>
-				<dd tal:condition="address/getFax">${address/getFax}</dd>
-		</dl>
-	</li>
-	<li class="odd">
-		<dl tal:define="address order/getBillingAddress">
-			<dt>${trans:m.order.frontoffice.billingaddress,ucf}</dt>
-				<dd>${address/getTitle/getLabel} ${address/getFirstname} ${address/getLastname}</dd>
-				<dd>${address/getAddressLine1}</dd>
-				<dd tal:condition="address/getAddressLine2">${address/getAddressLine2}</dd>
-				<dd tal:condition="address/getAddressLine3">${address/getAddressLine3}</dd>
-				<dd>${address/getZipcode} ${address/getCity}</dd>
-				<dd tal:condition="address/getProvince">${address/getProvince}</dd>
-				<dd>${address/getCountry/getLabel}</dd>
-				<dd tal:condition="address/getPhone">${address/getPhone}</dd>
-				<dd tal:condition="address/getFax">${address/getFax}</dd>
-		</dl>
-	</li>
-</ol>
+<div class="columns">
+	<div class="column-50">
+		<h2 change:h="">${trans:m.order.frontoffice.shippingaddress,ucf}</h2>
+		<ul tal:define="address order/getShippingAddress" class="address">
+			<li>${structure address/getFullNameAsHtml}</li>
+			<li>${structure address/getAddressLine1AsHtml}</li>
+			<li tal:condition="address/getAddressLine2">${structure address/getAddressLine2AsHtml}</li>
+			<li tal:condition="address/getAddressLine3">${structure address/getAddressLine3AsHtml}</li>
+			<li>${structure address/getZipcodeAsHtml} ${structure address/getCityAsHtml}</li>
+			<li tal:condition="address/getProvince">${structure address/getProvinceAsHtml}</li>
+			<li>${structure address/getCountry/getLabelAsHtml}</li>
+			<li tal:condition="address/getPhone">${structure address/getPhoneAsHtml}</li>
+			<li tal:condition="address/getFax">${structure address/getFaxAsHtml}</li>
+		</ul>
+	</div>
+	<div class="column-50">
+		<h2 change:h="">${trans:m.order.frontoffice.billingaddress,ucf}</h2>
+		<ul tal:define="address order/getBillingAddress" class="address">
+			<li>${structure address/getFullNameAsHtml}</li>
+			<li>${structure address/getAddressLine1AsHtml}</li>
+			<li tal:condition="address/getAddressLine2">${structure address/getAddressLine2AsHtml}</li>
+			<li tal:condition="address/getAddressLine3">${structure address/getAddressLine3AsHtml}</li>
+			<li>${structure address/getZipcodeAsHtml} ${structure address/getCityAsHtml}</li>
+			<li tal:condition="address/getProvince">${address/getProvince}</li>
+			<li>${structure address/getCountry/getLabelAsHtml}</li>
+			<li tal:condition="address/getPhone">${structure address/getPhoneAsHtml}</li>
+			<li tal:condition="address/getFax">${structure address/getFaxAsHtml}</li>
+		</ul>
+	</div>
+</div>
 
-<table border="0" class="normal" summary="${trans:m.order.frontoffice.cart-table-summary,ucf}">
+<table class="normal" summary="${trans:m.order.frontoffice.cart-table-summary,ucf}">
 	<thead>
 		<tr>
-		    <th>${trans:m.order.frontoffice.designation,ucf}</th>
+			<th>${trans:m.order.frontoffice.designation,ucf}</th>
 			<th tal:condition="shop/getDisplayPriceWithoutTax">
 				<abbr title="${trans:m.order.frontoffice.unitprice-without-tax,ucf}">${trans:m.order.frontoffice.unitprice-without-tax-abr,ucf}</abbr>
 			</th>
 			<th tal:condition="shop/getDisplayPriceWithTax">
 				<abbr title="${trans:m.order.frontoffice.unitprice-with-tax,ucf}">${trans:m.order.frontoffice.unitprice-with-tax-abr,ucf}</abbr>
 			</th>
-		    <th>${trans:m.order.frontoffice.quantity,ucf}</th>
+			<th>${trans:m.order.frontoffice.quantity,ucf}</th>
 			<th tal:condition="shop/getDisplayPriceWithoutTax">
 				<abbr title="${trans:m.order.frontoffice.totalprice-without-tax,ucf}">${trans:m.order.frontoffice.totalprice-without-tax-abr,ucf}</abbr>
 			</th>
@@ -66,94 +72,115 @@
 			</th>
 		</tr>
 	</thead>
-
 	<tbody>
-		<tr tal:repeat="line order/getLineArray" class="${php: repeat.line.odd ? 'odd' : 'even'}">
+		<tr tal:repeat="line order/getLineArray" class="${alternateclass:lineId}">
 			<td change:include="module 'order'; template 'Order-Inc-OrderLine'; type 'html'; shop shop; order order; line line" />
 		</tr>
 	</tbody>
 </table>
 
-<div class="column-two">
-	<table class="normal payment-information" border="0">
-		<tr tal:condition="shop/getDisplayPriceWithoutTax">
-			<td>${trans:m.order.frontoffice.sub-total-withouttax-abr,ucf,lab}</td>
-			<td>${php:order.formatPrice(order.getLinesAmountWithoutTax())}</td>
-		</tr>
-		<tr tal:condition="shop/getDisplayPriceWithTax">
-			<td>${trans:m.order.frontoffice.sub-total-withtax-abr,ucf,lab}</td>
-			<td>${php:order.formatPrice(order.getLinesAmountWithTax())}</td>
-		</tr>
-
-		<!-- Mode d'envoi -->
-		<tr tal:condition="order/getShippingModeId">
-			<td>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</td>
-			<td>${order/getShippingMode}</td>
-		</tr>
-		
-		<!-- fees -->
-		<tr tal:repeat="fees order/getFeesDataArrayForDisplay">	
-			<td>${fees/label}</td>
-			<td>${fees/valueWithTax}</td>
-		</tr>	
-				
-		<!-- coupon -->
-		<tr tal:condition="order/getCouponId" tal:define="coupon order/getCouponData">
-			<td>${trans:m.order.frontoffice.coupon-code,ucf,lab}</td>
-			<td>${coupon/code}</td>
-		</tr>
-		
-		<!-- discount -->
-		<tr tal:repeat="discount order/getDiscountDataArrayForDisplay">	
-			<td>${discount/label}</td>
-			<td class="discount">${discount/valueWithTax}</td>
-		</tr>
-		
-		<!-- Montants par taxe -->
-		<tr tal:repeat="PriceByTax order/getTotalTaxInfoArray">
-			<td>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</td>
-			<td>${php:order.formatPrice(PriceByTax['taxAmount'])}</td>
-		</tr>
-		
-		<tr>
-			<td class="pricetotal" tal:content="trans:m.order.frontoffice.total-withouttax-abr,ucf,lab" />
-			<td class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithoutTax())}</td>
-		</tr>
-		
-		<tr>
-			<td class="pricetotal">${trans:m.order.frontoffice.total-tva-abr,ucf,lab}</td>
-			<td class="pricetotal">${php:order.formatPrice(order.getTotalTax())}</td>	
-		</tr>
-		
-		<tr tal:condition="not:order/hasCreditNote">				
-			<td class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</td>
-			<td class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
-		</tr>
-		
-		<tal:block tal:condition="order/hasCreditNote">				
+<div class="columns">
+	<div class="column-50"></div>
+	<div class="column-50">
+		<table class="normal payment-information">
+			<tr tal:condition="shop/getDisplayPriceWithoutTax">
+				<td>${trans:m.order.frontoffice.sub-total-withouttax-abr,ucf,lab}</td>
+				<td class="price">${php:order.formatPrice(order.getLinesAmountWithoutTax())}</td>
+			</tr>
+			<tr tal:condition="shop/getDisplayPriceWithTax">
+				<td>${trans:m.order.frontoffice.sub-total-withtax-abr,ucf,lab}</td>
+				<td class="price">${php:order.formatPrice(order.getLinesAmountWithTax())}</td>
+			</tr>
+	
+			<!-- Mode d'envoi -->
+			<tr tal:condition="order/getShippingModeId">
+				<td>${trans:m.order.frontoffice.shipping-mode,ucf,lab}</td>
+				<td>${order/getShippingMode}</td>
+			</tr>
+			
+			<!-- fees -->
+			<tr tal:repeat="fees order/getFeesDataArrayForDisplay">	
+				<td>${fees/label} :</td>
+				<td class="price">${fees/valueWithTax}</td>
+			</tr>	
+					
+			<!-- coupon -->
+			<tr tal:condition="order/getCouponId" tal:define="coupon order/getCouponData">
+				<td>${trans:m.order.frontoffice.coupon-code,ucf,lab}</td>
+				<td>${coupon/code}</td>
+			</tr>
+			
+			<!-- discount -->
+			<tr tal:repeat="discount order/getDiscountDataArrayForDisplay">	
+				<td>${discount/label}</td>
+				<td class="discount">${discount/valueWithTax}</td>
+			</tr>
+			
+			<!-- Montants par taxe -->
+			<tr tal:repeat="PriceByTax order/getTotalTaxInfoArray">
+				<td>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</td>
+				<td class="price">${php:order.formatPrice(PriceByTax['taxAmount'])}</td>
+			</tr>
+			
 			<tr>
-				<td class="pricetotal">${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</td>
-				<td class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithTax() + order.getTotalCreditNoteAmount())}</td>
+				<td>${trans:m.order.frontoffice.total-withouttax-abr,ucf,lab}</td>
+				<td class="price">${php:order.formatPrice(order.getTotalAmountWithoutTax())}</td>
 			</tr>
-			<tr>	
-				<td>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</td>
-				<td>${php:order.formatPrice(order.getTotalCreditNoteAmount())}</td>
-			</tr>
+			
 			<tr>
-				<td class="pricetotal">${trans:m.order.frontoffice.creditnote-total,ucf,lab}</td>
-				<td class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
+				<td>${trans:m.order.frontoffice.total-tva-abr,ucf,lab}</td>
+				<td class="price">${php:order.formatPrice(order.getTotalTax())}</td>	
 			</tr>
-		</tal:block>	
-	</table>
-	<a change:actionlink="" block="order_order" action="addToCart" cmpref="${order/getId}">${trans:m.order.frontoffice.add-order-articles-to-cart,ucf}</a>
+			
+			<tr tal:condition="not:order/hasCreditNote" class="big">				
+				<td>${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</td>
+				<td class="price">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
+			</tr>
+			
+			<tal:block tal:condition="order/hasCreditNote">				
+				<tr>
+					<td>${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</td>
+					<td class="price">${php:order.formatPrice(order.getTotalAmountWithTax() + order.getTotalCreditNoteAmount())}</td>
+				</tr>
+				<tr>	
+					<td>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</td>
+					<td class="price">${php:order.formatPrice(order.getTotalCreditNoteAmount())}</td>
+				</tr>
+				<tr class="big">
+					<td>${trans:m.order.frontoffice.creditnote-total,ucf,lab}</td>
+					<td class="price">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
+				</tr>
+			</tal:block>	
+		</table>
+		<div id="actionAddOrderToCart">
+			<a change:actionlink="" block="order_order" action="addToCart" cmpref="${order/getId}" >${trans:m.order.frontoffice.add-order-articles-to-cart,ucf}</a>
+		</div>
+		<tal:block tal:condition="cart">
+			<div id="addPopin" style="display: none;">
+				<p class="normal">${trans:m.order.frontoffice.add-order-articles-txt,ucf}</p>
+				<ul class="normal">
+					<li><a change:actionlink="" block="order_order" action="addToCart" cmpref="${order/getId}" >${trans:m.order.frontoffice.add-order-articles-merge,ucf}</a></li>
+					<li><a change:actionlink="" block="order_order" action="addToCart" clearCart="1" cmpref="${order/getId}" >${trans:m.order.frontoffice.add-order-articles-replace,ucf}</a></li>
+				</ul>
+			</div>
+			<script tal:condition="not:cart/isEmpty" type="text/javascript" >
+				/* <![CDATA[ */
+				jQuery(document).ready(function(){
+					var a = jQuery("#actionAddOrderToCart > a:first-child");	
+					a.attr('href', "javascript:void 0;");
+					a.click(function(){
+						jQuery("#addPopin").dialog({title: "${trans:m.order.frontoffice.add-order-articles-title,ucf,js}", modal: true, width: 300, closeOnEscape: true});
+					});
+				});
+				/* ]]> */
+			</script>
+		</tal:block>
+	</div>
 </div>
-<div class="cleaner"></div>
 
-<tal:block tal:repeat="bill bills">
+<div tal:repeat="bill bills" class="normal">
 	<tal:block change:block="" name="payment" module="payment" billid="${bill/getId}" />
-</tal:block>
-<div class="cleaner"></div>
-
-<tal:block tal:repeat="expedition expeditions">
+</div>
+<div tal:repeat="expedition expeditions" class="normal">
 	<tal:block change:block="" name="expedition" module="order" expeditionid="${expedition/getId}" />
-</tal:block>
+</div>

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.frontoffice.status" lcid="en_GB">
-  <key id="error">error</key>
-  <key id="canceled">cancelled</key>
-  <key id="complete">shipped</key>
-  <key id="unknown">unknown</key>
-  <key id="in_progress">in progress</key>
-  <key id="initiated">started</key>
+	<key id="error">error</key>
+	<key id="canceled">cancelled</key>
+	<key id="complete">shipped</key>
+	<key id="unknown">unknown</key>
+	<key id="in_progress">in progress</key>
+	<key id="initiated">started</key>
 </i18n>

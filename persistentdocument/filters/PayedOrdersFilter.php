@@ -6,7 +6,7 @@ class order_PayedOrdersFilter extends f_persistentdocument_DocumentFilterImpl
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

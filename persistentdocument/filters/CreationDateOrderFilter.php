@@ -18,7 +18,7 @@ class order_CreationDateOrderFilter extends f_persistentdocument_DocumentFilterI
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

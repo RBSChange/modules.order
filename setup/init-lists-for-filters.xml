@@ -2,31 +2,24 @@
 <script>
 	<binding fileName="modules/list/persistentdocument/import/list_binding.xml" />
 	<binding fileName="modules/notification/persistentdocument/import/notification_binding.xml" />
-	
 	<systemfolder module="list" relatedmodule="order">
-		<staticlist listid="modules_order/paymentstatuscategories" 
-			label="&amp;modules.order.bo.general.list.Payment-status-categories;"
-			description="&amp;modules.order.bo.general.list.Payment-status-categories;">
-			<staticitem label="&amp;modules.order.bo.general.list.payment-status-category-paid;" value="paid" />
-			<staticitem label="&amp;modules.order.bo.general.list.payment-status-category-paid-or-waiting;" value="paid-or-waiting" />
-			<staticitem label="&amp;modules.order.bo.general.list.payment-status-category-all;" value="all" />
+		<staticlist listid="modules_order/paymentstatuscategories" label="m.order.bo.general.list.payment-status-categories" description="m.order.bo.general.list.payment-status-categories">
+			<staticitem label="m.order.bo.general.list.payment-status-category-paid" value="paid" />
+			<staticitem label="m.order.bo.general.list.payment-status-category-paid-or-waiting" value="paid-or-waiting" />
+			<staticitem label="m.order.bo.general.list.payment-status-category-all" value="all" />
 		</staticlist>
-		
-		<staticlist listid="modules_order/statusesforordercountfilter" label="&amp;modules.order.bo.general.list.statusesforordercountfilter.Label;"
-			description="&amp;modules.order.bo.general.list.statusesforordercountfilter.Description;">
-			<staticitem label="&amp;modules.order.bo.general.list.statusesforordercountfilter.Paid;" value="paid" />
-			<staticitem label="&amp;modules.order.bo.general.list.statusesforordercountfilter.Uncancelled;" value="uncancelled" />
-			<staticitem label="&amp;modules.order.bo.general.list.statusesforordercountfilter.All;" value="all" />
+		<staticlist listid="modules_order/statusesforordercountfilter" label="m.order.bo.general.list.statusesforordercountfilter.label" description="m.order.bo.general.list.statusesforordercountfilter.description">
+			<staticitem label="m.order.bo.general.list.statusesforordercountfilter.paid" value="paid" />
+			<staticitem label="m.order.bo.general.list.statusesforordercountfilter.uncancelled" value="uncancelled" />
+			<staticitem label="m.order.bo.general.list.statusesforordercountfilter.all" value="all" />
 		</staticlist>
-		
-		<staticlist listid="modules_order/addrtypefilter" label="type d'adresse" >
-			<staticitem label="&amp;modules.order.bo.documentfilters.Addrtypefilter-billing;" value="billing" />
-			<staticitem label="&amp;modules.order.bo.documentfilters.Addrtypefilter-shipping;" value="shipping" />
+		<staticlist listid="modules_order/addrtypefilter" label="type d'adresse">
+			<staticitem label="m.order.bo.documentfilters.addrtypefilter-billing" value="billing" />
+			<staticitem label="m.order.bo.documentfilters.addrtypefilter-shipping" value="shipping" />
 		</staticlist>
-		
-		<staticlist listid="modules_order/addrpartfilter" label="partie de l'adresse" >
-			<staticitem label="&amp;modules.order.bo.documentfilters.Addrpartfilter-country;" value="country" />
-			<staticitem label="&amp;modules.order.bo.documentfilters.Addrpartfilter-zipCode;" value="zipCode" />
-		</staticlist>		
+		<staticlist listid="modules_order/addrpartfilter" label="partie de l'adresse">
+			<staticitem label="m.order.bo.documentfilters.addrpartfilter-country" value="country" />
+			<staticitem label="m.order.bo.documentfilters.addrpartfilter-zipcode" value="zipCode" />
+		</staticlist>
 	</systemfolder>
 </script>

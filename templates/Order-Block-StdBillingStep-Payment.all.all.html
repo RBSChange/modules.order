@@ -1,117 +1,100 @@
-<div class="orderprocess billing">
-    <tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-NavigationTop'; type 'html';orderProcess orderProcess" />
-    <div class="main">
-    	<h2 change:h="">${trans:m.order.standardprocess.resume-order-title,ucf}</h2>
-    	<table class="normal product-lines" border="0" summary="" >
-    		<thead>
+<tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-NavigationTop'; type 'html';orderProcess orderProcess" />
+<div class="columns">
+	<div class="column-75">
+		<div class="normal">
+			<tal:block change:block="" name="payment" module="payment" billid="${bill/getId}" />
+		</div>
+		
+		<h2 change:h="">${trans:m.order.standardprocess.resume-order-title,ucf}</h2>
+		<table class="normal product-lines">
+			<thead>
 				<tr>
 					<th>${trans:m.order.standardprocess.order-product-qtt,ucf}</th>
 					<th colspan="2">${trans:m.order.standardprocess.order-product-description,ucf}</th>
 					<th>${trans:m.order.standardprocess.order-product-availability,ucf}</th>
 					<tal:block tal:condition="showPrice">
-					<th>${trans:m.order.standardprocess.order-product-unit-price,ucf}</th>	
-					<th tal:condition="showPriceWithoutTax">${trans:m.order.standardprocess.order-product-price-ht}</th>
-					<th tal:condition="showPriceWithTax">${trans:m.order.standardprocess.order-product-price-ttc}</th>
+						<th>${trans:m.order.standardprocess.order-product-unit-price,ucf}</th>	
+						<th tal:condition="showPriceWithoutTax">${trans:m.order.standardprocess.order-product-price-ht}</th>
+						<th tal:condition="showPriceWithTax">${trans:m.order.standardprocess.order-product-price-ttc}</th>
 					</tal:block>
 				</tr>
 			</thead>
 			<tbody>
 				<tal:block tal:repeat="orderLine order/getLineArray">
-					<tr class="${php: repeat.orderLine.odd ? 'odd' : 'even'}" tal:define="product orderLine/getProduct;">						
+					<tr class="${alternateclass:lineId}" tal:define="product orderLine/getProduct;">						
 						<td>${orderLine/getQuantity} </td>
-						<td><img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/cartdetailproduct'"/></td> 
+						<td><img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/small'"/></td> 
 						<td>${orderLine/getLabel} <br/> ${line/getCodeReference}</td>
 						<td>${product/getAvailability} </td>
 						<tal:block tal:condition="showPriceWithoutTax">
-							<td>${php:order.formatPrice(orderLine.getUnitPriceWithoutTax())}</td>
-							<td>${php:order.formatPrice(orderLine.getAmountWithoutTax())}</td>
+							<td class="price">${php:order.formatPrice(orderLine.getUnitPriceWithoutTax())}</td>
+							<td class="price">${php:order.formatPrice(orderLine.getAmountWithoutTax())}</td>
 						</tal:block>
 						<tal:block tal:condition="showPriceWithTax">
-							<td tal:condition="not: showPriceWithoutTax">${php:order.formatPrice(orderLine.getUnitPriceWithTax())}</td>
-							<td>${php:order.formatPrice(orderLine.getAmountWithTax())}</td>
+							<td tal:condition="not: showPriceWithoutTax" class="price">${php:order.formatPrice(orderLine.getUnitPriceWithTax())}</td>
+							<td class="price">${php:order.formatPrice(orderLine.getAmountWithTax())}</td>
 						</tal:block>
 					</tr>
 				</tal:block>
 			</tbody>
-    	</table>
-   	
-		<div class="normal payment-information-block column-two" tal:condition="showPrice">
-			<table class="normal payment-information" border="0">	
-				<caption>${trans:m.order.standardprocess.billing-amount-title,ucf}</caption>
-				<tr tal:condition="showPriceWithoutTax">
-					<td>${trans:m.order.frontoffice.sub-total-withouttax-abr,ucf,lab}</td>
-					<td>${php:order.formatPrice(order.getLinesAmountWithoutTax())}</td>
-				</tr>
-				<tr tal:condition="showPriceWithTax">
-					<td>${trans:m.order.frontoffice.sub-total-withtax-abr,ucf,lab}</td>
-					<td>${php:order.formatPrice(order.getLinesAmountWithTax())}</td>
-				</tr>
-				
-				<tr tal:repeat="fees order/getFeesDataArrayForDisplay">	
-					<td>${fees/label} :</td>
-					<td tal:condition="not: showPriceWithTax">${fees/valueWithoutTax}</td>
-					<td tal:condition="showPriceWithTax">${fees/valueWithTax}</td>
-				</tr>
-				
-				<tr tal:condition="order/getCouponId">
-					<td>${trans:m.order.standardprocess.coupon,ucf,lab}</td>
-					<td>${order/getCouponData/code}</td>		
-				</tr>
-				
-				<tr tal:repeat="discount order/getDiscountDataArrayForDisplay">
-					<td>${discount/label} :</td>
-					<td tal:condition="not: showPriceWithTax" class="discount">${discount/valueWithoutTax}</td>
-					<td tal:condition="showPriceWithTax" class="discount">${discount/valueWithTax}</td>
-				</tr>					
-	
-				<tr tal:condition="showPriceWithTax" tal:repeat="PriceByTax cart/getFormattedSubTotalTaxByRate">
-					<td>${trans:m.order.frontoffice.tva,ucf,lab,rate=PriceByTax/formattedTaxRate}</td>
-					<td>${php:order.formatPrice(PriceByTax['taxAmount'])}</td>
-				</tr>
-				
-				<tr tal:condition="order/hasCreditNote">
-					<td>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</td>
-					<td>${php:order.formatPrice(order.getTotalCreditNoteAmount())}</td>
-				</tr>
-				
-				<tr>
-					<td class="pricetotal">${trans:m.order.frontoffice.creditnote-total,ucf,lab}</td>
-					<td class="pricetotal">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
-				</tr>
-			</table>
-		</div>
-		<div class="cleaner"></div>
-	    <tal:block change:block="" name="payment" module="payment" billid="${bill/getId}" />
+		</table>
 	</div>
-    <div class="resume">
-    	<div class="normal resume-section">
-    		<h2 change:h="">${trans:m.order.standardprocess.resume-address-title,ucf}</h2>
-	    	<ol class="ecom-adresses">
-				<li class="even">
-					<dl>
-						<dt>${trans:m.order.standardprocess.resume-address-shipping,ucf}</dt>
-						<dd tal:repeat="line shippingAddress">${line}</dd>
-					</dl>
-				</li>
-				<li class="odd">
-					<dl>
-						<dt>${trans:m.order.standardprocess.resume-address-billing,ucf}</dt>
-						<dd tal:repeat="line billingAddress">${line}</dd>
-					</dl>
-				</li>
-			</ol>
+	<div class="column-25">
+		<div class="summary">
+			<h2 change:h="">${trans:m.order.standardprocess.summary,ucf}</h2>
+			<div class="normal section">
+				<table class="normal payment-information">	
+					<caption class="h-3">${trans:m.order.standardprocess.billing-amount-title,ucf}</caption>
+					<tr>
+						<td>${trans:m.order.standardprocess.resume-article-count,ucf,lab}</td>
+						<td>${order/getTotalProductCount}</td>
+					</tr>
+					<tr>
+						<td>${trans:m.order.standardprocess.resume-lines-total,ucf,lab}</td>
+						<td class="price">${php:order.formatPrice(order.getLinesAmountWithoutTax())}</td>
+					</tr>
+					<tr tal:repeat="fees order/getFeesDataArrayForDisplay">	
+						<td>${fees/label} :</td>
+						<td tal:condition="not: showPriceWithTax" class="price">${fees/valueWithoutTax}</td>
+						<td tal:condition="showPriceWithTax" class="price">${fees/valueWithTax}</td>
+					</tr>
+					<tr tal:repeat="discount order/getDiscountDataArrayForDisplay">
+						<td>${discount/label} :</td>
+						<td tal:condition="not: showPriceWithTax" class="price">${discount/valueWithoutTax}</td>
+						<td tal:condition="showPriceWithTax" class="price">${discount/valueWithTax}</td>
+					</tr>
+					<tr tal:condition="order/hasCreditNote">
+						<td>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</td>
+						<td class="price">${php:order.formatPrice(order.getTotalCreditNoteAmount())}</td>
+					</tr>
+					<tr>
+						<td>${trans:m.order.standardprocess.resume-total-ttc,ucf,lab}</td>
+						<td class="price">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
+					</tr>
+				</table>
+				<p class="buttons"><a class="link" href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify-cart,ucf}</a></p>
+			</div>
+			<div class="normal section">
+				<h3 change:h="">${trans:m.order.standardprocess.resume-address-billing,ucf}</h3>
+				<ul class="address normal-margin">
+					<li tal:repeat="line billingAddress">${line}</li>
+				</ul>
+				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
+			</div>
+			<div class="normal section">
+				<h3 change:h="">${trans:m.order.standardprocess.resume-address-shipping,ucf}</h3>
+				<ul class="address normal-margin">
+					<li tal:repeat="line shippingAddress">${line}</li>
+				</ul>
+				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
+			</div>
+			<div tal:condition="order/getShippingModeId" class="normal section">
+				<h3 change:h="">${trans:m.order.standardprocess.shipping-title,ucf}</h3>
+				<ul class="normal-margin">
+					<li>${structure order/getShippingModeLabelAsHtml}</li>
+				</ul>
+				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getShippingStepUrl}">${trans:m.order.standardprocess.modify-shipping-mode,ucf}</a></p>
+			</div>
 		</div>
-    	<div tal:condition="order/getShippingModeId" class="normal resume-section">
-    		<h2 change:h="">${trans:m.order.standardprocess.shipping-title,ucf}</h2>
-    		<ol>
-    			<li>${order/getShippingModeLabel}</li>
-    		</ol>
-    	</div>
-    	<div tal:condition="order/getBillingModeId" class="normal resume-section">
-    		<h2 change:h="">${trans:m.order.standardprocess.billing-title,ucf}</h2>
-    		<ol>
-    			<li>${order/getPaymentConnectorLabel}</li>
-    		</ol>
-    	</div>
-    </div>    
+	</div>
 </div>

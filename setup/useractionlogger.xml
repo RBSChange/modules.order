@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <script>
-  <binding fileName="modules/useractionlogger/persistentdocument/import/useractionlogger_binding.xml"/>
-  <actiondef modulename="order" actionname="create-new-order" label="m.order.bo.useractionlogger.create-new-order"/>
-  <actiondef modulename="order" actionname="update-order" label="m.order.bo.useractionlogger.update-order"/>
-  <actiondef modulename="order" actionname="update-order-status" label="m.order.bo.useractionlogger.update-order-status"/>
-  <actiondef modulename="order" actionname="update.order" label="m.order.bo.useractionlogger.update-order"/>
-  <actiondef modulename="order" actionname="insert.smartfolder" label="m.order.bo.useractionlogger.insert-smartfolder"/>
-  <actiondef modulename="order" actionname="move.smartfolder" label="m.order.bo.useractionlogger.move-smartfolder"/>
-  <actiondef modulename="order" actionname="cancelorder.order" label="m.order.bo.useractionlogger.cancelorder-order"/>
-  <actiondef modulename="order" actionname="purge.bill" label="m.order.bo.useractionlogger.purge-bill"/>
-  <actiondef modulename="order" actionname="purge.bill" label="m.order.bo.useractionlogger.purge-bill"/>
-  <actiondef modulename="order" actionname="update.smartfolder" label="m.order.bo.useractionlogger.update-smartfolder"/>
-  <actiondef modulename="order" actionname="insert.creditnote" label="m.order.bo.useractionlogger.insert-creditnote"/>
-  <actiondef modulename="order" actionname="update.creditnote" label="m.order.bo.useractionlogger.update-creditnote"/>
-  <actiondef modulename="order" actionname="delete.creditnote" label="m.order.bo.useractionlogger.delete-creditnote"/>
-  
-  <actiondef modulename="catalog" actionname="insert.fees" label="m.order.bo.useractionlogger.insert-fees"/>
-  <actiondef modulename="catalog" actionname="activate.fees" label="m.order.bo.useractionlogger.activate-fees"/>
-  <actiondef modulename="catalog" actionname="deactivated.fees" label="m.order.bo.useractionlogger.deactivated-fees"/>
-  <actiondef modulename="catalog" actionname="delete.fees" label="m.order.bo.useractionlogger.delete-fees"/>
-  <actiondef modulename="catalog" actionname="update.fees" label="m.order.bo.useractionlogger.update-fees"/>
+	<binding fileName="modules/useractionlogger/persistentdocument/import/useractionlogger_binding.xml" />
+	<actiondef modulename="order" actionname="create-new-order" label="m.order.bo.useractionlogger.create-new-order" />
+	<actiondef modulename="order" actionname="update-order" label="m.order.bo.useractionlogger.update-order" />
+	<actiondef modulename="order" actionname="update-order-status" label="m.order.bo.useractionlogger.update-order-status" />
+	<actiondef modulename="order" actionname="update.order" label="m.order.bo.useractionlogger.update-order" />
+	<actiondef modulename="order" actionname="insert.smartfolder" label="m.order.bo.useractionlogger.insert-smartfolder" />
+	<actiondef modulename="order" actionname="move.smartfolder" label="m.order.bo.useractionlogger.move-smartfolder" />
+	<actiondef modulename="order" actionname="cancelorder.order" label="m.order.bo.useractionlogger.cancelorder-order" />
+	<actiondef modulename="order" actionname="purge.bill" label="m.order.bo.useractionlogger.purge-bill" />
+	<actiondef modulename="order" actionname="purge.bill" label="m.order.bo.useractionlogger.purge-bill" />
+	<actiondef modulename="order" actionname="update.smartfolder" label="m.order.bo.useractionlogger.update-smartfolder" />
+	<actiondef modulename="order" actionname="insert.creditnote" label="m.order.bo.useractionlogger.insert-creditnote" />
+	<actiondef modulename="order" actionname="update.creditnote" label="m.order.bo.useractionlogger.update-creditnote" />
+	<actiondef modulename="order" actionname="delete.creditnote" label="m.order.bo.useractionlogger.delete-creditnote" />
+	<actiondef modulename="catalog" actionname="insert.fees" label="m.order.bo.useractionlogger.insert-fees" />
+	<actiondef modulename="catalog" actionname="activate.fees" label="m.order.bo.useractionlogger.activate-fees" />
+	<actiondef modulename="catalog" actionname="deactivated.fees" label="m.order.bo.useractionlogger.deactivated-fees" />
+	<actiondef modulename="catalog" actionname="delete.fees" label="m.order.bo.useractionlogger.delete-fees" />
+	<actiondef modulename="catalog" actionname="update.fees" label="m.order.bo.useractionlogger.update-fees" />
+	<actiondef modulename="order" actionname="insert.orderpreparation" label="m.order.bo.useractionlogger.insert-orderpreparation" />
+	<actiondef modulename="order" actionname="delete.orderpreparation" label="m.order.bo.useractionlogger.delete-orderpreparation" />
+	<actiondef modulename="order" actionname="update.orderpreparation" label="m.order.bo.useractionlogger.update-orderpreparation" />
+	<actiondef modulename="order" actionname="activate.orderpreparation" label="m.order.bo.useractionlogger.activate-orderpreparation" />
+	<actiondef modulename="order" actionname="generateexpedition.orderpreparation" label="m.order.bo.useractionlogger.generateexpedition-orderpreparation" />
+	<actiondef modulename="order" actionname="update.expedition" label="m.order.bo.useractionlogger.update-expedition" />
+	<actiondef modulename="order" actionname="finalizeorder.order" label="m.order.bo.useractionlogger.finalizeorder-order" />
 </script>

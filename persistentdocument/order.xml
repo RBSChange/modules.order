@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/4.0.xsd" model-version="3.0" icon="order" publish-on-day-change="false">
-  <properties>
-    <property name="orderNumber" type="String" min-occurs="1">
-      <constraint name="unique" propertyName="orderNumber" modelName="modules_order/order"/>
-    </property>
-    <property name="orderStatus" type="String" from-list="modules_order/orderstatuses" default-value="initiated" preserve-old-value="true"/>
-    <property name="customer" type="modules_customer/customer" inverse="true" min-occurs="1"/>
-    <property name="shopId" type="Integer" min-occurs="1"/>
-    <property name="websiteId" type="Integer" min-occurs="1"/>
-    <property name="line" type="modules_order/orderline" max-occurs="-1" inverse="true"/>
-    <property name="totalAmountWithTax" type="Double" min-occurs="1"/>
-    <property name="totalAmountWithoutTax" type="Double" min-occurs="1"/>
-    <property name="currencyCode" type="String" min-occurs="1" default-value="EUR"/>
-    <property name="shippingModeId" type="Integer"/>
-    <property name="shippingFeesWithTax" type="Double" default-value="0"/>
-    <property name="shippingFeesWithoutTax" type="Double" default-value="0"/>
-    <property name="shippingAddress" type="modules_customer/address"/>
-    <property name="billingModeId" type="Integer" min-occurs="1"/>
-    <property name="billingAddress" type="modules_customer/address"/>
-    <property name="couponId" type="Integer"/>
-    <property name="globalProperties" type="Lob"/>
-    <property name="lastCommentReminder" type="DateTime"/>
-    <property name="commentuser" type="LongString"/>
-    <property name="commentadmin" type="LongString"/>
-    <property name="needsAnswer" type="Boolean"/>
-    <property name="usecreditnote" type="modules_order/creditnote" max-occurs="-1"/>
-  </properties>
-  <statuses default="ACTIVE"/>
-  <serializedproperties>
-    <property name="description" type="LongString"/>
-  </serializedproperties>
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/schema/persistentdocument-4.0.xsd" model-version="3.0" icon="order" use-publication-dates="false">
+	<properties>
+		<property name="orderNumber" type="String" />
+		<property name="orderStatus" type="String" from-list="modules_order/orderstatuses" default-value="initiated" preserve-old-value="true" />
+		<property name="customer" type="Document" inverse="true" min-occurs="1" document-type="modules_customer/customer" />
+		<property name="shopId" type="Integer" min-occurs="1" />
+		<property name="websiteId" type="Integer" min-occurs="1" />
+		<property name="line" type="DocumentArray" inverse="true" document-type="modules_order/orderline" />
+		<property name="totalAmountWithTax" type="Double" min-occurs="1" />
+		<property name="totalAmountWithoutTax" type="Double" min-occurs="1" />
+		<property name="currencyCode" type="String" min-occurs="1" default-value="EUR" />
+		<property name="shippingModeId" type="Integer" />
+		<property name="shippingFeesWithTax" type="Double" default-value="0" />
+		<property name="shippingFeesWithoutTax" type="Double" default-value="0" />
+		<property name="shippingAddress" type="Document" document-type="modules_customer/address" />
+		<property name="billingModeId" type="Integer" min-occurs="1" />
+		<property name="billingAddress" type="Document" document-type="modules_customer/address" />
+		<property name="couponId" type="Integer" />
+		<property name="globalProperties" type="Lob" />
+		<property name="lastCommentReminder" type="DateTime" />
+		<property name="commentuser" type="LongString" />
+		<property name="commentadmin" type="LongString" />
+		<property name="needsAnswer" type="Boolean" />
+		<property name="usecreditnote" type="DocumentArray" document-type="modules_order/creditnote" />
+	</properties>
+	<statuses default="ACTIVE" />
+	<serializedproperties>
+		<property name="description" type="LongString" />
+	</serializedproperties>
 </document>

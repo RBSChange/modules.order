@@ -6,7 +6,7 @@ class order_BlockOrderlistAction extends website_TaggerBlockAction
 {
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	protected function getTag()
 	{
@@ -18,7 +18,7 @@ class order_BlockOrderlistAction extends website_TaggerBlockAction
 	 *
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	function execute($request, $response)
 	{

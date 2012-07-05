@@ -1,26 +1,14 @@
 <?php
 /**
- * order_ExpeditionlineService
  * @package modules.order
+ * @method order_ExpeditionlineService getInstance()
  */
 class order_ExpeditionlineService extends f_persistentdocument_DocumentService
 {
-	/**
-	 * @var order_ExpeditionlineService
-	 */
-	private static $instance;
-
-	/**
-	 * @return order_ExpeditionlineService
-	 */
-	public static function getInstance()
-	{
-		if (self::$instance === null)
-		{
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
+	const RECEIVED = "received";
+	const DELIVERED = "delivered";
+	const IN_TRANSIT = "in_transit";
+	const CANCELED = "canceled";
 
 	/**
 	 * @return order_persistentdocument_expeditionline
@@ -38,7 +26,7 @@ class order_ExpeditionlineService extends f_persistentdocument_DocumentService
 	 */
 	public function createQuery()
 	{
-		return $this->pp->createQuery('modules_order/expeditionline');
+		return $this->getPersistentProvider()->createQuery('modules_order/expeditionline');
 	}
 	
 	/**
@@ -49,6 +37,35 @@ class order_ExpeditionlineService extends f_persistentdocument_DocumentService
 	 */
 	public function createStrictQuery()
 	{
-		return $this->pp->createQuery('modules_order/expeditionline', false);
+		return $this->getPersistentProvider()->createQuery('modules_order/expeditionline', false);
+	}
+	
+	/**
+	 * @param string $packetNumber
+	 * @param string $packetStatus (in_transit|received|delivered)
+	 * @return order_persistentdocument_expeditionline[]
+	 */
+	public function getByPacketNumber($packetNumber, $packetStatus = null)
+	{
+		if (empty($packetNumber))
+		{
+			return array();	
+		}
+		$query = $this->createQuery()->add(Restrictions::eq('packetNumber', $packetNumber, true));
+		if ($packetStatus !== null)
+		{
+			$query->add(Restrictions::eq('status', $packetStatus));
+		}
+		return $query->find();
+	}
+	
+	/**
+	 * @param order_persistentdocument_expeditionline $document
+	 * @return boolean true if the document is publishable, false if it is not.
+	 */
+	public function isPublishable($document)
+	{
+		$result = parent::isPublishable($document);
+		return $result && ($document->getStatus() === null || $document->getStatus() !== self::CANCELED);
 	}
 }

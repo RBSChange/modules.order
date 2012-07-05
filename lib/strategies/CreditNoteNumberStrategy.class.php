@@ -6,7 +6,7 @@ interface order_CreditNoteNumberStrategy
 {
 	/**
 	 * @param order_persistentdocument_creditnote $creditnote
-	 * @return String
+	 * @return string
 	 */
 	public function generate($creditnote);
 }
@@ -51,7 +51,7 @@ class order_CreditNoteNumberGenerator
 	
 	/**
 	 * @param order_persistentdocument_creditnote $creditnote
-	 * @return String
+	 * @return string
 	 */
 	public function generate($creditnote)
 	{
@@ -94,7 +94,7 @@ class order_CreditNoteNumberYearSequenceStrategy implements order_CreditNoteNumb
 {
 	/**
  	 * @param order_persistentdocument_creditnote $creditnote
-	 * @return String
+	 * @return string
 	 */
 	public function generate($creditnote)
 	{

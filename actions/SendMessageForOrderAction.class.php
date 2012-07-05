@@ -24,6 +24,6 @@ class order_SendMessageForOrderAction extends change_JSONAction
 				}
 			}
 		}
-		return $this->sendJSONError(f_Locale::translateUI('&modules.order.bo.doceditor.panel.messages.Error-no-message-to-send;', true));
+		return $this->sendJSONError(LocaleService::getInstance()->trans('m.order.bo.doceditor.panel.messages.error-no-message-to-send', array('ucf'), true));
 	}
 }

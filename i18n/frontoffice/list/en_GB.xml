@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.frontoffice.list" lcid="en_GB">
-  <key id="order-statuses">order status</key>
-  <key id="bill-statuses">invoice status</key>
-  <key id="expedition-statuses">shipment status</key>
+	<key id="order-statuses">order status</key>
+	<key id="bill-statuses">invoice status</key>
+	<key id="expedition-statuses">shipment status</key>
 </i18n>

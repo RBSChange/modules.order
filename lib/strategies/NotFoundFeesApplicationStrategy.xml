@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sections>
-  <section labeli18n="modules.uixul.bo.doceditor.fieldsgroup.Title">
-     
-  </section>
+	<section labeli18n="m.uixul.bo.doceditor.fieldsgroup.title" />
 </sections>

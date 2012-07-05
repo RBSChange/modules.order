@@ -6,7 +6,7 @@ class order_WaitingResponseOrderFilter extends f_persistentdocument_DocumentFilt
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

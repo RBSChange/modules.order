@@ -1,12 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/4.0.xsd" model-version="1.0" icon="cart-modifier" publish-on-day-change="true" has-url="false">
-  <properties>
-    <property name="shop" type="modules_catalog/shop" min-occurs="1" inverse="true" from-list="modules_catalog/shops"/>
-    <property name="exclusive" type="Boolean" default-value="false"/>
-    <property name="excludeModifier" type="modules_order/cartmodifier" max-occurs="-1"/>
-    <property name="description" type="XHTMLFragment"/>
-    <property name="applicationPriority" type="Integer" default-value="0"/>
-  </properties>
-  <statuses default="DRAFT"/>
-  <serializedproperties/>
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/schema/persistentdocument-4.0.xsd" model-version="1.0" icon="cart-modifier" has-url="false" use-publication-dates="true">
+	<properties>
+		<property name="shop" type="Document" min-occurs="1" inverse="true" from-list="modules_catalog/shops" document-type="modules_catalog/shop" />
+		<property name="exclusive" type="Boolean" default-value="false" />
+		<property name="excludeModifier" type="DocumentArray" document-type="modules_order/cartmodifier" />
+		<property name="description" type="XHTMLFragment" />
+		<property name="applicationPriority" type="Integer" default-value="0" />
+		<property name="billingArea" type="Document" from-list="modules_catalog/billingareabyshop" document-type="modules_catalog/billingarea" />
+	</properties>
+	<statuses default="DRAFT" />
+	<serializedproperties/>
 </document>

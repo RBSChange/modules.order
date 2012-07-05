@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.billingstepbean" lcid="de_DE">
-  <key id="refresh">Hinzufügen</key>
-  <key id="removecoupon">Entfernen</key>
-  <key id="select">Weiter</key>
-  <key id="invalid-coupon-code">Der Gutschein {coupon} ist kein gültiger Gutschein</key>
-  <key id="transaction-amount-overview-legend">Zahlungsweise</key>
-  <key id="transaction-amount-overview-text">Nachstehend finden Sie Informationen über die Transaktion, die Sie ausführen möchten. Wir danken Ihnen, die Art der Zahlung, die Sie verwenden möchten, zu wählen. Am Ende dieses Schrittes können Sie die Zusammenfassung Ihrer Bestellung einsehen und Zahlung.</key>
-  <key id="transaction-amount-overview-head">Transaktionsinformationen</key>
-  <key id="mops-legend">Zahlungsmethoden zur Verfügung</key>
-  <key id="no-valid-mop">Kein Zahlungsmethoden zur Verfügung.</key>
+	<key id="refresh">Hinzufügen</key>
+	<key id="removecoupon">Entfernen</key>
+	<key id="select">Weiter</key>
+	<key id="invalid-coupon-code">Der Gutschein {coupon} ist kein gültiger Gutschein</key>
+	<key id="transaction-amount-overview-legend">Zahlungsweise</key>
+	<key id="transaction-amount-overview-text">Nachstehend finden Sie Informationen über die Transaktion, die Sie ausführen möchten. Wir danken Ihnen, die Art der Zahlung, die Sie verwenden möchten, zu wählen. Am Ende dieses Schrittes können Sie die Zusammenfassung Ihrer Bestellung einsehen und Zahlung.</key>
+	<key id="transaction-amount-overview-head">Transaktionsinformationen</key>
+	<key id="mops-legend">Zahlungsmethoden zur Verfügung</key>
+	<key id="no-valid-mop">Kein Zahlungsmethoden zur Verfügung.</key>
 </i18n>

@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.general.list" lcid="fr_FR">
-  <key id="payment-status-categories">catégories de statut de paiement</key>
-  <key id="payment-status-category-paid">payées</key>
-  <key id="payment-status-category-paid-or-waiting">payées ou en attente de paiement</key>
-  <key id="payment-status-category-all">toutes</key>
-  <key id="comment-reminder-references">références pour le rappel de commentaires</key>
-  <key id="comment-reminder-refrence-payment">date du paiement</key>
-  <key id="comment-reminder-refrence-shipment">date d'expédition</key>
-  <key id="comment-reminder-selections">modes de sélection pour le rappel de commentaires</key>
-  <key id="comment-reminder-selection-all">tous</key>
-  <key id="comment-reminder-selection-random">aléatoire</key>
+	<key id="payment-status-categories">catégories de statut de paiement</key>
+	<key id="payment-status-category-paid">payées</key>
+	<key id="payment-status-category-paid-or-waiting">payées ou en attente de paiement</key>
+	<key id="payment-status-category-all">toutes</key>
+	<key id="comment-reminder-references">références pour le rappel de commentaires</key>
+	<key id="comment-reminder-refrence-payment">date du paiement</key>
+	<key id="comment-reminder-refrence-shipment">date d'expédition</key>
+	<key id="comment-reminder-selections">modes de sélection pour le rappel de commentaires</key>
+	<key id="comment-reminder-selection-all">tous</key>
+	<key id="comment-reminder-selection-random">aléatoire</key>
 </i18n>

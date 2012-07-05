@@ -10,18 +10,18 @@
 				<xul:cmessageinfo anonid="message"/>
 				<xul:hbox anonid="action-bar">
 					<xul:button anonid="save_properties" oncommand="saveProperties()" 
-						label="${trans:m.uixul.bo.doceditor.button.Save,ucf,attr}" 
+						label="${trans:m.uixul.bo.doceditor.button.save,ucf,attr}" 
 						image="{IconsBase}/small/save.png"
 						disabled="true" />
 					<xul:button anonid="reset_properties" oncommand="resetProperties()" 
-						label="${trans:m.uixul.bo.doceditor.button.Canceledit,ucf,attr}" 
+						label="${trans:m.uixul.bo.doceditor.button.canceledit,ucf,attr}" 
 						image="{IconsBase}/small/undo.png"
 						disabled="true" />
 				</xul:hbox>
 				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
 					<xul:vbox flex="1" anonid="parameterseditor">
-					</xul:vbox>						
-				</xul:scrollbox>					
+					</xul:vbox>
+				</xul:scrollbox>
 			</xul:vbox>
 		</content>
 			
@@ -29,7 +29,7 @@
 			<field name="mFieldNames">["strategyParametersJSON"]</field>
 			<field name="mDocumentIdentifier">null</field>
 			<field name="mParameters">null</field>
-						
+		
 			<property name="modified">
 				<getter><![CDATA[
 					return this.getAttribute("modified") === "true";
@@ -57,7 +57,7 @@
 				]]>
 				</body>
 			</method>
-						
+			
 			<method name="resetProperties">
 				<body><![CDATA[
 					this.getElementByAnonId('parameterseditor').reset();
@@ -121,22 +121,19 @@
 						var bindingurl = Context.CHROME_BASEURL
 								+ '/module=order&action=GetBinding&uilang=' + Context.W_UILANG + '&cmpref=' + cmpref
 								+ '&class=' + this.mParameters.strategyClassName;	
-						wCore.debug("updateEditorBinding: " + bindingurl);	
 						parameterseditor.style.MozBinding = 'url(' + bindingurl + '#cStrategy)';
 					}
 				]]>
 				</body>
-			</method>			
-			
-
+			</method>
 			
 			<method name="saveProperties">
 				<body><![CDATA[
 					this.documentEditor.executeServerAction('strategy', 'Update');
 				]]>
 				</body>
-			</method>			
-					
+			</method>
+			
 			<method name="getUpdateParameters">
 				<body><![CDATA[
 					var parameterseditor = this.getElementByAnonId('parameterseditor');				
@@ -168,7 +165,7 @@
 						this.mParameters = datas.strategyParametersJSON;		
 						var parameterseditor = this.getElementByAnonId('parameterseditor');
 						parameterseditor.setInitialValues(this.mParameters);
-						this.showTextMessage("&modules.uixul.bo.doceditor.message.Document-updated;");
+						this.showTextMessage("${trans:m.uixul.bo.doceditor.message.document-updated,ucf,js}");
 					} 
 					else 
 					{
@@ -180,7 +177,6 @@
 						
 			<method name="clear">
 				<body><![CDATA[
-					wCore.debug("clear cStrategyPanel");
 					this.showTextMessage('');
 					this.mInitialized = false;
 				]]>
@@ -189,7 +185,6 @@
 			
 			<method name="onCloseEditor">
 				<body><![CDATA[
-					wCore.debug("onCloseEditor cStrategyPanel");
 					try {
 						this.updateEditorBinding(null);
 					} catch (e) {
@@ -218,7 +213,6 @@
 					}
 				]]></body>
 			</method>
-			
 			
 			<property name="error">
 				<getter><![CDATA[
@@ -264,11 +258,10 @@
 	</binding>
 	
 	<binding id="cStrategySections">
-		<implementation>						
+		<implementation>
 			<method name="setInitialValues">
 				<parameter name="initialValues" />
 				<body><![CDATA[
-					wCore.debug('cStrategySections.setInitialValues');
 					for (var i = 0; i < this.mParameters.length; i++) {
 						var name = this.mParameters[i];
 						var field = document.getAnonymousElementByAttribute(this, "name", name);
@@ -278,8 +271,8 @@
 							} else {
 								field.setAttribute('initialvalue', initialValues[name]);
 							}
-						} 
-						else 
+						}
+						else
 						{
 							if ('setInitialValue' in field) 
 							{
@@ -291,7 +284,7 @@
 					}
 				]]>
 				</body>
-			</method>	
+			</method>
 			
 			<method name="getValues">
 				<body><![CDATA[
@@ -307,8 +300,8 @@
 					return datas;
 				]]>
 				</body>
-			</method>	
-						
+			</method>
+			
 			<method name="reset">
 				<body><![CDATA[
 					for (var i = 0; i < this.mParameters.length; i++) {
@@ -320,7 +313,7 @@
 					}
 				]]>
 				</body>
-			</method>	
+			</method>
 			
 			<method name="refreshModifiedState">
 				<body><![CDATA[
@@ -384,6 +377,6 @@
 				if (!this.mPanel) {return;}
 				this.mPanel.onFieldValidated(event.originalTarget);
 			]]></handler>
-		</handlers>	
+		</handlers>
 	</binding>
 </bindings>

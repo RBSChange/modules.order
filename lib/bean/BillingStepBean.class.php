@@ -13,7 +13,7 @@ class order_BillingStepBean
 	 * @var Integer
 	 * @required
 	 */
-	public $paymentFilterId;	
+	public $paymentFilterId;
 
 	/**
 	 * @return catalog_persistentdocument_paymentfilter

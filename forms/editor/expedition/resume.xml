@@ -1,18 +1,35 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <panel>
 	<section name="properties" linkedtab="properties" labeli18n="m.uixul.bo.doceditor.section.properties" image="{IconsBase}/small/edit-properties.png">
-		<property name="label" labeli18n="m.uixul.bo.doceditor.property.label" />
+		<property name="label" labeli18n="m.order.document.expedition.label" />
 		<property name="author" labeli18n="m.uixul.bo.doceditor.property.author" />
 		<property name="creationdate" labeli18n="m.uixul.bo.doceditor.property.creationdate" />
 		<property name="status" class="shipExpedition" labeli18n="m.order.bo.doceditor.property.status" />
-		<property name="tracking" class="link" labeli18n="m.order.bo.doceditor.property.tracking" />
+		<property name="tracking" class="link" labeli18n="m.order.document.expedition.trackingnumber" />
 	</section>
 	<section name="lines" labeli18n="m.order.bo.doceditor.section.lines" image="{IconsBase}/small/list-classic.png" />
+	<section name="address" labeli18n="m.order.bo.doceditor.section.shipping-address" image="{IconsBase}/small/expedition.png">
+		<property name="label" labeli18n="m.order.document.shippingaddress.label" />
+		<property name="email" labeli18n="m.order.document.shippingaddress.email" />
+		<property name="company" labeli18n="m.order.document.shippingaddress.company" />
+		<property name="addressLine1" labeli18n="m.order.document.shippingaddress.addressline1" />
+		<property name="addressLine2" labeli18n="m.order.document.shippingaddress.addressline2" />
+		<property name="addressLine3" labeli18n="m.order.document.shippingaddress.addressline3" />
+		<property name="zipCode" labeli18n="m.order.document.shippingaddress.zipcode" />
+		<property name="city" labeli18n="m.order.document.shippingaddress.city" />
+		<property name="province" labeli18n="m.order.document.shippingaddress.province" />
+		<property name="country" labeli18n="m.order.document.shippingaddress.countryid" />
+		<property name="phone" labeli18n="m.order.document.shippingaddress.phone" />
+		<property name="fax" labeli18n="m.order.document.shippingaddress.fax" />
+		<property name="mobilephone" labeli18n="m.order.document.shippingaddress.mobilephone" />
+	</section>
 	<section name="publication" linkedtab="publication" labeli18n="m.uixul.bo.doceditor.section.status" image="{IconsBase}/small/status.png">
 		<property name="status" labeli18n="m.uixul.bo.doceditor.property.status" />
 	</section>
-	<section name="history" linkedtab="history" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.uixul.bo.doceditor.section.history"
-		image="{IconsBase}/small/history.png">
+	<section flex="1" name="urlrewriting" labeli18n="m.uixul.bo.doceditor.section.urlrewriting" image="{IconsBase}/small/urlrewriting.png">
+		<property name="currenturl" labeli18n="m.uixul.bo.doceditor.property.currenturl" class="link" />
+	</section>
+	<section name="history" linkedtab="history" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.uixul.bo.doceditor.section.history" image="{IconsBase}/small/history.png">
 		<property name="modificationdate" labeli18n="m.uixul.bo.doceditor.property.modificationdate" />
 	</section>
 </panel>

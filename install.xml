@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install type="modules" name="order" version="4.0.0">
-  <package type="modules" name="catalog"/>
-  <package type="modules" name="customer"/>
-  <package type="modules" name="filter"/>
-  <package type="modules" name="zone"/>
-  <package type="modules" name="website"/>
-  <package type="modules" name="payment"/>
-  <package type="modules" name="preferences"/>
+	<package type="modules" name="catalog" />
+	<package type="modules" name="customer" />
+	<package type="modules" name="zone" />
+	<package type="modules" name="payment" />
 </install>

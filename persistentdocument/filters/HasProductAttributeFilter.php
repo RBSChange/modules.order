@@ -16,12 +16,20 @@ class order_HasProductAttributeFilter extends order_LinesCartFilterBase
 		$attributesDef = ($attributeFolder) ? $attributeFolder->getAttributes() : array();
 		foreach ($attributesDef as $attributeDef)
 		{
-			$name = $attributeDef['code'];
-			$type = $attributeDef['type'] == 'text' ? 'String' : 'Double';
+			/* @var $attributeDef catalog_AttributeDefinition */
+			$name = $attributeDef->getCode();
+			$type = $attributeDef->getType() == 'text' ? 'String' : 'Double';
+			$list = $attributeDef->getList();
+			
 			$beanprop = new BeanPropertyInfoImpl($name, $type);
-			$beanprop->setLabelKey($attributeDef['label']);
+			$beanprop->setLabelKey($attributeDef->getLabel());
 			$parameter->addAllowedProperty($name, $beanprop);
-			if ($type == 'Double')
+			if ($list)
+			{
+				$beanprop->setListId($list->getListid());
+				$parameter->setAllowedRestrictions($name, array('eq', 'ne'));
+			}
+			elseif ($type == 'Double')
 			{
 				$parameter->setAllowedRestrictions($name, array('eq', 'ne', 'ge', 'gt', 'le', 'lt'));
 			}
@@ -34,7 +42,7 @@ class order_HasProductAttributeFilter extends order_LinesCartFilterBase
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.blocks.stdaddressstep" lcid="fr_FR">
-  <key id="title">Processus standard : Choix des adresses</key>
+	<key id="title">Processus standard : Choix des adresses</key>
 </i18n>

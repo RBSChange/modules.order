@@ -8,9 +8,8 @@ class order_ContinueShoppingAction extends change_Action
 	public function _execute($context, $request)
 	{
 		$user = $context->getUser();
-		$backLink = $user->getAttribute('cartBackLink');
-		
-		if (is_null($backLink))
+		$backLink = $user->getAttribute('cartBackLink');		
+		if ($backLink !== null)
 		{
 			$shop = $this->getDocumentInstanceFromRequest($request);
 			$backLink = LinkHelper::getDocumentUrl($shop->getTopic()->getIndexPage());
@@ -21,12 +20,11 @@ class order_ContinueShoppingAction extends change_Action
 		return change_View::NONE;		
 	}
 	
-    /**
+	/**
 	 * @return boolean
 	 */
-	function isSecure ()
-    {
+	public function isSecure()
+	{
 		return false;
-    }		
-	
+	}		
 }

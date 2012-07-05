@@ -5,72 +5,155 @@
 	<binding id="order_shipping" extends="layout.cDocumentEditor#cDocumentEditorPanel">
 		<content>
 			<xul:vbox flex="1">
-		        <xul:cmessageinfo anonid="message"/>
-		        <xul:hbox anonid="action-bar">
-		          <!-- <xul:button anonid="save_properties" oncommand="saveProperties()" label="Enregistrer" image="http://web35.localhost/changeicons/small/save.png"/> -->
-		        </xul:hbox>
+				<xul:cmessageinfo anonid="message"/>
+				<xul:hbox anonid="action-bar">
+				</xul:hbox>
 				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
-					<xul:cfieldsgroup class="customeraddress" label="${transui:m.order.bo.general.shipping-address,ucf,attr}"/>
-					
-					<xul:cfieldsgroup label="${transui:m.order.bo.doceditor.expeditions,ucf,attr}">
-						<xul:cfieldsgroup class="orderexpeditions" anonid="expedition-grid" />
-						<xul:hbox anonid="expedition-message" collapsed="true" align="center">
-							<xul:label value="${transui:m.order.document.expedition.generating,ucf,attr}" />
-							<xul:button anonid="generate-default-expedition" oncommand="generateDefaultExpedition()"
-								label="${transui:m.order.bo.actions.generate-default-expedition,ucf,attr}" collapsed="true" image="{IconsBase}/small/add.png" />
-						</xul:hbox>
+					<xul:cfieldsgroup class="customeraddress" label="${trans:m.order.bo.general.shipping-address,ucf,attr}"/>
+									
+					<xul:cfieldsgroup label="${trans:m.order.document.orderpreparation.documents-name,ucf,attr}" hidegrid="true" 
+						xbl:inherits="hidden=hideorderpreparation">
+						<xul:cfieldsgroup class="orderpreparations" anonid="orderpreparation-grid" />
 					</xul:cfieldsgroup>
 					
-					<xul:cfieldsgroup anonid="orderreturns" label="${transui:m.order.bo.doceditor.returns,ucf,attr}">
-						<xul:cfieldsgroup class="orderreturns" />
+					<xul:cfieldsgroup label="${trans:m.order.bo.doceditor.expeditions,ucf,attr}" hidegrid="true">
+						<xul:cfieldsgroup class="orderexpeditions" anonid="expedition-grid" xbl:inherits="collapsed=collapseexpeditions" />
+						<xul:hbox anonid="expedition-message" collapsed="true" align="center">
+							<xul:label value="${trans:m.order.document.expedition.generating,ucf,attr}" />
+						</xul:hbox>
 					</xul:cfieldsgroup>
 				</xul:scrollbox>
 			</xul:vbox>	
 		</content>
 		<implementation>
-			<field name="mCreateReturnButton">null</field>
-			<field name="mCreateNPAIReturnButton">null</field>
+			<field name="mButtons">null</field>
 			<field name="mOrderExpeditions">null</field>
-			<field name="mOrderReturns">null</field>
+			<field name="mOrderPreparations">null</field>
 			<field name="mAddress">null</field>				
 			<field name="mInitData">null</field>
 			
 			<constructor><![CDATA[
-				if (getController().hasModule('productreturns'))
-				{
-					this.mCreateReturnButton = this.addActionButton("${transui:m.productreturns.bo.actions.createreturn,ucf,js}", wToolkit.getIcon('add', 'small'));
-					this.mCreateReturnButton.addEventListener('command', function(event) {me.onCreateReturn(event);}, true);
-					this.mCreateNPAIReturnButton = this.addActionButton("${transui:m.productreturns.bo.actions.createnpaireturn,ucf,js}", wToolkit.getIcon('add', 'small'));
-					this.mCreateNPAIReturnButton.addEventListener('command', function(event) {me.onCreateNPAIReturn(event);}, true);
-				}
-				var me = this;			
+				var me = this;
+				this.mButtons = {};
+
+				this.mButtons.CreateOPButton = this.addActionButton("${trans:m.order.bo.actions.createorderpreparation,ucf,js}", wToolkit.getIcon('add', 'small'));
+				this.mButtons.CreateOPButton.addEventListener('command', function(event) {me.onCreateOrderpreparation(event);}, true);
+				this.mButtons.CreateOPButton.setAttribute('hidden', 'true');
+				
+				this.mButtons.GenerateDefaultExpedition = this.addActionButton("${trans:m.order.bo.actions.generate-default-expedition,ucf,js}", wToolkit.getIcon('add', 'small'));
+				this.mButtons.GenerateDefaultExpedition.addEventListener('command', function(event) {me.generateDefaultExpedition(event);}, true);
+				this.mButtons.GenerateDefaultExpedition.setAttribute('hidden', 'true');
+						
+				this.mButtons.Finalize = this.addActionButton("${trans:m.order.bo.actions.finalize-order,ucf,js}", wToolkit.getIcon('check', 'small'));
+				this.mButtons.Finalize.addEventListener('command', function(event) {me.onFinalizeOrder(event);}, true);
+				this.mButtons.Finalize.disabled = true;
+													
 				this.addEventListener("gridInitialised", function (event) {return me.onGridInitialised(event);}, true);
-				this.addEventListener("addressInitialised", function (event) {return me.onAddressInitialised(event);}, true);		
+				this.addEventListener("addressInitialised", function (event) {return me.onAddressInitialised(event);}, true);
+				this.addEventListener("generateExpedition", function (event) {return me.onGenerateExpedition(event);}, true);		
 			]]></constructor>
-	
-			<method name="onCreateReturn">
-				<parameter name="event" />
+			
+			<method name="initUI">
 				<body><![CDATA[
-					var id = this.documentEditor.documentid;	
-					var uri = ['productreturns', 'createReturnForOrder', 'modules_productreturns_return', id].join(',');
-					var from = ['order', 'openDocument', 'modules_order_order', id, 'shipping'].join(',');
-					openActionUri(uri, from);
+				if (this.hasAttribute('uiinitiated')) {return;}
+
+				if (this.documentEditor.module.hasAttribute('useOrderPreparation'))
+				{
+					this.mButtons.CreateOPButton.removeAttribute('hidden');	
+				}
+				else
+				{
+					this.setAttribute('hideorderpreparation', 'true');
+				}
+				
+				if (this.documentEditor.module.hasAttribute('generateDefaultExpedition'))
+				{
+					this.mButtons.GenerateDefaultExpedition.removeAttribute('hidden');		
+				}
+				
+				this.setAttribute('uiinitiated', 'true');
 				]]></body>
 			</method>
-	
-			<method name="onCreateNPAIReturn">
-				<parameter name="event" />
+			
+			<method name="lockCommandsUI">
 				<body><![CDATA[
-					var id = this.documentEditor.documentid;	
-					var uri = ['productreturns', 'createNPAIReturnForOrder', 'modules_productreturns_npaireturn', id].join(',');
-					var from = ['order', 'openDocument', 'modules_order_order', id, 'shipping'].join(',');
-					openActionUri(uri, from);
+					for (var n in this.mButtons)
+					{
+						this.mButtons[n].disabled = true;
+					}
 				]]></body>
 			</method>
-	
+				
+			<method name="updateCommandsUI">
+				<body><![CDATA[
+					this.lockCommandsUI();
+					if (this.mInitData != null)
+					{
+						this.mButtons.Finalize.disabled = !this.mInitData.canBeFinalize;
+							
+						if (('CreateOPButton' in this.mButtons) && ('createOrderPreparation' in this.mInitData))
+						{
+							this.mButtons.CreateOPButton.disabled = false;
+						}
+						
+						if (('GenerateDefaultExpedition' in this.mButtons) && ('generateDefaultExpedition' in this.mInitData))
+						{
+							this.mButtons.GenerateDefaultExpedition.disabled = false;
+						}
+					}
+				]]></body>
+			</method>
+				
+			<method name="onFinalizeOrder">
+				<parameter name="event" />
+				<body><![CDATA[
+					this.lockCommandsUI();
+					if (confirm("${trans:m.order.bo.actions.finalize-order-confirm-message,ucf}"))
+					{
+						this.showTextMessage("${trans:m.order.bo.actions.finalize-order-in-progress,ucf}");
+						this.documentEditor.executeServerAction('shipping', 'FinalizeOrder');
+					}
+				]]></body>
+			</method>
+			
+			<method name="getFinalizeOrderParameters">
+				<body><![CDATA[
+					var attributes = {
+						action: 'FinalizeOrder',
+						cmpref: this.documentEditor.documentid, 
+						lang : this.documentEditor.documentInfos.vo
+					};
+					return attributes;
+				]]></body>
+			</method>
+			
+			<method name="fireFinalizeOrderComplete">
+				<parameter name="result" />
+				<body><![CDATA[			
+					if (result.status == "OK")
+					{					
+						this.documentEditor.clearTabs();				
+						this.fireInitializeComplete(result);						
+						this.showTextMessage("${trans:m.order.bo.actions.order-finalized,ucf,js}");
+					}
+					else
+					{
+						this.showErrorMessage(result.contents.errorMessage);					
+					}
+				]]></body>
+			</method>
+			
+			<method name="onCreateOrderpreparation">
+				<parameter name="event" />
+				<body><![CDATA[
+					this.documentEditor.executeModuleAction('createOrderpreparation');
+				]]></body>
+			</method>
+			
 			<method name="generateDefaultExpedition">
 				<body><![CDATA[
-					this.showTextMessage("${transui:m.order.bo.actions.generating-default-expedition,ucf,js}");
+					this.lockCommandsUI();
+					this.showTextMessage("${trans:m.order.bo.actions.generating-default-expedition,ucf,js}");
 					this.documentEditor.executeServerAction('shipping', 'GenerateDefaultExpedition');
 				]]></body>
 			</method>
@@ -90,36 +173,66 @@
 				<body><![CDATA[
 					this.fireInitializeComplete(result);
 				]]></body>
-			</method>		
+			</method>
+			
+			<method name="onGenerateExpedition">
+				<parameter name="event" />
+				<body><![CDATA[
+					var orderPreparationId = event.orderPreparationId;
+					this.lockCommandsUI();
+					this.showTextMessage("${trans:m.order.bo.actions.generating-default-expedition,ucf,js}");
+					this.setAttribute('orderPreparationId', orderPreparationId);
+					this.documentEditor.executeServerAction('shipping', 'GenerateExpedition');
+				]]></body>
+			</method>	
+			
+			<method name="getGenerateExpeditionParameters">
+				<body><![CDATA[
+					return {
+						action: 'GenerateExpedition',
+						cmpref: this.getAttribute('orderPreparationId'), 
+						lang : this.documentEditor.documentInfos.vo
+					};
+				]]></body>
+			</method>
+			
+			<method name="fireGenerateExpeditionComplete">
+				<parameter name="result" />
+				<body><![CDATA[
+					this.fireInitializeComplete(result);
+				]]></body>
+			</method>
 	
 			<method name="onGridInitialised">
 				<parameter name="event" />
 				<body><![CDATA[	
 					var grid = event.originalTarget;
+					var idts = this.mInitData;
+					
 					if (grid.className == 'orderexpeditions')
 					{
 						this.mOrderExpeditions = grid;
-						if (this.mInitData && this.mInitData.expeditionArray)
+						if (idts && idts.expeditionArray)
 						{
-							this.mOrderExpeditions.initJSONDataset(this.mInitData.expeditionArray);
+							this.mOrderExpeditions.initJSONDataset(idts.expeditionArray);
 						}	
 						else
 						{
 							this.mOrderExpeditions.initJSONDataset(null);
 						}
 					}
-					else if (grid.className == 'orderreturns')
+					else if (grid.className == 'orderpreparations')
 					{
-						this.mOrderReturns = grid;
-						if (this.mInitData && "returnsArray" in this.mInitData && this.mInitData.returnArray)
+						this.mOrderPreparations = grid;
+						if (idts && "orderPreparationArray" in idts && idts.orderPreparationArray)
 						{
-							this.mOrderReturns.initJSONDataset(this.mInitData.returnsArray);
+							this.mOrderPreparations.initJSONDataset(idts.orderPreparationArray);
 						}	
 						else
 						{
-							this.mOrderReturns.initJSONDataset(null);
+							this.mOrderPreparations.initJSONDataset(null);
 						}
-					}	
+					}
 				]]></body>
 			</method>
 			
@@ -127,7 +240,6 @@
 				<parameter name="event" />
 				<body><![CDATA[	
 					var grid = event.originalTarget;
-					wCore.debug('onAddressInitialised :' + grid.className);
 					if (grid.className == 'customeraddress')
 					{
 						this.mAddress = grid;
@@ -142,9 +254,10 @@
 					}	
 				]]></body>
 			</method>
-					
+							
 			<method name="getInitializeParameters">
 				<body><![CDATA[
+					this.initUI();
 					return {
 						action: 'LoadOrderShipping',
 						cmpref: this.documentEditor.documentid, 
@@ -161,38 +274,42 @@
 						this.showErrorMessage(result.contents.errorMessage);
 						this.collapseContentZone(true);						
 						this.mInitialized = true;
+						this.mInitData = null;
+						this.lockCommandsUI();
 						return;
+					}
+					var idts = result.contents;
+					this.mInitData = idts;
+					
+					if ('orderPreparationArray' in idts)
+					{
+						if (this.mOrderPreparations)
+						{
+							this.mOrderPreparations.initJSONDataset(idts.orderPreparationArray);
+						}
 					}
 					
 					// Expeditions.
 					var nodeMessage = this.getElementByAnonId('expedition-message');
-					var nodeGrid = this.getElementByAnonId('expedition-grid');
-					this.mInitData = result.contents;
-					if ('expeditionArray' in this.mInitData && this.mInitData.expeditionArray.length > 0)
+					if ('expeditionArray' in idts && idts.expeditionArray.length > 0)
 					{
-						nodeGrid.removeAttribute('collapsed');
+						this.removeAttribute('collapseexpeditions');
 						nodeMessage.setAttribute('collapsed', 'true');
 						if (this.mOrderExpeditions)
 						{
-							this.mOrderExpeditions.initJSONDataset(this.mInitData.expeditionArray);
+							this.mOrderExpeditions.initJSONDataset(idts.expeditionArray);
 						}
 					}	
 					else
 					{
-						nodeGrid.setAttribute('collapsed', 'true');
-						if ('showExpeditionMessage' in this.mInitData && this.mInitData.showExpeditionMessage)
+						this.setAttribute('collapseexpeditions', 'true');
+						if (this.mOrderExpeditions)
+						{
+							this.mOrderExpeditions.initJSONDataset(null);
+						}
+						if ('showExpeditionMessage' in idts && idts.showExpeditionMessage)
 						{
 							nodeMessage.removeAttribute('collapsed');
-							
-							var nodeButton = this.getElementByAnonId('generate-default-expedition');
-							if ('allowCreatedefaultExpedition' in this.mInitData && this.mInitData.allowCreatedefaultExpedition)
-							{
-								nodeButton.removeAttribute('collapsed');
-							}
-							else
-							{
-								nodeButton.setAttribute('collapsed', 'true');
-							}
 						}
 						else
 						{
@@ -200,25 +317,13 @@
 						}
 					}
 					
-					// Returns.					
-					if ("returnsArray" in this.mInitData)
-					{
-						if (this.mOrderReturns)
-						{
-							this.mOrderReturns.initJSONDataset(this.mInitData.returnsArray);
-						}
-					}
-					else
-					{
-						this.getElementByAnonId('orderreturns').setAttribute('hidden', 'true');
-					}
-					
 					// Address.
 					if (this.mAddress)
 					{
-						this.mAddress.initJSONDataset(this.mInitData.address);
+						this.mAddress.initJSONDataset(idts.address);
 					}
-																	
+					
+					this.updateCommandsUI();												
 					this.collapseContentZone(false);
 					this.mInitialized = true;
 					this.fireEvent("panelInitializeComplete");

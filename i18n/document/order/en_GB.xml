@@ -1,21 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.order" lcid="en_GB">
-  <key id="edition-form-title">order properties</key>
-  <key id="document-name">order</key>
-  <key id="creationdate">creation date</key>
-  <key id="commentadmin">administrator comment</key>
-  <key id="commentadmin-help">This comment will only be seen here. Its purpose it to write down remarks about this order.</key>
-  <key id="orderstatus">status</key>
-  <key id="bostatusasjson">status</key>
-  <key id="bostatusasjson-help">When the status of an order changes, an email notification is sent to the customer ({customerName}). This behaviour may be changed in the "Notification" module, located in the Administration menu under the main menu of RBS Change.</key>
-  <key id="amountwithtax">sub-total incl. taxes</key>
-  <key id="amountwithouttax">sub-total without tax</key>
-  <key id="totalamountwithtax">total amount incl. taxes</key>
-  <key id="totalamountwithouttax">total amount excluding taxes</key>
-  <key id="currencycode">currency code</key>
-  <key id="currencysymbol">currency symbol</key>
-  <key id="ordernumber">number</key>
-  <key id="reference">reference</key>
-  <key id="needsanswer">answer pending</key>
-  <key id="shippingmode">shipping method</key>
+	<key id="edition-form-title">order properties</key>
+	<key id="document-name">order</key>
+	<key id="creationdate">creation date</key>
+	<key id="commentadmin">administrator comment</key>
+	<key id="commentadmin-help">This comment will only be seen here. Its purpose it to write down remarks about this order.</key>
+	<key id="orderstatus">status</key>
+	<key id="bostatusasjson">status</key>
+	<key id="bostatusasjson-help">When the status of an order changes, an email notification is sent to the customer ({customerName}). This behaviour may be changed in the "Notification" module, located in the Administration menu under the main menu of RBS Change.</key>
+	<key id="amountwithtax">sub-total incl. taxes</key>
+	<key id="amountwithouttax">sub-total without tax</key>
+	<key id="totalamountwithtax">total amount incl. taxes</key>
+	<key id="totalamountwithouttax">total amount excluding taxes</key>
+	<key id="currencycode">currency code</key>
+	<key id="currencysymbol">currency symbol</key>
+	<key id="ordernumber">number</key>
+	<key id="reference">reference</key>
+	<key id="needsanswer">answer pending</key>
+	<key id="shippingmode">shipping method</key>
 </i18n>

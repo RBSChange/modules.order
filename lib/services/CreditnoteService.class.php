@@ -1,27 +1,10 @@
 <?php
 /**
- * order_CreditnoteService
  * @package modules.order
+ * @method order_CreditnoteService getInstance()
  */
 class order_CreditnoteService extends f_persistentdocument_DocumentService
 {
-	/**
-	 * @var order_CreditnoteService
-	 */
-	private static $instance;
-
-	/**
-	 * @return order_CreditnoteService
-	 */
-	public static function getInstance()
-	{
-		if (self::$instance === null)
-		{
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
-
 	/**
 	 * @return order_persistentdocument_creditnote
 	 */
@@ -38,7 +21,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	 */
 	public function createQuery()
 	{
-		return $this->pp->createQuery('modules_order/creditnote');
+		return $this->getPersistentProvider()->createQuery('modules_order/creditnote');
 	}
 	
 	/**
@@ -49,12 +32,12 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	 */
 	public function createStrictQuery()
 	{
-		return $this->pp->createQuery('modules_order/creditnote', false);
+		return $this->getPersistentProvider()->createQuery('modules_order/creditnote', false);
 	}
 	
 	/**
 	 * @param order_persistentdocument_creditnote $document
-	 * @param Integer $parentNodeId Parent node ID where to save the document.
+	 * @param integer $parentNodeId Parent node ID where to save the document.
 	 * @return void
 	 */
 	protected function preInsert($document, $parentNodeId)
@@ -220,9 +203,10 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		$order->setCreditNoteDataArray(null);
 		$order->removeAllUsecreditnote();
 		
+		$pf = catalog_PriceFormatter::getInstance();
 	
 		$totalAmountWithTax = $cart->getTotalWithTax();
-		$order->setTotalAmountWithoutTax(catalog_PriceFormatter::getInstance()->round($cart->getTotalWithoutTax()));
+		$order->setTotalAmountWithoutTax($pf->round($cart->getTotalWithoutTax(), $order->getCurrencyCode()));
 		
 
 		$newCreditNoteDataArray = array();
@@ -260,7 +244,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 			}
 		}
 		
-		$order->setTotalAmountWithTax(catalog_PriceFormatter::getInstance()->round($totalAmountWithTax));
+		$order->setTotalAmountWithTax($pf->round($totalAmountWithTax,$order->getCurrencyCode()));
 	}
 	
 	/**
@@ -318,7 +302,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	 * @param string $actionType
 	 * @param array $formProperties
 	 */
-	public function addFormProperties($document, $propertiesNames, &$formProperties)
+	public function addFormProperties($document, $propertiesNames, &$formProperties, $parentId = null)
 	{	
 		$tamount = $this->getTotalAmountForOrder($document->getOrder(), $document);
 		$document->setOtherCreditNoteAmount($tamount);
@@ -375,27 +359,15 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		$this->save($document);
 		
 		// Send the notification.
-		$order = $document->getOrder();
-		$wms = website_WebsiteService::getInstance();
-		$currentWebsite = $wms->getCurrentWebsite();
-		$wms->setCurrentWebsite($order->getWebsite());
-		$rc = RequestContext::getInstance();
-		try 
+		$order = $document->getOrder();		
+		$notification = notification_NotificationService::getInstance()->getConfiguredByCodeName('modules_order/reCreditNote', $order->getWebsiteId(), $order->getLang());
+		if ($notification)
 		{
-			$rc->beginI18nWork($order->getLang());
-			
+			$notification->setSendingModuleName('order');
+			$notification->addGlobalParam('repaymentAmount', $order->formatPrice($reCreditedAmount));
+			$notification->registerCallback($this, 'getNotificationParameter', $document);		
 			$user = $order->getCustomer()->getUser();
-			$replacements = $this->getNotificationParameter($document);
-			$replacements['repaymentAmount'] = $order->formatPrice($reCreditedAmount);
-			users_UserService::getInstance()->sendNotificationToUser($user, 'modules_order/reCreditNote', $replacements, 'order');
-			
-			$wms->setCurrentWebsite($currentWebsite);
-			$rc->endI18nWork();
-		}
-		catch (Exception $e)
-		{
-			$wms->setCurrentWebsite($currentWebsite);
-			$rc->endI18nWork($e);
+			$notification->sendToUser($user);
 		}
 	}
 	
@@ -421,9 +393,9 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * 
 	 * @param customer_persistentdocument_customer $customer
-	 * @param Boolean $includeRepayments
+	 * @param boolean $includeRepayments
+	 * @return order_persistentdocument_creditnote[]
 	 */
 	public function getByCustomer($customer, $includeRepayments = false, $includeUsedCreditNotes = true)
 	{
@@ -441,12 +413,25 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param customer_persistentdocument_customer $customer
+	 * @return order_persistentdocument_creditnote[]
 	 */
 	public function getRepaymentsByCustomer($customer)
 	{
 		$query = $this->createQuery()->add(Restrictions::published())
-					->add(Restrictions::eq('customer', $customer))
-					->add(Restrictions::isNotNull('transactionDate'));
+			->add(Restrictions::eq('customer', $customer))
+			->add(Restrictions::isNotNull('transactionDate'));
 		return $query->find();
+	}
+	
+	/**
+	 * @param customer_persistentdocument_customer $customer
+	 * @return float
+	 */
+	public function getTotalAvailableAmountByCustomer($customer)
+	{
+		$query = $this->createQuery()->add(Restrictions::published())->add(Restrictions::eq('customer', $customer));
+		$query->add(Restrictions::gt('amountNotApplied', 0.000001));
+		$query->setProjection(Projections::sum('amountNotApplied', 'availableAmount'));
+		return f_util_ArrayUtils::firstElement($query->findColumn('availableAmount'));
 	}
 }

@@ -2,7 +2,7 @@
 class order_ContainedProductCartshippingFilter extends order_ContainedProductCartFilter
 {
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

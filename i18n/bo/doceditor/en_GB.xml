@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.doceditor" lcid="en_GB">
-  <key id="actions">Actions</key>
-  <key id="bills">invoices</key>
-  <key id="cancelation-in-progress">cancelling this order</key>
-  <key id="confirm-cancelation">By cancelling this order, the amount of non-shipped products will be transferred to your account as credit. Beware, this operation cannot be undone.</key>
-  <key id="creditnotes">Credits</key>
-  <key id="customer">customer</key>
-  <key id="expeditions">shipments</key>
-  <key id="links">Related documents</key>
-  <key id="order">order</key>
-  <key id="returns">returns</key>
+	<key id="actions">Actions</key>
+	<key id="bills">invoices</key>
+	<key id="cancelation-in-progress">cancelling this order</key>
+	<key id="confirm-cancelation">By cancelling this order, the amount of non-shipped products will be transferred to your account as credit. Beware, this operation cannot be undone.</key>
+	<key id="creditnotes">Credits</key>
+	<key id="customer">customer</key>
+	<key id="expeditions">shipments</key>
+	<key id="links">Related documents</key>
+	<key id="order">order</key>
+	<key id="returns">returns</key>
 </i18n>

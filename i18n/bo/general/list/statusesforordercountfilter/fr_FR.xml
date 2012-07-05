@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.general.list.statusesforordercountfilter" lcid="fr_FR">
-  <key id="label">catégories de commandes par statut</key>
-  <key id="description">Liste des catégories de commandes par statut utilisés pour certains filtres.</key>
-  <key id="paid">payée</key>
-  <key id="uncancelled">non-annulée</key>
-  <key id="all">toutes</key>
+	<key id="label">catégories de commandes par statut</key>
+	<key id="description">Liste des catégories de commandes par statut utilisés pour certains filtres.</key>
+	<key id="paid">payée</key>
+	<key id="uncancelled">non-annulée</key>
+	<key id="all">toutes</key>
 </i18n>

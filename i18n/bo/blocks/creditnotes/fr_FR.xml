@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.blocks.creditnotes" lcid="fr_FR">
-	<key id="title">avoirs</key>
+	<key id="title">Avoirs</key>
 	<key id="includerepayments">inclure les remboursements</key>
 	<key id="includerepayments-help">inclure ou non les remboursements</key>
 	<key id="includeusedcreditnotes">inclure les avoirs utilisés</key>

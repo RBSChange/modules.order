@@ -3,7 +3,7 @@ class order_ViewOrderBillStrategy extends media_DisplaySecuremediaStrategy
 {
 	/**
 	 * @param media_persistentdocument_securemedia $media
-	 * @return Integer
+	 * @return integer
 	 */
 	public function canDisplayMedia($media)
 	{

@@ -1,27 +1,10 @@
 <?php
 /**
- * order_CartmodifierService
  * @package modules.order
+ * @method order_CartmodifierService getInstance()
  */
 class order_CartmodifierService extends f_persistentdocument_DocumentService
 {
-	/**
-	 * @var order_CartmodifierService
-	 */
-	private static $instance;
-
-	/**
-	 * @return order_CartmodifierService
-	 */
-	public static function getInstance()
-	{
-		if (self::$instance === null)
-		{
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
-
 	/**
 	 * @return order_persistentdocument_cartmodifier
 	 */
@@ -38,7 +21,7 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 	 */
 	public function createQuery()
 	{
-		return $this->pp->createQuery('modules_order/cartmodifier');
+		return $this->getPersistentProvider()->createQuery('modules_order/cartmodifier');
 	}
 	
 	/**
@@ -49,7 +32,27 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 	 */
 	public function createStrictQuery()
 	{
-		return $this->pp->createQuery('modules_order/cartmodifier', false);
+		return $this->getPersistentProvider()->createQuery('modules_order/cartmodifier', false);
+	}
+	
+	/**
+	 * @param order_persistentdocument_cartmodifier $document
+	 * @param integer $parentNodeId Parent node ID where to save the document.
+	 * @return void
+	 */
+	protected function preInsert($document, $parentNodeId)
+	{
+		$document->setInsertInTree(false);
+		if ($document->getShop() === null)
+		{
+			$shop = catalog_persistentdocument_shop::getInstanceById($parentNodeId); 
+			$document->setShop($shop);
+		}
+		
+		if ($document->getBillingArea() === null)
+		{
+			$document->setBillingArea($document->getShop()->getDefaultBillingArea());
+		}		
 	}
 	
 	/**
@@ -73,6 +76,7 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 		$newModifiers = array();				
 		$query = $this->createQuery()->add(Restrictions::published())
 			->add(Restrictions::eq('shop', $cart->getShop()))
+			->add(Restrictions::eq('billingArea', $cart->getBillingArea()))
 			->add(Restrictions::eq('exclusive', true))
 			->addOrder(Order::desc('applicationPriority'))
 			->addOrder(Order::asc('id'));
@@ -99,6 +103,7 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 			$exludeModifier = array();
 			$query = $this->createQuery()->add(Restrictions::published())
 				->add(Restrictions::eq('shop', $cart->getShop()))
+				->add(Restrictions::eq('billingArea', $cart->getBillingArea()))
 				->add(Restrictions::eq('exclusive', false))
 				->add(Restrictions::isNotEmpty('excludeModifier'))
 				->addOrder(Order::desc('applicationPriority'))
@@ -127,6 +132,7 @@ class order_CartmodifierService extends f_persistentdocument_DocumentService
 	
 			$query = $this->createQuery()->add(Restrictions::published())
 				->add(Restrictions::eq('shop', $cart->getShop()))
+				->add(Restrictions::eq('billingArea', $cart->getBillingArea()))
 				->add(Restrictions::eq('exclusive', false))
 				->add(Restrictions::isEmpty('excludeModifier'))
 				->addOrder(Order::desc('applicationPriority'))

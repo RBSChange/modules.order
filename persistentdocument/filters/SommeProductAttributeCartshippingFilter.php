@@ -2,7 +2,7 @@
 class order_SommeProductAttributeCartshippingFilter extends order_SommeProductAttributeFilter
 {
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

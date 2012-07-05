@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.strategy" lcid="en_GB">
-  <key id="cartpriceshippingstrategy-ranges">Fee ranges</key>
-  <key id="cartpriceshippingstrategy-ranges-help">For instance, '500=0,250=10' means 'free' for 500 and more, '10 €' for 250 and more, otherwise 'the default value'.</key>
-  <key id="cartpriceshippingstrategy-strategylabel">Fee label</key>
-  <key id="defaultshippingstrategy-strategylabel">Fee label</key>
+	<key id="cartpriceshippingstrategy-ranges">Fee ranges</key>
+	<key id="cartpriceshippingstrategy-ranges-help">For instance, '500=0,250=10' means 'free' for 500 and more, '10 €' for 250 and more, otherwise 'the default value'.</key>
+	<key id="cartpriceshippingstrategy-strategylabel">Fee label</key>
+	<key id="defaultshippingstrategy-strategylabel">Fee label</key>
 </i18n>

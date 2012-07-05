@@ -1,36 +1,30 @@
-<?xml version="1.0"?>
-<panel>	
-	<section name="properties" linkedtab="properties" actiontexti18n="m.uixul.bo.doceditor.section.action.view"
-		labeli18n="m.uixul.bo.doceditor.section.properties" image="{IconsBase}/small/edit-properties.png">
+<?xml version="1.0" encoding="UTF-8"?>
+<panel>
+	<section name="properties" linkedtab="properties" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.uixul.bo.doceditor.section.properties" image="{IconsBase}/small/edit-properties.png">
 		<property name="orderNumber" labeli18n="m.order.bo.doceditor.property.reference" />
-		<property name="orderStatus" labeli18n="m.order.bo.doceditor.property.order-status" />		
+		<property name="orderStatus" labeli18n="m.order.bo.doceditor.property.order-status" />
 		<property name="customerFullName" labeli18n="m.order.bo.doceditor.property.customer-full-name" />
 		<property name="customerCode" labeli18n="m.order.bo.doceditor.property.customer-code" />
 		<property name="creationdate" labeli18n="m.uixul.bo.doceditor.property.creationdate" />
 	</section>
-		
-	<section name="financial" linkedtab="financial" actiontexti18n="m.uixul.bo.doceditor.section.action.view"
-		labeli18n="m.order.bo.doceditor.tab.financial" image="{IconsBase}/small/price.png">
+	<section name="financial" linkedtab="financial" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.order.bo.doceditor.tab.financial" image="{IconsBase}/small/price.png">
 		<property name="usedCreditNote" labeli18n="m.order.bo.doceditor.property.used-credit-note" />
 		<property name="totalAmount" labeli18n="m.order.bo.doceditor.property.total-amount" />
 		<property name="paymentStatus" labeli18n="m.order.bo.doceditor.property.payment-status" />
-	</section>		
-		
-	<section name="shipping" linkedtab="shipping" actiontexti18n="m.uixul.bo.doceditor.section.action.view"
-		labeli18n="m.order.bo.doceditor.tab.shipping" image="{IconsBase}/small/redirection.png">
+	</section>
+	<section name="shipping" linkedtab="shipping" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.order.bo.doceditor.tab.shipping" image="{IconsBase}/small/redirection.png">
 		<property name="shippingStatus" labeli18n="m.order.bo.doceditor.property.shipping-status" />
-	</section>	
-		
-	<section name="messages" linkedtab="messages" actiontexti18n="m.uixul.bo.doceditor.section.action.view"
-		labeli18n="m.order.bo.doceditor.section.messages" image="{IconsBase}/small/mail.png">
-		<property name="totalCount" labeli18n="m.order.bo.doceditor.property.total-count"/>
-		<property name="fromCustomerCount" labeli18n="m.order.bo.doceditor.property.from-customer-message-count"/>
-		<property name="toCustomerCount" labeli18n="m.order.bo.doceditor.property.to-customer-message-count"/>
+	</section>
+	<section name="messages" linkedtab="messages" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.order.bo.doceditor.section.messages" image="{IconsBase}/small/mail.png">
+		<property name="totalCount" labeli18n="m.order.bo.doceditor.property.total-count" />
+		<property name="fromCustomerCount" labeli18n="m.order.bo.doceditor.property.from-customer-message-count" />
+		<property name="toCustomerCount" labeli18n="m.order.bo.doceditor.property.to-customer-message-count" />
 		<property name="needsAnswer" labeli18n="m.order.bo.doceditor.property.needsanswer" />
-	</section>		
-	
-	<section name="history" linkedtab="history" actiontexti18n="m.uixul.bo.doceditor.section.action.view"
-		labeli18n="m.uixul.bo.doceditor.section.history" image="{IconsBase}/small/history.png">
-		<property name="modificationdate" labeli18n="m.uixul.bo.doceditor.property.modificationdate"/>
-	</section>			
+	</section>
+	<section flex="1" name="urlrewriting" labeli18n="m.uixul.bo.doceditor.section.urlrewriting" image="{IconsBase}/small/urlrewriting.png">
+		<property name="currenturl" labeli18n="m.uixul.bo.doceditor.property.currenturl" class="link" />
+	</section>
+	<section name="history" linkedtab="history" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.uixul.bo.doceditor.section.history" image="{IconsBase}/small/history.png">
+		<property name="modificationdate" labeli18n="m.uixul.bo.doceditor.property.modificationdate" />
+	</section>
 </panel>

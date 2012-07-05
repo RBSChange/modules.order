@@ -1,29 +1,25 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <panel>
-  <section name="properties" linkedtab="properties" labeli18n="m.uixul.bo.doceditor.section.properties" image="{IconsBase}/small/edit-properties.png">
-    <property name="author" labeli18n="m.uixul.bo.doceditor.property.author"/>
-    <property name="creationdate" labeli18n="m.uixul.bo.doceditor.property.creationdate"/>
-    <property name="label" labeli18n="m.order.document.bill.label"/>
-    <property name="status" labeli18n="m.uixul.bo.doceditor.property.status"/>  
-    <property name="amount" labeli18n="m.order.document.bill.amount"/>
-  </section>
-  
-  <section name="transaction" labeli18n="m.order.bo.doceditor.bill.transaction-infos" image="{IconsBase}/small/order.png">
-  	<property name="transactionDate" labeli18n="m.order.document.bill.transactiondate"/>
-    <property name="transactionId" labeli18n="m.order.document.bill.transactionid"/>
-  	<property name="transactionInfo" labeli18n="m.order.document.bill.transactioninfo" class="order-transaction-info" />
-  </section>
-  
-  <section name="links" labeli18n="m.order.bo.doceditor.links" image="{IconsBase}/small/document.png">
-  	 <property name="customer" labeli18n="m.order.bo.doceditor.customer"/>
-  	 <property name="order" labeli18n="m.order.bo.doceditor.order"/>
-  </section>
-  
-  <section name="publication" linkedtab="publication" labeli18n="m.uixul.bo.doceditor.section.status" image="{IconsBase}/small/status.png">
-    <property name="status" labeli18n="m.uixul.bo.doceditor.property.status"/>
-  </section>
-  
-  <section name="history" linkedtab="history" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.uixul.bo.doceditor.section.history" image="{IconsBase}/small/history.png">
-    <property name="modificationdate" labeli18n="m.uixul.bo.doceditor.property.modificationdate"/>
-  </section>
+	<section name="properties" linkedtab="properties" labeli18n="m.uixul.bo.doceditor.section.properties" image="{IconsBase}/small/edit-properties.png">
+		<property name="author" labeli18n="m.uixul.bo.doceditor.property.author" />
+		<property name="creationdate" labeli18n="m.uixul.bo.doceditor.property.creationdate" />
+		<property name="label" labeli18n="m.order.document.bill.label" />
+		<property name="status" labeli18n="m.uixul.bo.doceditor.property.status" />
+		<property name="amount" labeli18n="m.order.document.bill.amount" />
+	</section>
+	<section name="transaction" labeli18n="m.order.bo.doceditor.bill.transaction-infos" image="{IconsBase}/small/order.png">
+		<property name="transactionDate" labeli18n="m.order.document.bill.transactiondate" />
+		<property name="transactionId" labeli18n="m.order.document.bill.transactionid" />
+		<property name="transactionInfo" labeli18n="m.order.document.bill.transactioninfo" class="order-transaction-info" />
+	</section>
+	<section name="links" labeli18n="m.order.bo.doceditor.links" image="{IconsBase}/small/document.png">
+		<property name="customer" labeli18n="m.order.bo.doceditor.customer" />
+		<property name="order" labeli18n="m.order.bo.doceditor.order" />
+	</section>
+	<section name="publication" linkedtab="publication" labeli18n="m.uixul.bo.doceditor.section.status" image="{IconsBase}/small/status.png">
+		<property name="status" labeli18n="m.uixul.bo.doceditor.property.status" />
+	</section>
+	<section name="history" linkedtab="history" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.uixul.bo.doceditor.section.history" image="{IconsBase}/small/history.png">
+		<property name="modificationdate" labeli18n="m.uixul.bo.doceditor.property.modificationdate" />
+	</section>
 </panel>

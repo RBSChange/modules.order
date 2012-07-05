@@ -5,15 +5,15 @@
  */
 class order_ExpeditionScriptDocumentElement extends import_ScriptDocumentElement
 {
-    /**
-     * @return order_persistentdocument_expedition
-     */
-    protected function initPersistentDocument()
-    {
-    	return order_ExpeditionService::getInstance()->createForOrder($this->getOrderDocument());
-    }
-    
-    /**
+	/**
+	 * @return order_persistentdocument_expedition
+	 */
+	protected function initPersistentDocument()
+	{
+		return order_ExpeditionService::getInstance()->createForOrder($this->getOrderDocument());
+	}
+	
+	/**
 	 * @return f_persistentdocument_PersistentDocumentModel
 	 */
 	protected function getDocumentModel()

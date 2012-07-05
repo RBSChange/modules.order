@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <script>
 	<binding fileName="modules/list/persistentdocument/import/list_binding.xml" />
-	
 	<systemfolder module="list" relatedmodule="order">
 		<staticlist listid="modules_order/creditnotefilter" label="Valeur des filtres sur les avoirs">
-			<staticitem label="&amp;modules.order.bo.documentfilters.creditnote-hascreditnote;" value="hascreditnote" />
-			<staticitem label="&amp;modules.order.bo.documentfilters.creditnote-consumecreditnote;" value="consumecreditnote" />
-			<staticitem label="&amp;modules.order.bo.documentfilters.creditnote-nocreditnote;" value="nocreditnote" />
-		</staticlist>	
+			<staticitem label="m.order.bo.documentfilters.creditnote-hascreditnote" value="hascreditnote" />
+			<staticitem label="m.order.bo.documentfilters.creditnote-consumecreditnote" value="consumecreditnote" />
+			<staticitem label="m.order.bo.documentfilters.creditnote-nocreditnote" value="nocreditnote" />
+		</staticlist>
 	</systemfolder>
 </script>

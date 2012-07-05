@@ -12,7 +12,7 @@ class order_ShopOrderFilter extends f_persistentdocument_DocumentFilterImpl
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

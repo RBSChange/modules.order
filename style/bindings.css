@@ -48,6 +48,10 @@ cdocumenteditor#edt_order_expedition cresumesection[sectionname="lines"] linesgr
 	-moz-binding: url(binding:modules.order.cOrderEditor#cExpeditionLinesGrid);
 }
 
+cdocumenteditor#edt_order_expedition gridlist.boExplinesJSON{
+	-moz-binding: url(binding:modules.order.cOrderEditor#cEditExpeditionLinesGrid);
+}
+
 wdialog[template="ValidateBill"]{
 	-moz-binding: url(binding:modules.order.cOrderEditor#validateBillDialog);
 }
@@ -57,4 +61,11 @@ wdialog[template="ShipExpedition"]{
 
 cproperty.shipExpedition{
 	-moz-binding: url(binding:modules.order.cOrderEditor#cShipExpeditionProperty);
+}
+
+cdocumenteditor#edt_order_orderpreparation gridlist.oplinesJSON{
+	-moz-binding: url(binding:modules.order.cOrderPreparation#cLinesGrid);
+}
+cdocumenteditor#edt_order_order cfieldsgroup.orderpreparations{
+	-moz-binding: url(binding:modules.order.cOrderPreparation#cOrderpreparationsGrid);
 }

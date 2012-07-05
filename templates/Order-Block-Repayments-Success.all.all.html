@@ -1,22 +1,20 @@
 <h2 change:h="">${trans:m.order.frontoffice.repayments-title,ucf}</h2>
 <p tal:condition="not: repayments">${trans:m.order.frontoffice.repayments-empty,ucf}</p>
-<div tal:condition="repayments">
-	<table border="0" class="normal">
-		<thead>
-			<tr>		
-				<th>${trans:m.order.frontoffice.repayments-repayment,ucf}</th>
-				<th>${trans:m.order.frontoffice.repayments-date,ucf}</th>
-				<th>${trans:m.order.frontoffice.repayments-total-amount,ucf}</th>
-				<th>${trans:m.order.frontoffice.repayments-order,ucf}</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr tal:repeat="repayment repayments" class="row-${repeat/repayment/odd}">	
-				<td>${structure repayment/getLabelAsHtml}</td>
-				<td>${datetime:repayment/getUITransactionDate}</td>
-				<td class="pricettc">${repayment/getAmountFormated}</td>
-				<td><a change:link="document repayment/getOrder">${repayment/getOrderNumber}</a></td>
-			</tr>
-		</tbody>
-	</table>
-</div>					
+<table class="normal" tal:condition="repayments">
+	<thead>
+		<tr>		
+			<th>${trans:m.order.frontoffice.repayments-repayment,ucf}</th>
+			<th>${trans:m.order.frontoffice.repayments-date,ucf}</th>
+			<th>${trans:m.order.frontoffice.repayments-total-amount,ucf}</th>
+			<th>${trans:m.order.frontoffice.repayments-order,ucf}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="repayment repayments" class="row-${repeat/repayment/odd}">	
+			<td>${structure repayment/getLabelAsHtml}</td>
+			<td>${datetime:repayment/getUITransactionDate}</td>
+			<td class="price">${repayment/getAmountFormated}</td>
+			<td><a change:link="document repayment/getOrder">${repayment/getOrderNumber}</a></td>
+		</tr>
+	</tbody>
+</table>

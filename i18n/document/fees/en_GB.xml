@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.fees" lcid="en_GB">
-  <include id="m.order.document.cartmodifier"/>
-  <key id="document-name">fees</key>
-  <key id="query">conditions</key>
-  <key id="applicationstrategy">Fee action</key>
-  <key id="applicationstrategy-help">Defines how the fees affect the basket.</key>
-  <key id="application-conditions">application conditions</key>
-  <key id="strategy-cart-price-shipping">shipping fees decreasing in function based on the amount of the lines in the basket</key>
-  <key id="strategy-default-shipping">default shipping fee</key>
+	<include id="m.order.document.cartmodifier" />
+	<key id="document-name">fees</key>
+	<key id="query">conditions</key>
+	<key id="applicationstrategy">Fee action</key>
+	<key id="applicationstrategy-help">Defines how the fees affect the basket.</key>
+	<key id="application-conditions">application conditions</key>
+	<key id="strategy-cart-price-shipping">shipping fees decreasing in function based on the amount of the lines in the basket</key>
+	<key id="strategy-default-shipping">default shipping fee</key>
 </i18n>

@@ -12,11 +12,12 @@
 				<contextaction name="activate" />
 				<contextaction name="deactivated" />
 				<contextaction name="reactivate" />
+				<contextaction name="duplicate" />
 			</contextactions>
 		</model>
 	</models>
 	<actions>
 		<action name="createFees" single="true" permission="Insert_fees" icon="add" 
-			labeli18n="m.order.bo.actions.createfees"/>
+			labeli18n="m.order.bo.actions.createFees"/>
 	</actions>
 </perspective>

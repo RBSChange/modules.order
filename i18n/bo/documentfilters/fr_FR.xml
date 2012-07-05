@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.documentfilters" lcid="fr_FR">
 	<key id="query-on-cart">panier satisfaisant l'ensemble des critères suivants</key>
 	<key id="or-query-on-cart">panier satisfaisant un des critères suivants</key>
@@ -63,5 +63,11 @@
 	<key id="firstordercartfilter-label">première commande</key>
 	<key id="firstordercartfilter-text">première commande du client</key>
 	<key id="payedordersfilter-label">les commandes ayant au moins une facture payée</key>
-        <key id="payedordersfilter-text">les commandes ayant au moins une facture payée</key>
+	<key id="payedordersfilter-text">les commandes ayant au moins une facture payée</key>
+	<key id="containedproductorderfilter-label">présence d'un produit</key>
+	<key id="containedproductorderfilter-text">les commandes contenant au moins l'un des produits {product}</key>
+	<key id="paymentstatusorderfilter-label">statut du paiement</key>
+	<key id="paymentstatusorderfilter-text">les commandes ayant {restriction} facture {status}</key>
+	<key id="paymentstatuscustomerfilter-label">statut du paiement des commandes</key>
+	<key id="paymentstatuscustomerfilter-text">les clients qui ont au moins {count} commandes avec {restriction} facture {status}</key>
 </i18n>

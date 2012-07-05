@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.blocks.cart" lcid="en_GB">
-  <key id="title">current basket (detailed)</key>
-  <key id="showtotalwithfees">include the fees</key>
-  <key id="showevaluateshipping">shipping fee evaluation</key>
-  <key id="showinstructions">basket instructions</key>
-  <key id="showtotalwithfees-help">Include or do not include the shipping fees in the displayed total.</key>
-  <key id="usecartemptypage">use the "empty basket" page</key>
-  <key id="usecartemptypage-help">Redirect to the page with an "Empty basket" tag if the basket is empty.</key>
+	<key id="title">current basket (detailed)</key>
+	<key id="showevaluateshipping">shipping fee evaluation</key>
+	<key id="showevaluateshipping-help">Show or hide the shipping fees evaluation form.</key>
+	<key id="showinstructions">basket instructions</key>
+	<key id="showinstructions-help">Show or hide the instructions on using the basket for visitors.</key>
+	<key id="usecartemptypage">use the "empty basket" page</key>
+	<key id="usecartemptypage-help">Redirect to the page with an "Empty basket" tag if the basket is empty.</key>
 </i18n>

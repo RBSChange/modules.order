@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.permission" lcid="fr_FR">
-  <key id="edition-form-title">gestion des droits</key>
-  <key id="admin">Administrateur</key>
-  <key id="admin-help">Administrateur</key>
-  <key id="writer">Rédacteur</key>
-  <key id="writer-help">Rédacteur</key>
-  <key id="translator">Traducteur</key>
-  <key id="translator-help">Traducteur</key>
-  <key id="validator">Validateur</key>
-  <key id="validator-help">Validateur du contenu avant publication</key>
-  <key id="user">Utilisateur</key>
-  <key id="user-help">Utilisateur</key>
+	<key id="edition-form-title">gestion des droits</key>
+	<key id="admin">Administrateur</key>
+	<key id="admin-help">Administrateur</key>
+	<key id="writer">Rédacteur</key>
+	<key id="writer-help">Rédacteur</key>
+	<key id="translator">Traducteur</key>
+	<key id="translator-help">Traducteur</key>
+	<key id="validator">Validateur</key>
+	<key id="validator-help">Validateur du contenu avant publication</key>
+	<key id="user">Utilisateur</key>
+	<key id="user-help">Utilisateur</key>
 </i18n>

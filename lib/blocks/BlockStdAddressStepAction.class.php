@@ -1,13 +1,11 @@
 <?php
 /**
- * order_BlockStdAddressStepAction
- * @package modules.order.lib.blocks
+ * @package modules.order
  */
 class order_BlockStdAddressStepAction extends website_BlockAction
 {
-	
 	/**
-	 * @see website_BlockAction::getInputViewName()
+	 * @return string
 	 */
 	public function getInputViewName()
 	{
@@ -15,11 +13,9 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	}
 		
 	/**
-	 * @see website_BlockAction::execute()
-	 *
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	public function execute($request, $response)
 	{
@@ -49,14 +45,13 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	}
 	
 	/**
-	 * @see website_BlockAction::execute()
-	 * @param f_mvc_Request $request
-	 * @param f_mvc_Response $response
-	 * @return String
+	 * @param f_mvc_Request usuest
+	 * @param f_mvc_Response usponse
+	 * @return string
 	 */
 	public function executeAuthenticate($request, $response)
 	{
-		$validationRules = array('email{blank:false;email:true}');
+		$validationRules = array('email{blank:false}');
 		$valid = $this->processValidationRules($validationRules, $request, null);
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
 		if ($valid)
@@ -67,15 +62,58 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			
 			$cart->setUserId(null);
 			$cart->setCustomerId(null);
-			$wfus = users_UserService::getInstance();
+			$us = users_UserService::getInstance();
 			
-			$user = $wfus->getIdentifiedUser($login, $password, $website->getGroup()->getId());
+			$user = $us->getIdentifiedUser($login, $password, $website->getId());
 			if ($user === null)
 			{
-				$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
-				$this->addError($error);
-				$this->addErrorForProperty('email', $error);
-				$valid = false;
+				$user = $us->getFrontendUserByLogin($login, $website->getId());
+				if ($user)
+				{
+					$error = LocaleService::getInstance()->trans('m.order.standardprocess.invalid-account', array('ucf', 'html'));
+					$this->addError($error);
+					$this->addErrorForProperty('email', $error);
+					$valid = false;
+					$user = null;
+				}
+				else
+				{
+					$validationRules = array('email{email:true}');
+					$generatePassword = intval($request->getParameter('password-generate', 0)) == 1;
+					if (!$generatePassword)
+					{
+						$securityLevel = ModuleService::getInstance()->getPreferenceValue('users', 'securitylevel');
+						$validationRules[] = 'password{blank:false;password:' . $securityLevel . '}';
+						$validationRules[] = 'password-validate{blank:false}';
+						
+						$passwordValidate = $request->getParameter('password-validate');
+						if ($password !== $passwordValidate)
+						{
+							$error = LocaleService::getInstance()->trans('m.order.standardprocess.invalid-password-validate', array('ucf', 'html'));
+							$this->addError($error);
+							$this->addErrorForProperty('password-validate', $error);
+							$valid = false;
+						}
+					}
+					else
+					{
+						$password = users_UserService::getInstance()->generatePassword();
+					}
+					$valid = $this->processValidationRules($validationRules, $request, null);
+					
+					// If all is valid, create the user.
+					if ($valid)
+					{
+						$user = order_OrderProcessService::getInstance()->createNewUser($website, $login, $password);
+						if ($user === null)
+						{
+							$error = LocaleService::getInstance()->trans('m.order.standardprocess.invalid-account', array('ucf', 'html'));
+							$this->addError($error);
+							$this->addErrorForProperty('email', $error);
+							$valid = false;
+						}
+					}
+				}
 			}
 			
 			if ($valid && $user)
@@ -83,7 +121,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 				$cart->setUserId($user->getId());
 				$cart->setMergeWithUserCart(false);
 				$cart->setAddressInfo(new order_ShippingStepBean());
-				$wfus->authenticate($user);
+				$us->authenticate($user);
 			}
 		}
 		
@@ -93,15 +131,13 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			return 'Authenticate';
 		}
 		
-		$this->setRequestParams($request, $cart);
-		return $this->getInputViewName();
+		return $this->redirectToUrl(LinkHelper::getCurrentUrl());
 	}
 	
 	/**
-	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */
 	public function executeUseRegistered($request, $response)
 	{
@@ -125,14 +161,19 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	}
 	
 	/**
-	 * @see website_BlockAction::execute()
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
-	 * @return String
+	 * @return string
 	 */	
 	public function executeNextStep($request, $response)
 	{
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
+		if ($cart->getUser() === null)
+		{
+			$this->setAuthenticateRequestParams($request, $cart);
+			return 'Authenticate';
+		}
+		
 		$validationRules = array('billing-firstname{blank:false}', 'billing-lastname{blank:false}', 'billing-addressline1{blank:false}', 
 			'billing-zipcode{blank:false}', 'billing-city{blank:false}', 'billing-country{blank:false}');
 		
@@ -142,22 +183,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			$validationRules = array_merge($validationRules, array('shipping-firstname{blank:false}', 'shipping-lastname{blank:false}', 'shipping-addressline1{blank:false}',
 			'shipping-zipcode{blank:false}', 'shipping-city{blank:false}', 'shipping-country{blank:false}'));
 		}
-		if ($cart->getUserId() === null)
-		{
-			$email = $request->getParameter('email');
-			$validationRules[] = 'email{blank:false;email:true}';
-			$generatePassword = intval($request->getParameter('password-generate', 0)) == 1;
-			if (!$generatePassword)
-			{
-				$securityLevel = ModuleService::getInstance()->getPreferenceValue('users', 'securitylevel');
-				$validationRules[] = 'password{blank:false;password:' . $securityLevel . '}';
-				$validationRules[] = 'password-validate{blank:false}';
-			}
-		}
-		else
-		{
-			$email = $cart->getUser()->getEmail();
-		}
+		$email = $cart->getUser()->getEmail();
 		
 		$valid = $this->processValidationRules($validationRules, $request, null);		
 		if ($valid)
@@ -177,63 +203,33 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 				$cart->getAddressInfo()->useSameAddressForBilling = false;
 			}
 			
-			if ($cart->getUserId() === null)
-			{
-				$website = $this->getContext()->getWebsite();
-				$user = users_UserService::getInstance()->getFrontendUserByLogin($email, $website->getId());
-				if ($user !== null)
-				{
-					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
-					$this->addError($error);
-					$this->addErrorForProperty('email', $error);
-					$valid = false;
-				}
-				elseif (!$generatePassword)
-				{
-					$password = $request->getParameter('password');
-					$passwordValidate = $request->getParameter('password-validate');
-					if ($password !== $passwordValidate)	
-					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-password-validate', array('ucf'));
-						$this->addError($error);
-						$this->addErrorForProperty('password-validate', $error);
-						$valid = false;
-					}
-				}
-				else
-				{
-					$password = null;
-				}
-				
-				if ($valid)
-				{
-					$user = order_OrderProcessService::getInstance()->createNewUser($website, $email, $password, $cart->getAddressInfo()->billingAddress);
-					if ($user === null)
-					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
-						$this->addError($error);
-						$this->addErrorForProperty('email', $error);
-						$valid = false;						
-					}
-					else
-					{
-						$cart->setUserId($user->getId());
-						$cart->setMergeWithUserCart(false);
-						users_UserService::getInstance()->authenticateFrontEndUser($user);
-					}
-				}
-			}
-			
 			if ($valid && $cart->getCustomerId() === null)
 			{
-				$customer = customer_CustomerService::getInstance()->createNewCustomerFromUser($cart->getUser());
+				$user = $cart->getUser();
+				$customer = customer_CustomerService::getInstance()->createNewCustomerFromUser($user);
 				if ($customer !== null)
 				{
 					$cart->setCustomer($customer);
+					
+					// Update user infos.
+					$address = $cart->getAddressInfo()->billingAddress;
+					if (!$user->getFirstname())
+					{
+						$user->setFirstname($address->FirstName);
+					}
+					if (!$user->getLastname())
+					{
+						$user->setLastname($address->LastName);
+					}
+					if (!$user->getTitleid() && intval($address->Title) > 0)
+					{
+						$user->setTitleid(intval($address->Title));
+					}
+					$user->save();
 				}
 				else
 				{
-					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf'));
+					$error = LocaleService::getInstance()->trans('m.order.standardprocess.invalid-account', array('ucf', 'html'));
 					$this->addError($error);
 					$this->addErrorForProperty('email', $error);
 					$valid = false;	
@@ -245,7 +241,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			{
 				$defaultAddress = $cas->getNewDocumentInstance();
 				$cart->getAddressInfo()->billingAddress->export($defaultAddress);
-				$defaultAddress->setLabel(LocaleService::getInstance()->transFO('m.order.standardprocess.default-address', array('ucf')));
+				$defaultAddress->setLabel(LocaleService::getInstance()->trans('m.order.standardprocess.default-address', array('ucf', 'html')));
 				$cart->getCustomer()->addAddress($defaultAddress);
 				$cart->getCustomer()->save();
 			}	
@@ -295,7 +291,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 				$request->setAttribute('billing-registered', $defaultAddress->getId());
 				$addressInfo->billingAddress->import($defaultAddress);
 			}
-			else if ($user) 
+			else
 			{
 				$addressInfo->billingAddress->FirstName = $user->getFirstname();
 				$addressInfo->billingAddress->LastName = $user->getLastname();
@@ -317,7 +313,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			$this->exportAddressToRequest($addressInfo->shippingAddress, $request, 'shipping');
 		}
 		
-		//Refresh Cart
+		// Refresh Cart.
 		order_CartService::getInstance()->refresh($cart, false);
 		
 		if ($customer && $customer->getAddressCount())
@@ -339,8 +335,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 		return array('civility' => 'Title', 'firstname' => 'FirstName', 'lastname' => 'LastName', 
 			 'addressline1' => 'Addressline1', 'addressline2' => 'Addressline2', 'addressline3' => 'Addressline3',
 			 'zipcode' => 'Zipcode', 'city' => 'City', 'province' => 'Province', 'country' => 'CountryId',
-			 'phone' => 'Phone'); 
-			 //'company' => 'Company', 'email' => 'Email','fax' => 'Fax');
+			 'phone' => 'Phone');
 	}
 	
 	/**
@@ -374,7 +369,6 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			}
 		}
 	}
-	
 	
 	/**
 	 * @param order_CartInfo $cart

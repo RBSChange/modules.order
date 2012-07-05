@@ -15,11 +15,7 @@ class order_CancelOrderJSONAction extends change_JSONAction
 		{
 			$order->getDocumentService()->cancelOrder($order);
 			$this->logAction($order);
-			$propertiesNames = explode(',', $request->getParameter('documentproperties', ''));
-			$propertiesNames[] = 'documentversion';
-			$propertiesNames[] = 'id';
-			$propertiesNames[] = 'lang';
-			$data = $this->exportFieldsData($order, $propertiesNames);
+			$data = $this->exportFieldsData($order, array('financial'));
 			return $this->sendJSON($data); 
 		}		
 		else
@@ -30,7 +26,7 @@ class order_CancelOrderJSONAction extends change_JSONAction
 	
 	/**
 	 * @param f_persistentdocument_PersistentDocument $document
-	 * @param String[]
+	 * @param string[]
 	 * @return Array
 	 */
 	protected function exportFieldsData($document, $allowedProperties)

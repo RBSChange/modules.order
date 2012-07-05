@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <panel>
-  <section labeli18n="m.uixul.bo.doceditor.fieldsgroup.title">
-    <field name="orderNumber" type="text" disabled="true" labeli18n="m.order.document.creditnote.ordernumber" />
-    <field name="customer" disabled="true" />
-    <field name="label" required="false" />
-    <field name="amount" type="double">
-    	<constraint name="min" parameter="0" />
-    </field>
-  </section>
-  
+	<section labeli18n="m.uixul.bo.doceditor.fieldsgroup.title">
+		<field name="orderNumber" type="text" disabled="true" labeli18n="m.order.document.creditnote.ordernumber" />
+		<field name="customer" disabled="true" />
+		<field name="label" required="false" />
+		<field name="amount" type="double">
+			<constraint name="min" parameter="0" />
+		</field>
+	</section>
 	<xul>
-		<javascript>	
+		<javascript>
 			<constructor><![CDATA[
 				// Cancel order button.
 				this.extendMethod("fireInitializeComplete", this.initializeExtra);				
 
 			]]></constructor>
-				
 			<method name="prepareInitializeValues">
 				<parameter name="attributes" />
 				<body><![CDATA[
 					attributes.documentproperties += ',currencySymbol,maxAmount';
-				]]></body>				
+				]]></body>
 			</method>
-			
 			<method name="preparePropertiesValues">
 				<parameter name="attributes" />
 				<body><![CDATA[
 					attributes.documentproperties += ',autoActivate';
 					attributes.autoActivate = '1';
-				]]></body>				
-			</method>			
-			
+				]]></body>
+			</method>
 			<method name="initializeExtra">
 				<parameter name="result" />
 				<body><![CDATA[	
@@ -41,7 +37,7 @@
 						return;
 					}
 					this.fields.amount.setAttribute('currency', result.contents.currencySymbol);
-					this.fields.amount.setAttribute('mode', "${transui:m.order.document.creditnote.maxamount,ucf,space,js}" + result.contents.maxAmount + result.contents.currencySymbol);
+					this.fields.amount.setAttribute('mode', "${trans:m.order.document.creditnote.maxamount,ucf,space,js}" + result.contents.maxAmount + result.contents.currencySymbol);
 					this.fields.amount.value = result.contents.maxAmount;	
 				]]></body>
 			</method>

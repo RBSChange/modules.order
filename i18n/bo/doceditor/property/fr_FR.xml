@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.doceditor.property" lcid="fr_FR">
 	<key id="total-count">total des messages</key>
 	<key id="from-customer-message-count">messages envoyés par le client</key>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.blocks.stdbillingstep" lcid="fr_FR">
-  <key id="title">Processus standard : Paiement</key>
+	<key id="title">Processus standard : Paiement</key>
 </i18n>

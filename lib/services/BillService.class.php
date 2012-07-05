@@ -1,7 +1,7 @@
 <?php
 /**
- * order_BillService
  * @package modules.order
+ * @method order_BillService getInstance()
  */
 class order_BillService extends f_persistentdocument_DocumentService
 {
@@ -9,25 +9,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 	const WAITING = "waiting";
 	const SUCCESS = "success";
 	const FAILED = "failed";
-		
+	
 	const BILL_STATUS_MODIFIED_EVENT = 'order_billStatusChanged';
-		
-	/**
-	 * @var order_BillService
-	 */
-	private static $instance;
-
-	/**
-	 * @return order_BillService
-	 */
-	public static function getInstance()
-	{
-		if (self::$instance === null)
-		{
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
 
 	/**
 	 * @return order_persistentdocument_bill
@@ -45,7 +28,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function createQuery()
 	{
-		return $this->pp->createQuery('modules_order/bill');
+		return $this->getPersistentProvider()->createQuery('modules_order/bill');
 	}
 	
 	/**
@@ -56,7 +39,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function createStrictQuery()
 	{
-		return $this->pp->createQuery('modules_order/bill', false);
+		return $this->getPersistentProvider()->createQuery('modules_order/bill', false);
 	}
 	
 	/**
@@ -85,6 +68,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
+	 * @throws Exception
 	 */
 	public function genBill($bill)
 	{	
@@ -92,14 +76,13 @@ class order_BillService extends f_persistentdocument_DocumentService
 		{
 			return;
 		}
-		
-		$billContent = $this->createBill($bill);
+
 		$tmpPath = f_util_FileUtils::getTmpFile();
-		f_util_FileUtils::write($tmpPath, $billContent, f_util_FileUtils::OVERRIDE);
+		$this->createBill($bill, $tmpPath);
 		
 		try
 		{
-			$this->tm->beginTransaction();
+			$this->getTransactionManager()->beginTransaction();
 			$media = media_SecuremediaService::getInstance()->getNewDocumentInstance();
 			$label = $bill->getLabel();
 			$media->setLabel($label);
@@ -108,88 +91,32 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$media->save();
 			$bill->setArchive($media);
 			$bill->save();
-			$this->tm->commit();
+			$this->getTransactionManager()->commit();
 		}
 		catch (Exception $e)
 		{
-			$this->tm->rollBack($e);
+			$this->getTransactionManager()->rollBack($e);
+			throw $e;
 		}
 	}
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
-	 * @return String the pdf content
+	 * @params string $filePath
+	 * @throws Exception
 	 */
-	public function createBill($bill)
+	public function createBill($bill, $filePath = null)
 	{
-		$order = $bill->getOrder();
-		$shop = $order->getShop();
-		$customer = $order->getCustomer();
-		
-		// OK, ... I will code a dedicated getInfo method
-		$data = order_OrderService::getInstance()->getInfo($order);
-		foreach ($data['informations'] as $key => $value)
+		$className = Framework::getConfigurationValue("modules/order/billPDFGenerator");
+		if ($className && f_util_ClassUtils::classExists($className))
 		{
-			$data[$key] = $value;
+			$generator = new $className();
+			$generator->writePDF($bill, $filePath);
 		}
-		unset($data['informations']);
-		
-		//
-		$data["number"] = $bill->getLabel();
-		$data["amountWithoutTax"] = $shop->formatPrice($order->getLinesAmountWithoutTax());
-		
-		$lines = $data['billingAddressLine1'];
-		if ($data['billingAddressLine2'] != "")
+		else
 		{
-			$lines .= "\n".$data['billingAddressLine2'];
+			throw new Exception("Invalid configuration: modules/order/billPDFGenerator. $className class doesn't exist");
 		}
-		if ($data['billingAddressLine3'] != "")
-		{
-			$lines .= "\n".$data['billingAddressLine3'];
-		}
-		$data['billingAddressLines'] = $lines;
-	
-		$taxes = array();
-		foreach ($order->getTotalTaxInfoArray() as $subTotal)
-		{
-			$taxes[] = array("rate" => $subTotal['formattedTaxRate'],
-				"amount" => $order->formatPrice($subTotal['taxAmount']));
-		}
-		$data['taxes'] = $taxes;		
-		// Discounts
-		$discounts = array();
-		$cartModificators = $order->getDiscountDataArray();
-		if (count($cartModificators) > 0)
-		{
-			foreach ($cartModificators as $discount) 
-			{
-				if ($discount["valueWithTax"] > 0)
-				{
-					$discounts[] = array("name" => $discount["label"], 
-						"value" => $order->formatPrice($discount["valueWithTax"]));
-				}
-			}			
-		}
-		$data["discounts"] = $discounts;
-		$data['creationdate'] = date_Formatter::toDefaultDate($bill->getUICreationdate());
-		$data['creationdatetime'] = date_Formatter::toDefaultDate($bill->getUICreationdate());
-		$data['customerCode'] = $customer->getCode(); 
-		
-		$odt2pdf = new Odtphp2PDFClient(Framework::getConfigurationValue("modules/order/odtphp2pdfURL"));
-		
-		$ref = $shop->getCodeReference();
-		$lang = $order->getLang();
-		$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate-".$ref."-".$lang.".odt");
-		if ($billTemplate === null)
-		{
-			$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate-".$ref.".odt");
-			if ($billTemplate === null)
-			{
-				$billTemplate = FileResolver::getInstance()->setPackageName("modules_order")->setDirectory("templates")->getPath("billTemplate.odt");	
-			}
-		}
-		
-		return $odt2pdf->getPdf($billTemplate, $data);
 	}
 	
 	/**
@@ -206,7 +133,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			{
 				$order->setOrderStatus(order_OrderService::INITIATED);
 				$order->setLabel(date_Calendar::now()->toString());
-				$this->pp->updateDocument($order);
+				$this->getPersistentProvider()->updateDocument($order);
 			}			
 			
 			$bill = $this->createQuery()->add(Restrictions::eq('publicationstatus', 'DRAFT'))
@@ -375,7 +302,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$oldStatus = $bill->getStatus();
 		try 
 		{
-			$this->tm->beginTransaction();
+			$this->getTransactionManager()->beginTransaction();
 			$bill->setStatus($newStatus);
 			switch ($newStatus) 
 			{
@@ -386,17 +313,17 @@ class order_BillService extends f_persistentdocument_DocumentService
 					$this->confirmPayment($bill);
 					break;
 			}
-			$this->tm->commit();	
+			$this->getTransactionManager()->commit();	
 		}
 		catch (Exception $e)
 		{
-			$this->tm->rollBack($e);
+			$this->getTransactionManager()->rollBack($e);
 			throw $e;
 		}
 		if ($oldStatus != $newStatus)
 		{
 			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 'oldStatus' => $oldStatus));
-	}
+		}
 	}
 	
 	/**
@@ -444,7 +371,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			{
 				$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ?  $backendUser->getId() : 'UNKNOWN'));
 			}
-			$bill->setTransactionText(LocaleService::getInstance()->transBO('m.order.bo.general.canceled-by', array('ucf', 'lab')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
+			$bill->setTransactionText(LocaleService::getInstance()->trans('m.order.bo.general.canceled-by', array('ucf', 'lab')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
 			$this->save($bill);
 			$this->cancelBill($bill);
 			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 'oldStatus' => self::WAITING));
@@ -461,7 +388,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	protected function confirmPayment($bill)
 	{
 		if ($bill->getPublicationstatus() == 'FILED')
-        {
+		{
 			$bill->setPublicationstatus('DRAFT');
 			$this->save($bill);
 		}
@@ -486,7 +413,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	protected function validatePayment($bill)
 	{
 		$order = $bill->getOrder();
-		if ($order->getOrderStatus() == order_OrderService::INITIATED)
+		if ($order->getOrderStatus() == order_OrderService::INITIATED || $order->getOrderStatus() == order_OrderService::CANCELED)
 		{
 			$order->getDocumentService()->updateStock($order);
 			$order->getDocumentService()->processOrder($order);
@@ -495,10 +422,10 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$customer->setLastAbandonedOrderDate(null);
 			if ($customer->isModified())
 			{
-				$this->pp->updateDocument($customer);
+				$this->getPersistentProvider()->updateDocument($customer);
 			}
 			$bill->setPaidByCustomerId($customer->getId());
-			$this->pp->updateDocument($bill);
+			$this->getPersistentProvider()->updateDocument($bill);
 			order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_success', $order, $bill);
 			order_ModuleService::getInstance()->sendAdminNotification('modules_order/bill_admin_success', $order, $bill);
 		}
@@ -519,7 +446,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			}
 			else
 			{
-				$this->setActivePublicationStatusInfo($document, 'm.order.document.bill.not-validated');	
+				$this->setActivePublicationStatusInfo($document, 'm.order.document.bill.not-validated');
 			}
 		}
 		return false;
@@ -527,7 +454,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
-	 * @return Array<String=>String>
+	 * @return array<string,string>
 	 */
 	public function getNotificationParameters($bill)
 	{
@@ -589,7 +516,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 		{
 			try 
 			{
-				$this->tm->beginTransaction();
+				$this->getTransactionManager()->beginTransaction();
 				
 				$bill->setStatus(self::SUCCESS);
 				$bill->setTransactionId($transactionId);
@@ -598,11 +525,11 @@ class order_BillService extends f_persistentdocument_DocumentService
 				$this->save($bill);
 				$this->validatePayment($bill);
 				
-				$this->tm->commit();
+				$this->getTransactionManager()->commit();
 			}
 			catch (Exception $e)
 			{
-				$this->tm->rollBack($e);
+				$this->getTransactionManager()->rollBack($e);
 				throw $e;
 			}
 			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 'oldStatus' => self::WAITING));
@@ -623,7 +550,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$oldStatus = $bill->getStatus();
 		try
 		{
-			$this->tm->beginTransaction();
+			$this->getTransactionManager()->beginTransaction();
 			$bill->setTransactionDate(null);
 			$bill->setStatus(self::FAILED);
 			
@@ -632,16 +559,16 @@ class order_BillService extends f_persistentdocument_DocumentService
 			{
 				$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ?  $backendUser->getId() : 'UNKNOWN'));
 			}
-			$bill->setTransactionText(LocaleService::getInstance()->transBO('m.order.bo.general.canceled-by', array('ucf', 'lab')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
+			$bill->setTransactionText(LocaleService::getInstance()->trans('m.order.bo.general.canceled-by', array('ucf', 'lab')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
 			$this->save($bill);
 			$order = $bill->getOrder();
 			order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_failed', $order, $bill);
 			$order->getDocumentService()->cancelOrder($order, false);
-			$this->tm->commit();
+			$this->getTransactionManager()->commit();
 		}
 		catch (Exception $e)
 		{
-			$this->tm->rollBack($e);
+			$this->getTransactionManager()->rollBack($e);
 			throw $e;
 		}
 		if ($oldStatus != self::FAILED)
@@ -674,8 +601,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 		
 		if ($document->getTransactionDate())
 		{
-			$dateTimeFormatted = date_Formatter::toDefaultDateTimeBO($document->getUITransactionDate());
-			
+			$dateTimeFormatted = date_Formatter::toDefaultDateTimeBO($document->getUITransactionDate());			
 			$data['transaction']['transactionDate'] = $dateTimeFormatted;
 			// This one is deprecated
 			$data['properties']['transactionDate'] = $dateTimeFormatted;
@@ -703,5 +629,15 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$data['links']['customer'] = $order->getCustomer()->getLabel();
 		$data['links']['order'] = $order->getOrderNumber();
 		return $data;
+	}
+	
+	// DEPRECATED.
+	
+	/**
+	 * @deprecated
+	 */
+	public function udatePaymentStatus($bill, $newStatus)
+	{
+		$this->updatePaymentStatus($bill, $newStatus);
 	}
 }

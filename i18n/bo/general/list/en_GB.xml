@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.general.list" lcid="en_GB">
-  <key id="payment-status-categories">payment status categories</key>
-  <key id="payment-status-category-paid">paid</key>
-  <key id="payment-status-category-paid-or-waiting">paid or payment pending</key>
-  <key id="payment-status-category-all">all</key>
-  <key id="comment-reminder-references">references for comment reminders</key>
-  <key id="comment-reminder-refrence-payment">payment date</key>
-  <key id="comment-reminder-refrence-shipment">shipping date</key>
-  <key id="comment-reminder-selection-all">all</key>
-  <key id="comment-reminder-selection-random">random</key>
-  <key id="comment-reminder-selections">selection modes for comment reminders</key>
+	<key id="payment-status-categories">payment status categories</key>
+	<key id="payment-status-category-paid">paid</key>
+	<key id="payment-status-category-paid-or-waiting">paid or payment pending</key>
+	<key id="payment-status-category-all">all</key>
+	<key id="comment-reminder-references">references for comment reminders</key>
+	<key id="comment-reminder-refrence-payment">payment date</key>
+	<key id="comment-reminder-refrence-shipment">shipping date</key>
+	<key id="comment-reminder-selection-all">all</key>
+	<key id="comment-reminder-selection-random">random</key>
+	<key id="comment-reminder-selections">selection modes for comment reminders</key>
 </i18n>

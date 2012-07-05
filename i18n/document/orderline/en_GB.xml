@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.document.orderline" lcid="en_GB">
-  <key id="document-name">order line</key>
-  <key id="codereference">reference code</key>
-  <key id="gencode">gen code</key>
-  <key id="articleid">article identifier</key>
-  <key id="productid">product identifier</key>
-  <key id="quantity">quantity</key>
+	<key id="document-name">order line</key>
+	<key id="codereference">reference code</key>
+	<key id="gencode">gen code</key>
+	<key id="articleid">article identifier</key>
+	<key id="productid">product identifier</key>
+	<key id="quantity">quantity</key>
 </i18n>

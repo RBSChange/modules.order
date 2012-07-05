@@ -1,11 +1,11 @@
 <div class="dashboard-widget" tal:omit-tag="refresh" refreshURL="${refreshURL}" title="${title}" icon="${icon}">
 	<tal:block tal:condition="forEdition">
 		<div class="title-bar" ><img src="${icon}" /> ${title}</div>
-		<div class="content-block"><div class="content" tal:content="trans:m.dashboard.dashboard.dummycontent,ucf">...</div></div>
+		<div class="content-block"><div class="content">${transui:m.dashboard.dashboard.DummyContent,ucf}</div></div>
 	</tal:block>
 
 	<tal:block tal:condition="not:forEdition">
-		<p><strong tal:content="trans:m.order.bo.blocks.dashboardgeneralstatistics.statistics-for-shop,ucf"></strong> 
+		<p><strong>${transui:m.order.bo.blocks.dashboardgeneralstatistics.Statistics-for-shop,ucf}</strong> 
 		<select onchange="var widget = Dashboard.getWidgetByNode(this); widget.parameters['orderParam[shopId]'] = this.options[this.selectedIndex].value; widget.refresh();">
 			<tal:block tal:repeat="shop shops">
 				<option tal:condition="php: shopId == shop.getId()" selected="selected" value="${shop/getId}">${shop/getLabel}</option>
@@ -13,21 +13,21 @@
 			</tal:block>
 		</select></p>
 		
-		<table width="100%" tal:condition="widget/lines">
+		<table tal:condition="widget/lines">
 			<thead>
 				<tr>
 					<th />
-					<th tal:condition="columnsArray/orders" tal:content="trans:m.order.bo.blocks.dashboardgeneralstatistics.column-orders,ucf" />
-					<th tal:condition="columnsArray/amount" tal:content="trans:m.order.bo.blocks.dashboardgeneralstatistics.column-amount,ucf" />
-					<th tal:condition="columnsArray/toDeliver" tal:content="trans:m.order.bo.blocks.dashboardgeneralstatistics.column-todeliver,ucf" />
+					<th tal:condition="columnsArray/orders">${transui:m.order.bo.blocks.dashboardgeneralstatistics.column-orders,ucf}</th>
+					<th tal:condition="columnsArray/amount">${transui:m.order.bo.blocks.dashboardgeneralstatistics.column-amount,ucf}</th>
+					<th tal:condition="columnsArray/toDeliver">${transui:m.order.bo.blocks.dashboardgeneralstatistics.column-toDeliver,ucf}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr tal:repeat="line widget/lines">
 					<td tal:content="line/monthLabel" />
-					<td tal:condition="columnsArray/orders" tal:content="line/totalCount" />
-					<td tal:condition="columnsArray/amount" tal:content="line/totalAmountFormatted" />
-					<td tal:condition="columnsArray/toDeliver" tal:content="line/toDeliver" />
+					<td tal:condition="columnsArray/orders">${line/totalCount}</td>
+					<td tal:condition="columnsArray/amount">${line/totalAmountFormatted}</td>
+					<td tal:condition="columnsArray/toDeliver">${line/toDeliver}</td>
 				</tr>
 			</tbody>
 		</table>

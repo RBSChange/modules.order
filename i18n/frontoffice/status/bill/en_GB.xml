@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.frontoffice.status.bill" lcid="en_GB">
-  <key id="success">payment validated</key>
-  <key id="waiting">payment pending</key>
-  <key id="failed">the payment has failed</key>
-  <key id="initiated">started</key>
+	<key id="success">payment validated</key>
+	<key id="waiting">payment pending</key>
+	<key id="failed">the payment has failed</key>
+	<key id="initiated">started</key>
 </i18n>

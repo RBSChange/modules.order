@@ -5,12 +5,12 @@
 class order_Exception extends BaseException
 {
 	/**
-	 * @var String
+	 * @var string
 	 */
 	private $frontEndUserMessage=null;
 	
 	/**
-	 * @param String $message
+	 * @param string $message
 	 */
 	public function setFrontEndUserMessage($message)
 	{
@@ -18,14 +18,10 @@ class order_Exception extends BaseException
 	}
 	
 	/**
-	 * @returns String
-	 *
+	 * @returns string
 	 */
 	public function getFrontEndUserMessage()
 	{
 		return $this->frontEndUserMessage;
 	}
-	
-	
-	
 }

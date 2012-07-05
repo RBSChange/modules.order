@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.general.list.statusesforordercountfilter" lcid="en_GB">
-  <key id="all">all</key>
-  <key id="description">List of order categories by status used for some filters.</key>
-  <key id="label">order categories by status</key>
-  <key id="paid">paid</key>
-  <key id="uncancelled">uncancelled</key>
+	<key id="all">all</key>
+	<key id="description">List of order categories by status used for some filters.</key>
+	<key id="label">order categories by status</key>
+	<key id="paid">paid</key>
+	<key id="uncancelled">uncancelled</key>
 </i18n>

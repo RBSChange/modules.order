@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <i18n baseKey="m.order.bo.actions" lcid="fr_FR">
 	<key id="create_">créer</key>
 	<key id="create2_">créer</key>
@@ -18,11 +18,21 @@
 	<key id="generatingbill">Facture en cours de génération...</key>
 	<key id="generatingbilldone">Facture générée!</key>
 	<key id="generatebill">Générer la facture</key>
-	<key id="cannotgeneratebillmsg">La commande n'est ni payée, ni expédiée : la génération de la facture est donc impossible.</key>
+	<key id="cannotgeneratebillmsg">La commande n'est pas payée : la génération de la facture est donc impossible.</key>
 	<key id="downloadbill">Télécharger la facture</key>
 	<key id="unable-to-generate-pdf-bill">Une erreur est survenue pendant la génération de la facture. Si le problème persiste, contactez votre administrateur.</key>
 	<key id="createcreditnote">Créer un avoir</key>
 	<key id="createfees">Créer des frais</key>
 	<key id="generate-default-expedition">générer l'expédition</key>
 	<key id="generating-default-expedition">Génération de l'expédition en cours.</key>
+	<key id="view-printable-version">version imprimable</key>
+	<key id="create-from-this">créer un autre prix à partir de celui-ci</key>
+	<key id="createproductqueryfolder">créer un dossier intelligent de produits</key>
+	<key id="createorderpreparation">créer un bon de préparation</key>
+	<key id="createexpedition">créer une expedition</key>
+	<key id="invalid-order-status">La commande n'est pas dans le bon statut</key>
+	<key id="finalize-order">Finaliser la commande</key>
+	<key id="finalize-order-confirm-message">En finalisant la commande, le montant de tout produits non-expédiés sera recrédité au client sous forme d'avoir. Attention, cette opération est irréversible.</key>
+	<key id="finalize-order-in-progress">finalisation de la commande en cours...</key>
+	<key id="order-finalized">commande finalisé...</key>
 </i18n>

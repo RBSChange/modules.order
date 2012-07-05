@@ -2,7 +2,7 @@
 class order_HasProductAttributeCartshippingFilter extends order_HasProductAttributeFilter
 {
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

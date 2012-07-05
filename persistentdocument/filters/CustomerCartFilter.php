@@ -4,13 +4,13 @@ class order_CustomerCartFilter extends f_persistentdocument_DocumentFilterImpl
 	public function __construct()
 	{
 		$info = new BeanPropertyInfoImpl('customer', BeanPropertyType::DOCUMENT, 'customer_persistentdocument_customer');
-		$info->setLabelKey('&modules.order.bo.documentfilters.parameter.Cart-customer;');
+		$info->setLabelKey('m.order.bo.documentfilters.parameter.cart-customer');
 		$parameter = new f_persistentdocument_DocumentFilterValueParameter($info);
 		$this->setParameter('customer', $parameter);
 	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public static function getDocumentModelName()
 	{

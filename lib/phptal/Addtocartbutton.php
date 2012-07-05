@@ -2,6 +2,7 @@
 // change:addtocartbutton
 //
 // <tal:block change:addtocartbutton="shop shop; product product">
+// <tal:block change:addtocartbutton="shop shop; product product; name 'addToCart'">
 
 /**
  * @package order.lib.phptal
@@ -41,8 +42,21 @@ class PHPTAL_Php_Attribute_CHANGE_Addtocartbutton extends ChangeTalAttribute
 		$backurl = self::getFromParams('backurl', $params);
 		$backurl = (!$backurl) ? LinkHelper::getCurrentUrl() : $backurl;
 		$html .= '<input type="hidden" value="' . $backurl . '" name="backurl" />';
-			
-		$addToCart = $ls->transFO('m.order.fo.add-to-cart', array('ucf'));
+		
+		// Button label.
+		if (isset($params['label']))
+		{
+			$addToCart = $params['label'];
+		}
+		elseif (isset($params['labeli18n']))
+		{
+			$addToCart = $ls->trans($params['labeli18n'], array('ucf', 'attr'));
+		}
+		else
+		{
+			$addToCart = $ls->trans('m.order.fo.add-to-cart', array('ucf', 'attr'));
+		}
+		
 		if (isset($params['class']))
 		{
 			$class = $params['class'];
@@ -51,7 +65,12 @@ class PHPTAL_Php_Attribute_CHANGE_Addtocartbutton extends ChangeTalAttribute
 		{
 			$class = "button";
 		}
-		$html .= '<input type="submit" class="' . $class . '" value="' . $addToCart . '" title="' . $addToCart . '" />';
+		$html .= '<input type="submit" class="' . $class . '" value="' . $addToCart . '" title="' . $addToCart . '"';
+		if (isset($params['name']))
+		{
+			$html .= ' name="' . $params['name'] . '"';
+		}
+		$html .= ' />';
 		
 		return $html;
 	}
