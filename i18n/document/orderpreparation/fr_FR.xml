@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18n baseKey="m.order.document.orderpreparation" lcid="fr_FR">
+	<include id="m.generic.document.document" />
+	<key id="document-name">bon de préparation</key>
+	<key id="documents-name">bons de préparation</key>
+	<key id="label">Numéro</key>
+	<key id="label-help">Numéro du bon de préparation</key>
+	<key id="generate-number">Générer un numéro</key>
+	<key id="generate-number-help">Générer un numéro automatiquement</key>
+	<key id="lines-section">Détail du bon</key>
+	<key id="status-header">état</key>
+	<key id="targetid">Préparateur</key>
+	<key id="targetid-help">Entité résponsable de la réalisation du bon de préparation</key>
+	<key id="invalid-lines-count">Le bon de prépartion doit contenir un produit de la commande</key>
+	<key id="zero-quantity">Exclure la ligne</key>
+	<key id="all-quantity">Inclure la ligne</key>
+	<key id="decrement-quantity">-1</key>
+	<key id="increment-quantity">+1</key>
+</i18n>

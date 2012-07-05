@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>${order/getOrderNumber} - ${structure order/getBillingAddress/getFirstnameAsHtml} ${structure order/getBillingAddress/getLastnameAsHtml}</title>
+		<style tal:replace="cssInclusion" />
+	</head>
+	<body>
+		<h1 change:h="">${transui:m.order.bo.print.messages-for-order,ucf,orderNumber=order/getOrderNumber}</h1>
+		
+		<dl>
+			<dd>${transui:m.order.bo.print.date,ucf,lab}</dd>
+			<dt>${datetime:order/getUICreationdate}</dt>
+			<dd>${transui:m.order.bo.print.customer,ucf,lab}</dd>
+			<dt>${order/getCustomer/getUser/getFullname}</dt>
+			<dd>${transui:m.order.bo.print.status,ucf,lab}</dd>
+			<dt>${order/getFoOrderStatusLabel}</dt>
+		</dl>
+		
+		<div class="cleaner"></div>
+		
+		<h2 change:h="">${trans:m.order.bo.print.messages-list,ucf}</h2>
+		<ul tal:condition="messages" class="messagecustomer">
+			<tal:block tal:repeat="message messages">
+				<li class="fromcustomer ${alternateclass:messageIndex}" tal:condition="message/isSentByCustomer">
+					<p><strong>${trans:m.customer.frontoffice.message-sent-by-customer,ucf} ${datetime:message/getUICreationdate}</strong></p>
+					<blockquote>${structure message/getContentAsHtml}</blockquote>
+				</li>
+				<li class="tocustomer ${alternateclass:messageIndex}" tal:condition="not: message/isSentByCustomer">
+					<p><strong>${trans:m.customer.frontoffice.message-sent-by-company,ucf} ${datetime:message/getUICreationdate}</strong></p>
+					<blockquote>${structure message/getContentAsHtml}</blockquote>
+				</li>	
+			</tal:block>
+		</ul>
+		<p tal:condition="not: messages">${trans:m.customer.frontoffice.no-message-for-this-order,ucf}</p>
+	</body>
+</html>

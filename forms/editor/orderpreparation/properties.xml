@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel>
+	<section labeli18n="m.uixul.bo.doceditor.fieldsgroup.title">
+		<field name="targetId" type="document" moduleselector="store" allow="modules_store_store" />
+	</section>
+	<section labeli18n="m.order.document.orderpreparation.lines-section">
+		<fieldinput name="oplinesJSON" type="namedgridlist" flex="1" />
+	</section>
+	<xul>
+		<javascript>
+			<constructor><![CDATA[
+				var me = this;		
+				this.extendMethod("fireInitializeComplete", this.initializeExtra);
+			]]></constructor>
+			<method name="initializeExtra">
+				<parameter name="result" />
+				<body><![CDATA[			
+					if (result.status == 'OK' && result.contents.updatelines)
+					{	
+						this.fields.oplinesJSON.internalControl.removeAttribute('hideactions');
+					}
+					else
+					{
+						this.fields.oplinesJSON.internalControl.setAttribute('hideactions', true);
+					}
+				]]></body>
+			</method>
+		</javascript>
+	</xul>
+</panel>

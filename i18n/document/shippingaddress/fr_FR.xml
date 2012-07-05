@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18n baseKey="m.order.document.shippingaddress" lcid="fr_FR">
+	<include id="m.customer.document.address" />
+	<key id="document-name">shippingaddress</key>
+	<key id="orderid">[TO TRANSLATE] orderId</key>
+	<key id="orderid-help">[TO TRANSLATE] orderId-help</key>
+	<key id="targetid">[TO TRANSLATE] targetId</key>
+	<key id="targetid-help">[TO TRANSLATE] targetId-help</key>
+</i18n>

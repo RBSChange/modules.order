@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/schema/persistentdocument-4.0.xsd" model-version="1.0" extend="modules_generic/folder">
+	<properties>
+		<property name="label" type="String" default-value="m.order.document.waitingresponseorderfolder.document-name" />
+	</properties>
+</document>

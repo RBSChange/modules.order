@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel>
+	<section labeli18n="m.uixul.bo.doceditor.fieldsgroup.title">
+		<field name="autoNumber" type="boolean" labeli18n="m.order.document.orderpreparation.generate-number" shorthelp="m.order.document.orderpreparation.generate-number-help" />
+		<field name="label" />
+		<field name="targetId" type="document" moduleselector="store" allow="modules_store_store" />
+	</section>
+	<section labeli18n="m.order.document.orderpreparation.lines-section">
+		<fieldinput name="oplinesJSON" type="namedgridlist" flex="1" />
+	</section>
+	<xul>
+		<javascript>
+			<constructor><![CDATA[
+				var me = this;		
+				this.addEventListener("panelInitializeComplete", function (event) { return me.onPanelInitializeComplete(event); }, true);				
+				this.addEventListener("fieldChanged", function (event) { return me.onFieldChanged(event); }, true);
+			]]></constructor>
+			<method name="onPanelInitializeComplete">
+				<parameter name="event" />
+				<body><![CDATA[	
+					if (this.fields.autoNumber.value == "true")
+					{
+						this.fields.label.disabled = true;
+					}
+					else
+					{
+						this.fields.label.disabled = false;
+						this.fields.label.validate();
+					}
+				]]></body>
+			</method>
+			<method name="onFieldChanged">
+				<parameter name="event" />
+				<body><![CDATA[	
+					if (event.originalTarget.name = "autoNumber")
+					{
+						this.onPanelInitializeComplete(event);
+					}
+				]]></body>
+			</method>
+		</javascript>
+	</xul>
+</panel>

@@ -1,0 +1,32 @@
+<ul class="mini-navigation">
+	<li>
+		<a change:link="document order">${trans:m.customer.frontoffice.back-to-order,ucf}</a>
+	</li>
+</ul>
+
+<h1 change:h=""><span>${trans:m.order.frontoffice.shipping-number,ucf}</span> ${structure expedition/getLabelAsHtml}</h1>
+<h2 change:h="">${trans:m.order.frontoffice.general-informations,ucf}</h2>
+<ul tal:define="shippingMode expedition/getShippingMode" class="normal">
+	<li><span>${trans:m.order.frontoffice.related-order,ucf,lab}</span> <a change:link="document order">${order/getOrderNumber}</a> (${datetime:order/getCreationdate})</li>
+	<li><span>${trans:m.order.frontoffice.expedition-status,ucf,lab}</span> ${expedition/getStatusLabel}</li>
+	<li><span>${trans:m.order.frontoffice.transport-name,ucf,lab}</span> ${structure shippingMode/getLabelAsHtml}</li>
+	<li tal:condition="expedition/getShippingDate"><span>${trans:m.order.document.expedition.shippingdate,ucf,lab}</span> ${datetime:expedition/getUIShippingDate}</li>
+</ul>
+
+<h2 change:h="">${trans:m.order.frontoffice.expedition-lines,ucf}</h2>
+<table class="normal">
+	<thead>
+		<tr>
+			<th>${trans:m.order.frontoffice.designation,ucf}</th>
+			<th>${trans:m.order.frontoffice.product-download,ucf}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="line expeditionlines" class="${php: repeat.line.odd ? 'odd' : 'even'}">
+			<td>${structure line/getProduct/getLabelAsHtml}<br />${structure line/getProduct/getCodeReferenceAsHtml}</td>
+			<td>
+				<a tal:condition="line/getURL" class="link download" href="${line/getURL}">${trans:m.order.frontoffice.product-download,ucf}</a> ${line/getURLClick} <span>${trans:m.order.frontoffice.product-download-count,ucf}</span>
+			</td>
+		</tr>
+	</tbody>
+</table>

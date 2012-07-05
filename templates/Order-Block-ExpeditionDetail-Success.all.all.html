@@ -1,0 +1,94 @@
+<ul class="mini-navigation">
+	<li>
+		<a change:link="document order">${trans:m.customer.frontoffice.back-to-order,ucf}</a>
+	</li>
+</ul>
+
+<h1 change:h=""><span>${trans:m.order.frontoffice.shipping-number,ucf}</span> ${structure expedition/getLabelAsHtml}</h1>
+<div class="columns">
+	<div class="column-66">
+		<h2 change:h="">${trans:m.order.frontoffice.general-informations,ucf}</h2>
+		<dl tal:define="shippingMode expedition/getShippingMode" class="inline-items normal-margin">
+			<dt>${trans:m.order.frontoffice.related-order,ucf}</dt>
+			<dd><a change:link="document order">${order/getOrderNumber}</a> (${datetime:order/getUICreationdate}) (<a class="link popup" target="_blank" href="${actionurl:'order', 'PrintExpedition', cmpref=expedition/getId, attr}">${trans:m.order.frontoffice.delivery,ucf}</a>)</dd>
+			<dt>${trans:m.order.frontoffice.expedition-status,ucf}</dt>
+			<dd>${expedition/getStatusLabel}</dd>
+			<dt>${trans:m.order.frontoffice.transport-name,ucf}</dt>
+			<dd>${structure shippingMode/getLabelAsHtml}</dd>
+			<tal:block tal:condition="expedition/getShippingDate">
+				<dt>${trans:m.order.document.expedition.shippingdate,ucf}</dt>
+				<dd>${datetime:expedition/getUIShippingDate}</dd>
+			</tal:block>
+			<tal:block tal:condition="expedition/getTrackingNumber">
+				<dt>${trans:m.order.frontoffice.tracking-number,ucf}</dt>
+				<dd><a class="link" href="${expedition/getTrackingURL}">${expedition/getTrackingNumber}</a></dd>
+			</tal:block>
+			<tal:block tal:condition="expedition/getTrackingText">
+				<dt>${trans:m.order.frontoffice.tracking-text,ucf}</dt>
+				<dd>${structure expedition/getTrackingTextAsHtml}</dd>
+			</tal:block>
+		</dl>
+	</div>
+	<div class="column-33">
+		<h2 change:h="">${trans:m.order.frontoffice.shippingaddress,ucf}</h2>
+		<ul tal:define="address expedition/getAddress" class="address normal-margin">
+			<li>${structure address/getLabelAsHtml}</li>
+			<li>${address/getAddressLine1}</li>
+			<li tal:condition="address/getAddressLine2">${address/getAddressLine2}</li>
+			<li tal:condition="address/getAddressLine3">${address/getAddressLine3}</li>
+			<li>${address/getZipcode} ${address/getCity}</li>
+			<li tal:condition="address/getProvince">${address/getProvince}</li>
+			<li>${address/getCountry/getLabel}</li>
+			<li tal:condition="address/getPhone">${address/getPhone}</li>
+			<li tal:condition="address/getFax">${address/getFax}</li>
+		</ul>
+	</div>
+</div>		
+
+<h2 change:h="">${trans:m.order.frontoffice.expedition-lines,ucf}</h2>
+<tal:block tal:repeat="packetLines packetByExpedition">
+	<dl tal:define="packet packetLines/0" class="inline-items">
+		<tal:block tal:condition="packet/getPacketNumber">
+			<dt>${trans:m.order.frontoffice.packet,ucf}</dt>
+			<dd>${structure packet/getPacketNumberAsHtml}</dd>
+		</tal:block>
+		<tal:block tal:condition="packet/getTrackingNumber">
+			<dt>${trans:m.order.frontoffice.track,ucf}</dt>
+			<dd>
+				<a tal:omit-tag="not: packet/getTrackingURL" class="link" target="_blank" href="${packet/getEvaluatedTrackingURL}">${structure packet/getTrackingNumberAsHtml}</a>
+				<p tal:condition="packet/getTrackingText">${structure packet/getTrackingTextAsHtml}</p>
+			</dd>
+		</tal:block>
+		<tal:block tal:condition="packet/getStatus">
+			<dt>${trans:m.order.frontoffice.status,ucf}</dt>
+			<dd>${packet/getStatusLabel}</dd>
+		</tal:block>
+		<tal:block tal:condition="packet/getReceiveDate">
+			<dt>${trans:m.order.frontoffice.receive-date,ucf}</dt>
+			<dd>${date:packet/getUIReceiveDate}</dd>
+		</tal:block>
+		<tal:block tal:condition="packet/getDeliveryDate">
+			<dt>${trans:m.order.frontoffice.delivery-date,ucf}</dt>
+			<dd>${date:packet/getUIDeliveryDate}</dd>
+		</tal:block>
+	</dl>
+	<table class="normal">
+		<thead>
+			<tr>
+				<th>${trans:m.order.frontoffice.designation,ucf}</th>
+				<th>${trans:m.order.frontoffice.codereference,ucf}</th>
+				<th>${trans:m.order.frontoffice.quantity,ucf}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr tal:repeat="line packetLines" class="${alternateclass: expIndex}">
+				<tal:block tal:define="product line/getProduct">
+				<td>${structure product/getLabelAsHtml}</td>
+				<td>${structure product/getCodeReferenceAsHtml}</td>
+				<td>${line/getQuantity} / ${line/getOrderProductQuantity}</td>
+				</tal:block>
+			</tr>
+		</tbody>	
+	</table>
+	<hr tal:condition="not: repeat/packetLines/end" />
+</tal:block>
