@@ -3,7 +3,7 @@
 	<properties>
 		<property name="label" type="String" />
 		<!-- Use for credit note number storage -->
-		<property name="order" type="Document" min-occurs="1" inverse="true" document-type="modules_order/order" />
+		<property name="order" type="Document" inverse="true" document-type="modules_order/order" required="true" />
 		<property name="customer" type="Document" document-type="modules_customer/customer" />
 		<property name="amount" type="Double" />
 		<property name="currency" type="String" db-size="5" />

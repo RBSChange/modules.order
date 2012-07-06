@@ -70,15 +70,10 @@ class order_FeesService extends order_CartmodifierService
 	public function getEditParametersBinding($document)
 	{
 		$applicationStrategy = $this->getNewApplicationStrategyInstance($document->getApplicationstrategy());			
-		
-		
-		$xslPath = FileResolver::getInstance()->setPackageName('modules_order')
-			->setDirectory('templates/fees')->getPath('strategyParameters.xsl');
+		$xslPath = change_FileResolver::getNewInstance()->getPath('modules', 'order', 'templates', 'fees', 'strategyParameters.xsl');
 
 		$panelName = $applicationStrategy->getEditorDefinitionPanelName() . '.xml';
-		
-		$parametersDefPath = FileResolver::getInstance()->setPackageName('modules_' . $applicationStrategy->getEditorModuleName())
-			->setDirectory('lib/strategies')->getPath($panelName);
+		$parametersDefPath = change_FileResolver::getNewInstance()->getPath('modules', $applicationStrategy->getEditorModuleName(), 'lib', 'strategies', $panelName);
 
 		$skinDefDoc = new DOMDocument('1.0', 'UTF-8');
 		$skinDefDoc->load($parametersDefPath);
@@ -89,8 +84,7 @@ class order_FeesService extends order_CartmodifierService
 		{
 			if ($item->getAttribute('href') === 'field.xsl')
 			{
-				$fieldsXSL = FileResolver::getInstance()->setPackageName('modules_uixul')
-					->setDirectory('forms/editor/xul')->getPath('field.xsl');
+				$fieldsXSL = change_FileResolver::getNewInstance()->getPath('modules', 'uixul', 'forms', 'editor', 'xul', 'field.xsl');
 				$item->setAttribute('href', $fieldsXSL);
 			}
 		}

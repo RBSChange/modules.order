@@ -146,16 +146,12 @@ class order_billToPDF extends FPDF
 			
 			if ($ref)
 			{
-				$configXMLPath = FileResolver::getInstance()->setPackageName('modules_order')
-				->setDirectory('templates')
-				->getPath('FPDFBillInfos-'. $ref. '-'. $lang . '.xml');
+				$configXMLPath = change_FileResolver::getNewInstance()->getPath('modules', 'order', 'templates', 'FPDFBillInfos-'. $ref. '-'. $lang . '.xml');
 			}
 			if ($configXMLPath == null)
 			{
 				//get the merchant address from XML Configuration
-				$configXMLPath = FileResolver::getInstance()->setPackageName('modules_order')
-					->setDirectory('templates')
-					->getPath('FPDFBillInfos-default.xml');
+				$configXMLPath = change_FileResolver::getNewInstance()->getPath('modules', 'order', 'templates', 'FPDFBillInfos-default.xml');
 			}
 			
 			$configXML = f_util_DOMUtils::fromPath($configXMLPath);

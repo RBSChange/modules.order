@@ -10,11 +10,11 @@
 		<property name="orderProcessClosed" type="Boolean" default-value="false" />
 		<property name="orderProcessClosedMessage" type="XHTMLFragment" />
 		<property name="orderProcessAllowedCustomer" type="DocumentArray" document-type="modules_customer/customer" />
-		<property name="enableCommentReminder" type="Boolean" min-occurs="1" default-value="true" />
-		<property name="commentReminderPeriod" type="Integer" min-occurs="1" default-value="7" />
-		<property name="commentReminderReference" type="String" min-occurs="1" default-value="shipment" from-list="modules_order/commentreminderreferences" />
-		<property name="commentReminderSelection" type="String" min-occurs="1" default-value="random" from-list="modules_order/commentreminderselections" />
-		<property name="commentReminderCount" type="Integer" min-occurs="1" default-value="3">
+		<property name="enableCommentReminder" type="Boolean" default-value="true" />
+		<property name="commentReminderPeriod" type="Integer" default-value="7" required="true" />
+		<property name="commentReminderReference" type="String" default-value="shipment" from-list="modules_order/commentreminderreferences" required="true" />
+		<property name="commentReminderSelection" type="String" default-value="random" from-list="modules_order/commentreminderselections" required="true" />
+		<property name="commentReminderCount" type="Integer" default-value="3" required="true">
 			<constraint name="min" min="1" />
 		</property>
 	</properties>

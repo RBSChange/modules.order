@@ -67,15 +67,11 @@ class order_ODTBillGenerator {
 
 		if ($ref)
 		{
-			$configXMLPath = FileResolver::getInstance()->setPackageName('modules_order')
-			->setDirectory('templates')
-			->getPath('ODT2PDFBillInfos-'. $ref. '-'. $lang . '.xml');
+			$configXMLPath = change_FileResolver::getNewInstance()->getPath('modules', 'order', 'templates', 'ODT2PDFBillInfos-'. $ref. '-'. $lang . '.xml');
 		}
 		if ($configXMLPath == null)
 		{
-			$configXMLPath = FileResolver::getInstance()->setPackageName('modules_order')
-			->setDirectory('templates')
-			->getPath('ODT2PDFBillInfos-default.xml');
+			$configXMLPath = change_FileResolver::getNewInstance()->getPath('modules', 'order', 'templates', 'ODT2PDFBillInfos-default.xml');
 		}
 		
 		$configXML = f_util_DOMUtils::fromPath($configXMLPath)->getElementsByTagName('odt2pdf')->item(0);

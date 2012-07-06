@@ -2,7 +2,7 @@
 <document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/schema/persistentdocument-4.0.xsd" model-version="1.0" has-url="false" icon="bill" backoffice-indexable="false" use-publication-dates="false">
 	<properties>
 		<property name="label" type="String" />
-		<property name="order" type="Document" min-occurs="1" inverse="true" document-type="modules_order/order" />
+		<property name="order" type="Document" inverse="true" document-type="modules_order/order" required="true" />
 		<property name="amount" type="Double" />
 		<property name="currency" type="String" db-size="5" />
 		<property name="address" type="Document" document-type="modules_customer/address" />

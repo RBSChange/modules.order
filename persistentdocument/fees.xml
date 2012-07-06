@@ -3,7 +3,7 @@
 	<properties>
 		<property name="shop" inverse="true" />
 		<property name="query" type="Lob" />
-		<property name="applicationstrategy" type="String" min-occurs="1" from-list="modules_order/feesstrategy" />
+		<property name="applicationstrategy" type="String" from-list="modules_order/feesstrategy" required="true" />
 	</properties>
 	<serializedproperties>
 		<property name="strategylabel" type="String" />

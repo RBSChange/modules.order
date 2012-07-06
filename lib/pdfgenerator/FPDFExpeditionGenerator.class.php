@@ -114,16 +114,12 @@ class order_FPDFExpeditionGenerator extends FPDF
 				
 			if ($ref)
 			{
-				$configXMLPath = FileResolver::getInstance()->setPackageName('modules_order')
-				->setDirectory('templates')
-				->getPath('FPDFExpeditionInfos-'. $ref. '-'. $lang . '.xml');
+				$configXMLPath = change_FileResolver::getNewInstance()->getPath('modules', 'order', 'templates', 'FPDFExpeditionInfos-'. $ref. '-'. $lang . '.xml');
 			}
 			if ($configXMLPath == null)
 			{
 				//get the merchant address from XML Configuration
-				$configXMLPath = FileResolver::getInstance()->setPackageName('modules_order')
-				->setDirectory('templates')
-				->getPath('FPDFExpeditionInfos-default.xml');
+				$configXMLPath = change_FileResolver::getNewInstance()->getPath('modules', 'order', 'templates', 'FPDFExpeditionInfos-default.xml');
 			}
 				
 			$configXML = f_util_DOMUtils::fromPath($configXMLPath);

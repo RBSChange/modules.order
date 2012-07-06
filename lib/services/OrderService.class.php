@@ -703,8 +703,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$shippingFeesWithTax = $order->formatPrice($order->getShippingFeesWithTax());
 		$shippingFeesWithoutTax = $order->formatPrice($order->getShippingFeesWithoutTax());
 		
-		$template = TemplateLoader::getInstance()->setPackageName('modules_order')->setMimeContentType('html')
-			->setDirectory('templates/mails')->load('Order-Inc-Lines');
+		$template = change_TemplateLoader::getNewInstance()->setExtension('html')
+			->load('modules', 'order', 'templates', 'mails', 'Order-Inc-Lines');
 		
 		$template->setAttribute('order', $order);
 		$template->setAttribute('shop', $shop);
@@ -1411,8 +1411,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function renderReminderProductBlock($products)
 	{
-		$template = TemplateLoader::getInstance()->setPackageName('modules_order')
-		->setMimeContentType('html')->setDirectory('templates/mails')->load('Order-Inc-CommentReminderProducts');
+		$template = change_TemplateLoader::getNewInstance()->setExtension('html')
+			->load('modules', 'order', 'templates', 'mails', 'Order-Inc-CommentReminderProducts');
 		$template->setAttribute('products', $products);
 		return array('reminderProductBlock' => $template->execute());
 	}

@@ -3,7 +3,7 @@
 	<properties>
 		<property name="label" type="String" />
 		<property name="amount" type="Double" default-value="0" />
-		<property name="order" type="Document" min-occurs="1" inverse="true" document-type="modules_order/order" />
+		<property name="order" type="Document" inverse="true" document-type="modules_order/order" required="true" />
 		<property name="bill" type="Document" inverse="true" document-type="modules_order/bill" />
 		<property name="line" type="DocumentArray" inverse="true" cascade-delete="true" document-type="modules_order/expeditionline" />
 		<property name="address" type="Document" document-type="modules_customer/address" />

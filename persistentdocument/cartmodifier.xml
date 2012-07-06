@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/schema/persistentdocument-4.0.xsd" model-version="1.0" icon="cart-modifier" has-url="false" use-publication-dates="true">
 	<properties>
-		<property name="shop" type="Document" min-occurs="1" inverse="true" from-list="modules_catalog/shops" document-type="modules_catalog/shop" />
+		<property name="shop" type="Document" inverse="true" from-list="modules_catalog/shops" document-type="modules_catalog/shop" required="true" />
 		<property name="exclusive" type="Boolean" default-value="false" />
 		<property name="excludeModifier" type="DocumentArray" document-type="modules_order/cartmodifier" />
 		<property name="description" type="XHTMLFragment" />

@@ -134,8 +134,8 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			$trackingNumber = '<a href="' . $trackingUrl . '">' . $trackingNumber . '</a>';
 		}
 		
-		$template = TemplateLoader::getInstance()->setPackageName('modules_order')->setMimeContentType('html')
-			->setDirectory('templates/mails')->load('Order-Inc-ExpeditionLines');
+		$template = change_TemplateLoader::getNewInstance()->setExtension('html')
+			->load('modules', 'order', 'templates', 'mails', 'Order-Inc-ExpeditionLines');
 		$template->setAttribute('expedition', $expedition);
 		
 		$params = array(

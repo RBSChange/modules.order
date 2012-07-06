@@ -3,18 +3,18 @@
 	<properties>
 		<property name="orderNumber" type="String" />
 		<property name="orderStatus" type="String" from-list="modules_order/orderstatuses" default-value="initiated" preserve-old-value="true" />
-		<property name="customer" type="Document" inverse="true" min-occurs="1" document-type="modules_customer/customer" />
-		<property name="shopId" type="Integer" min-occurs="1" />
-		<property name="websiteId" type="Integer" min-occurs="1" />
+		<property name="customer" type="Document" inverse="true" document-type="modules_customer/customer" required="true" />
+		<property name="shopId" type="Integer" required="true" />
+		<property name="websiteId" type="Integer" required="true" />
 		<property name="line" type="DocumentArray" inverse="true" document-type="modules_order/orderline" />
-		<property name="totalAmountWithTax" type="Double" min-occurs="1" />
-		<property name="totalAmountWithoutTax" type="Double" min-occurs="1" />
-		<property name="currencyCode" type="String" min-occurs="1" default-value="EUR" />
+		<property name="totalAmountWithTax" type="Double" required="true" />
+		<property name="totalAmountWithoutTax" type="Double" required="true" />
+		<property name="currencyCode" type="String" default-value="EUR" required="true" />
 		<property name="shippingModeId" type="Integer" />
 		<property name="shippingFeesWithTax" type="Double" default-value="0" />
 		<property name="shippingFeesWithoutTax" type="Double" default-value="0" />
 		<property name="shippingAddress" type="Document" document-type="modules_customer/address" />
-		<property name="billingModeId" type="Integer" min-occurs="1" />
+		<property name="billingModeId" type="Integer" required="true" />
 		<property name="billingAddress" type="Document" document-type="modules_customer/address" />
 		<property name="couponId" type="Integer" />
 		<property name="globalProperties" type="Lob" />
