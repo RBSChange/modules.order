@@ -26,8 +26,8 @@
 				<legend class="h-2">${trans:m.order.standardprocess.billing-title,ucf}</legend>
 				<ul change:errors="relKey paymentFilter"></ul>		
 				<ol id="paymentselector" tal:condition="paymentFilters">
-					<li tal:repeat="paymentFilter cart/getPaymentConnectors">
-						<label change:fieldlabel="name paymentFilterId; withcolon false"><input change:radioinput="" id="paymentFilter" value="${paymentFilter/getId}" /> ${structure paymentFilter/getConnector/getSelectionAsHtml}</label>
+					<li tal:repeat="paymentFilter paymentFilters">
+						<label change:label="withcolon false" for="paymentFilter_${paymentFilter/getId}"><input change:radioinput="name paymentFilterId;labeled false" id="paymentFilter" value="${paymentFilter/getId}" /> ${structure paymentFilter/getConnector/getSelectionAsHtml}</label>
 					</li>
 				</ol>
 			</fieldset>
