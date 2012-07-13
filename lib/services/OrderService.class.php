@@ -526,6 +526,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$currencyCode = $billingArea->getCurrency()->getCode();
 			$orderDocument->setCurrencyCode($currencyCode);
 			$orderDocument->setPriceFormat($billingArea->getPriceFormat());
+			$orderDocument->setCurrencyPosition('currencyPosition', $billingArea->getCurrencyPosition());
 			$orderDocument->setTaxZone($cartInfo->getTaxZone());
 			
 			if ($cartInfo->hasCreditNote())

@@ -35,10 +35,29 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function formatPrice($value)
 	{
-		return catalog_PriceFormatter::getInstance()->applyFormat($value, $this->getPriceFormat(), $this->getCurrencyCode(), $this->getLang());
+		$rc = RequestContext::getInstance();
+		$lang = $rc->getMode() == RequestContext::BACKOFFICE_MODE ? $rc->getUILang() : $rc->getLang();
+		return catalog_PriceFormatter::getInstance()->format($value,  $this->getCurrencyCode(), $lang, $this->getCurrencyPosition());
 	}
 	
 	/**
+	 * @return string
+	 */
+	public function getCurrencyPosition()
+	{
+		return $this->getGlobalProperty('currencyPosition');
+	}
+	
+	/**
+	 * @param string $position
+	 */
+	public function setCurrencyPosition($position)
+	{
+		return $this->setGlobalProperty('currencyPosition', $position);
+	}
+	
+	/**
+	 * @deprecated
 	 * @return string
 	 */
 	public function getPriceFormat()
@@ -47,6 +66,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}
 	
 	/**
+	 * @deprecated
 	 * @param string $priceFormat
 	 */
 	public function setPriceFormat($priceFormat)
