@@ -837,7 +837,9 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			}
 			
 			$preparedExpeditions = $this->createQuery()
-				->add(Restrictions::eq('status', self::PREPARE))->find();
+				->add(Restrictions::eq('status', self::PREPARE))
+				->add(Restrictions::eq('order', $order))
+				->find();
 			
 			foreach ($preparedExpeditions as $value)
 			{
