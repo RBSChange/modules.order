@@ -8,6 +8,9 @@
   
   	<key id="strategy-default-shipping">frais de livraison fixe</key>
   	<key id="strategy-cart-price-shipping">frais de livraison degressif en fonction de montant des lignes du panier</key>
+  	
+  	<key id="strategy-fees-value">frais fixe</key>
+  	<key id="strategy-fees-ranges-value">frais fonction du montant des lignes du panier</key>
 
   	<key id="application-conditions">conditions d'applications</key>
 </i18n>

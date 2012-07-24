@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sections>
+  <section labeli18n="m.order.bo.strategy.feesrangesvaluestrategy-section">
+ 	 <field name="strategylabel" type="text" labeli18n="m.order.bo.strategy.fees-strategylabel" />
+ 	 <field name="boValueJSON" type="price" required="true" 
+			labeli18n="m.order.bo.strategy.feesrangesvaluestrategy-min" 
+			shorthelp="m.order.bo.strategy.feesrangesvaluestrategy-min-help">
+			<constraint name="min" parameter="0" />
+	</field>
+	<field name="ranges" type="longtext" labeli18n="m.order.bo.strategy.feesrangesvaluestrategy-ranges" 
+		shorthelp="m.order.bo.strategy.feesrangesvaluestrategy-ranges-help"/>
+  </section>
+</sections>
