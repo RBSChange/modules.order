@@ -148,7 +148,8 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 	 */
 	protected function getBoValueJSON()
 	{
-		$array = catalog_BillingareaService::getInstance()->buildBoPriceEditInfos($this->getValueWithoutTax(), $this->getShop(), $this->getTaxCategory());
+		$ba = $this->fees->getBillingArea();
+		$array = catalog_BillingareaService::getInstance()->buildBoPriceEditInfos($this->getValueWithoutTax(), $this->getShop(), $this->getTaxCategory(), $ba);
 		return JsonService::getInstance()->encode($array);
 	}
 	
@@ -157,7 +158,8 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 	 */
 	public function setBoValueJSON($value)
 	{
-		list($valueWithoutTax, $taxCategory) = catalog_BillingareaService::getInstance()->parseBoPriceEditInfos($value, $this->getShop());
+		$ba = $this->fees->getBillingArea();
+		list($valueWithoutTax, $taxCategory) = catalog_BillingareaService::getInstance()->parseBoPriceEditInfos($value, $this->getShop(), $ba);
 		$this->fees->setStrategyParam('taxcategory', $taxCategory);
 		$this->fees->setStrategyParam('valuewithouttax', $valueWithoutTax);
 	}
