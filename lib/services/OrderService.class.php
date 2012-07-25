@@ -1396,31 +1396,63 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
-	 * @return void
+	 * @param integer $lastId
+	 * @param integer $chunkSize
+	 * @return integer[]
 	 */
-	public function sendCommentReminders()
+	public function getOrderIdsToRemind($lastId, $chunkSize = 100)
 	{
-		$codeName = 'modules_order/comment-reminder';
-		foreach ($this->getOrdersToRemind() as $order)
+		$ms = ModuleService::getInstance();
+		switch ($ms->getPreferenceValue('order', 'commentReminderReference'))
 		{
-			/* @var $order order_persistentdocument_order */
-			$user = $order->getCustomer()->getUser();
-			$products = $this->getNotCommentedProducts($order, $user);
-			if (count($products) > 0)
+			case 'payment' :
+				$referenceProperty = 'bill.transactionDate';
+				break;			
+			default :
+			case 'shipment' :
+				$referenceProperty = 'expedition.shippingDate';
+				break;
+		}
+		$referenceDate = date_Calendar::getInstance();
+		$referenceDate->sub(date_Calendar::DAY, $ms->getPreferenceValue('order', 'commentReminderPeriod'));		
+		$query = $this->createQuery()->add(Restrictions::isNull('lastCommentReminder'));
+		$query->add(Restrictions::lt($referenceProperty, $referenceDate->toString()));
+		$query->add(Restrictions::gt('id', $lastId))->addOrder(Order::asc('id'))->setMaxResults($chunkSize);
+		return $query->setProjection(Projections::groupProperty('id', 'id'))->findColumn('id');
+	}
+	
+	/**
+	 * @param order_persistentdocument_order $order
+	 */
+	public function sendCommentReminder($order)
+	{
+		$user = $order->getCustomer()->getUser();
+		if ($user->isPublished())
+		{
+			$notif = notification_NotificationService::getInstance()->getConfiguredByCodeName('modules_order/comment-reminder', $order->getWebsiteId(), $order->getLang());
+			if ($notif)
 			{
-				$products = $this->filterProductsForCommentReminder($products);	
-				$notif = notification_NotificationService::getInstance()->getConfiguredByCodeName($codeName, $order->getWebsiteId(), $order->getLang());
-				if ($notif)
+				$products = $this->getNotCommentedProducts($order, $user);
+				if (count($products) > 0)
 				{
+					$products = $this->filterProductsForCommentReminder($products);
 					$notif->setSendingModuleName('order');
 					order_ModuleService::getInstance()->registerNotificationCallback($notif, $order, null, null);
 					$notif->registerCallback($this, 'renderReminderProductBlock', $products);
 					$notif->sendToUser($user);
 				}
 			}
-			$order->setLastCommentReminder(date_calendar::getInstance()->toString());
-			$order->save();
 		}
+		$order->setLastCommentReminder(date_calendar::getInstance()->toString());
+		$order->save();
+	}	
+	
+	/**
+	 * @deprecated
+	 */
+	public function sendCommentReminders()
+	{
+		return;
 	}
 	
 	/**
@@ -1505,29 +1537,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		return array_values($products);
 	}
 
-	/**
-	 * @return order_persistentdocument_order[]
-	 */
-	private function getOrdersToRemind()
-	{
-		$ms = ModuleService::getInstance();
-		switch ($ms->getPreferenceValue('order', 'commentReminderReference'))
-		{
-			case 'payment' :
-				$referenceProperty = 'bill.transactionDate';
-				break;
-					
-			default :
-			case 'shipment' :
-				$referenceProperty = 'expedition.shippingDate';
-				break;
-		}
-		$referenceDate = date_Calendar::getInstance();
-		$referenceDate->sub(date_Calendar::DAY, $ms->getPreferenceValue('order', 'commentReminderPeriod'));
-		$query = $this->createQuery()->add(Restrictions::isNull('lastCommentReminder'));
-		$query->add(Restrictions::lt($referenceProperty, $referenceDate->toString()));
-		return $query->find();
-	}
+
 
 	/**
 	 * @param catalog_persistentdocument_product[] $products
