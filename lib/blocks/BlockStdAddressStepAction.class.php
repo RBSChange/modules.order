@@ -73,14 +73,14 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 				{
 					if ($user->isPublished())
 					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.bad-password', array('ucf', 'html'));
+						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-password-or-inactive-account', array('ucf', 'html'));
 						$this->addError($error);
 						$this->addErrorForProperty('password', $error);
 						$valid = false;
 					}
 					else
 					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf', 'html'));
+						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-password-or-inactive-account', array('ucf', 'html'));
 						$this->addError($error);
 						$this->addErrorForProperty('email', $error);
 						$valid = false;
