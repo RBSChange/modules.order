@@ -70,7 +70,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 				$user = $us->getFrontendUserByLogin($login, $website->getId());
 				if ($user)
 				{
-					$error = LocaleService::getInstance()->trans('m.order.standardprocess.invalid-account', array('ucf', 'html'));
+					$error = LocaleService::getInstance()->trans('m.order.standardprocess.invalid-password-or-inactive-account', array('ucf', 'html'));
 					$this->addError($error);
 					$this->addErrorForProperty('email', $error);
 					$valid = false;
