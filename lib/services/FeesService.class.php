@@ -215,10 +215,11 @@ class order_FeesService extends order_CartmodifierService
 	
 	/**
 	 * @param order_persistentdocument_fees $document
-	 * @param String[] $propertiesName
-	 * @param Array $datas
+	 * @param string[] $propertiesName
+	 * @param array $datas
+	 * @param integer $parentId
 	 */
-	public function addFormProperties($document, $propertiesName, &$datas)
+	public function addFormProperties($document, $propertiesName, &$datas, $parentId = null)
 	{
 		if (in_array('strategyParametersJSON', $propertiesName))
 		{
