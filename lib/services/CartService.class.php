@@ -450,6 +450,7 @@ class order_CartService extends BaseService
 		{
 			foreach ($cart->getCartLineArray() as $cartLine)
 			{
+				/* @var $cartLine order_CartLineInfo */
 				$cartLine->importPrice($cartLine->getPrice());
 			}
 		}
@@ -715,13 +716,14 @@ class order_CartService extends BaseService
 				$price = $product->getPrice($shop, $cart->getBillingArea(), $cart->getCustomer(), $cartLine->getQuantity());
 				if ($price === null)
 				{
-					$cartLine->setPriceId(null);
+					$cartLine->setPrice(null);
 					$replacements = array('articleLabel' => $product->getLabelAsHtml());
-					$cart->addErrorMessage($ls->transFO('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
+					$cart->addPersistentErrorMessage($ls->transFO('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
 				}
 				else
 				{
-					$cartLine->setPriceId($price->getId());
+					
+					$cartLine->setPrice($price);
 				}
 				return true;
 			}

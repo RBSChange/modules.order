@@ -5,12 +5,12 @@
 class order_CartLineInfo
 {
 	/**
-	 * @var Integer
+	 * @var integer
 	 */
 	private $productId = null;
 	
 	/**
-	 * @var Integer
+	 * @var integer
 	 */
 	private $priceId = null;
 	
@@ -59,8 +59,31 @@ class order_CartLineInfo
 	 */
 	private $key = null;
 	
-	
+	/**
+	 * @var array
+	 */
 	private $priceParts;
+	
+	/**
+	 * @var array<string, mixed>
+	 */
+	private $properties = array();
+	
+	/**
+	 * @var catalog_persistentdocument_price
+	 */
+	private $price = null;
+	
+
+	public function __sleep()
+	{
+		return array("\0order_CartLineInfo\0properties", "\0order_CartLineInfo\0key", 
+			"\0order_CartLineInfo\0ecoTax", "\0order_CartLineInfo\0discountDetail", 
+			"\0order_CartLineInfo\0oldValueWithoutTax", "\0order_CartLineInfo\0oldValueWithoutTax", 
+			"\0order_CartLineInfo\0valueWithoutTax", "\0order_CartLineInfo\0valueWithTax", 
+			"\0order_CartLineInfo\0productId", "\0order_CartLineInfo\0priceId", "\0order_CartLineInfo\0quantity", 
+			"\0order_CartLineInfo\0taxCategory", "\0order_CartLineInfo\0priceParts");
+	}
 
 	/**
 	 * @return Integer
@@ -119,7 +142,7 @@ class order_CartLineInfo
 		}
 		return $this->key;
 	}
-
+	
 	/**
 	 * @return Double
 	 */
@@ -158,11 +181,14 @@ class order_CartLineInfo
 	 */
 	public function getPrice()
 	{
-		if ($this->priceId)
+		if ($this->price === null)
 		{
-			return catalog_persistentdocument_price::getInstanceById($this->priceId);
+			if ($this->priceId !== null && $this->priceId > 0)
+			{
+				$this->price = catalog_persistentdocument_price::getInstanceById($this->priceId);
+			}
 		}
-		return null;
+		return $this->price;
 	}
 	
 	/**
@@ -172,10 +198,12 @@ class order_CartLineInfo
 	{
 		if ($price instanceof catalog_persistentdocument_price) 
 		{
+			$this->price = $price;
 			$this->setPriceId($price->getId());
 		}
 		else
 		{
+			$this->price = null;
 			$this->setPriceId(null);
 		}
 	}
@@ -453,11 +481,6 @@ class order_CartLineInfo
 	{
 		$this->valueWithTax = $valueWithTax;
 	}
-
-	/**
-	 * @var Array<String, Mixed>
-	 */
-	private $properties = array();
 
 	/**
 	 * @return Array<String, Mixed>
