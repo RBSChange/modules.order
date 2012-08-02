@@ -9,7 +9,7 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 	 * @var order_OrderpreparationService
 	 */
 	private static $instance;
-
+	
 	/**
 	 * @return order_OrderpreparationService
 	 */
@@ -21,7 +21,7 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 		}
 		return self::$instance;
 	}
-
+	
 	/**
 	 * @return order_persistentdocument_orderpreparation
 	 */
@@ -29,7 +29,7 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 	{
 		return $this->getNewDocumentInstanceByModelName('modules_order/orderpreparation');
 	}
-
+	
 	/**
 	 * Create a query based on 'modules_order/orderpreparation' model.
 	 * Return document that are instance of modules_order/orderpreparation,
@@ -55,11 +55,10 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 	/**
 	 * @param integer $orderId
 	 * @return boolean
-	 */	
+	 */
 	public function existForOrderId($orderId)
 	{
-		$result = $this->createQuery()->setProjection(Projections::count('id', 'countId'))
-			->add(Restrictions::eq('orderId', $orderId))->findColumn('countId');
+		$result = $this->createQuery()->setProjection(Projections::count('id', 'countId'))->add(Restrictions::eq('orderId', $orderId))->findColumn('countId');
 		return is_array($result) && $result[0] > 0;
 	}
 	
@@ -72,7 +71,7 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 		if (is_array($lineInfo) && isset($lineInfo['id']) && isset($lineInfo['quantity']) && ($lineInfo['quantity'] > 0))
 		{
 			$dm = $this->getPersistentProvider()->getDocumentModelName($lineInfo['id']);
-			if ($dm )
+			if ($dm)
 			{
 				$srv = f_persistentdocument_DocumentService::getInstanceByDocumentModelName($dm);
 				if ($srv instanceof order_OrderlineService)
@@ -92,17 +91,17 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 	public function getLinesInfosForOrder($order)
 	{
 		$array = array();
-		foreach ($order->getLineArray() as $line) 
+		foreach ($order->getLineArray() as $line)
 		{
 			/* @var $line order_persistentdocument_orderline */
-			$array[$line->getId()]  = array('id' => $line->getId(), 'quantity' => $line->getQuantity());
+			$array[$line->getId()] = array('id' => $line->getId(), 'quantity' => $line->getQuantity());
 		}
 		
 		$opArray = $this->createQuery()->add(Restrictions::eq('orderId', $order->getId()))->find();
-		foreach ($opArray as $op) 
+		foreach ($opArray as $op)
 		{
 			/* @var $op order_persistentdocument_orderpreparation */
-			foreach ($op->getLinesArray() as $lineInfo) 
+			foreach ($op->getLinesArray() as $lineInfo)
 			{
 				$lid = $lineInfo['id'];
 				if (isset($array[$lid]))
@@ -113,11 +112,10 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 						unset($array[$lid]);
 					}
 				}
-			}			
+			}
 		}
 		return $array;
 	}
-	
 	
 	/**
 	 * @param order_persistentdocument_orderpreparation $document
@@ -143,7 +141,7 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 		}
 		elseif (in_array('oplinesJSON', $propertiesName))
 		{
-			$datas['updatelines'] =  ($document->getPublicationstatus() == 'DRAFT');
+			$datas['updatelines'] = ($document->getPublicationstatus() == 'DRAFT');
 		}
 	}
 	
@@ -165,7 +163,6 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 			$document->setLabel($this->getNextNumber($document));
 		}
 	}
-	
 	
 	/**
 	 * @param order_persistentdocument_orderpreparation $document
@@ -193,8 +190,7 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 	{
 		if ($order instanceof order_persistentdocument_order)
 		{
-			$query = $this->createQuery()->add(Restrictions::eq('orderId', $order->getId()))
-			->addOrder(Order::asc('label'));
+			$query = $this->createQuery()->add(Restrictions::eq('orderId', $order->getId()))->addOrder(Order::asc('label'));
 			return $query->find();
 		}
 		return array();
@@ -209,7 +205,6 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 		$result = array();
 		foreach ($this->getByOrder($order) as $orderpreparation)
 		{
-			/* @var orderpreparation order_persistentdocument_orderpreparation */
 			$result[] = $this->buildBoRow($orderpreparation);
 		}
 		return $result;
@@ -232,4 +227,5 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 		);
 		return $result;
 	}
+
 }

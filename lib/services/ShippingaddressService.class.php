@@ -88,4 +88,5 @@ class order_ShippingaddressService extends customer_AddressService
 			$document->setEmail(Framework::getDefaultNoReplySender());
 		}
 	}
+	
 }
