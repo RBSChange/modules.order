@@ -97,6 +97,9 @@
 		<action name="createSmartfolder" single="true" permission="Insert_smartfolder" icon="create-folder"
 			labeli18n="m.order.bo.actions.Create-smartfolder" />
 		<action name="openTreeNodeOrder" single="true" permission="Order" icon="sort" labeli18n="m.uixul.bo.actions.Set-children-order" />		
-		<action name="createOrderpreparation" single="true" permission="Insert_orderpreparation" icon="add" />		
+		<action name="createOrderpreparation" single="true" permission="Insert_orderpreparation" icon="add" />
+		<action name="activate" single="true" permission="Activate" icon="activate" labeli18n="m.uixul.bo.actions.Activate"/>
+		<action name="deactivated" permission="Deactivated" icon="deactivated" labeli18n="m.uixul.bo.actions.Deactivate"/>
+		<action name="reactivate" permission="ReActivate" icon="reactivate" labeli18n="m.uixul.bo.actions.ReActivate"/>
 	</actions>
 </perspective>
