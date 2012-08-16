@@ -1652,6 +1652,78 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			}
 		}
 	}
+	
+	/**
+	 * 
+	 * @param string $startdate
+	 * @param string $endate
+	 * @param integer $offset
+	 * @param integer $pageSize
+	 * @param integer $resultCount
+	 * @param string $orderBy
+	 * @return order_persistentdocument_order[]
+	 */
+	public function getVirtualChildrenByDate($startdate, $endate, $offset, $pageSize, &$resultCount, $orderBy = null)
+	{
+		$countQuery = $this->createQuery()
+			->add(Restrictions::between('creationdate', $startdate, $endate))
+			->setProjection(Projections::rowCount('countItems'));
+		$ci = $countQuery->findColumn('countItems');
+		$resultCount = intval($ci[0]);
+		
+		$query = order_OrderService::getInstance()->createQuery()
+		->add(Restrictions::between('creationdate', $startdate, $endate))
+		->setFirstResult($offset)->setMaxResults($pageSize);
+		
+		if ($orderBy)
+		{
+			list($cn, $dir) = explode(':', $orderBy);
+			if($cn == 'label')
+			{
+				$fn = 'orderNumber';
+			}
+			elseif($cn == 'formattedTotalAmountWithTax')
+			{
+				$fn = 'totalAmountWithTax';
+			}
+			elseif($cn == 'date')
+			{
+				$fn = 'id';
+			}
+			elseif($cn == 'customer')
+			{
+				if ($dir === 'asc')
+				{
+					$query->createCriteria('customer')
+					->createCriteria('user')->addOrder(Order::asc('customer.user.firstname'))->addOrder(Order::asc('customer.user.lastname'));
+				}
+				else
+				{
+					$query->createCriteria('customer')
+					->createCriteria('user')->addOrder(Order::desc('customer.user.firstname'))->addOrder(Order::desc('customer.user.lastname'));
+				}
+				$fn = null;
+			}
+			else
+			{
+				$fn = null;
+			}
+				
+			if ($fn)
+			{
+				if ($dir === 'asc')
+				{
+					$query->addOrder(Order::asc($fn));
+				}
+				else
+				{
+					$query->addOrder(Order::desc($fn));
+				}
+			}
+		}
+		
+		return $query->find();		
+	}
 
 	// Deprecated
 	

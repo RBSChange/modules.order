@@ -15,20 +15,16 @@ class order_GetTreeChildrenJSONAction extends generic_GetTreeChildrenJSONAction
 			$matches = null;			
 			if (preg_match('/^\d{4}\-\d{2}\-\d{2}$/', $dateLabel, $matches) && $this->getTreeType() == "wlist")
 			{
+				
 				$startdate = date_Converter::convertDateToGMT($matches[0] . ' 00:00:00');
 				$endate = date_Calendar::getInstance($startdate)->add(date_Calendar::DAY, 1)->toString();
 				$offset = $this->getStartIndex();
 				$pageSize = $this->getPageSize();
-				$countQuery = order_OrderService::getInstance()->createQuery()
-					->add(Restrictions::between('creationdate', $startdate, $endate))
-					->setProjection(Projections::rowCount('countItems'));
-				$resultCount = $countQuery->find();
-				$this->setTotal(intval($resultCount[0]['countItems']));
-				$query = order_OrderService::getInstance()->createQuery()
-					->add(Restrictions::between('creationdate', $startdate, $endate))
-					->addOrder(Order::desc('id'))
-					->setFirstResult($offset)->setMaxResults($pageSize);
-				return $query->find();
+				$orderBy = $this->getOrderBy();
+				$resultCount = 0;
+				$result = order_OrderService::getInstance()->getVirtualChildrenByDate($startdate, $endate, $offset, $pageSize, $resultCount, $orderBy);
+				$this->setTotal($resultCount);
+				return $result;
 			}
 			else
 			{
