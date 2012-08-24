@@ -23,9 +23,12 @@ class order_PrintOrderPropertiesView extends f_view_BaseView
 		{
 			/* @var $bill order_persistentdocument_bill */
 			$connector = $bill->getPaymentConnector();
-			$connector->getDocumentService()->setPaymentInfo($connector, $bill);
-			$template = 'Payment-Block-Payment-' . $connector->getTemplateViewName();
-			$payments[] = array('bill' => $bill, 'connector' => $connector, 'template' => $template);
+			if ($connector instanceof payment_persistentdocument_connector)
+			{
+				$connector->getDocumentService()->setPaymentInfo($connector, $bill);
+				$template = 'Payment-Block-Payment-' . $connector->getTemplateViewName();
+				$payments[] = array('bill' => $bill, 'connector' => $connector, 'template' => $template);
+			}
 		}
 		$this->setAttribute('payments', $payments);
 		
