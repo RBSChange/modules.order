@@ -27,6 +27,8 @@
 		<withTax>TTC</withTax>
 		<subTotal>Total Brut</subTotal>
 		<total>Total Net</total>
+		<creditNote>Montant de l'avoir</creditNote>
+		<paidAmount>Reste à payer</paidAmount>
 	</billTexts>
 	<merchantAddress>
 		<line>AEROPARC 1 - 11 Rue Icard</line>
