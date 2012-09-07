@@ -507,11 +507,11 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$orderDocument = $cartInfo->getOrder();
 			if ($orderDocument === null)
 			{
-				$orderDocument = $this->getNewDocumentInstance();				
+				$orderDocument = $this->getNewDocumentInstance();
 				
 			}
 			else
-			{
+			{		
 				$orderDocument->setLabel(date_Calendar::now()->toString());
 			}
 			
@@ -660,6 +660,33 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$this->finalizeOrderAndCart($orderDocument, $cartInfo);		
 		}
 		return $orderDocument;
+	}
+	
+	/**
+	 *
+	 * @param order_persistentdocument_order $order
+	 * @param order_CartInfo $cart
+	 */
+	public function resetForCart($order, $cart)
+	{
+		if ($order->getOrderStatus() == self::INITIATED)
+		{
+
+			$bills = order_BillService::getInstance()->getByOrderForPayment($order);
+			foreach ($bills as $bill)
+			{
+				/* @var $bill order_persistentdocument_bill */
+				if ($bill->getTransactionId() == null)
+				{
+					$bill->setStatus(order_BillService::FAILED);
+					//Set a transactionId for file bill instead of delete
+					$bill->setTransactionId('resetForCart');
+					$bill->getDocumentService()->cancelBill($bill);
+				}
+			}
+			$this->cancelOrder($order, false);
+		}
+		$cart->setOrderId(null);
 	}
 
 	/**
@@ -973,9 +1000,25 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	public function processOrder($order, $sendNotification = true)
 	{
 		$oldStatus = $order->getOrderStatus();
-		if ($oldStatus != self::IN_PROGRESS)
+		if ($oldStatus == self::CANCELED)
 		{
-			Framework::info(__METHOD__ . ' '. $order->__toString());
+			$paidAmount = order_BillService::getInstance()->getPaidAmountByOrder($order);
+			// Create new credit note.
+			if ($paidAmount >= 0.0001)
+			{
+				if (count(order_CreditnoteService::getInstance()->getByOrder($order)) == 0)
+				{
+					$creditNote = order_CreditnoteService::getInstance()->getNewDocumentInstance();
+					$creditNote->setOrder($order);
+					$creditNote->setAmount($paidAmount);
+					$creditNote->setPublicationstatus('DRAFT');
+					$creditNote->save();
+					$this->handleNewCreditNoteAfterCancel($creditNote);
+				}
+			}
+		}
+		elseif ($oldStatus != self::IN_PROGRESS)
+		{
 			$order->setOrderStatus(self::IN_PROGRESS);
 			$this->save($order);
 			
@@ -986,8 +1029,8 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			}
 			f_event_EventManager::dispatchEvent(self::ORDER_STATUS_MODIFIED_EVENT, $this, array('document' => $order));
 		}
-	}		
-	
+	}	
+
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @param boolean $sendNotification

@@ -169,7 +169,15 @@ class order_CartService extends BaseService
 		{
 			Framework::info(__METHOD__);
 		}
-		$cart->setOrderId(null);
+		$order = DocumentHelper::getDocumentInstanceIfExists($cart->getOrderId());
+		if ($order instanceof order_persistentdocument_order)
+		{
+			$order->getDocumentService()->resetForCart($order, $cart);
+		}
+		else
+		{
+			$cart->setOrderId(null);
+		}
 	}
 	
 	/**
@@ -219,14 +227,14 @@ class order_CartService extends BaseService
 	 * @return boolean
 	 */
 	public function addProductToCart($cart, $product, $quantity = 1)
-	{		
+	{	
 		$ls = LocaleService::getInstance();
 		if (!($cart instanceof order_CartInfo) || !($product instanceof catalog_persistentdocument_product) || $quantity <= 0)
 		{
 			Framework::warn(__METHOD__ . ' Invalid arguments');
 			return false;
 		}
-				
+
 		// Get properties and line key.
 		$properties = array();
 		$product->getDocumentService()->getProductToAddToCart($product, $cart->getShop(), $quantity, $properties);
@@ -257,7 +265,6 @@ class order_CartService extends BaseService
 		}
 		else
 		{
-			Framework::info(__METHOD__ . ' Check Key:' . $cartLineKey);
 			$cartLine = $this->getCartLineByKey($cart, $cartLineKey);
 			if ($cartLine === null)
 			{
@@ -407,34 +414,34 @@ class order_CartService extends BaseService
 		
 		Framework::startBench();
 		
-		// Validate the cart.
-		$this->validateCart($cart);		
-		Framework::bench('validateCart');
-		
-		// Refresh the prices infos.
-		$this->refreshCartPrice($cart);
-		Framework::bench('refreshCartPrice');
-
-		$this->refreshCoupon($cart);
-		Framework::bench('refreshCoupon');			
-		
-		$this->refreshShipping($cart);
-		Framework::bench('refreshShipping');
-		
-		$this->refreshModifiers($cart);
-		Framework::bench('refreshModifiers');
-		
-		$this->refreshTax($cart);
-		Framework::bench('refreshTax');
-		
-		$this->refreshCreditNote($cart);
-		Framework::bench('refreshCreditNote');
+			// Validate the cart.
+			$this->validateCart($cart);		
+			Framework::bench('validateCart');
+			
+			// Refresh the prices infos.
+			$this->refreshCartPrice($cart);
+			Framework::bench('refreshCartPrice');
+	
+			$this->refreshCoupon($cart);
+			Framework::bench('refreshCoupon');			
+			
+			$this->refreshShipping($cart);
+			Framework::bench('refreshShipping');
+			
+			$this->refreshModifiers($cart);
+			Framework::bench('refreshModifiers');
+			
+			$this->refreshTax($cart);
+			Framework::bench('refreshTax');
+			
+			$this->refreshCreditNote($cart);
+			Framework::bench('refreshCreditNote');
 				
 		if ($resetSessionOrderProcess)
 		{
 			order_OrderProcessService::getInstance()->resetSessionOrderProcess();
 		}
-
+	
 		$this->saveToSession($cart);
 		
 		Framework::endBench(__METHOD__);
@@ -495,11 +502,11 @@ class order_CartService extends BaseService
 				$shippingFilter = DocumentHelper::getDocumentInstance($cart->getAddressInfo()->shippingFilterId);
 				$cart->setRequiredShippingFilter(0, $shippingFilter);
 			}
-			else
-			{
+		else
+		{
 				$cart->setRequiredShippingFilter(0, null);
-			}
 		}
+	}	
 	}	
 
 	/**
