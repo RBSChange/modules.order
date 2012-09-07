@@ -21,6 +21,9 @@ class order_CartInfoScriptElement extends import_ScriptObjectElement
     			case 'shop-refid':
     				$cart->setShop($this->script->getElementById($value)->getPersistentDocument());
     				break;
+    			case 'context-refid':
+    				$cart->setContextId($this->script->getElementById($value)->getPersistentDocument()->getId());
+    				break;
     			case 'customer-refid':
     				$cart->setCustomer($this->script->getElementById($value)->getPersistentDocument());
     				break;    			

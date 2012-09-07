@@ -31,8 +31,16 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 		}	
 		$cs = order_CartService::getInstance();	
 		$cart =$cs->getDocumentInstanceFromSession();
-		$cs->refresh($cart, false);
-		
+		if ($request->hasParameter('Payment'))
+		{
+			if ($cart->getOrderId() == $request->getParameter('Payment'))
+			{
+				$this->setRequestOrderParams($request, $cart, $cart->getOrder());
+				return 'Payment';
+			}
+		}
+
+		$cs->refresh($cart, false);		
 		if ($cart->isEmpty() || $cart->getCustomer() === null) {$this->redirectToCart($cart);}
 		$op = $cart->getOrderProcess();
 		$op->setCurrentStep('Billing');
@@ -113,8 +121,10 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 			$order = $this->generateOrderForCart($cart);
 			if ($order !== null)
 			{	
-				$this->setRequestOrderParams($request, $cart, $order);
-				return 'Payment';
+				$op = $cart->getOrderProcess();
+				$url = order_OrderProcessService::getInstance()->getOrderProcessURL($op, array('orderParam' => array('Payment' => $order->getId())));
+				$this->redirectToUrl($url);
+				exit(0);
 			}
 		}
 		

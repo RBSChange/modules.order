@@ -16,4 +16,6 @@
 	<key id="tracking">URL de suivi</key>
 	<key id="status">statut</key>
 	<key id="used-credit-note">avoir consommé</key>
+	<key id="context">Context</key>
+	<key id="context-deleted">Le context ({id}) associé à cette commande n'existe plus.</key>
 </i18n>

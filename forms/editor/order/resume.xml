@@ -7,6 +7,7 @@
 		<property name="customerFullName" labeli18n="modules.order.bo.doceditor.property.Customer-full-name" />
 		<property name="customerCode" labeli18n="modules.order.bo.doceditor.property.Customer-code" />
 		<property name="creationdate" labeli18n="modules.uixul.bo.doceditor.property.Creationdate" />
+		<property name="context" class="action" type="edit" labeli18n="m.order.bo.doceditor.property.context" />
 	</section>
 		
 	<section name="financial" linkedtab="financial" actiontexti18n="modules.uixul.bo.doceditor.section.action.View"

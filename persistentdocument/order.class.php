@@ -198,6 +198,44 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		return catalog_persistentdocument_shop::getInstanceById($this->getShopId());
 	}
 	
+	
+	/**
+	 * @return f_persistentdocument_PersistentDocument|null
+	 */
+	public function getContextDocument()
+	{
+		return DocumentHelper::getDocumentInstanceIfExists($this->getContextId());
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getContextDocumentLabel()
+	{
+		$label = $this->getOrderProperty('context_label');
+		if (!$label && $this->getContextDocument())
+		{
+			$label = $this->getContextDocument()->getNavigationLabel();
+		}
+		return $label;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getContextDocumentLabelAsHtml()
+	{
+		return f_util_HtmlUtils::textToHtml($this->getContextDocumentLabel());
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function setContextDocumentLabel($label)
+	{
+		return $this->setOrderProperty('context_label', $label);
+	}	
+	
 	/**
 	 * @return string
 	 */

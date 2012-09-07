@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document xmlns="http://www.rbs.fr/schema/change-document/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.rbs.fr/schema/change-document/1.0 http://www.rbschange.fr/static/schema/change-document/1.0.xsd" model-version="3.0" icon="order" publish-on-day-change="false">
   <properties>
-    <add name="orderNumber" type="String" />
+    <add name="orderNumber" type="String"/>
     <add name="orderStatus" type="String" from-list="modules_order/orderstatuses" default-value="initiated" preserve-old-value="true"/>
     <add name="customer" type="modules_customer/customer" inverse="true" min-occurs="1"/>
     <add name="shopId" type="Integer" min-occurs="1"/>
@@ -10,7 +10,7 @@
     <add name="totalAmountWithTax" type="Double" min-occurs="1"/>
     <add name="totalAmountWithoutTax" type="Double" min-occurs="1"/>
     <add name="currencyCode" type="String" min-occurs="1" default-value="EUR"/>
-    <add name="shippingModeId" type="Integer" />
+    <add name="shippingModeId" type="Integer"/>
     <add name="shippingFeesWithTax" type="Double" default-value="0"/>
     <add name="shippingFeesWithoutTax" type="Double" default-value="0"/>
     <add name="shippingAddress" type="modules_customer/address"/>
@@ -23,6 +23,7 @@
     <add name="commentadmin" type="LongString"/>
     <add name="needsAnswer" type="Boolean"/>
     <add name="usecreditnote" type="modules_order/creditnote" max-occurs="-1"/>
+    <add name="contextId" type="Integer"/>
   </properties>
   <statuses default="ACTIVE"/>
   <serializedproperties>

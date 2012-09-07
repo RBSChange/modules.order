@@ -11,7 +11,6 @@
 				<tr>
 					<th>${trans:m.order.standardprocess.order-product-qtt,ucf}</th>
 					<th colspan="2">${trans:m.order.standardprocess.order-product-description,ucf}</th>
-					<th>${trans:m.order.standardprocess.order-product-availability,ucf}</th>
 					<tal:block tal:condition="showPrice">
 						<th>${trans:m.order.standardprocess.order-product-unit-price,ucf}</th>	
 						<th tal:condition="showPriceWithoutTax">${trans:m.order.standardprocess.order-product-price-ht}</th>
@@ -25,7 +24,6 @@
 						<td>${orderLine/getQuantity} </td>
 						<td><img change:media="document product/getDefaultVisual; format 'modules.catalog.frontoffice/small'"/></td> 
 						<td>${orderLine/getLabel} <br/> ${line/getCodeReference}</td>
-						<td>${product/getAvailability} </td>
 						<tal:block tal:condition="showPriceWithoutTax">
 							<td class="price">${php:order.formatPrice(orderLine.getUnitPriceWithoutTax())}</td>
 							<td class="price">${php:order.formatPrice(orderLine.getAmountWithoutTax())}</td>
@@ -72,28 +70,28 @@
 						<td class="price">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
 					</tr>
 				</table>
-				<p class="buttons"><a class="link" href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify-cart,ucf}</a></p>
+				<p class="buttons"><a class="link" href="${orderProcess/getCartUrl}">${trans:m.order.standardprocess.modify-cart,ucf}</a></p>
 			</div>
 			<div class="normal section">
 				<h3 change:h="">${trans:m.order.standardprocess.resume-address-billing,ucf}</h3>
 				<ul class="address normal-margin">
 					<li tal:repeat="line billingAddress">${line}</li>
 				</ul>
-				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
+				<p class="buttons"><a class="link" href="${orderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
 			</div>
 			<div class="normal section">
 				<h3 change:h="">${trans:m.order.standardprocess.resume-address-shipping,ucf}</h3>
 				<ul class="address normal-margin">
 					<li tal:repeat="line shippingAddress">${line}</li>
 				</ul>
-				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
+				<p class="buttons"><a class="link" href="${orderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
 			</div>
 			<div tal:condition="order/getShippingModeId" class="normal section">
 				<h3 change:h="">${trans:m.order.standardprocess.shipping-title,ucf}</h3>
 				<ul class="normal-margin">
 					<li>${order/getShippingModeLabelAsHtml}</li>
 				</ul>
-				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getShippingStepUrl}">${trans:m.order.standardprocess.modify-shipping-mode,ucf}</a></p>
+				<p class="buttons"><a class="link" href="${orderProcess/getShippingStepUrl}">${trans:m.order.standardprocess.modify-shipping-mode,ucf}</a></p>
 			</div>
 		</div>
 	</div>

@@ -16,9 +16,11 @@ class order_BlockShippingModeConfigurationContainerAction extends website_BlockA
 		{
 			return website_BlockView::NONE;
 		}
-
-		$modeService = $request->getAttribute('mode')->getDocumentService();
-		list($cfgModule, $cfgBlock) = $modeService->getConfigurationBlockForProcess();
+		/* @var $modeService shipping_ModeService */
+		$mode = $request->getAttribute('mode');
+		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
+		$modeService = $mode->getDocumentService();
+		list($cfgModule, $cfgBlock) = $modeService->getConfigurationBlockForCart($mode, $cart);
 		$request->setAttribute('configurationBlockModule', $cfgModule);
 		$request->setAttribute('configurationBlockName', $cfgBlock);
 		

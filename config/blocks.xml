@@ -44,4 +44,5 @@
 				fieldtype="checklist" />
 		</parameters>
 	</block>
+	<block type="modules_order_CartContext" icon="cart" />
 </blocks>

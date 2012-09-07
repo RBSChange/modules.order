@@ -14,11 +14,12 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 		// Get parameters.
 		$cs = order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();
-		$shop = DocumentHelper::getDocumentInstance($request->getParameter('shopId'), 'modules_catalog/shop');
+		$shop = $this->getShopFromRequest($request);
 		$shopService = $shop->getDocumentService();
 		$products = $this->getProductsFromRequest($request);
 		$quantities = $this->getQuantitiesFromRequest($request, $products);
 		$backUrl = $request->getParameter('backurl');
+		$contextDocument = DocumentHelper::getDocumentInstanceIfExists($request->getParameter('contextId'));
 		
 		// No product configuration : products are added with their default values.
 		// TODO: handle product configuration here?
@@ -30,7 +31,7 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 		unset($paramsToRedirect['module']);
 		unset($paramsToRedirect['action']);
 		unset($paramsToRedirect['lang']);
-		if ($cs->checkAddToCart($cart, $shop, $products, $quantities, true, $paramsToRedirect))
+		if ($cs->checkAddToCart($cart, $shop, $products, $quantities, true, $paramsToRedirect, $contextDocument))
 		{
 			// Add products.
 			$productAdded = false;
@@ -60,7 +61,16 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 	}
 	
 	/**
-	 * @param f_mvc_Request $request
+	 * @param ChangeRequest $request
+	 * @return catalog_persistentdocument_shop
+	 */
+	protected function getShopFromRequest($request)
+	{
+		return catalog_persistentdocument_shop::getInstanceById($request->getParameter('shopId'));
+	}
+	
+	/**
+	 * @param ChangeRequest $request
 	 * @return catalog_persistentdocument_product
 	 */
 	protected function getProductsFromRequest($request)

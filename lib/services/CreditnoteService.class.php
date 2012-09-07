@@ -205,17 +205,14 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	 */
 	public function setOrderInfoFromCart($order, $cart)
 	{
-		if (Framework::isInfoEnabled())
-		{
-			Framework::info(__METHOD__);
-		}
-		
-		$oldCreditNoteDataArray = $order->getCreditNoteDataArray();
+		$oldCreditNoteDataArray = $order->getCreditNoteDataArray();		
 		$oldCreditnotes = $order->getUsecreditnoteArray();
 		foreach ($oldCreditnotes as $creditNote) 
 		{
+			/* @var $creditNote order_persistentdocument_creditnote */
 			$amount = $oldCreditNoteDataArray[$creditNote->getId()];
-			$creditNote->setAmountNotApplied($creditNote->getAmountNotApplied() + $amount);
+			$nv = min($creditNote->getAmount(), $creditNote->getAmountNotApplied() + $amount);
+			$creditNote->setAmountNotApplied($nv);
 		}
 		$order->setCreditNoteDataArray(null);
 		$order->removeAllUsecreditnote();
@@ -225,12 +222,11 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		$totalAmountWithTax = $cart->getTotalWithTax();
 		$order->setTotalAmountWithoutTax($pf->round($cart->getTotalWithoutTax(), $order->getCurrencyCode()));
 		
-
 		$newCreditNoteDataArray = array();
 		foreach ($cart->getCreditNoteArray() as $creditNoteId => $creditNoteAmount) 
 		{
-
-			$creditNote = DocumentHelper::getDocumentInstance($creditNoteId, 'modules_order/creditnote');
+			
+			$creditNote =  order_persistentdocument_creditnote::getInstanceById($creditNoteId);
 			$newamount = $creditNote->getAmountNotApplied() - $creditNoteAmount;
 			if ($newamount >= 0)
 			{
@@ -261,7 +257,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 			}
 		}
 		
-		$order->setTotalAmountWithTax($pf->round($totalAmountWithTax,$order->getCurrencyCode()));
+		$order->setTotalAmountWithTax($pf->round($totalAmountWithTax, $order->getCurrencyCode()));
 	}
 	
 	/**
@@ -271,23 +267,27 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	 */
 	public function removeFromOrder($order, $amount)
 	{
-		Framework::info(__METHOD__);
+
 		$creditNoteDataArray = $order->getCreditNoteDataArray();
 		$creditNotes = $order->getUsecreditnoteArray();
 		foreach ($creditNotes as $creditNote) 
 		{
+			/* @var $creditNote order_persistentdocument_creditnote */
 			$anAmount = $creditNoteDataArray[$creditNote->getId()];
-			if ($anAmount < $amount)
+			$removeAmount = (abs($anAmount - $amount) < 0.00001);
+			if ($removeAmount || $anAmount <= $amount)
 			{
-				$amount -= $anAmount;
-				$creditNote->setAmountNotApplied($creditNote->getAmountNotApplied() + $anAmount);
+				if ($removeAmount) {$amount = 0;} else {$amount -= $anAmount;}
+				$nv = min($creditNote->getAmount(), $creditNote->getAmountNotApplied() + $anAmount);
+				$creditNote->setAmountNotApplied($nv);
 				unset($creditNoteDataArray[$creditNote->getId()]);
 				$order->removeUsecreditnote($creditNote);
 			}
 			else
 			{
 				$creditNoteDataArray[$creditNote->getId()] -= $amount;
-				$creditNote->setAmountNotApplied($creditNote->getAmountNotApplied() + $amount);
+				$nv = min($creditNote->getAmount(), $creditNote->getAmountNotApplied() + $amount);
+				$creditNote->setAmountNotApplied($nv);
 				$amount = 0;
 			}
 			$creditNote->save();

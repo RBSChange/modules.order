@@ -18,6 +18,11 @@
 	<dd>${datetime:order/getUICreationdate}</dd>
 	<dt>${trans:m.order.frontoffice.status,ucf}</dt>
 	<dd>${order/getFoOrderStatusLabel}</dd>
+	
+	<tal:block tal:condition="order/getContextId">
+	<dt>${trans:m.order.fo.context-label,ucf}</dt>
+	<dd>${order/getContextDocumentLabelAsHtml}</dd>	
+	</tal:block>
 </dl>
 
 <div class="cleaner"></div>

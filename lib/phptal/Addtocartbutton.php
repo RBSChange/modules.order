@@ -2,7 +2,7 @@
 // change:addtocartbutton
 //
 // <tal:block change:addtocartbutton="shop shop; product product">
-// <tal:block change:addtocartbutton="shop shop; product product; name 'addToCart'">
+// <tal:block change:addtocartbutton="shop shop; product product; name 'addToCart'; context contextdocument">
 
 /**
  * @package order.lib.phptal
@@ -23,6 +23,13 @@ class PHPTAL_Php_Attribute_CHANGE_addtocartbutton extends ChangeTalAttribute
 	{
 		$ls = LocaleService::getInstance();
 		$html = '<input type="hidden" value="' . self::getFromParams('shop', $params)->getId() . '" name="shopId" />';
+
+		// Product.
+		$context = self::getFromParams('context', $params);
+		if ($context instanceof f_persistentdocument_PersistentDocument)
+		{
+			$html .= '<input type="hidden" value="' . $context->getId() . '" name="contextId" />';
+		}
 		
 		// Product.
 		$product = self::getFromParams('product', $params);

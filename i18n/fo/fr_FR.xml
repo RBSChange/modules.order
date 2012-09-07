@@ -11,10 +11,12 @@
   	<key id="product-labels-not-added">Les produits {firstLabels} et {lastLabel} n'ont pas pu être ajoutés à votre panier.</key>
 	<key id="product-labels-not-added-link" format="html"><![CDATA[Les produits {firstLabels} et {lastLabel} n'ont pas pu être ajoutés à <a class="link" href="{cartUrl}">votre panier</a>.]]></key>
   	<key id="confirm-incompatible-shop">Votre panier contient déjà un ou plusieurs produits d'une autre boutique. Ajouter ce produit au panier retirera les autres. Confirmez-vous l'ajout au panier ?</key>
+  	<key id="confirm-incompatible-context">Votre panier n'est pas compatible avec le produit ajouté. Ajouter ce produit au panier retirera les autres. Confirmez-vous l'ajout au panier ?</key>
 	<key id="confirm">confirmer</key>
 	<key id="cancel">annuler</key>
 	<key id="add-to-cart-confirm">annuler</key>
 	<key id="cant-create-order">Impossible de créer la commande.</key>
+	<key id="no-product-to-add">Aucun produit à ajouter.</key>
 	<key id="shop-in-other-website">Votre précédent panier n'a pas pu être restauré car il contenait des produit d'une boutique d'un autre site.</key>
 	<key id="mixed-tax">mixte</key>
 	<key id="no-tax">-</key>
@@ -35,6 +37,7 @@
 	<key id="order-date">datée du</key>
 	<key id="concerned-product">produit concerné</key>
 	<key id="concerned-products">produits concernés</key>
+	<key id="context-label">Contexte</key>
 	
 	<!-- Deprecated -->
 	<key id="product-added">Produit ajouté au panier.</key>

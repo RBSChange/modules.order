@@ -143,6 +143,7 @@ class order_CartService extends BaseService
 		$cartInfo = new order_CartInfo();
 		$cartInfo->setShop(null);
 		$cartInfo->setOrderId(null);	
+		$cartInfo->setContextId(null);
 		$cartInfo->setUid(session_id());	
 		return $cartInfo;	
 	}
@@ -228,12 +229,13 @@ class order_CartService extends BaseService
 	 */
 	public function addProductToCart($cart, $product, $quantity = 1)
 	{	
-		$ls = LocaleService::getInstance();
 		if (!($cart instanceof order_CartInfo) || !($product instanceof catalog_persistentdocument_product) || $quantity <= 0)
 		{
 			Framework::warn(__METHOD__ . ' Invalid arguments');
 			return false;
 		}
+
+		$ls = LocaleService::getInstance();
 
 		// Get properties and line key.
 		$properties = array();
@@ -258,9 +260,13 @@ class order_CartService extends BaseService
 			return false;
 		}
 		
+		$css = catalog_StockService::getInstance();
+		$css->initCartMode($cart);
+		
 		// If the article has no price the line is not added and a warning message is displayed.
 		if (!$this->validateProduct($cart, $product, $quantity))
 		{
+			$css->initCartMode(null);
 			return false;
 		}
 		else
@@ -284,6 +290,7 @@ class order_CartService extends BaseService
 			$params = array('product' => $product->getLabel());
 			UserActionLoggerService::getInstance()->addCurrentUserDocumentEntry('add-product-to-cart', null, $params, 'customer');
 		}
+		$css->initCartMode(null);
 		return true;
 	}	
 	
@@ -414,6 +421,8 @@ class order_CartService extends BaseService
 		
 		Framework::startBench();
 		
+		if (!$cart->isEmpty())
+		{
 			// Validate the cart.
 			$this->validateCart($cart);		
 			Framework::bench('validateCart');
@@ -436,7 +445,8 @@ class order_CartService extends BaseService
 			
 			$this->refreshCreditNote($cart);
 			Framework::bench('refreshCreditNote');
-				
+		}
+		
 		if ($resetSessionOrderProcess)
 		{
 			order_OrderProcessService::getInstance()->resetSessionOrderProcess();
@@ -495,18 +505,24 @@ class order_CartService extends BaseService
 			catalog_ShippingfilterService::getInstance()->setRequiredShippingModes($cart);	
 		}
 		
+		$shippingFilter = null;
 		if ($updateSelectFilter)
 		{
-			if ($cart->getAddressInfo() && $cart->getAddressInfo()->shippingFilterId)
+			$shippingFilterId =  intval($cart->getAddressInfo() ? $cart->getAddressInfo()->shippingFilterId : 0);
+			$shippingFilter = DocumentHelper::getDocumentInstanceIfExists($shippingFilterId);
+			if (!($shippingFilter instanceof  catalog_persistentdocument_shippingfilter))
 			{
-				$shippingFilter = DocumentHelper::getDocumentInstance($cart->getAddressInfo()->shippingFilterId);
-				$cart->setRequiredShippingFilter(0, $shippingFilter);
+				$shippingFilter = null;
 			}
+		}
+		if ($shippingFilter)
+		{
+			$shippingFilter->getDocumentService()->applyShippingFilterToCart($shippingFilter, $cart, true);
+		}
 		else
 		{
-				$cart->setRequiredShippingFilter(0, null);
+			$cart->setRequiredShippingFilter(0, $shippingFilter);
 		}
-	}	
 	}	
 
 	/**
@@ -871,25 +887,42 @@ class order_CartService extends BaseService
 	 * @param integer[] $quantity
 	 * @param boolean $askConfirmation
 	 * @param array $paramsToRedirect
+	 * @param f_persistentdocument_PersistentDocument $context
 	 * @return boolean
 	 */
-	public function checkAddToCart($cart, $shop, &$products, &$quantities, $askConfirmation, $paramsToRedirect = array())
+	public function checkAddToCart($cart, $shop, &$products, &$quantities, $askConfirmation, $paramsToRedirect = array(), $context = null)
 	{
 		$ls = LocaleService::getInstance();
+		if (!is_array($products) || count($products) == 0)
+		{
+			$cart->addTransientErrorMessage($ls->transFO('m.order.fo.no-product-to-add', array('ucf', 'html')));
+			return false;
+		}
 		
 		// Check website.
 		$currentWebsite = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
 		if ($currentWebsite->getId() != $shop->getWebsite()->getId())
 		{
-			$cart->addTransientErrorMessage($ls->transFO('m.order.fo.shop-in-other-website', array('ucf')));
+			$cart->addTransientErrorMessage($ls->transFO('m.order.fo.shop-in-other-website', array('ucf', 'html')));
 			return false;
 		}
+		$shopId = $shop->getId();
+		if ($context instanceof f_persistentdocument_PersistentDocument)
+		{
+			$contextId =  $context->getId();
+		}
+		else
+		{
+			$contextId = null;
+			$context = null;
+		}
 		
-		if (!$cart->getShopId() || $cart->isEmpty())
+		if ($cart->isEmpty())
 		{
 			$cart->setShop($shop);
+			$cart->setContextId($contextId);
 		}
-		else if ($cart->getShopId() !== $shop->getId())
+		else if ($cart->getShopId() != $shop->getId() || $contextId != $cart->getContextId())
 		{
 			if (!$askConfirmation)
 			{
@@ -905,7 +938,21 @@ class order_CartService extends BaseService
 				$paramsToRedirect['website_BlockAction_submit']['cart'] = array();
 			}
 			$paramsToRedirect['website_BlockAction_submit']['cart']['confirmClear'] = true;
-			$paramsToRedirect['message'] = $ls->transFO('m.order.fo.confirm-incompatible-shop', array('ucf'));
+			if ($cart->getShopId() != $shop->getId())
+			{
+				$paramsToRedirect['message'] = $ls->transFO('m.order.fo.confirm-incompatible-shop', array('ucf', 'html'));
+			}
+			else
+			{
+				if ($context && method_exists($context->getDocumentService(), 'getIncompatibleCartContextMessage'))
+				{
+					$paramsToRedirect['message'] = $context->getDocumentService()->getIncompatibleCartContextMessage($context, $cart);
+				}
+				else
+				{
+					$paramsToRedirect['message'] = $ls->transFO('m.order.fo.confirm-incompatible-context', array('ucf', 'html'));
+				}
+			}
 			
 			// Get the page tag to redirect.
 			if (isset($paramsToRedirect['confirmPageTag']))
@@ -929,8 +976,8 @@ class order_CartService extends BaseService
 			{
 				$url = LinkHelper::getTagUrl($tag, null, array('orderParam' => $paramsToRedirect));
 			}
-			unset($paramsToRedirect['confirmPagePopin']);
 			
+			unset($paramsToRedirect['confirmPagePopin']);
 			HttpController::getInstance()->redirectToUrl($url);
 		}
 		return true;
@@ -995,7 +1042,7 @@ class order_CartService extends BaseService
 			if ($added)
 			{
 				$key = ($recup) ? 'm.order.frontoffice.cart-recup' : 'm.order.frontoffice.cart-fusion';
-				$sessionCart->addSuccessMessage(LocaleService::getInstance()->transBO($key, array('ucf')));
+				$sessionCart->addSuccessMessage(LocaleService::getInstance()->transBO($key, array('ucf', 'html')));
 			}
 		}
 		

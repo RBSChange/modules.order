@@ -542,6 +542,17 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$customer = $cartInfo->getCustomer();
 			$orderDocument->setCustomer($customer);
 			$orderDocument->setShopId($shop->getId());
+			$orderDocument->setContextId($cartInfo->getContextId());
+			$ctxdoc = $cartInfo->getContextDocument();
+			if ($ctxdoc instanceof f_persistentdocument_PersistentDocument)
+			{
+				$ctxdocService = $ctxdoc->getDocumentService();
+				if (method_exists($ctxdocService, 'completeOrderContext'))
+				{
+					$ctxdocService->completeOrderContext($ctxdoc, $orderDocument, $cartInfo);
+				}
+			}
+			
 			$orderDocument->setWebsiteId($shop->getWebsite()->getId());
 				
 			// Frais de livraison.
@@ -678,7 +689,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				/* @var $bill order_persistentdocument_bill */
 				if ($bill->getTransactionId() == null)
 				{
-					$bill->setStatus(order_BillService::FAILED);
+					$bill->setStatus(order_BillService::FAILED);		
 					//Set a transactionId for file bill instead of delete
 					$bill->setTransactionId('resetForCart');
 					$bill->getDocumentService()->cancelBill($bill);
@@ -1002,7 +1013,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$oldStatus = $order->getOrderStatus();
 		if ($oldStatus == self::CANCELED)
 		{
-			$paidAmount = order_BillService::getInstance()->getPaidAmountByOrder($order);
+			$paidAmount = order_BillService::getInstance()->getPaidAmountByOrder($order);			
 			// Create new credit note.
 			if ($paidAmount >= 0.0001)
 			{
@@ -1012,7 +1023,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 					$creditNote->setOrder($order);
 					$creditNote->setAmount($paidAmount);
 					$creditNote->setPublicationstatus('DRAFT');
-					$creditNote->save();
+					$creditNote->save();		
 					$this->handleNewCreditNoteAfterCancel($creditNote);
 				}
 			}
@@ -1380,7 +1391,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$contextlang = $rc->getLang();
 		$usecontextlang = $document->isLangAvailable($contextlang);
 		$lang = $usecontextlang ? $contextlang : $document->getLang();
-
+		$ls = LocaleService::getInstance();
 		try
 		{
 			$rc->beginI18nWork($lang);
@@ -1391,6 +1402,28 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			$data['properties']['orderStatus'] = $document->getBoOrderStatusLabel();
 			$data['properties']['customerFullName'] = $billingAddress->getDocumentService()->getFullName($billingAddress);
 			$data['properties']['customerCode'] = $document->getCustomer()->getUser()->getEmail();
+			
+			$ctxdoc = $document->getContextDocument();
+			if ($ctxdoc)
+			{
+				$ds = $ctxdoc->getDocumentService();
+				if (method_exists($ds, 'getContextResume'))
+				{
+					$data['properties']['context'] = $ds->getContextResume($ctxdoc, $document);
+				}
+				else
+				{
+					$data['properties']['context'] = array('label' => $ctxdoc->getTreeNodeLabel(), 'jsaction' =>'', 'action' => '');
+				}
+			}
+			elseif ($document->getContextId())
+			{
+				$data['properties']['context'] = $ls->transBO('m.order.bo.doceditor.property.context-deleted', array('ucf'), array('id' => $document->getContextId()));
+			}
+			else
+			{
+				$data['properties']['context']  = array('label' => '-', 'jsaction' => '', 'action' => '');
+			}
 			
 			$usedCreditNote = $document->getTotalCreditNoteAmount();
 			$data['financial']['usedCreditNote'] = ($usedCreditNote) ? $document->formatPrice($usedCreditNote) : null;
@@ -1426,7 +1459,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			
 			// Messages.
 			$data['messages'] = order_MessageService::getInstance()->getInfosByOrder($document);
-			$data['messages']['needsAnswer'] = f_Locale::translateUI('&modules.uixul.bo.general.' . ($document->getNeedsAnswer() ? 'Yes' : 'No') . ';');
+			$data['messages']['needsAnswer'] = $ls->transBO('m.uixul.bo.general.' . ($document->getNeedsAnswer() ? 'yes' : 'no'), array('ucf'));
 			
 			$rc->endI18nWork();
 		}

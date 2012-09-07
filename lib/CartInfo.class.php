@@ -5,13 +5,23 @@
  */
 class order_CartInfo
 {
+	/**
+	 * @var boolean
+	 */
 	private $isModified = false;
 	
+	/**
+	 * @var string
+	 */
 	private $checkSum = null;
 	
+	/**
+	 * @return string
+	 */
 	protected function getCheckSum()
 	{
-		$keys = array($this->shopId, $this->customerId, $this->billinAreaId, $this->taxZone, $this->getCartLineCount());
+		$keys = array($this->shopId, $this->contextId, $this->customerId, $this->billinAreaId, $this->taxZone, $this->getCartLineCount(), $this->getTotalCreditNoteAmount());
+		
 		foreach ($this->getCartLineArray() as $cartLine) 
 		{
 			$keys[] = $cartLine->getKey();
@@ -77,18 +87,21 @@ class order_CartInfo
 	 * @var integer
 	 */
 	private $shopId = null;
-
-
-	/**
-	 * @var string
-	 */
-	private $taxZone;
-	
 	
 	/**
 	 * @var integer
 	 */
 	private $billinAreaId = null;
+	
+	/**
+	 * @var string
+	 */
+	private $taxZone;
+	
+	/**
+	 * @var integer
+	 */	
+	private $contextId = null;
 	
 	/**
 	 * @return string
@@ -114,6 +127,9 @@ class order_CartInfo
 		$this->taxZone = $taxZone;
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public function isModified()
 	{
 		if (!$this->isModified)
@@ -137,6 +153,9 @@ class order_CartInfo
 		return $this->isModified;
 	}
 	
+	/**
+	 * @param boolean $value
+	 */
 	private function setModified($value)
 	{
 		$this->isModified = $value;
@@ -147,7 +166,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return Integer
+	 * @return integer
 	 */
 	public function getShopId()
 	{
@@ -155,7 +174,7 @@ class order_CartInfo
 	}
 
 	/**
-	 * @param Integer $shopId
+	 * @param integer $shopId
 	 */
 	public function setShopId($shopId)
 	{
@@ -163,18 +182,16 @@ class order_CartInfo
 	}
 
 	/**
-	 * @return catalog_persistentdocument_shop
+	 * @return catalog_persistentdocument_shop|null
 	 */
 	function getShop()
 	{
-		if ($this->shopId !== null)
+		$shop = DocumentHelper::getDocumentInstanceIfExists($this->shopId);
+		if ($shop instanceof catalog_persistentdocument_shop)
 		{
-			return catalog_persistentdocument_shop::getInstanceById($this->shopId);
+			return $shop;
 		}
-		else 
-		{
-			return catalog_ShopService::getInstance()->getCurrentShop();
-		}
+		return null;
 	}
 	
 	/**
@@ -182,24 +199,44 @@ class order_CartInfo
 	 */
 	function setShop($shop)
 	{
-		if ($shop === null)
-		{
-			$this->shopId = null;
-			$this->setBillingArea(null);
-		}
-		else if ($shop instanceof catalog_persistentdocument_shop)
+		if ($shop instanceof catalog_persistentdocument_shop)
 		{
 			$this->shopId = $shop->getId();
 			$this->setBillingArea($shop->getCurrentBillingArea(true));
 		}
 		else 
 		{
-			throw new Exception('Invalid shop');
+			$this->shopId = null;
+			$this->setBillingArea(null);
 		}
 	}
 	
 	/**
-	 * @return integer || null
+	 * @return integer
+	 */
+	public function getContextId()
+	{
+		return $this->contextId;
+	}
+	
+	/**
+	 * @param integer $contextId
+	 */
+	public function setContextId($contextId)
+	{
+		$this->contextId = $contextId;
+	}
+	
+	/**
+	 * @return f_persistentdocument_PersistentDocument|null
+	 */
+	public function getContextDocument()
+	{
+		return DocumentHelper::getDocumentInstanceIfExists($this->contextId);
+	}	
+	
+	/**
+	 * @return integer|null
 	 */
 	public function getBillingAreaId()
 	{
@@ -207,40 +244,32 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return catalog_persistentdocument_billingarea
+	 * @return catalog_persistentdocument_billingarea|null
 	 */
 	public function getBillingArea()
 	{
-		if ($this->billinAreaId !== null)
+		$billinArea = DocumentHelper::getDocumentInstanceIfExists($this->billinAreaId);
+		if ($billinArea instanceof catalog_persistentdocument_billingarea)
 		{
-			return catalog_persistentdocument_billingarea::getInstanceById($this->billinAreaId);
+			return $billinArea;
 		}
-		else
-		{
-			return $this->getShop()->getCurrentBillingArea();
-		}
+		return null;
 	}
-	
 	
 	/**
 	 * @param catalog_persistentdocument_billingarea $billingArea
 	 */
 	public function setBillingArea($billingArea)
 	{
-		if ($billingArea === null)
-		{
-			$this->billinAreaId = null;
-			$this->taxZone = null;
-			
-		}
-		else if ($billingArea instanceof catalog_persistentdocument_billingarea)
+		if ($billingArea instanceof catalog_persistentdocument_billingarea)
 		{
 			$this->billinAreaId = $billingArea->getId();		
 			$this->taxZone = $billingArea->getDefaultZone();
 		}
 		else 
 		{
-			throw new Exception('Invalid shop');
+			$this->billinAreaId = null;
+			$this->taxZone = null;
 		}
 	}
 		
@@ -269,7 +298,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return order_persistentdocument_order
+	 * @return order_persistentdocument_order|null
 	 */
 	public function getOrder()
 	{
@@ -1595,34 +1624,34 @@ class order_CartInfo
 	{
 		$this->properties = $properties;
 	}
-
+	
 	/**
-	 * @param String $key
-	 * @return Boolean
+	 * @param string $key
+	 * @return boolean
 	 */
-	public function hasProperties($key)
+	public function hasProperty($key)
 	{
 		return isset($this->properties[$key]);
-	}
+	}	
 
 	/**
-	 * @param String $key
-	 * @return Mixed
+	 * @param string $key
+	 * @return mixed
 	 */
-	public function getProperties($key)
+	public function getProperty($key)
 	{
 		return $this->properties[$key];
 	}
-
+	
 	/**
-	 * @param String $key
-	 * @param Mixed $value
+	 * @param string $key
+	 * @param mixed $value
 	 */
-	public function setProperties($key, $value)
+	public function setProperty($key, $value)
 	{
 		$this->properties[$key] = $value;
 	}
-
+		
 	/**
 	 * @return order_OrderProcess
 	 */
@@ -1930,5 +1959,29 @@ class order_CartInfo
 	public function clearWarningMessages()
 	{
 		$this->clearTransientErrorMessages();
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0) use hasProperty 
+	 */
+	public function hasProperties($key)
+	{
+		return $this->hasProperty($key);
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0) use getProperty 
+	 */
+	public function getProperties($key)
+	{
+		return $this->getProperty($key);
+	}
+	
+	/**
+	 * @deprecated (will be removed in 4.0) use setProperty 
+	 */
+	public function setProperties($key, $value)
+	{
+		$this->setProperty($key, $value);
 	}
 }

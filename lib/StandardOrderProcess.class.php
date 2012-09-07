@@ -44,4 +44,14 @@ class order_StandardOrderProcess extends order_OrderProcess
 	{
 		return $this->getStepURL('Result');
 	}	
+	
+	/**
+	 * @return string
+	 */
+	public function getCartUrl()
+	{
+		$website = website_WebsiteModuleService::getInstance()->getCurrentWebsite();
+		$page = TagService::getInstance()->getDocumentByContextualTag('contextual_website_website_modules_order_cart', $website, false);
+		return $page ? LinkHelper::getDocumentUrl($page) : LinkHelper::getDocumentUrl($website);
+	}
 }

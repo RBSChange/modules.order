@@ -38,7 +38,8 @@ class order_ShippingModeConfigurationService extends BaseService
 			if ($this->isModeIdChecked($cart, $modeId)) { continue; }
 			$mode = shipping_persistentdocument_mode::getInstanceById($modeId);
 			$modeService = $mode->getDocumentService();
-			if (f_util_ClassUtils::methodExists($modeService, 'getConfigurationBlockForProcess'))
+			$result = $modeService->getConfigurationBlockForCart($mode, $cart);
+			if (is_array($result))
 			{
 				$request->setAttribute('cart', $cart);
 				$request->setAttribute('mode', $mode);
