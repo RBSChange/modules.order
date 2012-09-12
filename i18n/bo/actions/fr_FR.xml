@@ -37,4 +37,7 @@
 	<key id="finalize-order-confirm-message">En finalisant la commande, le montant de tout produits non-expédiés sera recrédité au client sous forme d'avoir. Attention, cette opération est irréversible.</key>
 	<key id="finalize-order-in-progress">finalisation de la commande en cours...</key>
 	<key id="order-finalized">commande finalisé...</key>
+	
+	<key id="shipping-action">marquer comme expedié</key>
+	<key id="shipping-date-confirm">Etes vous sur de vouloir marquer cette expedition comme expedié?</key>
 </i18n>

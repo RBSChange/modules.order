@@ -1,10 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <panel>
   <section labeli18n="modules.uixul.bo.doceditor.fieldsgroup.Title">
+  	<fieldinput type="hidden" name="status"/>
+  	<field name="shippingDate"/>
     <field name="trackingText"/>
     <field name="deliveryDate"/>
   </section>
   <section labeli18n="m.order.document.expedition.lines-section">
   	<fieldinput name="boExplinesJSON" type="namedgridlist" flex="1" />
   </section>  
+	<xul>
+		<field name="mShippingButton">null</field>
+		<javascript>	
+			<constructor><![CDATA[
+				var me = this;
+				this.mShippingButton = this.addActionButton("${transui:m.order.bo.actions.shipping-action,ucf,js}", wToolkit.getIcon('check', 'small'));	
+				this.mShippingButton.addEventListener('command', function(event) {me.onShipExpedition();}, true);			
+				this.extendMethod("updateCommandsUI", this.extendUpdateCommandsUI);
+			]]></constructor>
+			
+			<method name="isShipped">
+				<body><![CDATA[
+					return this.fields.status.value == 'shipped';
+				]]></body>
+			</method>		
+
+			<method name="extendUpdateCommandsUI">
+				<parameter name="event" />
+				<body><![CDATA[
+					this.mShippingButton.disabled = this.isShipped();
+				]]></body>
+			</method>
+			
+			<method name="onShipExpedition">
+				<parameter name="event" />
+				<body><![CDATA[
+					if (confirm("${transui:m.order.bo.actions.shipping-date-confirm,ucf,js}"))
+					{
+						this.lockCommandsUI();
+						this.showTextMessage("${transui:m.uixul.bo.doceditor.update-in-progress,ucf,js}");
+						this.documentEditor.executeServerAction('properties', 'ShipExpedition');
+					}
+				]]></body>
+			</method>	
+					
+			<method name="getShipExpeditionParameters">
+				<body><![CDATA[
+					var documentInfos = this.documentEditor.documentInfos;
+					 
+					var attributes = {
+						action: 'ShipExpedition',
+						cmpref: this.mDocumentId, 
+						lang : this.mLang,
+						documentversion: this.mRevision,
+						documentproperties: this.mFieldNames.join(',')
+					};
+
+					var fields = this.fields;
+					var field = null;
+					for (var name in fields)
+					{
+						field = fields[name];
+						if (('modified' in field) && field.modified) 
+						{
+							attributes[name] = field.value;
+						}
+					}
+					return attributes;
+				]]></body>
+			</method>
+			
+			<method name="fireShipExpeditionComplete">
+				<parameter name="result" />
+				<body><![CDATA[			
+					if (result.status == "OK")
+					{
+						this.modified = false;						
+						this.documentEditor.clearTabs();
+						this.fireInitializeComplete(result);						
+						this.showTextMessage("${transui:m.uixul.bo.doceditor.message.document-updated,ucf,js}");
+					}
+					else
+					{
+						this.showErrorMessage(result.contents.errorMessage);
+						this.updateCommandsUI();					
+					}
+				]]></body>
+			</method>
+		</javascript>
+	</xul>
 </panel>

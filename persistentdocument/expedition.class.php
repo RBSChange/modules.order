@@ -20,19 +20,6 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 	}
 
 	/**
-	 * @param unknown_type $trackingNumber
-	 * @return boolean
-	 */
-	protected function setTrackingNumberInternal($trackingNumber)
-	{
-		if ($trackingNumber != null)
-		{
-			$trackingNumber = f_util_StringUtils::strtoupper(strval($trackingNumber));
-		}
-		return parent::setTrackingNumberInternal($trackingNumber);
-	}
-
-	/**
 	 * @return order_persistentdocument_expeditionline[]
 	 */
 	public function getLinesForDisplay()

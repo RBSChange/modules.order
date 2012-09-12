@@ -7,7 +7,7 @@ class order_DefaultValuesJSONAction extends generic_DefaultValuesJSONAction
 	 * @param integer $parentId
 	 * @return Array
 	 */
-	protected function exportFieldsData($document, $allowedProperties, $parentId)
+	protected function exportFieldsData($document, $allowedProperties, $parentId = null)
 	{		
 		if ($document instanceof order_persistentdocument_creditnote)
 		{
