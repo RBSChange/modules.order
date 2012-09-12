@@ -421,7 +421,7 @@ class order_CartService extends BaseService
 		
 		Framework::startBench();
 		
-		if (!$cart->isEmpty())
+		if ($cart->getShopId())
 		{
 			// Validate the cart.
 			$this->validateCart($cart);		
