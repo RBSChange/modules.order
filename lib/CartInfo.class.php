@@ -5,13 +5,23 @@
  */
 class order_CartInfo
 {
+	/**
+	 * @var boolean
+	 */
 	private $isModified = false;
 	
+	/**
+	 * @var string
+	 */
 	private $checkSum = null;
 	
+	/**
+	 * @return string
+	 */	
 	protected function getCheckSum()
 	{
-		$keys = array($this->shopId, $this->customerId, $this->billinAreaId, $this->taxZone, $this->getCartLineCount());
+		$keys = array($this->shopId, $this->contextId, $this->customerId, $this->billinAreaId, $this->taxZone, $this->getCartLineCount(), $this->getTotalCreditNoteAmount());
+		
 		foreach ($this->getCartLineArray() as $cartLine) 
 		{
 			$keys[] = $cartLine->getKey();
@@ -78,17 +88,20 @@ class order_CartInfo
 	 */
 	private $shopId = null;
 
-
+	/**
+	 * @var integer
+	 */
+	private $billinAreaId = null;
+	
 	/**
 	 * @var string
 	 */
 	private $taxZone;
 	
-	
 	/**
 	 * @var integer
 	 */
-	private $billinAreaId = null;
+	private $contextId = null;
 	
 	/**
 	 * @return string
@@ -114,6 +127,9 @@ class order_CartInfo
 		$this->taxZone = $taxZone;
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public function isModified()
 	{
 		if (!$this->isModified)
@@ -137,6 +153,9 @@ class order_CartInfo
 		return $this->isModified;
 	}
 	
+	/**
+	 * @param boolean $value
+	 */
 	private function setModified($value)
 	{
 		$this->isModified = $value;
@@ -163,18 +182,16 @@ class order_CartInfo
 	}
 
 	/**
-	 * @return catalog_persistentdocument_shop
+	 * @return catalog_persistentdocument_shop|null
 	 */
 	function getShop()
 	{
-		if ($this->shopId !== null)
+		$shop = DocumentHelper::getDocumentInstanceIfExists($this->shopId);
+		if ($shop instanceof catalog_persistentdocument_shop)
 		{
-			return catalog_persistentdocument_shop::getInstanceById($this->shopId);
+			return $shop;
 		}
-		else 
-		{
-			return catalog_ShopService::getInstance()->getCurrentShop();
-		}
+		return null;
 	}
 	
 	/**
@@ -182,24 +199,44 @@ class order_CartInfo
 	 */
 	function setShop($shop)
 	{
-		if ($shop === null)
-		{
-			$this->shopId = null;
-			$this->setBillingArea(null);
-		}
-		else if ($shop instanceof catalog_persistentdocument_shop)
+		if ($shop instanceof catalog_persistentdocument_shop)
 		{
 			$this->shopId = $shop->getId();
 			$this->setBillingArea($shop->getCurrentBillingArea(true));
 		}
 		else 
 		{
-			throw new Exception('Invalid shop');
+			$this->shopId = null;
+			$this->setBillingArea(null);
 		}
+	}
+
+	/**
+	 * @return integer
+	 */
+	public function getContextId()
+	{
+		return $this->contextId;
 	}
 	
 	/**
-	 * @return integer || null
+	 * @param integer $contextId
+	 */
+	public function setContextId($contextId)
+	{
+		$this->contextId = $contextId;
+	}
+	
+	/**
+	 * @return f_persistentdocument_PersistentDocument|null
+	 */
+	public function getContextDocument()
+	{
+		return DocumentHelper::getDocumentInstanceIfExists($this->contextId);
+	}
+		
+	/**
+	 * @return integer|null
 	 */
 	public function getBillingAreaId()
 	{
@@ -211,14 +248,12 @@ class order_CartInfo
 	 */
 	public function getBillingArea()
 	{
-		if ($this->billinAreaId !== null)
+		$billinArea = DocumentHelper::getDocumentInstanceIfExists($this->billinAreaId);
+		if ($billinArea instanceof catalog_persistentdocument_billingarea)
 		{
-			return catalog_persistentdocument_billingarea::getInstanceById($this->billinAreaId);
+			return $billinArea;
 		}
-		else
-		{
-			return $this->getShop()->getCurrentBillingArea();
-		}
+		return null;
 	}
 	
 	/**
@@ -226,20 +261,15 @@ class order_CartInfo
 	 */
 	public function setBillingArea($billingArea)
 	{
-		if ($billingArea === null)
-		{
-			$this->billinAreaId = null;
-			$this->taxZone = null;
-			
-		}
-		else if ($billingArea instanceof catalog_persistentdocument_billingarea)
+		if ($billingArea instanceof catalog_persistentdocument_billingarea)
 		{
 			$this->billinAreaId = $billingArea->getId();		
 			$this->taxZone = $billingArea->getDefaultZone();
 		}
-		else
+		else 
 		{
-			throw new Exception('Invalid shop');
+			$this->billinAreaId = null;
+			$this->taxZone = null;
 		}
 	}
 		
@@ -268,7 +298,7 @@ class order_CartInfo
 	}
 	
 	/**
-	 * @return order_persistentdocument_order
+	 * @return order_persistentdocument_order|null
 	 */
 	public function getOrder()
 	{
@@ -1598,25 +1628,25 @@ class order_CartInfo
 	 * @param string $key
 	 * @return boolean
 	 */
-	public function hasProperties($key)
+	public function hasProperty($key)
 	{
 		return isset($this->properties[$key]);
-	}
+	}	
 
 	/**
 	 * @param string $key
-	 * @return Mixed
+	 * @return mixed
 	 */
-	public function getProperties($key)
+	public function getProperty($key)
 	{
 		return $this->properties[$key];
 	}
-
+	
 	/**
 	 * @param string $key
-	 * @param Mixed $value
+	 * @param mixed $value
 	 */
-	public function setProperties($key, $value)
+	public function setProperty($key, $value)
 	{
 		$this->properties[$key] = $value;
 	}
@@ -1749,184 +1779,5 @@ class order_CartInfo
 			$count += $line->getQuantity();
 		}
 		return $count;
-	}
-	
-	// Deprecated.
-	
-	/**
-	 * @deprecated
-	 */
-	public function getBillingZone()
-	{
-		return $this->getBillingArea()->getBillingAddressZone();
-	}
-	
-	/**
-	 * @deprecated use formatPrice
-	 */
-	private function formatValue($value)
-	{
-		return $this->getBillingArea()->formatPrice($value);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	function getShippingPriceWithTax()
-	{
-		Framework::warn(f_util_ProcessUtils::getBackTrace());
-		return $this->getFeesTotalWithTax();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	function getFormattedShippingPriceWithTax()
-	{
-		return $this->formatPrice($this->getShippingPriceWithTax());
-	}	
-	
-	/**
-	 * @deprecated
-	 */
-	function getFormattedShippingPriceWithoutTax()
-	{
-		return $this->formatPrice($this->getShippingPriceWithTax());
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function getFormattedTotalAmount()
-	{
-		return $this->formatPrice($this->getTotalAmount());
-	}
-	
-	/**
-	 * @deprecated use getFormattedShippingPriceWithTax
-	 */
-	function getFormatedShippingPriceWithTax()
-	{
-		return $this->getFormattedShippingPriceWithTax();
-	}	
-	
-	/**
-	 * @deprecated use getFormattedShippingPriceWithoutTax
-	 */
-	function getFormatedShippingPriceWithoutTax()
-	{
-		return $this->getFormattedShippingPriceWithoutTax();
-	}
-	
-	/**
-	 * @deprecated (will be removed in 4.0) use getPersistentErrorMessages
-	 */
-	public function getErrorMessageArray()
-	{
-		return $this->getPersistentErrorMessages();
-	}
-
-	/**
-	 * @deprecated (will be removed in 4.0) use setPersistentErrorMessages
-	 */
-	public function setErrorMessageArray($messages)
-	{
-		$this->setPersistentErrorMessages($messages);
-	}
-
-	/**
-	 * @deprecated (will be removed in 4.0) with no replacement
-	 */
-	public function hasErrorMessage($key)
-	{
-		return isset($this->persistentErrorMessages[$key]);
-	}
-
-	/**
-	 * @deprecated (will be removed in 4.0) with no replacement
-	 */
-	public function getErrorMessage($key)
-	{
-		return $this->persistentErrorMessages[$key];
-	}
-
-	/**
-	 * @deprecated (will be removed in 4.0) with no replacement
-	 */
-	public function setErrorMessage($key, $value)
-	{
-		$this->persistentErrorMessages[$key] = $value;
-	}
-	
-	/**
-	 * @deprecated (will be removed in 4.0) use addPersistentErrorMessage
-	 */
-	public function addErrorMessage($message)
-	{
-		$this->addPersistentErrorMessage($message);
-	}
-	
-	/**
-	 * @deprecated (will be removed in 4.0) use clearPersistentErrorMessages
-	 */
-	public function clearErrorMessages()
-	{
-		$this->clearPersistentErrorMessages();
-	}
-
-	/**
-	 * @deprecated (will be removed in 4.0) use getTransientErrorMessages
-	 */
-	public function getWarningMessageArray()
-	{
-		return $this->getTransientErrorMessages();
-	}
-
-	/**
-	 * @deprecated (will be removed in 4.0) use setTransientErrorMessages
-	 */
-	public function setWarningMessageArray($messages)
-	{
-		$this->setTransientErrorMessages($messages);
-	}
-
-	/**
-	 * @deprecated (will be removed in 4.0) with no replacement
-	 */
-	public function hasWarningMessage($key)
-	{
-		return isset($this->transientErrorMessages[$key]);
-	}
-
-	/**
-	 * @deprecated (will be removed in 4.0) with no replacement
-	 */
-	public function getWarningMessage($key)
-	{
-		return $this->transientErrorMessages[$key];
-	}
-
-	/**
-	 * @deprecated (will be removed in 4.0) with no replacement 
-	 */
-	public function setWarningMessage($key, $value)
-	{
-		$this->transientErrorMessages[$key] = $value;
-	}
-
-	/**
-	 * @deprecated (will be removed in 4.0) use addTransientErrorMessage
-	 */
-	public function addWarningMessage($message)
-	{
-		$this->addTransientErrorMessage($message);
-	}
-
-	/**
-	 * @deprecated (will be removed in 4.0) use clearTransientErrorMessages
-	 */
-	public function clearWarningMessages()
-	{
-		$this->clearTransientErrorMessages();
 	}
 }

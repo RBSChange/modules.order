@@ -559,7 +559,11 @@ class order_billToPDF extends FPDF
 		$w = $txtMaxWidth + $valueMaxWidth;
 		$h = $this->summaryLineHeight;
 		$numberOfLine = count($totalSummaryValues) + 1;
-		
+		if ($order->hasCreditNote())
+		{
+			$numberOfLine += 2;
+		}
+				
 		//if the block of summary is too big, add a page and design on it
 		$summaryBlockSize = $this->GetY() + $this->margins[3] + ($numberOfLine * $h);
 		if ($summaryBlockSize > $this->h)
@@ -596,12 +600,11 @@ class order_billToPDF extends FPDF
 			$this->Ln();
 		}
 		$this->SetY($y);
-		while ($numberOfLine)
+		for ($i = $numberOfLine; $i > 0; $i--)
 		{
 			$this->SetX($x);
 			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
 			$this->Ln();
-			$numberOfLine--;
 		}
 		$this->SetY($y);
 		foreach ($totalSummaryValues as $totalSummaryValue)
@@ -620,27 +623,58 @@ class order_billToPDF extends FPDF
 		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithoutTax())), 0, 0, 'R');
 		$this->Ln();
 		
-		$this->SetX($x);
-		$this->SetFont($this->font, 'B', 12);
-		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['total'] . ' ' .  $this->billTexts['withTax']), 0, 0, 'L');
-		$this->SetX($x);
-		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
-		$this->SetX($x);
-		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithTax())), 0, 0, 'R');
-		$this->Ln(10);
+		if (!$order->hasCreditNote())
+		{
+			$this->SetX($x);
+			$this->SetFont($this->font, 'B', 12);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['total'] . ' ' .  $this->billTexts['withTax']), 0, 0, 'L');
+			$this->SetX($x);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
+			$this->SetX($x);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithTax())), 0, 0, 'R');
+			$this->Ln(10);
+		}
+		else
+		{
+			$this->SetX($x);
+			$this->SetFont($this->font, 'B', 10);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['total'] . ' ' .  $this->billTexts['withTax']), 0, 0, 'L');
+			$this->SetX($x);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
+			$this->SetX($x);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithTax() + $order->getTotalCreditNoteAmount())), 0, 0, 'R');
+			$this->Ln();
+			
+			$this->SetX($x);
+			$this->SetFont($this->font, 'B', 10);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['creditNote']), 0, 0, 'L');
+			$this->SetX($x);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
+			$this->SetX($x);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalCreditNoteAmount())), 0, 0, 'R');
+			$this->Ln();
+			
+			$this->SetX($x);
+			$this->SetFont($this->font, 'B', 12);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['paidAmount']), 0, 0, 'L');
+			$this->SetX($x);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
+			$this->SetX($x);
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithTax())), 0, 0, 'R');
+			$this->Ln(10);
+		}
 		
-		//borders
+			//borders
 		$this->SetY($y);
 		$countTaxes = count($order->getTaxRates());
-		$countSummaryLines = count($totalSummaryValues) + 2;
-		$h = $countTaxes > $countSummaryLines ? $countTaxes * $this->summaryLineHeight : $countSummaryLines * $this->summaryLineHeight;
+		$numberOfLine++;
+		$h = $countTaxes > $numberOfLine ? $countTaxes * $this->summaryLineHeight : $numberOfLine * $this->summaryLineHeight;
 		$this->Cell($summaryWidths[0], $h,'', 1, 0);
 		$this->Cell($summaryWidths[1], $h,'', 1, 0);
 		$this->Cell($summaryWidths[2], $h,'', 1, 0);
 		$this->Cell($summaryWidths[3], $h,'', 1, 0);
-		
-}
-	
+	}
+
 	protected function setFillColorByHeader()
 	{
 		$this->SetFillColor($this->orderLineHeaderFillColorRGB[0], $this->orderLineHeaderFillColorRGB[1], $this->orderLineHeaderFillColorRGB[2]);

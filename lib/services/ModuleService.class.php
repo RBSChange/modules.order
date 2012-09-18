@@ -23,9 +23,10 @@ class order_ModuleService extends ModuleBaseService
 	 * @param integer $pageSize
 	 * @param integer $startIndex
 	 * @param integer $totalCount
+	 * @param string $orderBy
 	 * @return f_persistentdocument_PersistentDocument[]
 	 */
-	public function getVirtualChildrenAt($document, $subModelNames, $locateDocumentId, $pageSize, &$startIndex, &$totalCount)
+	public function getVirtualChildrenAt($document, $subModelNames, $locateDocumentId, $pageSize, &$startIndex, &$totalCount, $orderBy = null)
 	{
 		if ($document->getDocumentModelName() === 'modules_generic/folder')
 		{
@@ -52,18 +53,7 @@ class order_ModuleService extends ModuleBaseService
 						}
 					}
 				}
-				else
-				{
-					$countQuery = order_OrderService::getInstance()->createQuery()
-					->add(Restrictions::between('creationdate', $startdate, $endate))
-					->setProjection(Projections::rowCount('countItems'));
-					$totalCount = intval(f_util_ArrayUtils::firstElement($countQuery->findColumn('countItems')));
-				}
-				$query = order_OrderService::getInstance()->createQuery()
-				->add(Restrictions::between('creationdate', $startdate, $endate))
-				->addOrder(Order::desc('id'))
-				->setFirstResult($startIndex)->setMaxResults($pageSize);
-				return $query->find();
+				return order_OrderService::getInstance()->getVirtualChildrenByDate($startdate, $endate, $startIndex, $pageSize, $totalCount, $orderBy);
 			}
 			else
 			{
@@ -584,165 +574,5 @@ class order_ModuleService extends ModuleBaseService
 					array('orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
 			$bill->delete();
 		}		
-	}
-	
-	
-	
-	
-	/**
-	 * @deprecated
-	 */
-	public function getPageLink()
-	{
-		$ops = order_OrderProcessService::getInstance()->getInstance();
-		$op = $ops->loadFromSession();
-		return $op->getOrderProcessURL();
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function getPage()
-	{
-		$ops = order_OrderProcessService::getInstance()->getInstance();
-		$op = $ops->loadFromSession();
-		return $op->getStepURL($op->getFirstStep());
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function cancelProcess()
-	{
-		order_OrderProcessService::getInstance()->getInstance()->resetSessionOrderProcess();
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function isProcessStarted()
-	{
-		$ops = order_OrderProcessService::getInstance()->getInstance();
-		$op = $ops->loadFromSession();
-		return $op->inProcess();
-	}
-		
-
-	
-	/**
-	 * @deprecated
-	 */
-	public final function getCurrentStep()
-	{
-		$ops = order_OrderProcessService::getInstance()->getInstance();
-		$op = $ops->loadFromSession();
-		return $op->getCurrentStep();
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public final function getCatalog()
-	{
-		return catalog_ShopService::getInstance()->getCurrentShop();
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public final function getCartInfo()
-	{
-		$cartInfo = order_CartService::getInstance()->getDocumentInstanceFromSession();
-		if (!is_null($cartInfo->getCustomerId()) && is_null($cartInfo->getBillingAddressId()))
-		{
-			$customer = $cartInfo->getCustomer();
-			$defaultAddress  = $customer->getDefaultAddress();
-			if ($defaultAddress)
-			{
-				$cartInfo->setBillingAddressId($defaultAddress->getId());
-			}
-		}
-		return $cartInfo;
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public final function getFormFieldName($name)
-	{
-		return 'orderParam[' . $name . ']';
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public final function getCurrentOrderProcessId()
-	{
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public final function setCurrentOrderProcessId($orderProcessId)
-	{	
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public final function getCurrentOrderId()
-	{
-		return 0;
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public final function setCurrentOrderId($orderId)
-	{
-			
-	}
-	
-	/**
-	 * @deprecated (will be removed in 4.0) with no replacement
-	 */
-	public function getMessageRecipients($order)
-	{
-		if ($order->getCustomer() && $order->getCustomer()->getUser())
-		{
-			$recipients = new mail_MessageRecipients();
-			$recipients->setTo($order->getCustomer()->getUser()->getEmail());
-			return $recipients;
-		}
-		return null;
-	}
-		
-	/**
-	 * @deprecated (will be removed in 4.0) with no replacement
-	 */
-	public function getAdminRecipients()
-	{
-		$recipients = new mail_MessageRecipients();
-		$emails = array();
-		$admins = $this->getOrderConfirmedNotificationUserPreference();
-		foreach ($admins as $admin)
-		{
-			$emails[] = $admin->getEmail();
-		}
-
-		if (count($emails))
-		{
-			$recipients->setTo($emails);
-			return $recipients;
-		}
-		return null;
-	}
-	
-	/**
-	 * @deprecated  (will be removed in 4.0) with no replacement
-	 */
-	public function getNotificationParameters($params)
-	{
-		return array();
 	}
 }

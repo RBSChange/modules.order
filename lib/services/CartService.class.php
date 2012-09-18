@@ -125,6 +125,7 @@ class order_CartService extends change_BaseService
 		$cartInfo = new order_CartInfo();
 		$cartInfo->setShop(null);
 		$cartInfo->setOrderId(null);	
+		$cartInfo->setContextId(null);
 		$cartInfo->setUid(session_id());	
 		return $cartInfo;	
 	}
@@ -151,7 +152,15 @@ class order_CartService extends change_BaseService
 		{
 			Framework::info(__METHOD__);
 		}
-		$cart->setOrderId(null);
+		$order = DocumentHelper::getDocumentInstanceIfExists($cart->getOrderId());
+		if ($order instanceof order_persistentdocument_order)
+		{
+			$order->getDocumentService()->resetForCart($order, $cart);
+		}
+		else
+		{
+			$cart->setOrderId(null);
+		}
 	}
 	
 	/**
@@ -207,7 +216,8 @@ class order_CartService extends change_BaseService
 			Framework::warn(__METHOD__ . ' Invalid arguments');
 			return false;
 		}
-				
+		$ls = LocaleService::getInstance();
+		
 		// Get properties and line key.
 		$properties = array();
 		$product->getDocumentService()->getProductToAddToCart($product, $cart->getShop(), $quantity, $properties);
@@ -231,14 +241,17 @@ class order_CartService extends change_BaseService
 			return false;
 		}
 		
+		$css = catalog_StockService::getInstance();
+		$css->initCartMode($cart);
+		
 		// If the article has no price the line is not added and a warning message is displayed.
 		if (!$this->validateProduct($cart, $product, $quantity))
 		{
+			$css->initCartMode(null);
 			return false;
 		}
 		else
 		{
-			Framework::info(__METHOD__ . ' Check Key:' . $cartLineKey);
 			$cartLine = $this->getCartLineByKey($cart, $cartLineKey);
 			if ($cartLine === null)
 			{
@@ -258,6 +271,7 @@ class order_CartService extends change_BaseService
 			$params = array('product' => $product->getLabel());
 			UserActionLoggerService::getInstance()->addCurrentUserDocumentEntry('add-product-to-cart', null, $params, 'customer');
 		}
+		$css->initCartMode(null);
 		return true;
 	}	
 	
@@ -387,30 +401,33 @@ class order_CartService extends change_BaseService
 		}
 		
 		Framework::startBench();
-			
-		// Validate the cart.
-		$this->validateCart($cart);		
-		Framework::bench('validateCart');
-		
-		// Refresh the prices infos.
-		$this->refreshCartPrice($cart);
-		Framework::bench('refreshCartPrice');
 
-		$this->refreshCoupon($cart);
-		Framework::bench('refreshCoupon');			
+		if ($cart->getShopId())
+		{
+			// Validate the cart.
+			$this->validateCart($cart);		
+			Framework::bench('validateCart');
+			
+			// Refresh the prices infos.
+			$this->refreshCartPrice($cart);
+			Framework::bench('refreshCartPrice');
+	
+			$this->refreshCoupon($cart);
+			Framework::bench('refreshCoupon');			
+			
+			$this->refreshShipping($cart);
+			Framework::bench('refreshShipping');
+			
+			$this->refreshModifiers($cart);
+			Framework::bench('refreshModifiers');
+			
+			$this->refreshTax($cart);
+			Framework::bench('refreshTax');
+			
+			$this->refreshCreditNote($cart);
+			Framework::bench('refreshCreditNote');
+		}
 		
-		$this->refreshShipping($cart);
-		Framework::bench('refreshShipping');
-		
-		$this->refreshModifiers($cart);
-		Framework::bench('refreshModifiers');
-		
-		$this->refreshTax($cart);
-		Framework::bench('refreshTax');
-		
-		$this->refreshCreditNote($cart);
-		Framework::bench('refreshCreditNote');
-				
 		if ($resetSessionOrderProcess)
 		{
 			order_OrderProcessService::getInstance()->resetSessionOrderProcess();
@@ -429,16 +446,10 @@ class order_CartService extends change_BaseService
 		$shop = $cart->getShop();
 		if ($shop)
 		{
-			$billingArea = $shop->getCurrentBillingArea(true);
-			$cart->setBillingArea($billingArea);
-			$cart->setTaxZone(catalog_TaxService::getInstance()->getCurrentTaxZone($shop, $cart, true));
-			$cartLines = $cart->getCartLineArray();
-			$customer = $cart->getCustomer();
-			foreach ($cartLines as $cartLine)
+			foreach ($cart->getCartLineArray() as $cartLine)
 			{
-				$product = $cartLine->getProduct();
-				$price = $product->getPrice($shop, $billingArea, $customer, $cartLine->getQuantity());
-				$cartLine->importPrice($price);
+				/* @var $cartLine order_CartLineInfo */
+				$cartLine->importPrice($cartLine->getPrice());
 			}
 		}
 		else
@@ -475,17 +486,23 @@ class order_CartService extends change_BaseService
 			catalog_ShippingfilterService::getInstance()->setRequiredShippingModes($cart);	
 		}
 		
+		$shippingFilter = null;
 		if ($updateSelectFilter)
 		{
-			if ($cart->getAddressInfo() && $cart->getAddressInfo()->shippingFilterId)
+			$shippingFilterId =  intval($cart->getAddressInfo() ? $cart->getAddressInfo()->shippingFilterId : 0);
+			$shippingFilter = DocumentHelper::getDocumentInstanceIfExists($shippingFilterId);
+			if (!($shippingFilter instanceof  catalog_persistentdocument_shippingfilter))
 			{
-				$shippingFilter = DocumentHelper::getDocumentInstance($cart->getAddressInfo()->shippingFilterId);
-				$cart->setRequiredShippingFilter(0, $shippingFilter);
+				$shippingFilter = null;
 			}
-			else
-			{
-				$cart->setRequiredShippingFilter(0, null);
-			}
+		}
+		if ($shippingFilter)
+		{
+			$shippingFilter->getDocumentService()->applyShippingFilterToCart($shippingFilter, $cart, true);
+		}
+		else
+		{
+			$cart->setRequiredShippingFilter(0, $shippingFilter);
 		}
 	}	
 
@@ -609,7 +626,14 @@ class order_CartService extends change_BaseService
 	{
 		// Clear persistent error messages (they are re-generated by this method each times it is called).
 		$cart->clearPersistentErrorMessages();	
-			
+
+		// Set billing area and tax zone
+		$shop = $cart->getShop();
+		$billingArea = $shop->getCurrentBillingArea(true);
+		$cart->setBillingArea($billingArea);
+		$cart->setTaxZone(catalog_TaxService::getInstance()->getCurrentTaxZone($shop, $cart, true));
+		
+		
 		// If there are lines, clean them.
 		$removeCartLineIndex = array();
 		foreach ($cart->getCartLineArray() as $index => $cartLine)
@@ -691,6 +715,18 @@ class order_CartService extends change_BaseService
 					$replacements = array('articleLabel' => $product->getLabelAsHtml());
 					$cart->addTransientErrorMessage($ls->trans('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
 					return false;
+				}
+				
+				$price = $product->getPrice($shop, $cart->getBillingArea(), $cart->getCustomer(), $cartLine->getQuantity());
+				if ($price === null)
+				{
+					$cartLine->setPrice(null);
+					$replacements = array('articleLabel' => $product->getLabelAsHtml());
+					$cart->addPersistentErrorMessage($ls->trans('m.order.frontoffice.cart-validation-error-unavailable-article-price', array('ucf'), $replacements));
+				}
+				else
+				{
+					$cartLine->setPrice($price);
 				}
 				return true;
 			}
@@ -831,25 +867,42 @@ class order_CartService extends change_BaseService
 	 * @param integer[] $quantity
 	 * @param boolean $askConfirmation
 	 * @param array $paramsToRedirect
+	 * @param f_persistentdocument_PersistentDocument $context
 	 * @return boolean
 	 */
-	public function checkAddToCart($cart, $shop, &$products, &$quantities, $askConfirmation, $paramsToRedirect = array())
+	public function checkAddToCart($cart, $shop, &$products, &$quantities, $askConfirmation, $paramsToRedirect = array(), $context = null)
 	{
 		$ls = LocaleService::getInstance();
-		
+		if (!is_array($products) || count($products) == 0)
+		{
+			$cart->addTransientErrorMessage($ls->trans('m.order.fo.no-product-to-add', array('ucf', 'html')));
+			return false;
+		}		
 		// Check website.
 		$currentWebsite = website_WebsiteService::getInstance()->getCurrentWebsite();
 		if ($currentWebsite->getId() != $shop->getWebsite()->getId())
 		{
-			$cart->addTransientErrorMessage($ls->trans('m.order.fo.shop-in-other-website', array('ucf')));
+			$cart->addTransientErrorMessage($ls->trans('m.order.fo.shop-in-other-website', array('ucf', 'html')));
 			return false;
 		}
 		
-		if (!$cart->getShopId() || $cart->isEmpty())
+		$shopId = $shop->getId();
+		if ($context instanceof f_persistentdocument_PersistentDocument)
+		{
+			$contextId =  $context->getId();
+		}
+		else
+		{
+			$contextId = null;
+			$context = null;
+		}
+		
+		if ($cart->isEmpty())
 		{
 			$cart->setShop($shop);
+			$cart->setContextId($contextId);
 		}
-		else if ($cart->getShopId() !== $shop->getId())
+		else if ($cart->getShopId() != $shop->getId() || $contextId != $cart->getContextId())
 		{
 			if (!$askConfirmation)
 			{
@@ -865,7 +918,21 @@ class order_CartService extends change_BaseService
 				$paramsToRedirect['website_BlockAction_submit']['cart'] = array();
 			}
 			$paramsToRedirect['website_BlockAction_submit']['cart']['confirmClear'] = true;
-			$paramsToRedirect['message'] = $ls->trans('m.order.fo.confirm-incompatible-shop', array('ucf'));
+			if ($cart->getShopId() != $shop->getId())
+			{
+				$paramsToRedirect['message'] = $ls->trans('m.order.fo.confirm-incompatible-shop', array('ucf', 'html'));
+			}
+			else
+			{
+				if ($context && method_exists($context->getDocumentService(), 'getIncompatibleCartContextMessage'))
+				{
+					$paramsToRedirect['message'] = $context->getDocumentService()->getIncompatibleCartContextMessage($context, $cart);
+				}
+				else
+				{
+					$paramsToRedirect['message'] = $ls->trans('m.order.fo.confirm-incompatible-context', array('ucf', 'html'));
+				}
+			}
 			
 			// Get the page tag to redirect.
 			if (isset($paramsToRedirect['confirmPageTag']))
@@ -889,8 +956,8 @@ class order_CartService extends change_BaseService
 			{
 				$url = LinkHelper::getTagUrl($tag, null, array('orderParam' => $paramsToRedirect));
 			}
-			unset($paramsToRedirect['confirmPagePopin']);
 			
+			unset($paramsToRedirect['confirmPagePopin']);
 			change_Controller::getInstance()->redirectToUrl($url);
 		}
 		return true;
@@ -955,25 +1022,10 @@ class order_CartService extends change_BaseService
 			if ($added)
 			{
 				$key = ($recup) ? 'm.order.frontoffice.cart-recup' : 'm.order.frontoffice.cart-fusion';
-				$sessionCart->addSuccessMessage(LocaleService::getInstance()->trans($key, array('ucf')));
+				$sessionCart->addSuccessMessage(LocaleService::getInstance()->trans($key, array('ucf', 'html')));
 			}
 		}
 		
 		$this->refresh($sessionCart);
-	}
-	
-	// Deprecated
-	
-	/**
-	 * @deprecated (will be removed in 4.0) use addProductToCart
-	 */
-	public function addProduct($product, $quantity, $properties = array())
-	{
-		$cart = $this->getDocumentInstanceFromSession();
-		if (!$this->addProductToCart($cart, $product, $quantity))
-		{
-			throw new order_Exception('Unable-to-add-product-to-cart');
-		}
-		return $cart;
 	}
 }

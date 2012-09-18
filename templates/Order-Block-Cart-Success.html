@@ -5,7 +5,8 @@
 </ul>
 
 <h1 change:h="">${trans:m.order.frontoffice.my-cart,ucf}</h1>
-
+<div class="cleaner"></div>
+<tal:block tal:condition="cart/getContextId" change:block="" module="order" name="CartContext" container="" />
 <form class="cmxform normal-margin" id="cart-lines" method="post" action="${updateActionUrl}">
 	<tal:block change:block="" module="order" name="CartMessages" handleCantOrderMessage="true" container="" />
 	<tal:block change:block="" module="website" name="messages" container="" />
@@ -14,7 +15,6 @@
 			<tr>
 				<th>&#160;</th>
 				<th>${trans:m.order.frontoffice.designation,ucf}</th>
-				<th>${trans:m.order.frontoffice.availability,ucf}</th>
 				<th tal:condition="showHT">
 					<abbr title="${trans:m.order.frontoffice.unitprice-without-tax,attr}">${trans:m.order.frontoffice.unitprice-without-tax-abr}</abbr>
 				</th>
@@ -42,7 +42,6 @@
 						<tal:block tal:condition="not: visual">&#160;</tal:block>
 					</td>
 					<td class="product-infos">${cartLine/getDiscountDetail}<br />${structure product/getOrderLabelAsHtml}</td>
-					<td>${product/getAvailability}</td>
 					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
 					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
 					<td>${cartLine/getQuantity}</td>
@@ -62,7 +61,6 @@
 						<a tal:condition="product/isConfigurable" change:link="document product/getConfigurationPage; cartLineIndex cartLineIndex" title="${trans:m.catalog.fo.configurate-product,ucf,attr}"><img change:img="icon/small/edit.png" alt="${trans:m.catalog.fo.configurate-product,ucf,attr}" /></a>
 						${structure product/getOrderLabelAsHtml} <input type="hidden" name="${string:orderParam[lines][${cartLineIndex}][productId]}" value="${product/getId}" />
 					</td>
-					<td>${product/getAvailability}</td>
 					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
 					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
 					<td tal:define="name string:orderParam[lines][${cartLineIndex}][quantity]; update product/updateCartQuantity">

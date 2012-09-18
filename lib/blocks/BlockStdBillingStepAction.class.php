@@ -6,6 +6,11 @@
 class order_BlockStdBillingStepAction extends website_BlockAction
 {
 	/**
+	 * @var integer
+	 */
+	protected $trivialErrorCount = 0;
+	
+	/**
 	 * @see website_BlockAction::getInputViewName()
 	 */
 	public function getInputViewName()
@@ -26,8 +31,16 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 		}	
 		$cs = order_CartService::getInstance();	
 		$cart =$cs->getDocumentInstanceFromSession();
-		$cs->refresh($cart, false);
-		
+		if ($request->hasParameter('Payment'))
+		{
+			if ($cart->getOrderId() == $request->getParameter('Payment'))
+			{
+				$this->setRequestOrderParams($request, $cart, $cart->getOrder());
+				return 'Payment';
+			}
+		}
+
+		$cs->refresh($cart, false);	
 		if ($cart->isEmpty() || $cart->getCustomer() === null) {$this->redirectToCart($cart);}
 		$op = $cart->getOrderProcess();
 		$op->setCurrentStep('Billing');
@@ -63,6 +76,7 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 				if ($currentCoupon === null)
 				{		
 					$request->setAttribute('coupon', '');
+					$this->trivialErrorCount++;
 					$this->addError(LocaleService::getInstance()->trans('m.order.standardprocess.invalid-coupon', array('ucf'), array('code' => $couponCode)), 
 						'coupon');
 				}
@@ -107,8 +121,10 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 			$order = $this->generateOrderForCart($cart);
 			if ($order !== null)
 			{	
-				$this->setRequestOrderParams($request, $cart, $order);
-				return 'Payment';
+				$op = $cart->getOrderProcess();
+				$url = order_OrderProcessService::getInstance()->getOrderProcessURL($op, array('orderParam' => array('Payment' => $order->getId())));
+				$this->redirectToUrl($url);
+				exit(0);
 			}
 		}
 		
@@ -172,7 +188,15 @@ class order_BlockStdBillingStepAction extends website_BlockAction
 		$request->setAttribute('showPrice', $request->getAttribute('showPriceWithTax') || $request->getAttribute('showPriceWithoutTax')); 
 		
 		$this->setResumeInfoFromCart($request, $cart);
-		$request->setAttribute('canContinue', !$this->hasErrors());	
+		$request->setAttribute('canContinue',  $this->canContinue());	
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	protected function canContinue()
+	{
+		return (count($this->getErrors()) - $this->trivialErrorCount) == 0;
 	}
 	
 	/**

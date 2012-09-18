@@ -48,8 +48,5 @@
 	<key id="create-new-address-button">create a new shipping address</key>
 	<key id="use-this-address">use this address</key>
 	<key id="do-order">Proceed to checkout</key>
-	<key id="pre-read-general-sales-conditions">please</key>
-	<key id="read-general-sales-conditions">read the general terms and conditions of sale</key>
-	<key id="post-read-general-sales-conditions">and check the box below to be able to proceed to checkout.</key>
 	<key id="agree-with-general-sales-conditions">I agree to the general terms and conditions of sale</key>
 </i18n>

@@ -595,16 +595,12 @@ class order_BillService extends f_persistentdocument_DocumentService
 		{
 			$transactionId = $document->getTransactionId();
 			$data['transaction']['transactionId'] = $transactionId;
-			// This one is deprecated
-			$data['properties']['transactionId'] = $transactionId; 
 		}
 		
 		if ($document->getTransactionDate())
 		{
 			$dateTimeFormatted = date_Formatter::toDefaultDateTimeBO($document->getUITransactionDate());			
 			$data['transaction']['transactionDate'] = $dateTimeFormatted;
-			// This one is deprecated
-			$data['properties']['transactionDate'] = $dateTimeFormatted;
 		}
 		$order = $document->getOrder();
 		try 
@@ -629,15 +625,5 @@ class order_BillService extends f_persistentdocument_DocumentService
 		$data['links']['customer'] = $order->getCustomer()->getLabel();
 		$data['links']['order'] = $order->getOrderNumber();
 		return $data;
-	}
-	
-	// DEPRECATED.
-	
-	/**
-	 * @deprecated
-	 */
-	public function udatePaymentStatus($bill, $newStatus)
-	{
-		$this->updatePaymentStatus($bill, $newStatus);
 	}
 }

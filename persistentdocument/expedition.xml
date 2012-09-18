@@ -20,7 +20,5 @@
 		<property name="trackingURL" type="String" />
 		<property name="trackingText" type="LongString" />
 		<property name="deliveryDate" type="DateTime" />
-		<!-- deprecated -->
-		<property name="taxCode" type="String" />
 	</serializedproperties>
 </document>

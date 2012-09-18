@@ -23,10 +23,11 @@
 				<child model="modules_order/order" from="function" />
 			</children>
 			<columns>
-				<column name="formattedTotalAmountWithTax" flex="1" label="TotalAmountWithTax" />
+				<column name="label" sortActive="true" />
+				<column name="formattedTotalAmountWithTax" flex="1" label="TotalAmountWithTax" sortActive="true" />
 				<column name="orderStatusLabel" flex="2" label="OrderStatus" />
-				<column name="customer" flex="4" labeli18n="m.order.bo.general.column.customer" />
-				<column name="date" flex="1" labeli18n="m.order.bo.general.column.date" />
+				<column name="customer" flex="4" sortActive="true" labeli18n="m.order.bo.general.column.customer" />
+				<column name="date" flex="1" sortActive="true" sortDirection="descending" labeli18n="m.order.bo.general.column.date" />
 				<column name="lastMessageDate" flex="1" labeli18n="m.order.bo.general.column.lastmessagedate" />
 			</columns>
 			<contextactions>
@@ -38,11 +39,12 @@
 				<child model="modules_order/order" from="function" />
 			</children>
 			<columns>
-				<column name="formattedTotalAmountWithTax" flex="1" label="TotalAmountWithTax" />
+				<column name="label" sortActive="true" />
+				<column name="formattedTotalAmountWithTax" flex="1" label="TotalAmountWithTax" sortActive="true" />
 				<column name="orderStatusLabel" flex="1" label="OrderStatus" />
-				<column name="customer" flex="4" labeli18n="m.order.bo.general.column.customer" />
-				<column name="date" flex="2" labeli18n="m.order.bo.general.column.date" />
-				<column name="lastMessageDate" flex="2" labeli18n="m.order.bo.general.column.lastmessagedate" />
+				<column name="customer" flex="4" sortActive="true" labeli18n="m.order.bo.general.column.customer" />
+				<column name="date" flex="2" sortActive="true" sortDirection="descending" labeli18n="m.order.bo.general.column.date" />
+				<column name="lastMessageDate" flex="1" labeli18n="m.order.bo.general.column.lastmessagedate" />
 			</columns>
 			<contextactions>
 				<contextaction name="edit" />
@@ -59,10 +61,10 @@
 		<model name="modules_order/creditnote">
 			<contextactions>
 				<contextaction name="edit" />
-				<contextaction name="delete" />
 				<contextaction name="activate" />
 				<contextaction name="deactivated" />
 				<contextaction name="reactivate" />
+				<contextaction name="delete" />
 			</contextactions>
 		</model>
 		<model name="modules_order/waitingresponseorderfolder">
@@ -83,6 +85,10 @@
 	</models>
 	<toolbar>
 		<toolbarbutton name="edit" />
+		<toolbarbutton name="activate" />
+		<toolbarbutton name="deactivated" />
+		<toolbarbutton name="reactivate" />
+		<toolbarbutton name="delete" />
 	</toolbar>
 	<actions>
 		<action name="refresh" single="true" icon="refresh" labeli18n="m.uixul.bo.actions.refresh" />
@@ -93,5 +99,8 @@
 		<action name="createSmartfolder" single="true" permission="Insert_smartfolder" icon="create-folder" labeli18n="m.order.bo.actions.create-smartfolder" />
 		<action name="openTreeNodeOrder" single="true" permission="Order" icon="sort" labeli18n="m.uixul.bo.actions.set-children-order" />
 		<action name="createOrderpreparation" single="true" permission="Insert_orderpreparation" icon="add" />
+		<action name="activate" single="true" permission="Activate" icon="activate" labeli18n="m.uixul.bo.actions.activate" />
+		<action name="deactivated" permission="Deactivated" icon="deactivated" labeli18n="m.uixul.bo.actions.deactivate" />
+		<action name="reactivate" permission="ReActivate" icon="reactivate" labeli18n="m.uixul.bo.actions.reactivate" />
 	</actions>
 </perspective>

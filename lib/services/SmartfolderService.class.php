@@ -34,15 +34,7 @@ class order_SmartfolderService extends filter_QueryfolderService
 	{
 		return $this->getPersistentProvider()->createQuery('modules_order/smartfolder', false);
 	}
-	
-	/**
-	 * @deprecated (will be removed in 4.0) use getVirtualChildrenAt
-	 */
-	public function getOrders($folder)
-	{
-		return f_persistentdocument_DocumentFilterService::getInstance()->getQueryIntersectionFromJson($folder->getQuery())->find();
-	}
-	
+		
 	/**
 	 * @param filter_persistentdocument_queryfolder $document
 	 * @param string[] $subModelNames
@@ -50,12 +42,71 @@ class order_SmartfolderService extends filter_QueryfolderService
 	 * @param integer $pageSize
 	 * @param integer $startIndex
 	 * @param integer $totalCount
-	 * @return f_persistentdocument_PersistentDocument[]
+	 * @param string $orderBy
+	 * @return order_persistentdocument_order[]
 	 */
-	public function getVirtualChildrenAt($document, $subModelNames, $locateDocumentId, $pageSize, &$startIndex, &$totalCount)
+	public function getVirtualChildrenAt($document, $subModelNames, $locateDocumentId, $pageSize, &$startIndex, &$totalCount, $orderBy = null)
 	{
 		$queryIntersection = f_persistentdocument_DocumentFilterService::getInstance()->getQueryIntersectionFromJson($document->getQuery());
-		$result = $queryIntersection->findAtOffset($startIndex, $pageSize, $totalCount, 'DESC');
-		return $result;
+		if ($orderBy == null)
+		{
+			$result = $queryIntersection->findAtOffset($startIndex, $pageSize, $totalCount, 'DESC');
+			return $result;
+		}
+		$ids = $queryIntersection->findIds();
+		if (count($ids) > 1000)
+		{
+			Framework::warn(__METHOD__ . ' total order > 1000');
+			$ids = array_slice($ids, 0, 1000);	
+		}
+		$query = order_OrderService::getInstance()->createQuery()
+					->add(Restrictions::in('id', $ids))
+					->setFirstResult($startIndex)->setMaxResults($pageSize);
+
+		list($cn, $dir) = explode(':', $orderBy);
+		if($cn == 'label')
+		{
+			$fn = 'orderNumber';
+		}
+		elseif($cn == 'formattedTotalAmountWithTax')
+		{
+			$fn = 'totalAmountWithTax';
+		}
+		elseif($cn == 'date')
+		{
+			$fn = 'id';
+		}
+		elseif($cn == 'customer')
+		{
+			if ($dir === 'asc')
+			{
+				$query->createCriteria('customer')
+				->createCriteria('user')->addOrder(Order::asc('customer.user.firstname'))->addOrder(Order::asc('customer.user.lastname'));
+			}
+			else
+			{
+				$query->createCriteria('customer')
+				->createCriteria('user')->addOrder(Order::desc('customer.user.firstname'))->addOrder(Order::desc('customer.user.lastname'));
+			}
+			$fn = null;
+		}
+		else
+		{
+			$fn = null;
+		}
+	
+		if ($fn)
+		{
+			if ($dir === 'asc')
+			{
+				$query->addOrder(Order::asc($fn));
+			}
+			else
+			{
+				$query->addOrder(Order::desc($fn));
+			}
+		}
+			
+		return $query->find();		
 	}
 }

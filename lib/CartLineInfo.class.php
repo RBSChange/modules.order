@@ -5,12 +5,12 @@
 class order_CartLineInfo
 {
 	/**
-	 * @var Integer
+	 * @var integer
 	 */
 	private $productId = null;
 	
 	/**
-	 * @var Integer
+	 * @var integer
 	 */
 	private $priceId = null;
 	
@@ -59,8 +59,30 @@ class order_CartLineInfo
 	 */
 	private $key = null;
 	
-	
+	/**
+	 * @var array
+	 */
 	private $priceParts;
+	
+	/**
+	 * @var array<string, mixed>
+	 */
+	private $properties = array();
+	
+	/**
+	 * @var catalog_persistentdocument_price
+	 */
+	private $price = null;
+	
+	public function __sleep()
+	{
+		return array("\0order_CartLineInfo\0properties", "\0order_CartLineInfo\0key", 
+			"\0order_CartLineInfo\0ecoTax", "\0order_CartLineInfo\0discountDetail", 
+			"\0order_CartLineInfo\0oldValueWithoutTax", "\0order_CartLineInfo\0oldValueWithoutTax", 
+			"\0order_CartLineInfo\0valueWithoutTax", "\0order_CartLineInfo\0valueWithTax", 
+			"\0order_CartLineInfo\0productId", "\0order_CartLineInfo\0priceId", "\0order_CartLineInfo\0quantity", 
+			"\0order_CartLineInfo\0taxCategory", "\0order_CartLineInfo\0priceParts");
+	}
 
 	/**
 	 * @return integer
@@ -158,11 +180,14 @@ class order_CartLineInfo
 	 */
 	public function getPrice()
 	{
-		if ($this->priceId)
+		if ($this->price === null)
 		{
-			return catalog_persistentdocument_price::getInstanceById($this->priceId);
+			if ($this->priceId !== null && $this->priceId > 0)
+			{
+				$this->price = catalog_persistentdocument_price::getInstanceById($this->priceId);
+			}
 		}
-		return null;
+		return $this->price;
 	}
 	
 	/**
@@ -172,10 +197,12 @@ class order_CartLineInfo
 	{
 		if ($price instanceof catalog_persistentdocument_price) 
 		{
-			$this->setPriceId($price->getId());
+			$this->price = $price;
+			$this->setPriceId($price->getId() > 0 ? $price->getId() : null);
 		}
 		else
 		{
+			$this->price = null;
 			$this->setPriceId(null);
 		}
 	}
@@ -455,11 +482,6 @@ class order_CartLineInfo
 	}
 
 	/**
-	 * @var Array<String, Mixed>
-	 */
-	private $properties = array();
-
-	/**
 	 * @return Array<String, Mixed>
 	 */
 	public function getPropertiesArray()
@@ -480,7 +502,7 @@ class order_CartLineInfo
 	 * @param string $key
 	 * @return boolean
 	 */
-	public function hasProperties($key)
+	public function hasProperty($key)
 	{
 		return isset($this->properties[$key]);
 	}
@@ -489,18 +511,25 @@ class order_CartLineInfo
 	 * @param string $key
 	 * @return Mixed
 	 */
-	public function getProperties($key)
+	public function getProperty($key)
 	{
-		return $this->hasProperties($key) ? $this->properties[$key] : null;
+		return $this->hasProperty($key) ? $this->properties[$key] : null;
 	}
 
 	/**
 	 * @param string $key
 	 * @param Mixed $value
 	 */
-	public function setProperties($key, $value)
+	public function setProperty($key, $value)
 	{
-		$this->properties[$key] = $value;
+		if ($value === null)
+		{	
+			unset($this->properties[$key]);
+		}
+		else
+		{
+			$this->properties[$key] = $value;
+		}
 		$this->key = null;
 	}
 	
@@ -555,15 +584,5 @@ class order_CartLineInfo
 			}
 		}
 		return null;
-	}
-	
-	// DEPRECATED
-	
-	/**
-	 * @deprecated use getFormattedTaxRate
-	 */
-	public function getFormattedTaxCode()
-	{
-		return $this->getFormattedTaxRate();
 	}
 }

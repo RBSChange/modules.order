@@ -3,7 +3,7 @@
  * order_ShipExpeditionAction
  * @package modules.order.actions
  */
-class order_ShipExpeditionAction extends change_JSONAction
+class order_ShipExpeditionAction extends generic_LoadJSONAction
 {
 	/**
 	 * @param change_Context $context
@@ -12,7 +12,34 @@ class order_ShipExpeditionAction extends change_JSONAction
 	public function _execute($context, $request)
 	{
 		$expedition = $this->getExpeditionFromRequest($request);
-		if ($request->getParameter('cancel') === 'true')
+		if ($request->hasParameter('documentproperties'))
+		{
+			
+			$documentService = $expedition->getDocumentService();
+			
+			$propertiesNames = explode(',', $request->getParameter('documentproperties', ''));
+			$propertiesNames[] = 'documentversion';
+			
+			$propertiesValue = array();
+			foreach ($propertiesNames as $propertyName)
+			{
+				if ($request->hasParameter($propertyName))
+				{
+					$propertiesValue[$propertyName] = $request->getParameter($propertyName);
+				}
+			}
+				
+			uixul_DocumentEditorService::getInstance()->importFieldsData($expedition, $propertiesValue);
+			
+			$trackingNumber = f_util_ArrayUtils::firstElement($documentService->getTrackingNumbers($expedition));
+			$packetNumber = f_util_ArrayUtils::firstElement($documentService->getPacketNumbers($expedition));		
+			$documentService->shipExpedition($expedition, $expedition->getShippingDate(), $trackingNumber, $expedition->getTrackingText(), $packetNumber);
+			
+			$propertiesNames[] = 'id';
+			$propertiesNames[] = 'lang';
+			$result = $this->exportFieldsData($expedition, $propertiesNames);
+		}
+		elseif ($request->getParameter('cancel') === 'true')
 		{
 			$result = order_ExpeditionService::getInstance()->cancelExpeditionFromBo($expedition);
 		}

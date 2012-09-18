@@ -35,25 +35,26 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	 */
 	public function formatPrice($value)
 	{
-		return catalog_PriceFormatter::getInstance()->applyFormat($value, $this->getPriceFormat(), $this->getCurrencyCode(), $this->getLang());
+		$lang = RequestContext::getInstance()->getLang();
+		return catalog_PriceFormatter::getInstance()->format($value,  $this->getCurrencyCode(), $lang, $this->getCurrencyPosition());
 	}
-	
+
 	/**
 	 * @return string
 	 */
-	public function getPriceFormat()
+	public function getCurrencyPosition()
 	{
-		return $this->getGlobalProperty('priceFormat');
+		return $this->getGlobalProperty('currencyPosition');
 	}
 	
 	/**
-	 * @param string $priceFormat
+	 * @param string $position
 	 */
-	public function setPriceFormat($priceFormat)
+	public function setCurrencyPosition($position)
 	{
-		return $this->setGlobalProperty('priceFormat', $priceFormat);
+		return $this->setGlobalProperty('currencyPosition', $position);
 	}
-	
+		
 	/**
 	 * @return string
 	 */
@@ -83,11 +84,9 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			{
 				$taxInfoArray[$rate] = array('formattedTaxRate' => $rate, 'taxAmount' => $value);
 			}
-			return $taxInfoArray;
+			
 		}
-		
-		//Deprecated remove in 4.0
-		return $this->getSubTotalTaxInfoArray();
+		return $taxInfoArray;
 	}
 	
 	/**
@@ -177,7 +176,43 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	{
 		return catalog_persistentdocument_shop::getInstanceById($this->getShopId());
 	}
+
+	/**
+	 * @return f_persistentdocument_PersistentDocument|null
+	 */
+	public function getContextDocument()
+	{
+		return DocumentHelper::getDocumentInstanceIfExists($this->getContextId());
+	}
 	
+	/**
+	 * @return string
+	 */
+	public function getContextDocumentLabel()
+	{
+		$label = $this->getOrderProperty('context_label');
+		if (!$label && $this->getContextDocument())
+		{
+			$label = $this->getContextDocument()->getNavigationLabel();
+		}
+		return $label;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getContextDocumentLabelAsHtml()
+	{
+		return f_util_HtmlUtils::textToHtml($this->getContextDocumentLabel());
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function setContextDocumentLabel($label)
+	{
+		return $this->setOrderProperty('context_label', $label);
+	}
 	/**
 	 * @return string
 	 */
@@ -791,172 +826,5 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	public function getTreeNodeLabel()
 	{
 		return $this->getOrderNumber();
-	}
-	
-	//DEPRECTAED FUNCTIONS
-
-	/**
-	 * @deprecated use getBoOrderStatusLabel or getFoOrderStatusLabel
-	 */
-	public function getOrderStatusLabel()
-	{
-		return $this->getFoOrderStatusLabel();
-	}
-		
-	/**
-	 * @deprecated use getCreationdate or getUICreationdate
-	 */
-	public function getOrderDate()
-	{
-		return $this->getCreationdate();
-	}
-	
-	/**
-	 * @deprecated 
-	 */
-	private $currentBill;
-	
-	/**
-	 * @deprecated 
-	 */
-	private function getCurrentBill()
-	{
-		if ($this->currentBill === null)
-		{
-			$billArray = $this->getBillArrayInverse();
-			$this->currentBill = $billArray[0];
-		}
-		return $this->currentBill;
-	}
-			
-	/**
-	 * @deprecated  use getPaymentConnectorLabel
-	 */
-	public function getBillingMode()
-	{
-		return $this->getPaymentConnectorLabel();
-	}
-	
-	/**
-	 * @deprecated use getPaymentConnectorCode
-	 */
-	public function getBillingModeCodeReference()
-	{
-		return $this->getPaymentConnectorCode();
-	}
-			
-	/**
-	 * @var order_persistentdocument_expedition
-	 */
-	private $currentExpedition;
-	
-	/**
-	 * @deprecated 
-	 */
-	private function getCurrentExpedition()
-	{
-		if ($this->currentExpedition === null)
-		{
-			$expeditionArray = $this->getExpeditionArrayInverse();
-			$this->currentExpedition = count($expeditionArray) > 0 ? $expeditionArray[0] : false;
-		}
-		return $this->currentExpedition ? $this->currentExpedition : null;
 	}	
-		
-	/**
-	 * @deprecated 
-	 */
-	public function getShippingModeCodeReference()
-	{
-		$sD = $this->getShippingModeDocument();
-		return $sD ? $sD->getCodeReference() : null;
-	}	
-
-	/**
-	 * @deprecated 
-	 */
-	public function getPackageTrackingNumber()
-	{
-		$exp = $this->getCurrentExpedition();
-		return $exp ? $exp->getTrackingNumber() : null;
-	}
-	
-	/**
-	 * @deprecated 
-	 */
-	public function getPackageTrackingURL()
-	{
-		$exp = $this->getCurrentExpedition();
-		return $exp ? $exp->getTrackingURL() : null;
-	}
-	
-	/**
-	 * @deprecated use getShippingModeLabel
-	 */
-	public function getShippingMode()
-	{
-		return $this->getShippingModeLabel();
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function setShippingModeTaxCode($shippingModeTaxCode)
-	{
-		$this->setOrderProperty('shippingModeTaxCode', $shippingModeTaxCode);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function setShippingModeTaxRate($shippingModeTaxRate)
-	{
-		$this->setOrderProperty('shippingModeTaxRate', $shippingModeTaxRate);
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function getShippingModeTaxCode()
-	{
-		return $this->getOrderProperty('shippingModeTaxCode');
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function getShippingModeTaxRate()
-	{
-		return $this->getOrderProperty('shippingModeTaxRate');
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public function getSubTotalTaxInfoArray()
-	{
-		$taxInfoArray = array();
-		$ts = catalog_TaxService::getInstance();
-		foreach ($this->getLineArray() as $line)
-		{
-			/* @var $line order_persistentdocument_orderline */
-			$formatedTaxRate = $ts->formatRate($line->getTaxRate());
-			if (!isset($taxInfoArray[$formatedTaxRate]))
-			{
-				$taxInfoArray[$formatedTaxRate] = array('formattedTaxRate' => $formatedTaxRate, 'taxAmount' => 0);
-			}
-			$taxInfoArray[$formatedTaxRate]['taxAmount'] += $line->getTaxAmount();
-		}
-	
-		if ($this->getShippingModeTaxCode())
-		{
-			$formatedTaxRate = $ts->formatRate($this->getShippingModeTaxRate());
-			if (!isset($taxInfoArray[$formatedTaxRate]))
-			{
-				$taxInfoArray[$formatedTaxRate] = array('taxAmount' => 0, 'formattedTaxRate' => $formatedTaxRate);
-			}
-			$taxInfoArray[$formatedTaxRate]['taxAmount'] += ($this->getShippingFeesWithTax() - $this->getShippingFeesWithoutTax());
-		}
-		return $taxInfoArray;
-	}
 }

@@ -9,15 +9,11 @@
 			<parameter name="showAcceptationCheckbox" type="Boolean" default-value="false" />
 			<parameter name="showInstructions" type="Boolean" default-value="false" />
 			<parameter name="useCartEmptyPage" type="Boolean" default-value="true" />
-			<!-- @deprecated -->
-			<parameter name="showTotalWithFees" type="Boolean" default-value="false" hidden="true" />
 		</parameters>
 	</block>
 	<block type="modules_order_ShortCart" icon="cart" afterAll="true">
 		<parameters>
 			<parameter name="showTotalProductCount" type="Boolean" default-value="false" />
-			<!-- @deprecated -->
-			<parameter name="showTotalWithFees" type="Boolean" default-value="false" hidden="true" />
 		</parameters>
 	</block>
 	<block type="modules_order_CartMessages" icon="cart" />
@@ -43,4 +39,5 @@
 			<parameter name="columns" type="String" default-value="orders,amount" max-occurs="-1" from-list="modules_order/dashboardshopstatisticscolums" fieldtype="checklist" />
 		</parameters>
 	</block>
+	<block type="modules_order_CartContext" icon="cart" />
 </blocks>

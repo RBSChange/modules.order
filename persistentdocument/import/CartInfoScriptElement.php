@@ -21,6 +21,9 @@ class order_CartInfoScriptElement extends import_ScriptObjectElement
 				case 'shop-refid':
 					$cart->setShop($this->script->getElementById($value)->getPersistentDocument());
 					break;
+				case 'context-refid':
+					$cart->setContextId($this->script->getElementById($value)->getPersistentDocument()->getId());
+					break;
 				case 'customer-refid':
 					$cart->setCustomer($this->script->getElementById($value)->getPersistentDocument());
 					break;
@@ -44,7 +47,7 @@ class order_CartInfoScriptElement extends import_ScriptObjectElement
 					$cart->setBillingMode($billingMode);
 					break;
 				 case 'creationdate':
-					$cart->setProperties('creationdate', $value);
+					$cart->setProperty('creationdate', $value);
 					break; 
 				default:
 					throw new Exception("Invalid attribute : $name => $value");

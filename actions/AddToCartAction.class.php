@@ -14,8 +14,11 @@ class order_AddToCartAction extends change_Action
 		// Get parameters.
 		$cs = order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();
-		$shop = DocumentHelper::getDocumentInstance($request->getParameter('shopId'), 'modules_catalog/shop');
+		$shop = $this->getShopFromRequest($request);
 		$shopService = $shop->getDocumentService();
+			
+		$contextDocument = DocumentHelper::getDocumentInstanceIfExists($request->getParameter('contextId'));
+
 		$product = $this->getProductFromRequest($request);
 		$quantity = $this->getQuantityFromRequest($request);
 		$backUrl = $request->getParameter('backurl');
@@ -34,7 +37,8 @@ class order_AddToCartAction extends change_Action
 		unset($paramsToRedirect['lang']);
 		$products = array($product);
 		$quantities = array($product->getId() => $quantity);
-		if ($cs->checkAddToCart($cart, $shop, $products, $quantities, true, $paramsToRedirect))
+		
+		if ($cs->checkAddToCart($cart, $shop, $products, $quantities, true, $paramsToRedirect, $contextDocument))
 		{
 			// Add.
 			if ($cs->addProductToCart($cart, $product, $quantity, $shop))
@@ -50,21 +54,25 @@ class order_AddToCartAction extends change_Action
 	}
 	
 	/**
-	 * @param f_mvc_Request $request
+	 * @param change_Request $request
+	 * @return catalog_persistentdocument_shop
+	 */
+	protected function getShopFromRequest($request)
+	{
+		return catalog_persistentdocument_shop::getInstanceById($request->getParameter('shopId'));
+	}
+	
+	/**
+	 * @param change_Request $request
 	 * @return catalog_persistentdocument_product
 	 */
 	protected function getProductFromRequest($request)
 	{
-		$productId = null;
-		if ($request->hasParameter('productId'))
-		{
-			$productId = $request->getParameter('productId');
-		}
-		return DocumentHelper::getDocumentInstance($productId, 'modules_catalog/product');
+		return catalog_persistentdocument_product::getInstanceById($request->getParameter('productId'));
 	}
 	
 	/**
-	 * @param f_mvc_Request $request
+	 * @param change_Request $request
 	 * @return catalog_persistentdocument_product
 	 */
 	protected function getQuantityFromRequest($request)

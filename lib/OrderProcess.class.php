@@ -179,14 +179,4 @@ class order_OrderProcess
 	{
 		return order_OrderProcessService::getInstance()->getOrderProcessURL($this);
 	}
-
-	// Deprecated.
-
-	/**
-	 * @deprecated (will be removed in 4.0) use order_OrderProcessService::getInstance()->loadFromSession()
-	 */
-	public static function getInstance()
-	{
-		return order_OrderProcessService::getInstance()->loadFromSession();
-	}
 }

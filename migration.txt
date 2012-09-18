@@ -1,0 +1,100 @@
+Last merge with 3.6 : https://github.com/RBSChange/modules.order/commit/71d79b372c842a8dce84e09072669a34effc3512
+
+removed function :
+order_BillService / public function udatePaymentStatus
+order_CartService / public function addProduct
+order_ModuleService / public function getPageLink
+order_ModuleService / public function getPage
+order_ModuleService / public function cancelProcess
+order_ModuleService / public function isProcessStarted
+order_ModuleService / public function getCurrentStep
+order_ModuleService / public function getCatalog
+order_ModuleService / public function getCartInfo
+order_ModuleService / public function getFormFieldName
+order_ModuleService / public function getCurrentOrderProcessId
+order_ModuleService / public function setCurrentOrderProcessId
+order_ModuleService / public function getCurrentOrderId
+order_ModuleService / public function setCurrentOrderId
+order_ModuleService / public function getMessageRecipients
+order_ModuleService / public function getAdminRecipients
+order_ModuleService / public function getNotificationParameters
+
+order_OrderService / public function generateBillIsActive
+order_OrderService / public function genBills
+order_OrderService / public function genBill
+order_OrderService / public function createBill
+order_OrderService / public function updateStock
+order_OrderService / public function getStatusLabel
+order_OrderService / public function getBoStatusLabel
+order_OrderService / public function sendCommentReminders
+
+order_SmartfolderService / public function getOrders
+order_persistentdocument_smartfolder / public function getOrders
+
+order_CartInfo / public function getBillingZone
+order_CartInfo / public function getShippingPriceWithTax
+order_CartInfo / public function getFormattedShippingPriceWithTax
+order_CartInfo / public function getFormattedTotalAmount
+order_CartInfo / public function getFormatedShippingPriceWithTax
+order_CartInfo / public function getFormatedShippingPriceWithoutTax
+order_CartInfo / public function getErrorMessageArray
+order_CartInfo / public function setErrorMessageArray
+order_CartInfo / public function hasErrorMessage
+order_CartInfo / public function getErrorMessage
+order_CartInfo / public function setErrorMessage
+order_CartInfo / public function addErrorMessage
+order_CartInfo / public function clearErrorMessages
+order_CartInfo / public function getWarningMessageArray
+order_CartInfo / public function setWarningMessageArray
+order_CartInfo / public function hasWarningMessage
+order_CartInfo / public function getWarningMessage
+order_CartInfo / public function setWarningMessage
+order_CartInfo / public function addWarningMessage
+order_CartInfo / public function clearWarningMessages
+
+order_CartInfo / public function hasProperties
+order_CartInfo / public function getProperties
+order_CartInfo / public function setProperties	
+	
+order_CartLineInfo / public function hasProperties
+order_CartLineInfo / public function getProperties
+order_CartLineInfo / public function setProperties
+order_CartLineInfo / public function getFormattedTaxCode
+
+order_CartModifierInfo / public function getFormattedTaxCode
+
+order_OrderProcess / public static function getInstance
+
+order_persistentdocument_expedition / public function getTaxCode
+order_persistentdocument_expedition / public function setTaxCode
+
+order_persistentdocument_message / public function getMessageDate
+
+order_persistentdocument_order / public function getOrderStatusLabel
+order_persistentdocument_order / public function getOrderDate
+order_persistentdocument_order / public function getBillingMode
+order_persistentdocument_order / public function getBillingModeCodeReference
+order_persistentdocument_order / public function getShippingModeCodeReference
+order_persistentdocument_order / public function getPackageTrackingNumber
+order_persistentdocument_order / public function getPackageTrackingURL
+order_persistentdocument_order / public function getShippingMode
+order_persistentdocument_order / public function setShippingModeTaxCode
+order_persistentdocument_order / public function setShippingModeTaxRate
+order_persistentdocument_order / public function getShippingModeTaxCode
+order_persistentdocument_order / public function getShippingModeTaxRate
+order_persistentdocument_order / public function getSubTotalTaxInfoArray
+order_persistentdocument_order / public function getPriceFormat
+
+order_persistentdocument_orderline / public function getTaxCode
+order_persistentdocument_orderline / public function setTaxCode
+order_persistentdocument_orderline / public function getSynchronizedProduct
+order_persistentdocument_orderline / public function getArticleId
+order_persistentdocument_orderline / public function setArticleId
+
+removed class :
+
+removed interface :
+
+removed block configuration : 
+modules_order_Cart / showTotalWithFees
+modules_order_ShortCart / showTotalWithFees

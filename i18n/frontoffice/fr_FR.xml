@@ -91,6 +91,7 @@
 	<key id="preparation-fees">frais de préparation</key>
 	<key id="shipping-mode">mode d'envoi</key>
 	<key id="shipping-fees">frais d'envoi</key>
+	<key id="fees">frais</key>
 	<key id="billing-mode">mode de paiement</key>
 	<key id="billing-fees">frais de paiement</key>
 	<key id="tva-column">TVA</key>

@@ -2,6 +2,9 @@
 <install type="modules" name="order" version="4.0.0">
 	<package type="modules" name="catalog" />
 	<package type="modules" name="customer" />
-	<package type="modules" name="zone" />
 	<package type="modules" name="payment" />
+	
+	<package type="libs" name="fpdf" />
+	<package type="libs" name="qrcode" />
+	<package type="libs" name="barcode" />
 </install>

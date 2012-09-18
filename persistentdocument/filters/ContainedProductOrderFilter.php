@@ -11,8 +11,12 @@ class order_ContainedProductOrderFilter extends f_persistentdocument_DocumentFil
 	
 	public function __construct()
 	{
-		$info = new BeanPropertyInfoImpl('product', 'modules_catalog/product');
-		$this->setParameter('product', new f_persistentdocument_DocumentFilterValueParameter($info));
+		$info = new BeanPropertyInfoImpl('product', BeanPropertyType::DOCUMENT, 'catalog_persistentdocument_product');
+		$parameter = new f_persistentdocument_DocumentFilterValueParameter($info);
+		$parameter->setCustomPropertyAttribute('product', 'dialog', 'productselector');
+		$allow = DocumentHelper::expandAllowAttribute('[modules_catalog_product],[modules_catalog_declinedproduct]');
+		$parameter->setCustomPropertyAttribute('product', 'allow', $allow);
+		$this->setParameter('product', $parameter);
 	}
 	
 	/**

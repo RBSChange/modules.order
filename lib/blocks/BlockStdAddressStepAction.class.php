@@ -63,11 +63,12 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			$cart->setUserId(null);
 			$cart->setCustomerId(null);
 			$us = users_UserService::getInstance();
+			$group = $website->getGroup();
 			
-			$user = $us->getIdentifiedUser($login, $password, $website->getId());
+			$user = $us->getIdentifiedUser($login, $password, $group->getId());
 			if ($user === null)
 			{
-				$user = $us->getFrontendUserByLogin($login, $website->getId());
+				$user = f_util_ArrayUtils::firstElement($us->getUsersByLoginAndGroup($login, $group));
 				if ($user)
 				{
 					$error = LocaleService::getInstance()->trans('m.order.standardprocess.invalid-password-or-inactive-account', array('ucf', 'html'));

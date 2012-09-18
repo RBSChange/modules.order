@@ -6,6 +6,7 @@
 		<property name="customerFullName" labeli18n="m.order.bo.doceditor.property.customer-full-name" />
 		<property name="customerCode" labeli18n="m.order.bo.doceditor.property.customer-code" />
 		<property name="creationdate" labeli18n="m.uixul.bo.doceditor.property.creationdate" />
+		<property name="context" class="action" type="edit" labeli18n="m.order.bo.doceditor.property.context" />
 	</section>
 	<section name="financial" linkedtab="financial" actiontexti18n="m.uixul.bo.doceditor.section.action.view" labeli18n="m.order.bo.doceditor.tab.financial" image="{IconsBase}/small/price.png">
 		<property name="usedCreditNote" labeli18n="m.order.bo.doceditor.property.used-credit-note" />

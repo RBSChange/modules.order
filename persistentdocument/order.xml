@@ -23,6 +23,7 @@
 		<property name="commentadmin" type="LongString" />
 		<property name="needsAnswer" type="Boolean" />
 		<property name="usecreditnote" type="DocumentArray" document-type="modules_order/creditnote" />
+		<property name="contextId" type="Integer" />
 	</properties>
 	<statuses default="ACTIVE" />
 	<serializedproperties>

@@ -1,5 +1,5 @@
 <?php
-class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
+class order_FeesValueStrategy extends order_BaseFeesApplicationStrategy
 {
 	/**
 	 * @param order_CartInfo $cart
@@ -10,6 +10,13 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 		$value = $this->getValueWithoutTax();		
 		if ($value > 0)
 		{
+			$value = $this->getValueWithoutTax();
+			if ($value <= 0)
+			{
+				Framework::warn(__METHOD__ . ' Invalid value');
+				return false;
+			}	
+					
 			$shop = $cart->getShop();
 			$billingArea = $shop->getCurrentBillingArea();
 			$taxZone = catalog_TaxService::getInstance()->getCurrentTaxZone($shop, $cart);
@@ -19,29 +26,19 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 				return false;
 			}
 			$feesId = $this->fees->getId();
-			$shippingArray = $cart->getShippingArray();
-			foreach ($shippingArray as $k => $data) 
+
+			$feesInfo = $cart->getFeesById($feesId);
+			if ($feesInfo === null)
 			{
-				if (isset($data['filter']) && $data['filter']['feesId'] == $feesId)
-				{
-					$feesInfo = $cart->getFeesById($feesId);
-					if ($feesInfo === null)
-					{
-						$feesInfo = new order_FeesInfo();
-						$feesInfo->setId($feesId);
-						$feesInfo->setLabel($this->getLabel());
-						$cart->addFeesInfo($feesInfo);
-					}
-					
-					$feesInfo->setValueWithoutTax($this->getValueWithoutTax());
-					$rate = catalog_TaxService::getInstance()->getTaxRateByKey($billingArea->getId(), $this->getTaxCategory(), $taxZone);
-					$feesInfo->setValueWithTax(catalog_TaxService::getInstance()->addTaxByRate($feesInfo->getValueWithoutTax(), $rate));
-					$shippingArray[$k]['filter']['shippingvalueWithTax'] = $feesInfo->getValueWithTax();
-					$shippingArray[$k]['filter']['shippingvalueWithoutTax'] = $feesInfo->getValueWithoutTax();
-					$cart->setShippingArray($shippingArray);
-					return true;					
-				}
-			} 			
+				$feesInfo = new order_FeesInfo();
+				$feesInfo->setId($this->fees->getId());
+				$feesInfo->setLabel($this->getLabel());
+				$cart->addFeesInfo($feesInfo);
+			}
+			$feesInfo->setValueWithoutTax($this->getValueWithoutTax());
+			$rate = catalog_TaxService::getInstance()->getTaxRateByKey($billingArea->getId(), $this->getTaxCategory(), $taxZone);
+			$feesInfo->setValueWithTax(catalog_TaxService::getInstance()->addTaxByRate($feesInfo->getValueWithoutTax(), $rate));			
+			return true;
 		}
 		return false;
 	}
@@ -71,7 +68,7 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 	}
 
 	/**
-	 * @return array
+	 * @return string[]
 	 */
 	function getParameters()
 	{
@@ -82,9 +79,9 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 	}
 	
 	/**
-	 * @param array $parameters
+	 * @param string[] $parameters
 	 */
-	function setParameters($parameters)
+	public function setParameters($parameters)
 	{
 		parent::setParameters($parameters);
 		if (isset($parameters['strategylabel']))
@@ -102,7 +99,7 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 	 */
 	private function getDefaultLabel()
 	{
-		return LocaleService::getInstance()->trans('m.order.frontoffice.shipping-fees', array('ucf'));
+		return LocaleService::getInstance()->trans('m.order.frontoffice.fees', array('ucf'));
 	}
 	
 	/**
@@ -132,7 +129,7 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 	private function getTaxCategory()
 	{
 		$taxCategory  = $this->fees->getStrategyParam('taxcategory');
-		return $taxCategory === null ? '1' : $taxCategory;
+		return $taxCategory === null ? '0' : $taxCategory;
 	}
 	
 	/**
@@ -156,7 +153,7 @@ class order_DefaultShippingStrategy extends order_BaseFeesApplicationStrategy
 	/**
 	 * @param string $value
 	 */
-	public function setBoValueJSON($value)
+	protected function setBoValueJSON($value)
 	{
 		$ba = $this->fees->getBillingArea();
 		list($valueWithoutTax, $taxCategory) = catalog_BillingareaService::getInstance()->parseBoPriceEditInfos($value, $this->getShop(), $ba);

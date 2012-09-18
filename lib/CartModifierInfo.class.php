@@ -137,17 +137,6 @@ class order_CartModifierInfo
 		}
 		return $this->parameters[$name];
 	}
-	
-	
-	// DEPRECATED
-	
-	/**
-	 * @deprecated
-	 */
-	public function getFormattedTaxCode()
-	{
-		return $this->getFormattedTaxRate();
-	}
 }
 
 class order_DiscountInfo extends order_CartModifierInfo

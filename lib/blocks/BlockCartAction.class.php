@@ -16,10 +16,20 @@ class order_BlockCartAction extends website_BlockAction
 		$cs =  order_CartService::getInstance();
 		$cart = $cs->getDocumentInstanceFromSession();
 
-		// Any cart validation error.
-		$cs->refresh($cart);
+
 		
 		$shop = $cart->getShop();
+		if ($shop === null)
+		{
+			$shop = catalog_ShopService::getInstance()->getCurrentShop();
+			if ($shop === null)
+			{
+				return null;
+			}
+		}
+		
+		// Any cart validation error.
+		$cs->refresh($cart);		
 		$pageId = $this->getContext()->getId();
 
 		$request->setAttribute('shop', $shop);

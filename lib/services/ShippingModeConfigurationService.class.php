@@ -20,7 +20,8 @@ class order_ShippingModeConfigurationService extends change_BaseService
 			if ($this->isModeIdChecked($cart, $modeId)) { continue; }
 			$mode = shipping_persistentdocument_mode::getInstanceById($modeId);
 			$modeService = $mode->getDocumentService();
-			if (f_util_ClassUtils::methodExists($modeService, 'getConfigurationBlockForProcess'))
+			$result = $modeService->getConfigurationBlockForCart($mode, $cart);
+			if (is_array($result))
 			{
 				$request->setAttribute('cart', $cart);
 				$request->setAttribute('mode', $mode);
@@ -59,7 +60,7 @@ class order_ShippingModeConfigurationService extends change_BaseService
 	{
 		$modeIds = $this->getCheckedModeIds($cart);
 		$modeIds[] = $modeId;
-		$cart->setProperties('__configurationCheckedIds', $modeIds);
+		$cart->setProperty('__configurationCheckedIds', $modeIds);
 	}
 
 	/**
@@ -67,7 +68,7 @@ class order_ShippingModeConfigurationService extends change_BaseService
 	 */
 	public function clearCheckedModeIds($cart)
 	{
-		$cart->setProperties('__configurationCheckedIds', null);
+		$cart->setProperty('__configurationCheckedIds', null);
 	}
 	
 	/**
@@ -76,7 +77,7 @@ class order_ShippingModeConfigurationService extends change_BaseService
 	 */
 	protected function getCheckedModeIds($cart)
 	{
-		$modeIds = ($cart->hasProperties('__configurationCheckedIds')) ? $cart->getProperties('__configurationCheckedIds') : null;
+		$modeIds = ($cart->hasProperty('__configurationCheckedIds')) ? $cart->getProperty('__configurationCheckedIds') : null;
 		if (!is_array($modeIds)) { $modeIds = array(); }
 		return $modeIds;
 	}
@@ -91,7 +92,7 @@ class order_ShippingModeConfigurationService extends change_BaseService
 	{
 		$modeConfig = $this->getConfigurations($cart, $modeId);
 		$modeConfig[$key] = $value;
-		$cart->setProperties($this->getModeKey($modeId), $modeConfig);
+		$cart->setProperty($this->getModeKey($modeId), $modeConfig);
 	}
 	
 	/**
@@ -114,7 +115,7 @@ class order_ShippingModeConfigurationService extends change_BaseService
 	protected function getConfigurations($cart, $modeId)
 	{
 		$modekey = $this->getModeKey($modeId);
-		return ($cart->hasProperties($modekey)) ? $cart->getProperties($modekey) : array();
+		return ($cart->hasProperty($modekey)) ? $cart->getProperty($modekey) : array();
 	}
 	
 	/**
@@ -125,7 +126,7 @@ class order_ShippingModeConfigurationService extends change_BaseService
 	protected function setConfigurations($cart, $modeId, $modeConfig)
 	{
 		$modekey = $this->getModeKey($modeId);
-		$cart->setProperties($modekey, count($modeConfig) ? $modeConfig : null);
+		$cart->setProperty($modekey, count($modeConfig) ? $modeConfig : null);
 	}
 	
 	/**
