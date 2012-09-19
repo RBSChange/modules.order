@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<script>
-	<binding fileName="modules/useractionlogger/persistentdocument/import/useractionlogger_binding.xml" />
-	<actiondef modulename="order" actionname="create-new-order" label="Création de la commande numéro ${orderNumber} associée au client ${customerFullName}" />
-	<actiondef modulename="order" actionname="update-order" label="Mise à jour de la commande numéro ${orderNumber} associée au client ${customerFullName}" />
-	<actiondef modulename="order" actionname="update-order-status" label="La commande numéro ${orderNumber} associée au client ${customerFullName} passe au statut ${orderStatus}" />
-</script>

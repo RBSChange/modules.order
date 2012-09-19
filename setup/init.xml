@@ -36,6 +36,43 @@
 			<staticitem label="m.order.bo.blocks.dashboardgeneralstatistics.column-amount" value="amount" />
 			<staticitem label="m.order.bo.blocks.dashboardgeneralstatistics.column-todeliver" value="toDeliver" />
 		</staticlist>
+		<staticlist listid="modules_order/commentreminderreferences" label="m.order.bo.general.list.comment-reminder-references" description="m.order.bo.general.list.comment-reminder-references">
+			<staticitem label="m.order.bo.general.list.comment-reminder-refrence-payment" value="payment" />
+			<staticitem label="m.order.bo.general.list.comment-reminder-refrence-shipment" value="shipment" />
+		</staticlist>
+		<staticlist listid="modules_order/commentreminderselections" label="m.order.bo.general.list.comment-reminder-selections" description="m.order.bo.general.list.comment-reminder-selections">
+			<staticitem label="m.order.bo.general.list.comment-reminder-selection-random" value="random" />
+			<staticitem label="m.order.bo.general.list.comment-reminder-selection-all" value="all" />
+		</staticlist>
+		<staticlist listid="modules_order/creditnotefilter" label="Valeur des filtres sur les avoirs">
+			<staticitem label="m.order.bo.documentfilters.creditnote-hascreditnote" value="hascreditnote" />
+			<staticitem label="m.order.bo.documentfilters.creditnote-consumecreditnote" value="consumecreditnote" />
+			<staticitem label="m.order.bo.documentfilters.creditnote-nocreditnote" value="nocreditnote" />
+		</staticlist>
+		<staticlist listid="modules_order/paymentstatuscategories" label="m.order.bo.general.list.payment-status-categories" description="m.order.bo.general.list.payment-status-categories">
+			<staticitem label="m.order.bo.general.list.payment-status-category-paid" value="paid" />
+			<staticitem label="m.order.bo.general.list.payment-status-category-paid-or-waiting" value="paid-or-waiting" />
+			<staticitem label="m.order.bo.general.list.payment-status-category-all" value="all" />
+		</staticlist>
+		<staticlist listid="modules_order/statusesforordercountfilter" label="m.order.bo.general.list.statusesforordercountfilter.label" description="m.order.bo.general.list.statusesforordercountfilter.description">
+			<staticitem label="m.order.bo.general.list.statusesforordercountfilter.paid" value="paid" />
+			<staticitem label="m.order.bo.general.list.statusesforordercountfilter.uncancelled" value="uncancelled" />
+			<staticitem label="m.order.bo.general.list.statusesforordercountfilter.all" value="all" />
+		</staticlist>
+		<staticlist listid="modules_order/addrtypefilter" label="type d'adresse">
+			<staticitem label="m.order.bo.documentfilters.addrtypefilter-billing" value="billing" />
+			<staticitem label="m.order.bo.documentfilters.addrtypefilter-shipping" value="shipping" />
+		</staticlist>
+		<staticlist listid="modules_order/addrpartfilter" label="partie de l'adresse">
+			<staticitem label="m.order.bo.documentfilters.addrpartfilter-country" value="country" />
+			<staticitem label="m.order.bo.documentfilters.addrpartfilter-zipcode" value="zipCode" />
+		</staticlist>
+		<staticlist listid="modules_order/feesstrategy" label="Strategie d'application de frais">
+			<staticitem value="order_DefaultShippingStrategy" label="m.order.document.fees.strategy-default-shipping" />
+			<staticitem value="order_CartPriceShippingStrategy" label="m.order.document.fees.strategy-cart-price-shipping" />
+			<staticitem value="order_FeesValueStrategy" label="m.order.document.fees.strategy-fees-value" />
+			<staticitem value="order_FeesRangesValueStrategy" label="m.order.document.fees.strategy-fees-ranges-value" />
+		</staticlist>
 	</systemfolder>
 	<systemfolder module="notification" relatedmodule="order">
 		<notification codename="modules_order/bill_waiting" label="Commande enregistrée" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}" subject="Votre commande sur le site {website-url} est enregistrée" header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;" body="Votre commande d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt; a été enregistrée sous le numéro &lt;em&gt;{orderId}&lt;/em&gt;." footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;" template="default" />
@@ -50,6 +87,9 @@
 		<attribute name="header"><![CDATA[<strong>Cher(chère) {receiverFullName},</strong>]]></attribute>
 		<attribute name="body"><![CDATA[Un montant de {repaymentAmount} vous a été remboursé manuellement concernant l'avoir numéro {creditNoteLabel}.<br /><br />Précisions complémentaires : {creditNoteTransactionText}]]></attribute>
 		<notification codename="modules_order/reCreditNote" label="Remboursement manuel d'un avoir" availableparameters="{repaymentAmount}, {creditNoteLabel}, {creditNoteAmountNotApplied}, {creditNoteEndDate}, {creditNoteTransactionDate}, {creditNoteTransactionText}, {receiverFirstName}, {receiverLastName}, {receiverFullName}, {receiverTitle}, {receiverEmail}" subject="Remboursement de l'avoir numéro {creditNoteLabel}" header-attr="" body-attr="" template="default" />
+		<notification codename="modules_order/comment-reminder" label="Suggestion de commenter les produits commandés" availableparameters="{reminderProductBlock}, {orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {website-url}" subject="Donnez votre avis" header="&lt;strong&gt;Cher(chère) {fullname},&lt;/strong&gt;" body="Vous avez commandé dernièrement les produits suivants. Vous pouvez publier votre avis les concernant en suivant les liens indiqués : {reminderProductBlock}" footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;" template="default" />
+		<notification codename="modules_order/expedition_canceled" label="Expédition annulée" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {packageNumber}, {trackingNumber}, {expeditionDetail}, {website-url}" subject="Expédition annulée sur votre commande numéro {orderId} sur le site {website-url}" header="&lt;strong&gt;Expédition annulée sur votre commande numéro {orderId}&lt;/strong&gt;" body="&lt;p&gt;{packageNumber}&lt;/p&gt;&lt;p&gt;{expeditionDetail}&lt;/p&gt;" template="default" />
+		<notification codename="modules_order/expedition_shipped" label="Expédition effectuée" availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {packageNumber}, {trackingNumber}, {expeditionDetail}, {website-url}" subject="Expédition effectuée sur votre commande numéro {orderId} sur le site {website-url}" header="&lt;strong&gt;Expédition effectuée sur votre commande numéro {orderId}&lt;/strong&gt;" body="&lt;p&gt;{packageNumber}&lt;/p&gt;&lt;p&gt;{expeditionDetail}&lt;/p&gt;" template="default" />
 	</systemfolder>
 	<rootfolder module="order">
 		<waitingresponseorderfolder byLabel="m.order.document.waitingresponseorderfolder.document-name" />

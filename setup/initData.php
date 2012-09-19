@@ -25,21 +25,8 @@ class order_Setup extends object_InitDataSetup
 		$task->setLabel('order_BackgroundCommentReminder');
 		$task->save(ModuleService::getInstance()->getSystemFolderId('task', 'order'));
 		
-		try
-		{
-			$scriptReader = import_ScriptReader::getInstance();
-			$scriptReader->executeModuleScript('order', 'init.xml');
-			$scriptReader->executeModuleScript('order', 'init-lists-for-filters.xml');
-			$scriptReader->executeModuleScript('order', 'init-comment.xml');
-			$scriptReader->executeModuleScript('order', 'init-expeditions.xml');
-			$scriptReader->executeModuleScript('order', 'init-creditnote-lists.xml');
-		}
-		catch (Exception $e)
-		{
-			echo "ERROR: " . $e->getMessage() . "\n";
-			Framework::exception($e);
-		}
-		
+		$this->executeModuleScript('init.xml');
+
 		$mbs = uixul_ModuleBindingService::getInstance();
 		$mbs->addImportInPerspective('catalog', 'order', 'catalog.perspective');
 		$mbs->addImportInActions('catalog', 'order', 'catalog.actions');
@@ -49,8 +36,6 @@ class order_Setup extends object_InitDataSetup
 			uixul_DocumentEditorService::getInstance()->compileEditorsConfig();
 		}
 		change_PermissionService::getInstance()->addImportInRight('catalog', 'order', 'catalog.rights');
-		
-		$this->executeModuleScript('listfeesstrategy.xml', 'order');
 	}
 	
 	private $resourceDir = null;
