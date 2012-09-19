@@ -8,7 +8,7 @@ class order_BackgroundOrderCheck extends task_SimpleSystemTask
 	protected function execute()
 	{		
 		$documentsArray = array_chunk($this->getDocumentIdsToProcess(), 10);
-		$script = 'modules/order/lib/task/orderCheckChunk.php';
+		$script = 'modules/order/lib/bin/orderCheckChunk.php';
 		$errors = array();
 		
 		foreach ($documentsArray as $chunk)
