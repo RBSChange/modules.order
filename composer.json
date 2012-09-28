@@ -1,0 +1,6 @@
+{
+	"name": "rbschange/order",
+	"description": "RBS Change Order module",
+	"type": "rbschange-compatibility-module",
+	"license":"AGPL-3.0"
+}
