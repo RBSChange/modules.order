@@ -5,7 +5,7 @@
 		<field name="description" hidehelp="true" />
 		<field name="applicationstrategy" />
 		<field name="exclusive" />
-		<field name="excludeModifier" moduleselector="catalog" allow="[modules_order/fees]" />
+		<field name="excludeModifier" moduleselector="catalog" allow="[modules_order_fees]" />
 		<field name="applicationPriority" />
 	</section>
 	<section labeli18n="modules.order.document.fees.Application-conditions">
