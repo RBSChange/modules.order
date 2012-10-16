@@ -471,7 +471,7 @@
 				<parameter name="rowData" />			
 				<body><![CDATA[
 					if (this.disabled) {return;}
-					var uri = ['order', 'openDocument', rowData.type, rowData.id].join(',');
+					var uri = ['order', 'openDocument', rowData.type, rowData.id, 'properties'].join(',');
 					openActionUri(uri);
 				]]></body>
 			</method>

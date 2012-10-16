@@ -144,21 +144,47 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	public function getNotificationParameters($expedition)
 	{
-		$trackingNumber = $expedition->getTrackingNumber();
-		$trackingUrl = $expedition->getTrackingURL();
-		if ($trackingUrl !== null)
+		$numbers = array();
+		if (($tn = $expedition->getTrackingNumber()) != null)
 		{
-			$trackingNumber = '<a href="' . $trackingUrl . '">' . $trackingNumber . '</a>';
+			$tn = f_util_HtmlUtils::textToHtml($tn);
+			$trackingUrl = $expedition->getTrackingURL();
+			if ($trackingUrl !== null)
+			{
+				$numbers[$tn] = '<a href="' . $trackingUrl . '">' . $tn . '</a>';
+			}
+			else
+			{
+				$numbers[$tn] = $tn;
+			}
 		}
+		foreach ($expedition->getLineArray() as $line)
+		{
+			/* @var $line order_persistentdocument_expeditionline */
+			if (($tn = $line->getTrackingNumber()) != null)
+			{
+				$tn = f_util_HtmlUtils::textToHtml($tn);
+				$trackingUrl = $line->getEvaluatedTrackingURL();
+				if ($trackingUrl)
+				{
+					$numbers[$tn] = '<a href="' . $trackingUrl . '">' . $tn . '</a>';
+				}
+				else
+				{
+					$numbers[$tn] = $tn;
+				}
+			}
+		}
+		
 		
 		$template = TemplateLoader::getInstance()->setPackageName('modules_order')->setMimeContentType(K::HTML)
 			->setDirectory('templates/mails')->load('Order-Inc-ExpeditionLines');
 		$template->setAttribute('expedition', $expedition);
 		
 		$params = array(
-			'packageNumber' => $trackingNumber,
-			'trackingNumber' => $expedition->getTrackingNumberAsHtml(),
-			'expeditionUrl' => LinkHelper::getDocumentUrl($expedition, $expedition->getOrder()->getLang()),
+			'packageNumber' =>  implode(', ', $numbers),
+			'trackingNumber' => implode(', ', array_keys($numbers)) ,
+			'expeditionUrl' => LinkHelper::getDocumentUrlForWebsite($expedition, $expedition->getOrder()->getWebsite(), $expedition->getOrder()->getLang()),
 			'expeditionDetail' => $template->execute()
 		);
 		

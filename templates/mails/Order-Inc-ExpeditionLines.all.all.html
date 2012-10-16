@@ -1,12 +1,36 @@
-<table width="100%" border="1" cellspacing="0" cellpadding="0">
-	<tr>
-		<th change:translate="modules.order.frontoffice.Designation" />
-		<th change:translate="modules.order.frontoffice.CodeReference" />
-		<th change:translate="modules.order.frontoffice.Quantity" />
-	</tr>
-	<tr tal:repeat="line expedition/getLinesForDisplay" align="center">
-		<td>${line/getLabelAsHtml}</td>
-		<td>${line/getCodeReferenceAsHtml}</td>
-		<td>${line/getQuantity}</td>
-	</tr>
-</table>
+<tal:block tal:repeat="packetLines expedition/getPacketByExpeditionForDisplay">
+	<table tal:define="packet packetLines/0" width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tbody>
+			<tr tal:condition="packet/getPacketNumber">
+				<th width="20%" align="right">${trans:m.order.frontoffice.packet,ucf,lab} </th>
+				<td width="80%">${packet/getPacketNumberAsHtml}</td>
+			</tr>
+			<tr tal:condition="packet/getTrackingNumber">
+				<th width="20%" align="right">${trans:m.order.frontoffice.track,ucf,lab} </th>
+				<td width="80%">
+					<a tal:omit-tag="not: packet/getTrackingURL" class="link" target="_blank" href="${packet/getEvaluatedTrackingURL}">${packet/getTrackingNumberAsHtml}</a>
+					<p tal:condition="packet/getTrackingText">${packet/getTrackingTextAsHtml}</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table width="100%" border="1" cellspacing="0" cellpadding="0">
+		<thead>
+			<tr>
+			    <th width="50%">${trans:m.order.frontoffice.designation,ucf}</th>
+			    <th width="30%">${trans:m.order.frontoffice.codereference,ucf}</th>
+			    <th width="20%">${trans:m.order.frontoffice.quantity,ucf}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr tal:repeat="line packetLines" class="${alternateclass: expIndex}">
+				<tal:block tal:define="product line/getProduct">
+				<td> ${product/getLabelAsHtml}</td>
+				<td> ${product/getCodeReferenceAsHtml}</td>
+				<td align="center">${line/getQuantity}</td>
+				</tal:block>
+			</tr>
+		</tbody>	
+	</table>
+	<br tal:condition="not: repeat/packetLines/end" />
+</tal:block>

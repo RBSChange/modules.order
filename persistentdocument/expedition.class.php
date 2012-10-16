@@ -28,6 +28,28 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 	}
 	
 	/**
+	 * @return array<order_persistentdocument_expeditionline[]>
+	 */
+	public function getPacketByExpeditionForDisplay()
+	{
+		$lines = $this->getLinesForDisplay();
+		$packetByExpedition = array();
+		$packetIndex = array();
+			
+		foreach ($lines as $line)
+		{
+			/* @var $line order_persistentdocument_expeditionline */
+			$packetNumber = $line->getPacketNumber() ? $line->getPacketNumber() : '-';
+			if (!isset($packetIndex[$packetNumber]))
+			{
+				$packetIndex[$packetNumber] = count($packetIndex);
+			}
+			$packetByExpedition[$packetIndex[$packetNumber]][] = $line;
+		}
+		
+		return $packetByExpedition;
+	}
+	/**
 	 * @return shipping_persistentdocument_mode
 	 */
 	public function getShippingMode()
