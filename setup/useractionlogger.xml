@@ -26,4 +26,7 @@
   <actiondef modulename="order" actionname="generateexpedition.orderpreparation" label="m.order.bo.useractionlogger.generateexpedition-orderpreparation"/>
   <actiondef modulename="order" actionname="update.expedition" label="m.order.bo.useractionlogger.update-expedition"/>
   <actiondef modulename="order" actionname="finalizeorder.order" label="m.order.bo.useractionlogger.finalizeorder-order"/>
+  <actiondef modulename="order" actionname="activate.creditnote" label="m.order.bo.useractionlogger.activate-creditnote"/>
+  <actiondef modulename="order" actionname="deactivated.creditnote" label="m.order.bo.useractionlogger.deactivated-creditnote"/>
+  <actiondef modulename="order" actionname="reactivate.creditnote" label="m.order.bo.useractionlogger.reactivate-creditnote"/>
 </script>

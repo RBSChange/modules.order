@@ -1115,7 +1115,8 @@
 		</implementation>
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
-				<xul:columns>	
+				<xul:columns>
+					<xul:column />	
 					<xul:column flex="1" />
 					<xul:column flex="1" />
 					<xul:column flex="1" />
@@ -1123,6 +1124,7 @@
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
+						<xul:label name="status" value="${transui:m.order.document.creditnote.status-header,ucf,attr}" />
 						<xul:label name="label" value="${transui:m.order.document.creditnote.Label,ucf,attr}" />
 						<xul:label name="amount" value="${transui:m.order.document.creditnote.Amount,ucf,attr}" />	
 						<xul:label name="amountNotApplied" value="${transui:m.order.document.creditnote.AmountNotApplied,ucf,attr}" />				
@@ -1131,6 +1133,7 @@
 				</xul:rows>
 			</xul:grid>
 			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:cpublicationcell value="" />
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />

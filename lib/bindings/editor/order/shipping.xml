@@ -133,8 +133,15 @@
 					if (result.status == "OK")
 					{					
 						this.documentEditor.clearTabs();				
-						this.fireInitializeComplete(result);						
-						this.showTextMessage("${transui:m.order.bo.actions.order-finalized,ucf,js}");
+						this.fireInitializeComplete(result);
+						if ('creditNoteIds' in result.contents && result.contents.creditNoteIds.length)
+						{
+							this.showWarningMessage("${transui:m.order.bo.actions.order-finalized-with-creditNote,ucf,js}")
+						}	
+						else
+						{					
+							this.showTextMessage("${transui:m.order.bo.actions.order-finalized,ucf,js}");
+						}
 					}
 					else
 					{

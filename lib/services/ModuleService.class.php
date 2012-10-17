@@ -461,10 +461,18 @@ class order_ModuleService extends ModuleBaseService
 					}
 				}
 				$oes = order_ExpeditionService::getInstance();
-				$oes->cleanUpExpeditionsForOrder($order);
+				$canceledArray = $oes->cleanUpExpeditionsForOrder($order);
 				$expArray = $oes->getShippedByOrder($order);
 				if (count($expArray))
 				{
+					if (count($canceledArray))
+					{
+						$amount = $oes->evaluateProductsAmount($canceledArray);
+						if ($amount > 0.0001)
+						{
+							order_CreditnoteService::getInstance()->createForOrder($order, $amount, false);
+						}
+					}
 					$oos->completeOrder($order, $sendNotification);
 				}
 				else

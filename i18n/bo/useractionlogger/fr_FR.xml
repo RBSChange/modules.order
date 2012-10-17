@@ -47,4 +47,10 @@
   <key id="log-update-expedition">log update expedition</key>
   <key id="finalizeorder-order">finalizeorder.order {status} {documentlabel}</key>
   <key id="log-finalizeorder-order">log finalizeorder order</key>
+  <key id="activate-creditnote">activate.creditnote {documentlabel}</key>
+  <key id="log-activate-creditnote">log activate creditnote</key>
+  <key id="deactivated-creditnote">deactivated.creditnote {documentlabel}</key>
+  <key id="log-deactivated-creditnote">log deactivated creditnote</key>
+  <key id="reactivate-creditnote">reactivate.creditnote {documentlabel}</key>
+  <key id="log-reactivate-creditnote">log reactivate creditnote</key>
 </i18n>

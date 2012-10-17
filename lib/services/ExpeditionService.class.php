@@ -937,6 +937,29 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		return $value;
 	}
 	
+	/**
+	 * @param order_persistentdocument_expedition[] $expArray
+	 * @return float
+	 */
+	public function evaluateProductsAmount($expArray)
+	{
+		$amount = 0.0;
+		foreach ($expArray as $expedition)
+		{
+			/* @var $expedition order_persistentdocument_expedition */
+			foreach ($expedition->getLineArray() as $expeditionLine)
+			{
+				/* @var $expeditionLine order_persistentdocument_expeditionline */
+				$orderLine = DocumentHelper::getDocumentInstanceIfExists($expeditionLine->getOrderlineid());
+				if ($orderLine instanceof order_persistentdocument_orderline)
+				{
+					$amount += $orderLine->getUnitPriceWithTax() * $expeditionLine->getQuantity();
+				}
+			}
+		}
+		return $amount;
+	}
+	
 
 	/**
 	 * @param string $packetNumber
