@@ -999,11 +999,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			{
 				if (count(order_CreditnoteService::getInstance()->getByOrder($order)) == 0)
 				{
-					$creditNote = order_CreditnoteService::getInstance()->getNewDocumentInstance();
-					$creditNote->setOrder($order);
-					$creditNote->setAmount($paidAmount);
-					$creditNote->setPublicationstatus('DRAFT');
-					$creditNote->save();
+					$creditNote = order_CreditnoteService::getInstance()->createForOrder($order, $paidAmount, false);
 					$this->handleNewCreditNoteAfterCancel($creditNote);
 				}
 			}

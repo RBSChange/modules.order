@@ -471,7 +471,7 @@
 				<parameter name="rowData" />
 				<body><![CDATA[
 					if (this.disabled) {return;}
-					var uri = ['order', 'openDocument', rowData.type, rowData.id].join(',');
+					var uri = ['order', 'openDocument', rowData.type, rowData.id, 'properties'].join(',');
 					openActionUri(uri);
 				]]></body>
 			</method>
@@ -1114,6 +1114,7 @@
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
 				<xul:columns>	
+					<xul:column />
 					<xul:column flex="1" />
 					<xul:column flex="1" />
 					<xul:column flex="1" />
@@ -1121,6 +1122,7 @@
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
+						<xul:label name="status" value="${transui:m.order.document.creditnote.status-header,ucf,attr}" />
 						<xul:label name="label" value="${trans:m.order.document.creditnote.label,ucf,attr}" />
 						<xul:label name="amount" value="${trans:m.order.document.creditnote.amount,ucf,attr}" />	
 						<xul:label name="amountNotApplied" value="${trans:m.order.document.creditnote.amountnotapplied,ucf,attr}" />				
@@ -1129,6 +1131,7 @@
 				</xul:rows>
 			</xul:grid>
 			<xul:row anonid="template-row" class="document" hidden="true">
+				<xul:cpublicationcell value="" />
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />

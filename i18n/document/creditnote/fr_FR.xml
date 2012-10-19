@@ -19,4 +19,5 @@
 	<key id="transactiondate">date du remboursement</key>
 	<key id="transactiontext">détail du remboursement</key>
 	<key id="recredit-action">marquer remboursé</key>
+	<key id="status-header">état</key>
 </i18n>

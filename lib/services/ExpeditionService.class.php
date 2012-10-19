@@ -127,11 +127,36 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 */
 	public function getNotificationParameters($expedition)
 	{
-		$trackingNumber = $expedition->getTrackingNumber();
-		$trackingUrl = $expedition->getTrackingURL();
-		if ($trackingUrl !== null)
+		$numbers = array();
+		if (($tn = $expedition->getTrackingNumber()) != null)
 		{
-			$trackingNumber = '<a href="' . $trackingUrl . '">' . $trackingNumber . '</a>';
+			$tn = f_util_HtmlUtils::textToHtml($tn);
+			$trackingUrl = $expedition->getTrackingURL();
+			if ($trackingUrl !== null)
+			{
+				$numbers[$tn] = '<a href="' . $trackingUrl . '">' . $tn . '</a>';
+			}
+			else
+			{
+				$numbers[$tn] = $tn;
+			}
+		}
+		foreach ($expedition->getLineArray() as $line)
+		{
+			/* @var $line order_persistentdocument_expeditionline */
+			if (($tn = $line->getTrackingNumber()) != null)
+			{
+				$tn = f_util_HtmlUtils::textToHtml($tn);
+				$trackingUrl = $line->getEvaluatedTrackingURL();
+				if ($trackingUrl)
+				{
+					$numbers[$tn] = '<a href="' . $trackingUrl . '">' . $tn . '</a>';
+				}
+				else
+				{
+					$numbers[$tn] = $tn;
+				}
+			}
 		}
 		
 		$template = change_TemplateLoader::getNewInstance()->setExtension('html')
@@ -139,9 +164,9 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		$template->setAttribute('expedition', $expedition);
 		
 		$params = array(
-			'packageNumber' => $trackingNumber,
-			'trackingNumber' => $expedition->getTrackingNumberAsHtml(),
-			'expeditionUrl' => LinkHelper::getDocumentUrl($expedition, $expedition->getOrder()->getLang()),
+			'packageNumber' =>  implode(', ', $numbers),
+			'trackingNumber' => implode(', ', array_keys($numbers)),
+			'expeditionUrl' => LinkHelper::getDocumentUrlForWebsite($expedition, $expedition->getOrder()->getWebsite(), $expedition->getOrder()->getLang()),
 			'expeditionDetail' => $template->execute()
 		);
 		
@@ -894,7 +919,28 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 		return $value;
 	}
 	
-
+	/**
+	 * @param order_persistentdocument_expedition[] $expArray
+	 * @return float
+	 */
+	public function evaluateProductsAmount($expArray)
+	{
+		$amount = 0.0;
+		foreach ($expArray as $expedition)
+		{
+			/* @var $expedition order_persistentdocument_expedition */
+			foreach ($expedition->getLineArray() as $expeditionLine)
+			{
+				/* @var $expeditionLine order_persistentdocument_expeditionline */
+				$orderLine = DocumentHelper::getDocumentInstanceIfExists($expeditionLine->getOrderlineid());
+				if ($orderLine instanceof order_persistentdocument_orderline)
+				{
+					$amount += $orderLine->getUnitPriceWithTax() * $expeditionLine->getQuantity();
+				}
+			}
+		}
+		return $amount;
+	}
 	/**
 	 * @param string $packetNumber
 	 * @param string $expeditionStatus (prepare|shipped|canceled)

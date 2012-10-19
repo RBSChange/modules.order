@@ -122,6 +122,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	{
 		$result = array(
 			'id' => $creditNote->getId(),
+			'status' => $creditNote->getPublicationstatus(),
 			'lang' => $creditNote->getLang(),
 			'type' => str_replace('/', '_', $creditNote->getDocumentModelName()),
 			'label' => $creditNote->getLabel(),
@@ -284,13 +285,18 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @param double $amount
+	 * @param boolean $published
 	 * @return order_persistentdocument_creditnote
 	 */
-	public function createForOrder($order, $amount)
+	public function createForOrder($order, $amount, $published = true)
 	{
 		$creditNote = $this->getNewDocumentInstance();
 		$creditNote->setOrder($order);
 		$creditNote->setAmount($amount);
+		if (!$published)
+		{
+			$creditNote->setPublicationstatus('DRAFT');
+		}
 		$creditNote->save();
 		return $creditNote;
 	}
