@@ -205,7 +205,8 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 		$result = array();
 		foreach ($this->getByOrder($order) as $orderpreparation)
 		{
-			$result[] = $this->buildBoRow($orderpreparation);
+			/* @var $orderpreparation order_persistentdocument_orderpreparation */
+			$result[] = $orderpreparation->getDocumentService()->buildBoRow($orderpreparation);
 		}
 		return $result;
 	}
