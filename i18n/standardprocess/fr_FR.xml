@@ -40,6 +40,7 @@
   <key id="required-shippingmode-not-found">Impossible de trouver un transporteur pour les produit suivants.</key>
   <key id="shippingmode-not-found">Impossible de trouver un transporteur.</key>
   <key id="connector-not-found">Impossible de trouver un moyen de paiement</key>
+  <key id="invalid-selected-shipping-mode">Le mode de livraison précédemment sélectionné n'est plus valide.</key>
   
   <key id="resume-order-title">Détail de la commande</key>
   <key id="resume-article-count">articles</key>
