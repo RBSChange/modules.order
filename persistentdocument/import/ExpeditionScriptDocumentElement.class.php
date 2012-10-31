@@ -21,6 +21,41 @@ class order_ExpeditionScriptDocumentElement extends import_ScriptDocumentElement
 		return f_persistentdocument_PersistentDocumentModel::getInstanceFromDocumentModelName('modules_order/expedition');
 	}
 	
+	protected function getDocumentProperties()
+	{
+		$properties = parent::getDocumentProperties();
+		if (!isset($properties['order']))
+		{
+			$order = $this->getOrderDocument();
+			$properties['order'] = $order;
+		}
+		if (!isset($properties['label']))
+		{
+			$properties['label'] = order_ExpeditionNumberGenerator::getInstance()->generate($this->getPersistentDocument());
+		}
+		if (isset($properties['storeStep']))
+		{
+			switch ($properties['storeStep'])
+			{
+				case 'ship':
+					if (!isset($properties['shippingdate']))
+					{
+						throw new Exception("shippingdate required when storeStep = ship");
+					}
+					if (!isset($properties['trackingnumber']))
+					{
+						throw new Exception("trackingnumber required when storeStep = ship");
+					}
+					order_ExpeditionService::getInstance()->shipExpedition($this->getPersistentDocument(), $properties['shippingdate'], $properties['trackingnumber']);
+					break;
+				default:
+					throw new Exception("unknow store step attribute : " . $properties['storeStep']);
+			}
+			unset($properties['storeStep']);
+		}
+		return $properties;
+	}
+	
 	/**
 	 * @return order_persistentdocument_order
 	 */
@@ -40,6 +75,7 @@ class order_ExpeditionScriptDocumentElement extends import_ScriptDocumentElement
 	protected function saveDocument()
 	{
 		$document = $this->getPersistentDocument();
+		/* @var $document order_persistentdocument_expedition */
 		$document->setPublicationstatus('ACTIVE');
 		$document->save();
 		if ($document->getStatus() == order_ExpeditionService::SHIPPED)
