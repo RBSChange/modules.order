@@ -57,6 +57,9 @@ class order_AddToCartMultipleAction extends change_Action
 			}
 		}
 		
+		// Add messages to cart.
+		$this->addMessagesToCart($cart);
+		
 		// Redirect.
 		change_Controller::getInstance()->redirectToUrl($backUrl ? $backUrl : $this->getCartUrl());
 	}
@@ -154,7 +157,9 @@ class order_AddToCartMultipleAction extends change_Action
 				$message = $ls->trans('m.order.fo.product-label-'.$eventname.'-link', array('ucf'), $replacements);
 				break;
 			default :
-				$replacements = array('firstLabels' => implode(', ', $labels), 'lastLabel' => array_pop($labels), 'cartUrl' => $this->getCartUrl());
+				$lastLabel = array_pop($labels);
+				$firstLabels = implode(', ', $labels);
+				$replacements = array('firstLabels' => $firstLabels, 'lastLabel' => $lastLabel, 'cartUrl' => $this->getCartUrl());
 				$message = $ls->trans('m.order.fo.product-labels-'.$eventname.'-link', array('ucf'), $replacements);
 				break;
 		}
