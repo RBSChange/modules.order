@@ -52,9 +52,11 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 			if ($productAdded)
 			{
 				$cart->refresh();
-				$this->addMessagesToCart($cart);
 			}
 		}
+		
+		// Add messages to cart.
+		$this->addMessagesToCart($cart);
 		
 		// Redirect.
 		HttpController::getInstance()->redirectToUrl($backUrl ? $backUrl : $this->getCartUrl());
@@ -153,7 +155,9 @@ class order_AddToCartMultipleAction extends f_action_BaseAction
 				$message = $ls->transFO('m.order.fo.product-label-'.$eventname.'-link', array('ucf'), $replacements);
 				break;
 			default :
-				$replacements = array('firstLabels' => implode(', ', $labels), 'lastLabel' => array_pop($labels), 'cartUrl' => $this->getCartUrl());
+				$lastLabel = array_pop($labels);
+				$firstLabels = implode(', ', $labels);
+				$replacements = array('firstLabels' => $firstLabels, 'lastLabel' => $lastLabel, 'cartUrl' => $this->getCartUrl());
 				$message = $ls->transFO('m.order.fo.product-labels-'.$eventname.'-link', array('ucf'), $replacements);
 				break;
 		}
