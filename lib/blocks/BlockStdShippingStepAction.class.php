@@ -215,7 +215,15 @@ class order_BlockStdShippingStepAction extends website_BlockAction
 			usort($results, array($this, 'comprareShippingFilterValue'));
 			if (!$inList)
 			{
-				$shippingFilter = (count($results)) ? $results[0] : null;
+				if ($shippingModeId)
+				{
+					$this->addError(LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-selected-shipping-mode'), "shippingFilters");
+					$shippingFilter = null;
+				}
+				else
+				{
+					$shippingFilter = (count($results)) ? $results[0] : null;
+				}
 				$cart->setRequiredShippingFilter(0, $shippingFilter);
 			}
 			$this->shippingFilters = $results;
