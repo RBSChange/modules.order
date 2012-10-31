@@ -952,7 +952,7 @@
 		</implementation>
 		
 		<xbl:handlers>
-			<xbl:handler event="change"><![CDATA[
+			<xbl:handler event="input"><![CDATA[
 				var ctrl = event.originalTarget;
 				while (ctrl != null && ctrl.localName != 'textbox') {ctrl = ctrl.parentNode;}
 				if (ctrl != null)
