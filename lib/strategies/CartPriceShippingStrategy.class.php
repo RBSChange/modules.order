@@ -16,7 +16,7 @@ class order_CartPriceShippingStrategy extends order_BaseFeesApplicationStrategy
 				$cart->addFeesInfo($feesInfo);
 			}
 			return true;
-		}			
+		}
 		return false;
 	}
 	
@@ -35,7 +35,8 @@ class order_CartPriceShippingStrategy extends order_BaseFeesApplicationStrategy
 			return false;
 		}
 		$feesId = $this->fees->getId();
-		foreach ($cart->getShippingArray() as $data) 
+		$shippingArray = $cart->getShippingArray();
+		foreach ($shippingArray as $k => $data)
 		{
 			if (isset($data['filter']) && $data['filter']['feesId'] == $feesId)
 			{
@@ -60,15 +61,21 @@ class order_CartPriceShippingStrategy extends order_BaseFeesApplicationStrategy
 					{
 						$feesInfo->setValueWithTax($feesValue);
 						$feesInfo->setValueWithoutTax($feesValue / ( 1 + $rate));
+						$shippingArray[$k]['filter']['shippingvalueWithTax'] = $feesInfo->getValueWithTax();
+						$shippingArray[$k]['filter']['shippingvalueWithoutTax'] = $feesInfo->getValueWithoutTax();
+						$cart->setShippingArray($shippingArray);
 						return $feesInfo;
 					}
 				}
 				$feesInfo->setValueWithoutTax($this->getValueWithoutTax());
 				$feesInfo->setValueWithTax($feesInfo->getValueWithoutTax() * ( 1 + $rate) );
-				return $feesInfo;					
+				$shippingArray[$k]['filter']['shippingvalueWithTax'] = $feesInfo->getValueWithTax();
+				$shippingArray[$k]['filter']['shippingvalueWithoutTax'] = $feesInfo->getValueWithoutTax();
+				$cart->setShippingArray($shippingArray);
+				return $feesInfo;
 			}
-		} 			
-		return null;		
+		}
+		return null;
 	}
 	
 	/**
