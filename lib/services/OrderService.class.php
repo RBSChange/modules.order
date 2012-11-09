@@ -485,12 +485,11 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			
 			$this->getTransactionManager()->beginTransaction();
 			$this->prepareCartForOrder($cartInfo);
-						
+			
 			$orderDocument = $cartInfo->getOrder();
 			if ($orderDocument === null)
 			{
-				$orderDocument = $this->getNewDocumentInstance();				
-				
+				$orderDocument = $this->getNewDocumentInstance();
 			}
 			else
 			{
@@ -519,7 +518,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$orderDocument->setTotalAmountWithTax($pf->round($cartInfo->getTotalWithTax(), $currencyCode));
 				$orderDocument->setTotalAmountWithoutTax($pf->round($cartInfo->getTotalWithoutTax(), $currencyCode));
 			}
-						
+			
 			$customer = $cartInfo->getCustomer();
 			$orderDocument->setCustomer($customer);
 			$orderDocument->setShopId($shop->getId());
@@ -533,9 +532,9 @@ class order_OrderService extends f_persistentdocument_DocumentService
 					$ctxdocService->completeOrderContext($ctxdoc, $orderDocument, $cartInfo);
 				}
 			}
-				
+			
 			$orderDocument->setWebsiteId($shop->getWebsite()->getId());
-				
+			
 			// Frais de livraison.
 			$shippingMode = $cartInfo->getShippingMode();
 			$orderDocument->setShippingModeDocument($shippingMode);
@@ -563,8 +562,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			if ($cartInfo->hasCoupon())
 			{
 				$coupon = $cartInfo->getCoupon();
-				$couponData = array('id' => $coupon->getId(), 
-									'code' => $coupon->getLabel());			
+				$couponData = array('id' => $coupon->getId(), 'code' => $coupon->getLabel());
 				$orderDocument->setCouponData($couponData);
 			}
 			else
@@ -593,7 +591,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 									'valueWithTax' => $discount->getValueWithTax(),
 									'valueWithoutTax' => $discount->getValueWithoutTax());
 				
-				$discountDocument = DocumentHelper::getDocumentInstance($discount->getId());				
+				$discountDocument = DocumentHelper::getDocumentInstance($discount->getId());
 				if (f_util_ClassUtils::methodExists($discountDocument, 'updateOrder'))
 				{
 					$extraData = $discountDocument->updateOrder($orderDocument, $discount);
@@ -612,7 +610,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 									'valueWithTax' => $fees->getValueWithTax(),
 									'valueWithoutTax' => $fees->getValueWithoutTax());
 				
-				$feesDocument = DocumentHelper::getDocumentInstance($fees->getId());				
+				$feesDocument = DocumentHelper::getDocumentInstance($fees->getId());
 				if (f_util_ClassUtils::methodExists($feesDocument, 'updateOrder'))
 				{
 					$extraData = $feesDocument->updateOrder($orderDocument, $fees);
@@ -620,7 +618,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				}
 				$feesDataArray[] = $feesData;
 			}
-			$orderDocument->setFeesDataArray($feesDataArray);			
+			$orderDocument->setFeesDataArray($feesDataArray);
 			
 			// Sauvegarde des taxes
 			$orderDocument->setTaxDataArray($cartInfo->getTaxRates());
@@ -642,14 +640,14 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			catalog_StockService::getInstance()->orderInitializedFromCart($cartInfo, $orderDocument);
 			
 			$this->finalizeOrderAndCart($orderDocument, $cartInfo);
-			$this->getTransactionManager()->commit();			
+			$this->getTransactionManager()->commit();
 		}
 		catch (Exception $e)
 		{
 			$cartInfo->addTransientErrorMessage(LocaleService::getInstance()->trans('m.order.fo.cant-create-order'));
 			$this->getTransactionManager()->rollBack($e);
-			$orderDocument = null;	
-			$this->finalizeOrderAndCart($orderDocument, $cartInfo);		
+			$orderDocument = null;
+			$this->finalizeOrderAndCart($orderDocument, $cartInfo);
 		}
 		return $orderDocument;
 	}
@@ -662,20 +660,31 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		if ($order->getOrderStatus() == self::INITIATED)
 		{
-	
-			$bills = order_BillService::getInstance()->getByOrderForPayment($order);
-			foreach ($bills as $bill)
+			$tm = $this->getTransactionManager();
+			try
 			{
-				/* @var $bill order_persistentdocument_bill */
-				if ($bill->getTransactionId() == null)
+				$tm->beginTransaction();
+				
+				$bills = order_BillService::getInstance()->getByOrderForPayment($order);
+				foreach ($bills as $bill)
 				{
-					$bill->setStatus(order_BillService::FAILED);
-					//Set a transactionId for file bill instead of delete
-					$bill->setTransactionId('resetForCart');
-					$bill->getDocumentService()->cancelBill($bill);
+					/* @var $bill order_persistentdocument_bill */
+					if ($bill->getTransactionId() == null)
+					{
+						$bill->setStatus(order_BillService::FAILED);
+						// Set a transactionId for file bill instead of delete.
+						$bill->setTransactionId('resetForCart');
+						$bill->getDocumentService()->cancelBill($bill);
+					}
 				}
+				$this->cancelOrder($order, false);
+				
+				$tm->commit();
 			}
-			$this->cancelOrder($order, false);
+			catch (Exception $e)
+			{
+				$tm->rollBack($e);
+			}
 		}
 		$cart->setOrderId(null);
 	}
