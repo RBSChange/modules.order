@@ -682,20 +682,31 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		if ($order->getOrderStatus() == self::INITIATED)
 		{
-
-			$bills = order_BillService::getInstance()->getByOrderForPayment($order);
-			foreach ($bills as $bill)
+			$tm = $this->getTransactionManager();
+			try
 			{
-				/* @var $bill order_persistentdocument_bill */
-				if ($bill->getTransactionId() == null)
+				$tm->beginTransaction();
+				
+				$bills = order_BillService::getInstance()->getByOrderForPayment($order);
+				foreach ($bills as $bill)
 				{
-					$bill->setStatus(order_BillService::FAILED);		
-					//Set a transactionId for file bill instead of delete
-					$bill->setTransactionId('resetForCart');
-					$bill->getDocumentService()->cancelBill($bill);
+					/* @var $bill order_persistentdocument_bill */
+					if ($bill->getTransactionId() == null)
+					{
+						$bill->setStatus(order_BillService::FAILED);
+						//Set a transactionId for file bill instead of delete
+						$bill->setTransactionId('resetForCart');
+						$bill->getDocumentService()->cancelBill($bill);
+					}
 				}
+				$this->cancelOrder($order, false);
+				
+				$tm->commit();
 			}
-			$this->cancelOrder($order, false);
+			catch (Exception $e)
+			{
+				$tm->rollBack($e);
+			}
 		}
 		$cart->setOrderId(null);
 	}

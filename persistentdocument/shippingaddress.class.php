@@ -37,7 +37,7 @@ class order_persistentdocument_shippingaddress extends order_persistentdocument_
 	public function setOrderId($val)
 	{
 		$val = ($val instanceof f_persistentdocument_PersistentDocument) ? $val->getId() : intval($val);
-		parent::setTargetId($val);
+		parent::setOrderId($val);
 	}
 		
 	/**
