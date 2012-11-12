@@ -1,0 +1,9 @@
+<div class="normal section">
+	<h3 change:h="">${title}</h3>
+	<ul class="address normal-margin">
+		<li tal:repeat="line address">${line}</li>
+	</ul>
+	<p class="buttons">
+		<a class="link" href="${addressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a>
+	</p>
+</div>
