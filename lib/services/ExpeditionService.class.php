@@ -581,9 +581,10 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 * 
 	 * @param order_persistentdocument_expedition $expedition
 	 * @param string $message
+	 * @param boolean $sendNotification
 	 * @throws Exception
 	 */
-	public function cancelExpedition($expedition, $message)
+	public function cancelExpedition($expedition, $message, $sendNotification = true)
 	{
 		try
 		{
@@ -593,18 +594,22 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 			$expedition->setTrackingText($message);
 			$this->save($expedition);
 			
-			$order = $expedition->getOrder();		
-			order_ModuleService::getInstance()->sendCustomerNotification('modules_order/expedition_canceled', $order, $expedition->getBill(), $expedition);
+			$order = $expedition->getOrder();	
+				
+			if ($sendNotification)
+			{
+				order_ModuleService::getInstance()->sendCustomerNotification('modules_order/expedition_canceled', $order, $expedition->getBill(), $expedition);
+			}
 			
 			if ($this->isCompleteForOrder($order))
 			{
 				if ($this->hasShippedExpeditionFromOrder($order))
 				{
-					order_OrderService::getInstance()->completeOrder($order);
+					order_OrderService::getInstance()->completeOrder($order, $sendNotification);
 				}
 				else
 				{
-					order_OrderService::getInstance()->cancelOrder($order);
+					order_OrderService::getInstance()->cancelOrder($order, $sendNotification);
 				}
 			}
 			elseif (order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
@@ -674,7 +679,7 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 	 * @param string $message
 	 * @param string $packetNumber
 	 */
-	public function shipExpedition($expedition, $shippingDate, $trackingNumber, $message = null, $packetNumber = null)
+	public function shipExpedition($expedition, $shippingDate, $trackingNumber, $message = null, $packetNumber = null, $sendNotification = true)
 	{
 		if ($expedition->getStatus() == self::PREPARE)
 		{
@@ -721,12 +726,15 @@ class order_ExpeditionService extends f_persistentdocument_DocumentService
 				$this->save($expedition);	
 				$order = $expedition->getOrder();
 				
-				$completlyShipped = (($expedition->getStatus() === self::SHIPPED) && $this->isCompleteForOrder($order));				
-				$sms->sendShippedNotification($mode, $expedition, $completlyShipped);
+				$completlyShipped = (($expedition->getStatus() === self::SHIPPED) && $this->isCompleteForOrder($order));	
+				if ($sendNotification)
+				{			
+					$sms->sendShippedNotification($mode, $expedition, $completlyShipped);
+				}
 				
 				if ($completlyShipped)
 				{
-					order_OrderService::getInstance()->completeOrder($order);
+					order_OrderService::getInstance()->completeOrder($order, $sendNotification);
 				}
 				elseif (order_ModuleService::getInstance()->isDefaultExpeditionGenerationEnabled())
 				{
