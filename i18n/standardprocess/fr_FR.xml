@@ -41,12 +41,13 @@
 	<key id="resume-evaluated-fees">Frais estimés</key>
 	<key id="resume-fees">Frais</key>
 	<key id="resume-discount">Réductions</key>
-	<key id="resume-credit-note">Avoirs</key>
+	<key id="resume-credit-note">Montant déduit</key>
 	<key id="resume-total-ttc">Total TTC</key>
 	<key id="resume-total-ht">Total HT</key>
 	<key id="resume-address-title">Adresses</key>
 	<key id="resume-address-billing">Adresse de facturation</key>
 	<key id="resume-address-shipping">Adresse de livraison</key>
+	<key id="resume-net-payable-amount">Net à payer</key>
 	<key id="shipping-title">Moyen de livraison</key>
 	<key id="shipping-select-title">Sélectionner le moyen de livraison</key>
 	<key id="billing-title">Moyen de paiement</key>

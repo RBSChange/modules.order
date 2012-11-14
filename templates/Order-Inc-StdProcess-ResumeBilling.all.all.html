@@ -1,0 +1,30 @@
+<div class="normal section">
+	<table class="normal payment-information">
+		<caption class="h-3">${trans:m.order.standardprocess.billing-amount-title,ucf}</caption>
+		<tr>
+			<td>${trans:m.order.standardprocess.resume-article-count,ucf,lab}</td>
+			<td>${cart/getTotalProductCount}</td>
+		</tr>
+		<tr>
+			<td>${trans:m.order.standardprocess.resume-total-ttc,ucf,lab}</td>
+			<td class="price">${php:cart.formatPrice(cart.getSubTotalWithTax())}</td>
+		</tr>
+		<tr tal:condition="php:cart.getFeesTotalWithTax() GT 0">
+			<td>${trans:m.order.standardprocess.resume-fees,ucf,lab}</td>
+			<td class="price">${php:cart.formatPrice(cart.getFeesTotalWithTax())}</td>
+		</tr>
+		<tr tal:condition="php:cart.getDiscountTotalWithTax() GT 0">
+			<td>${trans:m.order.standardprocess.resume-discount,ucf,lab}</td>
+			<td class="price">${php:cart.formatPrice(-cart.getDiscountTotalWithTax())}</td>
+		</tr>
+		<tr tal:condition="php:cart.getTotalCreditNoteAmount() GT 0">
+			<td>${trans:m.order.standardprocess.resume-credit-note,ucf,lab}</td>
+			<td class="price">${php:cart.formatPrice(-cart.getTotalCreditNoteAmount())}</td>
+		</tr>
+		<tr>
+			<td>${trans:m.order.standardprocess.resume-net-payable-amount,ucf,lab}</td>
+			<td class="price">${php:cart.formatPrice(cart.getTotalAmount())}</td>
+		</tr>
+	</table>
+	<p class="buttons"><a class="link" href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify-cart,ucf}</a></p>
+</div>

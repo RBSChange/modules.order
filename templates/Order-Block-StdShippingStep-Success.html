@@ -101,50 +101,13 @@
 	<div class="column-25">
 		<div class="summary">
 			<h2 change:h="">${trans:m.order.standardprocess.summary,ucf}</h2>
-			<div class="normal section">
-				<table class="normal payment-information">	
-					<caption class="h-3">${trans:m.order.standardprocess.billing-amount-title,ucf}</caption>
-					<tr>
-						<td>${trans:m.order.standardprocess.resume-article-count,ucf,lab}</td>
-						<td>${cart/getTotalProductCount}</td>
-					</tr>
-					<tr>
-						<td>${trans:m.order.standardprocess.resume-lines-total,ucf,lab}</td>
-						<td class="price">${php:cart.formatPrice(cart.getSubTotalWithoutTax())}</td>
-					</tr>
-					<tr tal:condition="php:cart.getFeesTotalWithTax() GT 0">
-						<td>${trans:m.order.standardprocess.resume-fees,ucf,lab}</td>
-						<td class="price">${php:cart.formatPrice(cart.getFeesTotalWithTax())}</td>
-					</tr>
-					<tr tal:condition="php:cart.getDiscountTotalWithTax() GT 0">
-						<td>${trans:m.order.standardprocess.resume-discount,ucf,lab}</td>
-						<td class="price">${php:cart.formatPrice(-cart.getDiscountTotalWithTax())}</td>
-					</tr>
-					<tr tal:condition="php:cart.getTotalCreditNoteAmount() GT 0">
-						<td>${trans:m.order.standardprocess.resume-credit-note,ucf,lab}</td>
-						<td class="price">${php:cart.formatPrice(-cart.getTotalCreditNoteAmount())}</td>
-					</tr>
-					<tr>
-						<td>${trans:m.order.standardprocess.resume-total-ttc,ucf,lab}</td>
-						<td class="price">${php:cart.formatPrice(cart.getTotalAmount())}</td>
-					</tr>
-				</table>
-				<p class="buttons"><a class="link" href="${cart/getCartUrl}">${trans:m.order.standardprocess.modify-cart,ucf}</a></p>
-			</div>
-			<div class="normal section">
-				<h3 change:h="">${trans:m.order.standardprocess.resume-address-billing,ucf}</h3>
-				<ul class="address normal-margin">
-					<li tal:repeat="line billingAddress">${line}</li>
-				</ul>
-				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
-			</div>
-			<div class="normal section">
-				<h3 change:h="">${trans:m.order.standardprocess.resume-address-shipping,ucf}</h3>
-				<ul class="address normal-margin">
-					<li tal:repeat="line shippingAddress">${line}</li>
-				</ul>
-				<p class="buttons"><a class="link" href="${cart/getOrderProcess/getAddressStepUrl}">${trans:m.order.standardprocess.modify-addresses,ucf}</a></p>
-			</div>
+			<tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-ResumeBilling'; type 'html';cart cart" />
+			<tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-ResumeAddress'; type 'html';
+				address billingAddress; title trans:m.order.standardprocess.resume-address-billing;
+				addressStepUrl cart/getOrderProcess/getAddressStepUrl" />
+			<tal:block change:include="module 'order'; template 'Order-Inc-StdProcess-ResumeAddress'; type 'html';
+				address shippingAddress; title trans:m.order.standardprocess.resume-address-shipping;
+				addressStepUrl cart/getOrderProcess/getAddressStepUrl" />
 		</div>
 	</div>
 </div>
