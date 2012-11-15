@@ -443,8 +443,12 @@ class order_CartService extends BaseService
 			$this->refreshTax($cart);
 			Framework::bench('refreshTax');
 			
+			$this->refreshModifierLines($cart);
+			
 			$this->refreshCreditNote($cart);
 			Framework::bench('refreshCreditNote');
+			
+			
 		}
 		
 		if ($resetSessionOrderProcess)
@@ -630,6 +634,42 @@ class order_CartService extends BaseService
 				$cart->setCoupon(null);						
 			}
 		}
+	}
+	
+	/**
+	 * @param order_CartInfo $cart
+	 */
+	protected function refreshModifierLines($cart)
+	{
+		$modifierLineArray = array();
+		$discountArray = $cart->getDiscountArray();
+		foreach ($discountArray as $discountInfo)
+		{
+			/* @var $feesInfo order_DiscountInfo */
+			$modifierLineInfo = new order_ModifierLineInfo();
+			$modifierLineInfo->setValueWithoutTax(- $discountInfo->getValueWithoutTax());
+			$modifierLineInfo->setValueWithTax(- $discountInfo->getValueWithTax());
+			$modifierLineInfo->setLabel(LocaleService::getInstance()->transFO($discountInfo->getLabel()));
+			$modifierLineInfo->setModifierId($discountInfo->getId());
+			$modifierLineInfo->setQuantity(1);
+			$modifierLineInfo->mergePropertiesArray($discountInfo->getParameters());
+			$modifierLineArray[] = $modifierLineInfo;
+		}
+		
+		$feesArray = $cart->getFeesArray();
+		foreach ($feesArray as $feesInfo)
+		{
+			/* @var $feesInfo order_FeesInfo */			
+			$modifierLineInfo = new order_ModifierLineInfo();
+			$modifierLineInfo->setValueWithoutTax($feesInfo->getValueWithoutTax());
+			$modifierLineInfo->setValueWithTax($feesInfo->getValueWithTax());
+			$modifierLineInfo->setLabel($feesInfo->getLabel());
+			$modifierLineInfo->setModifierId($feesInfo->getId());
+			$modifierLineInfo->setQuantity(1);
+			$modifierLineInfo->mergePropertiesArray($feesInfo->getParameters());
+			$modifierLineArray[] = $modifierLineInfo;
+		}
+		$cart->setModifierLineArray($modifierLineArray);
 	}
 
 	/**

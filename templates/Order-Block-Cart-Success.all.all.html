@@ -10,25 +10,29 @@
 <form class="cmxform normal-margin" id="cart-lines" method="post" action="${updateActionUrl}">
 	<tal:block change:block="" module="order" name="CartMessages" handleCantOrderMessage="true" container="" />
 	<tal:block change:block="" module="website" name="messages" container="" />
-	<table class="normal" summary="${trans:m.order.frontoffice.cart-table-summary,ucf,attr}" tal:define="showTTC shop/getDisplayPriceWithTax; showHT php: !showTTC && shop.getDisplayPriceWithoutTax()">
+	<table class="normal" summary="${trans:m.order.frontoffice.cart-table-summary,ucf,attr}">
 		<thead>
 			<tr>
 				<th>&#160;</th>
 				<th>${trans:m.order.frontoffice.designation,ucf}</th>
-				<th tal:condition="showHT">
-					<abbr title="${trans:m.order.frontoffice.unitprice-without-tax,attr}">${trans:m.order.frontoffice.unitprice-without-tax-abr}</abbr>
-				</th>
-				<th tal:condition="showTTC">
-					<abbr title="${trans:m.order.frontoffice.unitprice-with-tax,attr}">${trans:m.order.frontoffice.unitprice-with-tax-abr}</abbr>
-				</th>
+				<tal:block tal:condition="shop/getDisplayPrice">
+					<th tal:condition="not:shop/getDisplayPriceWithTax">
+						<abbr title="${trans:m.order.frontoffice.unitprice-without-tax,attr}">${trans:m.order.frontoffice.unitprice-without-tax-abr}</abbr>
+					</th>
+					<th tal:condition="shop/getDisplayPriceWithTax">
+						<abbr title="${trans:m.order.frontoffice.unitprice-with-tax,attr}">${trans:m.order.frontoffice.unitprice-with-tax-abr}</abbr>
+					</th>
+				</tal:block>
 				<th>${trans:m.order.frontoffice.quantity,ucf}</th>
-				<th tal:condition="showTTC">${trans:m.order.frontoffice.tva-column,ucf}</th>
-				<th tal:condition="showHT">
-					<abbr title="${trans:m.order.frontoffice.totalprice-without-tax,attr}">${trans:m.order.frontoffice.totalprice-without-tax-abr}</abbr>
-				</th>
-				<th tal:condition="showTTC">
-					<abbr title="${trans:m.order.frontoffice.totalprice-with-tax,attr}">${trans:m.order.frontoffice.totalprice-with-tax-abr}</abbr>
-				</th>
+				<th tal:condition="shop/getDisplayTax">${trans:m.order.frontoffice.tva-column,ucf}</th>
+				<tal:block tal:condition="shop/getDisplayPrice">			
+					<th tal:condition="not:shop/getDisplayPriceWithTax">
+						<abbr title="${trans:m.order.frontoffice.totalprice-without-tax,attr}">${trans:m.order.frontoffice.totalprice-without-tax-abr}</abbr>
+					</th>
+					<th tal:condition="shop/getDisplayPriceWithTax">
+						<abbr title="${trans:m.order.frontoffice.totalprice-with-tax,attr}">${trans:m.order.frontoffice.totalprice-with-tax-abr}</abbr>
+					</th>
+				</tal:block>
 				<th>&#160;</th>
 			</tr>
 		</thead>
@@ -42,12 +46,14 @@
 						<tal:block tal:condition="not: visual">&#160;</tal:block>
 					</td>
 					<td class="product-infos">${cartLine/getDiscountDetail}<br />${product/getOrderLabelAsHtml}</td>
-					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
-					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
-					<td>${cartLine/getQuantity}</td>
-					<td tal:condition="showTTC">${cartLine/getFormattedTaxRate}</td>
-					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
-					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
+					<tal:block tal:condition="shop/getDisplayPrice">
+						<td class="price" tal:condition="not:shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
+						<td class="price" tal:condition="shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
+						<td>${cartLine/getQuantity}</td>
+						<td tal:condition="shop/getDisplayTax">${cartLine/getFormattedTaxRate}</td>
+						<td class="price" tal:condition="not:shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
+						<td class="price" tal:condition="shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
+					</tal:block>
 					<td>&#160;</td>
 				</tr>
 				<tr tal:condition="not: cartLine/getDiscountId" class="${alternateclass:lineId}" tal:define="product cartLine/getProduct; cartLineIndex repeat/cartLine/index">
@@ -61,8 +67,10 @@
 						<a tal:condition="product/isConfigurable" change:link="document product/getConfigurationPage; cartLineIndex cartLineIndex" title="${trans:m.catalog.fo.configurate-product,ucf,attr}"><img change:img="icon/small/edit.png" alt="${trans:m.catalog.fo.configurate-product,ucf,attr}" /></a>
 						${product/getOrderLabelAsHtml} <input type="hidden" name="${string:orderParam[lines][${cartLineIndex}][productId]}" value="${product/getId}" />
 					</td>
-					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
-					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
+					<tal:block tal:condition="shop/getDisplayPrice">
+						<td class="price" tal:condition="not:shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getValueWithoutTax())}</td>
+						<td class="price" tal:condition="shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getValueWithTax())}</td>
+					</tal:block>
 					<td tal:define="name string:orderParam[lines][${cartLineIndex}][quantity]; update product/updateCartQuantity">
 						<label class="hidden" tal:attributes="for name">${trans:m.order.frontoffice.Quantity,ucf,lab}</label> 
 						<tal:block tal:condition="update">
@@ -73,9 +81,11 @@
 							<input type="hidden" name="${name}" value="${cartLine/getQuantity}" /> ${cartLine/getQuantity}
 						</tal:block>
 					</td>
-					<td tal:condition="showTTC">${cartLine/getFormattedTaxRate}</td>
-					<td class="price" tal:condition="showHT">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
-					<td class="price" tal:condition="showTTC">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
+					<td tal:condition="shop/getDisplayTax">${cartLine/getFormattedTaxRate}</td>
+					<tal:block tal:condition="shop/getDisplayPrice">
+						<td class="price" tal:condition="not:shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getTotalValueWithoutTax())}</td>
+						<td class="price" tal:condition="shop/getDisplayPriceWithTax">${php:cart.formatPrice(cartLine.getTotalValueWithTax())}</td>
+					</tal:block>
 					<td>
 						<a change:link="module order; action RemoveCartLine; cartLineIndex cartLineIndex; pageref pageref">
 							<img change:image="front/cross.gif" alt="${trans:m.order.frontoffice.delete-link,ucf,attr}" />
@@ -83,6 +93,32 @@
 					</td>
 				</tr>
 			</tal:block>
+		</tbody>
+		<tbody tal:condition="cart/getModifierLineArray/0" >
+			<tr>
+				<th></th><th></th><tal:block tal:condition="shop/getDisplayPrice"><th tal:condition="not:shop/getDisplayPriceWithTax"></th>
+				<th tal:condition="shop/getDisplayPriceWithTax"></th></tal:block><th></th><th tal:condition="shop/getDisplayTax"></th>
+				<tal:block tal:condition="shop/getDisplayPrice"><th tal:condition="not:shop/getDisplayPriceWithTax"></th>
+				<th tal:condition="shop/getDisplayPriceWithTax"></th></tal:block><th></th>
+			</tr>
+			<tr tal:repeat="line cart/getModifierLineArray">
+				<td tal:define="visual line/getVisual" class="visual">
+					<img tal:condition="visual" change:media="document visual; format 'modules.catalog.frontoffice/small'" />
+					<tal:block tal:condition="not: visual">&#160;</tal:block>
+				</td>
+				<td class="product-infos">${line/getLabel}</td>
+				<tal:block tal:condition="shop/getDisplayPrice">
+					<td class="price" tal:condition="not:shop/getDisplayPriceWithTax">${php:cart.formatPrice(line.getValueWithoutTax())}</td>
+					<td class="price" tal:condition="shop/getDisplayPriceWithTax">${php:cart.formatPrice(line.getValueWithTax())}</td>
+				</tal:block>
+				<td>${line/getQuantity}</td>
+				<td tal:condition="shop/getDisplayTax">${line/getFormattedTaxRate}</td>
+				<tal:block tal:condition="shop/getDisplayPrice">
+					<td class="price" tal:condition="not:shop/getDisplayPriceWithTax">${php:cart.formatPrice(line.getTotalValueWithoutTax())}</td>
+					<td class="price" tal:condition="shop/getDisplayPriceWithTax">${php:cart.formatPrice(line.getTotalValueWithTax())}</td>
+				</tal:block>
+				<td>&#160;</td>
+			</tr>
 		</tbody>
 	</table>
 	<div class="hidden">
@@ -162,31 +198,22 @@
 	<!-- Début : column-two -->
 	<div class="column-50" tal:define="discounts cart/getDiscountDataArrayForDisplay">
 		<table class="normal payment-information">
-			<tal:block tal:condition="discounts/0">
-				<tr tal:condition="shop/getDisplayPriceWithoutTax">
-					<td>${trans:m.order.frontoffice.sub-total-withouttax-abr,ucf,lab}</td>
-					<td class="price">${cart/getFormattedSubTotalWithoutTax}</td>
-				</tr>
-				<tr tal:condition="shop/getDisplayPriceWithTax">
-					<td>${trans:m.order.frontoffice.sub-total-withtax-abr,ucf,lab}</td>
-					<td class="price">${cart/getFormattedSubTotalWithTax}</td>
-				</tr>
-						
-				<!-- discount -->
-				<tr tal:repeat="discount discounts">
-					<td>${discount/label} :</td>
-					<td class="discount price">${discount/valueWithTax}</td>
-				</tr>
-			</tal:block>
-			
 			<!-- Total -->
-			<tr>
-				<td>${trans:m.order.frontoffice.total-withouttax-withoutfees-abr,ucf,lab}</td>
-				<td class="price">${cart/getFormattedTotalExcludingFeesWithoutTax}</td>
+			<tr class="big" tal:condition="php: shop.getDisplayPriceWithoutTax() && !shop.getDisplayPriceWithTax()">
+				<td>${trans:m.order.frontoffice.total-withouttax-abr,ucf,lab}</td>
+				<td class="price">${cart/getFormattedTotalWithoutTax}</td>
 			</tr>
-			<tr class="big">
-				<td>${trans:m.order.frontoffice.total-withtax-withoutfees-abr,ucf,lab}</td>
-				<td class="price">${cart/getFormattedTotalExcludingFeesWithTax}</td>
+			<tr tal:condition="php: shop.getDisplayPriceWithTax() && shop.getDisplayPriceWithoutTax()">
+				<td>${trans:m.order.frontoffice.total-withouttax-abr,ucf,lab}</td>
+				<td class="price">${cart/getFormattedTotalWithoutTax}</td>
+			</tr>
+			<tr tal:condition="shop/getDisplayTax">
+				<td>${trans:m.order.frontoffice.tva-column,ucf,lab}</td>
+				<td class="price">${cart/getFormattedTotalTax}</td>
+			</tr>
+			<tr class="big" tal:condition="shop/getDisplayPriceWithTax">
+				<td>${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</td>
+				<td class="price">${cart/getFormattedTotalWithTax}</td>
 			</tr>
 		</table>
 		<p tal:condition="orderProcess/open">${trans:m.order.frontoffice.cart-help-updatecart,ucf}</p>		

@@ -314,6 +314,11 @@ class order_CartInfo
 	private $cartLine = array();
 
 	/**
+	 * @var order_ModifierLineInfo[]
+	 */
+	private $modifierLine = array();
+	
+	/**
 	 * @return order_CartLineInfo[]
 	 */
 	public function getCartLineArray()
@@ -337,6 +342,30 @@ class order_CartInfo
 		return count($this->cartLine);
 	}
 
+	/**
+	 * @return order_ModifierLineInfo[]
+	 */
+	public function getModifierLineArray()
+	{
+		return $this->modifierLine;
+	}
+	
+	/**
+	 * @param order_ModifierLineInfo[] $modifierLine
+	 */
+	public function setModifierLineArray($modifierLine)
+	{
+		$this->modifierLine = $modifierLine;
+	}
+	
+	/**
+	 * @return Integer
+	 */
+	public function getModifierLineCount()
+	{
+		return count($this->modifierLine);
+	}
+	
 	/**
 	 * @return Boolean
 	 */
@@ -1432,8 +1461,8 @@ class order_CartInfo
 	public function getFormattedTotalExcludingFeesWithTax()
 	{
 		return $this->formatPrice($this->getTotalExcludingFeesWithTax());
-	}	
-
+	}
+	
 	/**
 	 * @return String
 	 */

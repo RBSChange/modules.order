@@ -138,6 +138,14 @@ class order_CartModifierInfo
 		return $this->parameters[$name];
 	}
 	
+	/**
+	 * 
+	 * @return array
+	 */
+	public function getParameters()
+	{
+		return is_array($this->parameters) ? $this->parameters : array();
+	}
 	
 	// DEPRECATED
 	
