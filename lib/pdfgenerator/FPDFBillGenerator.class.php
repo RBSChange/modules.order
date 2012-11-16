@@ -516,9 +516,7 @@ class order_billToPDF extends FPDF
 		}
 		$this->Cell($orderLineWidth[0], $this->orderLineHeight, $this->convertUTF8String($orderLine->getQuantity()), 1, 0, 'C', $fill);
 		$this->Cell($orderLineWidth[1], $this->orderLineHeight, $articleText, 1, 0, 'L', $fill);
-		
-		$this->Cell($orderLineWidth[2], $this->orderLineHeight, $this->convertUTF8String(''), 1, 0, 'L', $fill);
-		
+		$this->Cell($orderLineWidth[2], $this->orderLineHeight, $this->convertUTF8String($orderLine->getCodeReference()), 1, 0, 'L', $fill);
 		$this->Cell($orderLineWidth[3], $this->orderLineHeight, $this->convertUTF8String($order->formatPrice($orderLine->getUnitPriceWithoutTax())), 1, 0, 'R', $fill);
 		$this->Cell($orderLineWidth[4], $this->orderLineHeight, $this->convertUTF8String($order->formatPrice($orderLine->getAmountWithoutTax())), 1, 0, 'R', $fill);
 	}
