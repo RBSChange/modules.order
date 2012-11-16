@@ -96,11 +96,13 @@
 	<key id="billing-fees">frais de paiement</key>
 	<key id="tva-column">TVA</key>
 	<key id="tva">TVA ({rate})</key>
+	<key id="base-tva">BASE TVA</key>
 	<key id="total-withtax-abr">Total TTC</key>
 	<key id="total-withouttax-abr">Total HT</key>
 	<key id="total-tva-abr">TOTAL TVA</key>
 	<key id="total-withouttax-withoutfees-abr">total HT (hors frais)</key>
 	<key id="total-withtax-withoutfees-abr">total TTC (hors frais)</key>
+	<key id="total-net-payable">net à payer</key>
 	<key id="continue-shopping">je continue mes achats</key>
 	<key id="order-button">je commande</key>
 	<key id="validation-error-billing-minimum-amount-required">Le montant total de la commande doit au moins valoir {amount} pour que le mode de paiement {modeLabel} soit appliqué</key>

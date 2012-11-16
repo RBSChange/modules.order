@@ -16,6 +16,11 @@ class order_CartInfo
 	private $checkSum = null;
 	
 	/**
+	 * @var order_ModifierLineInfos[]
+	 */
+	private $modifierLine = array();
+	
+	/**
 	 * @return string
 	 */	
 	protected function getCheckSum()
@@ -336,6 +341,30 @@ class order_CartInfo
 		return count($this->cartLine);
 	}
 
+	/**
+	 * @return order_ModifierLineInfos[]
+	 */
+	public function getModifierLineArray()
+	{
+		return $this->modifierLine;
+	}
+	
+	/**
+	 * @param order_ModifierLineInfo[] $modifierLine
+	 */
+	public function setModifierLineArray($modifierLine)
+	{
+		$this->modifierLine = $modifierLine;
+	}
+	
+	/**
+	 * @return integer
+	 */
+	public function getModifierLineCount()
+	{
+		return count($this->modifierLine);
+	}
+	
 	/**
 	 * @return boolean
 	 */

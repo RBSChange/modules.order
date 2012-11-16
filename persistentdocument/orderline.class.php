@@ -6,22 +6,30 @@
 class order_persistentdocument_orderline extends order_persistentdocument_orderlinebase 
 {
 	/**
-	 * @return catalog_persistentdocument_product or null
+	 * @return catalog_persistentdocument_product|null
 	 */
 	public function getProduct()
 	{
-		try 
+		$product = DocumentHelper::getDocumentInstanceIfExists($this->getProductId());
+		if ($product instanceof catalog_persistentdocument_product)
 		{
-			return DocumentHelper::getDocumentInstance($this->getProductId(), 'modules_catalog/product');
+			return $product;
 		}
-		catch (Exception $e)
-		{
-			if (Framework::isInfoEnabled())
-			{
-				Framework::info(__METHOD__ . ' ' . $e->getMessage());
-			}		
-		}
+		Framework::warn(__METHOD__ . ' Product ' . $this->getProductId() . ' not found');
 		return null;
+	}
+	
+	/**
+	 * @return catalog_persistentdocument_product|null
+	 */
+	public function getConfiguredProduct()
+	{
+		$product = $this->getProduct();
+		if ($product)
+		{
+			$product->getDocumentService()->updateProductFromCartProperties($product, $this->getGlobalPropertyArray());
+		}
+		return $product;
 	}
 	
 	/**

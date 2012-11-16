@@ -384,6 +384,7 @@ class order_billToPDF extends FPDF
 	protected function generateBody()
 	{
 		$orderLines = $this->bill->getOrder()->getLineArray();
+		$modifierLines = $this->bill->getOrder()->getModiferLineArray();
 		
 		$widthWithoutMargin = $this->w - $this->lMargin - $this->rMargin;
 		//Sum of width must be equal to $this->w
@@ -410,6 +411,27 @@ class order_billToPDF extends FPDF
 			$this->Ln();
 			$fill = !$fill;
 		}
+		if (count($modifierLines) > 0)
+		{
+			$this->setFillColorByHeader();
+			$this->Cell(190, 2, '', 1, 2,'', true);
+			$fill = false;
+			foreach ($modifierLines as $modifierLine)
+			{
+				$modifierLine->setCodeReference('');
+				/* @var $orderLine order_persistentdocument_orderLine */
+				$case = $this->GetY() + $this->orderLineHeight;
+		
+				//if page change, replicate the orderLine Header
+				if ($case > $bottom)
+				{
+					$this->generateOrderLineHeaders();
+				}
+				$this->generateOrderLineCells($modifierLine, $fill);
+				$this->Ln();
+				$fill = !$fill;
+			}
+		}
 	}
 	
 	/**
@@ -424,11 +446,7 @@ class order_billToPDF extends FPDF
 		{
 			$this->Cell($width, 8, $this->convertUTF8String($text), 1, 0, 'C', true);
 		}
-		$this->SetFillColor(
-			$this->orderLineFillColorRGB[0],
-			$this->orderLineFillColorRGB[1],
-			$this->orderLineFillColorRGB[2]
-		);
+		$this->setFillColorByLine();
 		$this->Ln();
 	}
 	
@@ -476,11 +494,7 @@ class order_billToPDF extends FPDF
 		
 		$order = $this->bill->getOrder();
 		
-		$this->SetFillColor(
-			$this->orderLineFillColorRGB[0],
-			$this->orderLineFillColorRGB[1],
-			$this->orderLineFillColorRGB[2]
-		);
+		$this->setFillColorByLine();
 		
 		$orderLineWidth = array_values($this->orderLineHeaderTxtAndWidth);
 		
@@ -494,7 +508,7 @@ class order_billToPDF extends FPDF
 		}
 		$this->Cell($orderLineWidth[0], $this->orderLineHeight, $this->convertUTF8String($orderLine->getQuantity()), 1, 0, 'C', $fill);
 		$this->Cell($orderLineWidth[1], $this->orderLineHeight, $articleText, 1, 0, 'L', $fill);
-		$this->Cell($orderLineWidth[2], $this->orderLineHeight, $this->convertUTF8String($orderLine->getProduct()->getCodeReference()), 1, 0, 'L', $fill);
+		$this->Cell($orderLineWidth[2], $this->orderLineHeight, $this->convertUTF8String($orderLine->getCodeReference()), 1, 0, 'L', $fill);
 		$this->Cell($orderLineWidth[3], $this->orderLineHeight, $this->convertUTF8String($order->formatPrice($orderLine->getUnitPriceWithoutTax())), 1, 0, 'R', $fill);
 		$this->Cell($orderLineWidth[4], $this->orderLineHeight, $this->convertUTF8String($order->formatPrice($orderLine->getAmountWithoutTax())), 1, 0, 'R', $fill);
 	}
@@ -519,22 +533,6 @@ class order_billToPDF extends FPDF
 		$totalSummaryLabels = array();
 		$totalSummaryValues = array();
 		
-		$totalSummaryLabels[] = $this->billTexts['subTotal'] . ' ' . $this->billTexts['withoutTax'];
-		$totalSummaryValues[] = $order->formatPrice($order->getLinesAmountWithoutTax());
-		foreach ($order->getFeesDataArrayForDisplay() as $fees)
-		{
-			$totalSummaryLabels[] = $fees['label'] . ' ' . $this->billTexts['withoutTax'];
-			$totalSummaryValues[] =  $fees['valueWithoutTax'];
-		}
-		if (count($order->getDiscountDataArrayForDisplay()))
-		{
-			foreach ($order->getDiscountDataArrayForDisplay() as $discount)
-			{
-				$totalSummaryLabels[] = $discount['label'] . ' ' . $this->billTexts['withoutTax'];
-				$totalSummaryValues[] = $discount['valueWithoutTax'];
-			}
-		}
-		
 		$totalSummaryLabels[] = $this->billTexts['paymentConnector'];
 		$totalSummaryValues[] = $order->getPaymentConnectorLabel();
 		
@@ -558,10 +556,10 @@ class order_billToPDF extends FPDF
 		//Summary design
 		$w = $txtMaxWidth + $valueMaxWidth;
 		$h = $this->summaryLineHeight;
-		$numberOfLine = count($totalSummaryValues) + 1;
+		$numberOfLine = count($totalSummaryValues) + 4;
 		if ($order->hasCreditNote())
 		{
-			$numberOfLine += 2;
+			$numberOfLine++;
 		}
 				
 		//if the block of summary is too big, add a page and design on it
@@ -584,8 +582,8 @@ class order_billToPDF extends FPDF
 		{
 			$basePrice = $value / catalog_TaxService::getInstance()->parseRate($rateFormated);
 			$this->Cell($summaryWidths[0], $this->summaryLineHeight, $this->convertUTF8String($rateFormated), 0, 0, 'C');
-			$this->Cell($summaryWidths[1], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($basePrice)), 0, 0, 'C');
-			$this->Cell($summaryWidths[2], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($value)), 0, 0, 'C');
+			$this->Cell($summaryWidths[1], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($basePrice)), 0, 0, 'R');
+			$this->Cell($summaryWidths[2], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($value)), 0, 0, 'R');
 			$this->Ln();
 		}
 		
@@ -615,7 +613,6 @@ class order_billToPDF extends FPDF
 		}
 		
 		$this->SetX($x);
-		$this->SetFont($this->font, 'B', 10);
 		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['total'] . ' ' .  $this->billTexts['withoutTax']), 0, 0, 'L');
 		$this->SetX($x);
 		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
@@ -623,51 +620,45 @@ class order_billToPDF extends FPDF
 		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithoutTax())), 0, 0, 'R');
 		$this->Ln();
 		
-		if (!$order->hasCreditNote())
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['totalTax']), 0, 0, 'L');
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalTax())), 0, 0, 'R');
+		$this->Ln();
+		
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['total'] . ' ' .  $this->billTexts['withTax']), 0, 0, 'L');
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithTax() + $order->getTotalCreditNoteAmount())), 0, 0, 'R');
+		$this->Ln();
+		
+		if ($order->hasCreditNote())
 		{
 			$this->SetX($x);
-			$this->SetFont($this->font, 'B', 12);
-			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['total'] . ' ' .  $this->billTexts['withTax']), 0, 0, 'L');
-			$this->SetX($x);
-			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
-			$this->SetX($x);
-			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithTax())), 0, 0, 'R');
-			$this->Ln(10);
-		}
-		else
-		{
-			$this->SetX($x);
-			$this->SetFont($this->font, 'B', 10);
-			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['total'] . ' ' .  $this->billTexts['withTax']), 0, 0, 'L');
-			$this->SetX($x);
-			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
-			$this->SetX($x);
-			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithTax() + $order->getTotalCreditNoteAmount())), 0, 0, 'R');
-			$this->Ln();
-			
-			$this->SetX($x);
-			$this->SetFont($this->font, 'B', 10);
 			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['creditNote']), 0, 0, 'L');
 			$this->SetX($x);
 			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
 			$this->SetX($x);
-			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalCreditNoteAmount())), 0, 0, 'R');
+			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String('-' . $order->formatPrice($order->getTotalCreditNoteAmount())), 0, 0, 'R');
 			$this->Ln();
-			
-			$this->SetX($x);
-			$this->SetFont($this->font, 'B', 12);
-			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['paidAmount']), 0, 0, 'L');
-			$this->SetX($x);
-			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
-			$this->SetX($x);
-			$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithTax())), 0, 0, 'R');
-			$this->Ln(10);
 		}
+		
+		$this->SetX($x);
+		$this->SetFont($this->font, 'B', 12);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($this->billTexts['paidAmount']), 0, 0, 'L');
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String(':'), 0, 0, 'C');
+		$this->SetX($x);
+		$this->Cell($summaryWidths[3], $this->summaryLineHeight, $this->convertUTF8String($order->formatPrice($order->getTotalAmountWithTax())), 0, 0, 'R');
+		$this->Ln(10);
 		
 			//borders
 		$this->SetY($y);
 		$countTaxes = count($order->getTaxRates());
-		$numberOfLine++;
 		$h = $countTaxes > $numberOfLine ? $countTaxes * $this->summaryLineHeight : $numberOfLine * $this->summaryLineHeight;
 		$this->Cell($summaryWidths[0], $h,'', 1, 0);
 		$this->Cell($summaryWidths[1], $h,'', 1, 0);
@@ -678,6 +669,11 @@ class order_billToPDF extends FPDF
 	protected function setFillColorByHeader()
 	{
 		$this->SetFillColor($this->orderLineHeaderFillColorRGB[0], $this->orderLineHeaderFillColorRGB[1], $this->orderLineHeaderFillColorRGB[2]);
+	}
+	
+	protected function setFillColorByLine()
+	{
+		$this->SetFillColor($this->orderLineFillColorRGB[0], $this->orderLineFillColorRGB[1], $this->orderLineFillColorRGB[2]);
 	}
 	
 }

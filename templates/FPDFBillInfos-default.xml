@@ -27,8 +27,9 @@
 		<withTax>TTC</withTax>
 		<subTotal>Total Brut</subTotal>
 		<total>Total Net</total>
-		<creditNote>Montant de l'avoir</creditNote>
-		<paidAmount>Reste à payer</paidAmount>
+		<creditNote>Montant déduit</creditNote>
+		<totalTax>Total TVA</totalTax>
+		<paidAmount>Net à payer</paidAmount>
 	</billTexts>
 	<merchantAddress>
 		<line>AEROPARC 1 - 11 Rue Icard</line>
@@ -46,8 +47,8 @@
 	<!-- sum of orderLine headers size must be equal to 210 - margin left and rigth -->
 	<orderLineHeaders>
 		<line size="20">Quantité</line>
-		<line size="80" isProductLabel="true">Article</line>
-		<line size="30">Référence</line>
+		<line size="70" isProductLabel="true">Article</line>
+		<line size="40">Référence</line>
 		<line size="30">Prix Unitaire HT</line>
 		<line size="30">Prix Net HT</line>
 	</orderLineHeaders>

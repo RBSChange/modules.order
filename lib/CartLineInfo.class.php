@@ -76,12 +76,10 @@ class order_CartLineInfo
 	
 	public function __sleep()
 	{
-		return array("\0order_CartLineInfo\0properties", "\0order_CartLineInfo\0key", 
-			"\0order_CartLineInfo\0ecoTax", "\0order_CartLineInfo\0discountDetail", 
-			"\0order_CartLineInfo\0oldValueWithoutTax", "\0order_CartLineInfo\0oldValueWithoutTax", 
-			"\0order_CartLineInfo\0valueWithoutTax", "\0order_CartLineInfo\0valueWithTax", 
-			"\0order_CartLineInfo\0productId", "\0order_CartLineInfo\0priceId", "\0order_CartLineInfo\0quantity", 
-			"\0order_CartLineInfo\0taxCategory", "\0order_CartLineInfo\0priceParts");
+		$prefix = "\0" . get_class() . "\0";
+		return array_map(function($p) use ($prefix) {return $prefix.$p;},
+    		array("properties", "key", "ecoTax", "discountDetail", "oldValueWithoutTax", "oldValueWithoutTax",
+    			"valueWithoutTax", "valueWithTax", "productId", "priceId", "quantity", "taxCategory", "priceParts"));
 	}
 
 	/**

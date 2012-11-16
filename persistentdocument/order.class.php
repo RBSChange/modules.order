@@ -82,9 +82,9 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		{
 			foreach ($taxRates as $rate => $value)
 			{
-				$taxInfoArray[$rate] = array('formattedTaxRate' => $rate, 'taxAmount' => $value);
+				$baseAmount = $value / catalog_TaxService::getInstance()->parseRate($rate);
+				$taxInfoArray[$rate] = array('formattedTaxRate' => $rate, 'baseAmount' => $baseAmount, 'taxAmount' => $value);
 			}
-			
 		}
 		return $taxInfoArray;
 	}
@@ -818,6 +818,39 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			$count += $line->getQuantity();
 		}
 		return $count;
+	}
+	
+	public function getModifierLineArray()
+	{
+		$modifierLineArray = array();
+		$discountArray = $this->getDiscountDataArray();
+		foreach ($discountArray as $discountInfo)
+		{
+			/* @var $discountInfo order_DiscountInfo */
+			$orderLine = order_persistentdocument_orderline::getNewInstance();
+			$orderLine->setLabel($discountInfo['label']);
+			$orderLine->setQuantity(1);
+			$orderLine->setUnitPriceWithoutTax(- $discountInfo['valueWithoutTax']);
+			$orderLine->setUnitPriceWithTax(- $discountInfo['valueWithTax']);
+			$orderLine->setAmountWithoutTax(- $discountInfo['valueWithoutTax']);
+			$orderLine->setAmountWithTax(- $discountInfo['valueWithTax']);
+			$modifierLineArray[] = $orderLine;
+		}
+	
+		$feesArray = $this->getFeesDataArray();
+		foreach ($feesArray as $feesInfo)
+		{
+			/* @var $feesInfo order_FeesInfo */
+			$orderLine = order_persistentdocument_orderline::getNewInstance();
+			$orderLine->setLabel($feesInfo['label']);
+			$orderLine->setQuantity(1);
+			$orderLine->setUnitPriceWithoutTax($feesInfo['valueWithoutTax']);
+			$orderLine->setUnitPriceWithTax($feesInfo['valueWithTax']);
+			$orderLine->setAmountWithoutTax($feesInfo['valueWithoutTax']);
+			$orderLine->setAmountWithTax($feesInfo['valueWithTax']);
+			$modifierLineArray[] = $orderLine;
+		}
+		return $modifierLineArray;
 	}
 	
 	/**
