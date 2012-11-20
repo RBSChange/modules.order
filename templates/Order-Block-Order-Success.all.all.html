@@ -65,18 +65,18 @@
 <table class="normal" summary="${trans:m.order.frontoffice.cart-table-summary,ucf}">
 	<thead>
 		<tr>
-		    <th>${trans:m.order.frontoffice.designation,ucf}</th>
+			<th>${trans:m.order.frontoffice.designation,ucf}</th>
 			<th tal:condition="shop/getDisplayPriceWithoutTax">
 				<abbr title="${trans:m.order.frontoffice.unitprice-without-tax,ucf}">${trans:m.order.frontoffice.unitprice-without-tax-abr,ucf}</abbr>
 			</th>
 			<th tal:condition="shop/getDisplayPriceWithTax">
 				<abbr title="${trans:m.order.frontoffice.unitprice-with-tax,ucf}">${trans:m.order.frontoffice.unitprice-with-tax-abr,ucf}</abbr>
 			</th>
-		    <th>${trans:m.order.frontoffice.quantity,ucf}</th>
+			<th>${trans:m.order.frontoffice.quantity,ucf}</th>
 			<th tal:condition="shop/getDisplayPriceWithoutTax">
 				<abbr title="${trans:m.order.frontoffice.totalprice-without-tax,ucf}">${trans:m.order.frontoffice.totalprice-without-tax-abr,ucf}</abbr>
 			</th>
-		   	<th class="last" tal:condition="shop/getDisplayPriceWithTax">
+			<th class="last" tal:condition="shop/getDisplayPriceWithTax">
 				<abbr title="${trans:m.order.frontoffice.totalprice-with-tax,ucf}">${trans:m.order.frontoffice.totalprice-with-tax-abr,ucf}</abbr>
 			</th>
 		</tr>
@@ -86,9 +86,10 @@
 			<td change:include="module 'order'; template 'Order-Inc-OrderLine'; type 'html'; shop shop; order order; line line" />
 		</tr>
 	</tbody>
-	<tbody>
+	<tbody tal:condition="order/getModifierLineCount">
 		<tr>
-		    <th></th><th tal:condition="shop/getDisplayPriceWithoutTax"></th>
+			<th></th>
+			<th tal:condition="shop/getDisplayPriceWithoutTax"></th>
 			<th tal:condition="shop/getDisplayPriceWithTax"></th><th></th>
 			<th tal:condition="shop/getDisplayPriceWithoutTax"></th><th class="last" tal:condition="shop/getDisplayPriceWithTax"></th>
 		</tr>
@@ -129,13 +130,13 @@
 				<td>${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</td>
 				<td class="price">${php:order.formatPrice(order.getTotalAmountWithTax() + order.getTotalCreditNoteAmount())}</td>
 			</tr>
-			<tal:block tal:condition="order/hasCreditNote">				
-				<tr>	
+			<tal:block tal:condition="order/hasCreditNote">
+				<tr>
 					<td>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</td>
 					<td class="price">-${php:order.formatPrice(order.getTotalCreditNoteAmount())}</td>
 				</tr>
 			</tal:block>
-			<tr class="big" tal:condition="shop/getDisplayPrice">				
+			<tr class="big" tal:condition="shop/getDisplayPrice">
 				<td>${trans:m.order.frontoffice.total-net-payable,ucf,lab}</td>
 				<td class="price">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
 			</tr>
@@ -154,7 +155,7 @@
 			<script tal:condition="not:cart/isEmpty" type="text/javascript" >
 				/* <![CDATA[ */
 				jQuery(document).ready(function(){
-					var a = jQuery("#actionAddOrderToCart > a:first-child");	
+					var a = jQuery("#actionAddOrderToCart > a:first-child");
 					a.attr('href', "javascript:void 0;");
 					a.click(function(){
 						jQuery("#addPopin").dialog({title: "${trans:m.order.frontoffice.add-order-articles-title,ucf,js}", modal: true, width: 300, closeOnEscape: true});
