@@ -86,9 +86,10 @@
 			<td change:include="module 'order'; template 'Order-Inc-OrderLine'; type 'html'; shop shop; order order; line line" />
 		</tr>
 	</tbody>
-	<tbody>
+	<tbody tal:condition="order/getModifierLineCount">
 		<tr>
-		    <th></th><th tal:condition="shop/getDisplayPriceWithoutTax"></th>
+			<th></th>
+			<th tal:condition="shop/getDisplayPriceWithoutTax"></th>
 			<th tal:condition="shop/getDisplayPriceWithTax"></th><th></th>
 			<th tal:condition="shop/getDisplayPriceWithoutTax"></th><th class="last" tal:condition="shop/getDisplayPriceWithTax"></th>
 		</tr>
