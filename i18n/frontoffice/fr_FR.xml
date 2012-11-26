@@ -23,13 +23,13 @@
 	<key id="designation">désignation</key>
 	<key id="codereference">code référence</key>
 	<key id="unitprice">prix unitaire</key>
-	<key id="unitprice-with-tax">prix unitaire toutes taxes comprise</key>
+	<key id="unitprice-with-tax">prix unitaire toutes taxes comprises</key>
 	<key id="unitprice-with-tax-abr">PU TTC</key>
 	<key id="unitprice-without-tax">prix unitaire hors taxes</key>
 	<key id="unitprice-without-tax-abr">PU HT</key>
 	<key id="availability">disponibilité</key>
 	<key id="totalprice">prix total</key>
-	<key id="totalprice-with-tax">prix total toutes taxes comprise</key>
+	<key id="totalprice-with-tax">prix total toutes taxes comprises</key>
 	<key id="totalprice-with-tax-abr">PT TTC</key>
 	<key id="totalprice-without-tax">prix total hors taxes</key>
 	<key id="totalprice-without-tax-abr">PT HT</key>
