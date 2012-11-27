@@ -256,11 +256,24 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			$cas = customer_AddressService::getInstance();
 			if ($valid && $cas->getDefaultByCustomer($cart->getCustomer()) === null)
 			{
-				$defaultAddress = $cas->getNewDocumentInstance();
-				$cart->getAddressInfo()->billingAddress->export($defaultAddress);
-				$defaultAddress->setLabel(LocaleService::getInstance()->transFO('m.order.standardprocess.default-address', array('ucf', 'html')));
-				$cart->getCustomer()->addAddress($defaultAddress);
-				$cart->getCustomer()->save();
+				$tm = f_persistentdocument_TransactionManager::getInstance();
+				try
+				{
+					$tm->beginTransaction();
+					
+					$defaultAddress = $cas->getNewDocumentInstance();
+					$cart->getAddressInfo()->billingAddress->export($defaultAddress);
+					$defaultAddress->setLabel(LocaleService::getInstance()->transFO('m.order.standardprocess.default-address', array('ucf', 'html')));
+					$cart->getCustomer()->addAddress($defaultAddress);
+					$cart->getCustomer()->save();
+					
+					$tm->commit();
+				} 
+				catch (Exception $e) 
+				{
+					$tm->rollBack($e);
+					throw $e;
+				}
 			}	
 		}
 		
