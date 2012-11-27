@@ -40,7 +40,7 @@
 			<method name="onFieldChanged">
 				<parameter name="event" />
 				<body><![CDATA[	
-					if (event.originalTarget.name = "autoNumber")
+					if (event.originalTarget.name == "autoNumber")
 					{
 						this.onPanelInitializeComplete(event);
 					}
