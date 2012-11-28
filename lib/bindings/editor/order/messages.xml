@@ -95,7 +95,7 @@
 							
 							section.appendChild(document.createTextNode(message['content']));
 						}
-						while (section = messagesNode.childNodes[i])
+						while ((section = messagesNode.childNodes[i]) != null)
 						{
 							section.setAttribute('collapsed', 'true');
 							i++;
