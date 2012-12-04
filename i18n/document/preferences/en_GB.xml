@@ -4,7 +4,7 @@
   <key id="orderconfirmednotificationuser">users notified of new orders</key>
   <key id="orderconfirmednotificationuser-help">The recipients selected here will be notified for each new order paid foror pending payment confirmation.</key>
   <key id="disablecoupons">deactivate the coupons</key>
-  <key id="disablecoupons-help">This option disables the display of the coupon input forms in the frontoffice. Discount coupon management requires the "Shops animation" module.</key>
+  <key id="disablecoupons-help">This option disables the display of the coupon input forms in the frontoffice.</key>
   <key id="orderprocessclosedbegindate">'shop closed' start date</key>
   <key id="orderprocessclosedbegindate-help">Start date for the ordering process to be closed.</key>
   <key id="orderprocessclosedenddate">'shop closed' end date</key>

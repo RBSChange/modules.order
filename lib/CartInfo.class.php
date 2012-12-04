@@ -984,13 +984,13 @@ class order_CartInfo
 	public function getFeesDataArrayForDisplay()
 	{
 		$result = array();
-		foreach ($this->getFeesArray() as $fees) 
+		foreach ($this->getFeesArray() as $fees)
 		{
-			if ($fees instanceof order_FeesInfo) 
+			if ($fees instanceof order_FeesInfo)
 			{
 				if (f_util_StringUtils::isNotEmpty($fees->getLabel()) && $fees->getValueWithTax() > 0)
 				{
-					$result[] = array('label' => $fees->getLabel(),  
+					$result[] = array('label' => $fees->getLabel(),
 						'valueWithTax' => $this->formatPrice($fees->getValueWithTax()),
 						'valueWithoutTax' => $this->formatPrice($fees->getValueWithoutTax()));
 				}
@@ -1001,15 +1001,15 @@ class order_CartInfo
 
 	//DISCOUNT AND COUPON
 	
+	/**
+	 * @return boolean
+	 */
 	public function useCoupon()
 	{
-		if (ModuleService::getInstance()->isInstalled('marketing'))
+		$preferences = order_PreferencesService::getInstance()->createQuery()->findUnique();
+		if ($preferences !== null && !$preferences->getDisableCoupons())
 		{
-			$preferences = order_PreferencesService::getInstance()->createQuery()->findUnique();
-			if ($preferences !== null && !$preferences->getDisableCoupons())
-			{
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}
