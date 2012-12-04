@@ -5,7 +5,7 @@
 	<key id="orderconfirmednotificationuser">destinataires des nouvelles commandes</key>
 	<key id="orderconfirmednotificationuser-help">Les destinataires sélectionnés ici recevront une notification pour chaque nouvelle commande payée ou en attente de confirmation de paiement.</key>
 	<key id="disablecoupons">désactiver les coupons</key>
-	<key id="disablecoupons-help">cette option permet de désactiver l'affichage des champs de saisie des coupons de réduction en frontoffice. La gestion des coupons de réduction nécessite le module «Animation des boutiques».</key>
+	<key id="disablecoupons-help">cette option permet de désactiver l'affichage des champs de saisie des coupons et bons de réduction en frontoffice.</key>
 	<key id="orderprocessclosedbegindate">fermeture (début)</key>
 	<key id="orderprocessclosedbegindate-help">Date de début de fermeture du processus de commande.</key>
 	<key id="orderprocessclosedenddate">fermeture (fin)</key>

@@ -1002,13 +1002,10 @@ class order_CartInfo
 	
 	public function useCoupon()
 	{
-		if (ModuleService::getInstance()->isInstalled('marketing'))
+		$preferences = order_PreferencesService::getInstance()->createQuery()->findUnique();
+		if ($preferences !== null && !$preferences->getDisableCoupons())
 		{
-			$preferences = order_PreferencesService::getInstance()->createQuery()->findUnique();
-			if ($preferences !== null && !$preferences->getDisableCoupons())
-			{
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}
