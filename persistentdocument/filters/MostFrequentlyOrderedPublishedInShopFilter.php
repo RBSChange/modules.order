@@ -1,39 +1,19 @@
 <?php
-class order_MostFrequentlyOrderedFilter extends f_persistentdocument_DocumentFilterImpl
+/**
+ * order_MostFrequentlyOrderedPublishedInShopFilter
+ * @package modules.order.persistentdocument.filters
+ */
+class order_MostFrequentlyOrderedPublishedInShopFilter extends order_MostFrequentlyOrderedFilter
 {
 	public function __construct()
 	{
-		$info = new BeanPropertyInfoImpl('maxcount', 'Integer');
-		$info->setLabelKey('&modules.order.bo.documentfilters.parameter.max-count;');
+		parent::__construct();
+		
+		// Parameter "shop".
+		$info = new BeanPropertyInfoImpl('shop', 'module_catalog/shop');
+		$info->setListId('modules_catalog/shops');
 		$parameter = new f_persistentdocument_DocumentFilterValueParameter($info);
-		$this->setParameter('maxcount', $parameter);
-	}
-	
-	/**
-	 * @return String
-	 */
-	public static function getDocumentModelName()
-	{
-		return 'modules_catalog/product';
-	}
-	
-	/**
-	 * @param array $b
-	 * @param array $a
-	 * @return integer
-	 */
-	public function sortProducts($b, $a)
-	{
-		return $a['count'] > $b['count'] ? 1 : ($a['count'] === $b['count'] ? 0 : -1);
-	}
-	
-	/**
-	 * @param array $a
-	 * @return integer
-	 */
-	public function extractId($a)
-	{
-		return $a['productId'];
+		$this->setParameter('shop', $parameter);
 	}
 	
 	/**
@@ -42,6 +22,8 @@ class order_MostFrequentlyOrderedFilter extends f_persistentdocument_DocumentFil
 	public function getQuery()
 	{
 		$query = order_OrderlineService::getInstance()->createQuery();
+		$criteria = $query->createPropertyCriteria('productId', $this->getDocumentModelName())->add(Restrictions::published());
+		$criteria->createCriteria('compiledproduct')->add(Restrictions::published())->add(Restrictions::eq('shopId', $this->getParameter('shop')->getValueForQuery()));
 		$query->setProjection(Projections::groupProperty('productId'), Projections::rowCount('count'));
 		$rows = $query->find();
 		
