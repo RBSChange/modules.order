@@ -70,4 +70,6 @@
 	<key id="paymentstatusorderfilter-text">les commandes ayant {restriction} facture {status}</key>
 	<key id="paymentstatuscustomerfilter-label">statut du paiement des commandes</key>
 	<key id="paymentstatuscustomerfilter-text">les clients qui ont au moins {count} commandes avec {restriction} facture {status}</key>
+	<key id="mostfrequentlyorderedpublishedinshopfilter-label">Les produits les plus commandés publiés dans la boutique sélectionnée et la langue courante</key>
+	<key id="mostfrequentlyorderedpublishedinshopfilter-text">Les {maxcount} produits les plus commandés de la {shop} pour la langue courante</key>
 </i18n>

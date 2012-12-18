@@ -44,14 +44,16 @@ class order_MostFrequentlyOrderedFilter extends f_persistentdocument_DocumentFil
 		$query = order_OrderlineService::getInstance()->createQuery();
 		$query->setProjection(Projections::groupProperty('productId'), Projections::rowCount('count'));		
 		$rows = $query->find();
+		
+		if (count($rows) === 0)
+		{
+			return new filter_StaticQuery($this->getDocumentModelName(), array());
+		}
+		
 		usort($rows, array($this, "sortProducts"));
 		$rows = array_slice($rows, 0, $this->getParameter('maxcount')->getValueForQuery());
 		$rows = array_map(array($this, "extractId"), $rows);
-		if (count($rows) === 0)
-		{
-			//Bogus query
-			return catalog_ProductService::getInstance()->createQuery()->add(Restrictions::eq('id', '-1'));
-		}
+		
 		return catalog_ProductService::getInstance()->createQuery()->add(Restrictions::in('id', $rows));
 	}
 }
