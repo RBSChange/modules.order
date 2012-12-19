@@ -61,6 +61,15 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	{
 		return $document->getOrderNumber();
 	}
+	
+	/**
+	 * @param order_persistentdocument_order $document
+	 * @return string
+	 */
+	public function getTreeNodeLabel($document)
+	{
+		return $document->getOrderNumber();
+	}
 
 	/**
 	 * @param order_persistentdocument_order $order
