@@ -1,0 +1,5 @@
+Version: 3.6.4
+
+/!\ Ignore this patch if you want to activate the new delayed number generation.
+
+Deactivate the delayed number generation.

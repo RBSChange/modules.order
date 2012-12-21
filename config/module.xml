@@ -23,6 +23,16 @@
 		<entry name="billPDFGenerator">order_ODTBillGenerator</entry>
 		 -->
 		
+		<!-- Activate the delayed generation of orders, bills, expeditions and credit notes numbers to ensure unicity. -->
+		<entry name="delayNumberGeneration">true</entry>
+		<!-- 
+			<entry name="generateOrderNumbersChunkSize">100</entry>
+			<entry name="generateBillNumbersChunkSize">100</entry>
+			<entry name="generateOrderpreparationNumbersChunkSize">100</entry>
+			<entry name="generateExpeditionNumbersChunkSize">100</entry>
+			<entry name="generateCreditnoteNumbersChunkSize">100</entry>
+		-->
+		
 		<!-- 
 			<entry name="orderNumberStrategyClass">order_OrderNumberSequenceStrategy</entry>
 			<entry name="billNumberStrategyClass">order_BillNumberYearSequenceStrategy</entry>
@@ -30,8 +40,8 @@
 			<entry name="creditNoteNumberStrategyClass">order_CreditNoteNumberYearSequenceStrategy</entry>
 			<entry name="packetNumberStrategyClass"></entry>
 			<entry name="orderPreparationNumberStrategyClass"></entry>
-		  -->
-
+		-->
+		
 		<!--  Generation de l'expedition par défaut pour les commandes payés --> 
 		<entry name="generateDefaultExpedition">true</entry>
 		

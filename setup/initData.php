@@ -1,6 +1,5 @@
 <?php
 /**
- * order_Setup
  * @package modules.order
  */
 class order_Setup extends object_InitDataSetup
@@ -23,6 +22,11 @@ class order_Setup extends object_InitDataSetup
 		$task->setSystemtaskclassname('order_BackgroundCommentReminder');
 		$task->setMinute(-1);
 		$task->setLabel('order_BackgroundCommentReminder');
+		$task->save(ModuleService::getInstance()->getSystemFolderId('task', 'order'));
+		
+		$task = task_PlannedtaskService::getInstance()->getNewDocumentInstance();
+		$task->setSystemtaskclassname('order_GenerateNumbers');
+		$task->setLabel('m.order.bo.general.task-generate-numbers');
 		$task->save(ModuleService::getInstance()->getSystemFolderId('task', 'order'));
 		
 		try
@@ -53,6 +57,9 @@ class order_Setup extends object_InitDataSetup
 		$this->executeModuleScript('listfeesstrategy.xml', 'order');
 	}
 	
+	/**
+	 * @var string
+	 */
 	private $resourceDir = null;
 	
 	/**

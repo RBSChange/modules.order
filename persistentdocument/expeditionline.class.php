@@ -56,7 +56,7 @@ class order_persistentdocument_expeditionline extends order_persistentdocument_e
 	 */	
 	public function getCodeReference()
 	{
-		return $this->getOrderLine()->getCodeReference();	
+		return $this->getOrderLine()->getCodeReference();
 	}
 	
 	/**

@@ -4,10 +4,10 @@
 	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<binding id="order_financial" extends="layout.cDocumentEditor#cDocumentEditorPanel">
 		<content>
-			<xul:vbox flex="1">
-		        <xul:cmessageinfo anonid="message"/>
-		        <xul:hbox anonid="action-bar">
-		        </xul:hbox>
+				<xul:vbox flex="1">
+					<xul:cmessageinfo anonid="message"/>
+					<xul:hbox anonid="action-bar">
+				</xul:hbox>
 				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
 					<xul:cfieldsgroup class="customeraddress" label="${transui:m.order.bo.general.billing-address,ucf,attr}"/>
 					
@@ -22,10 +22,10 @@
 			</xul:vbox>	
 		</content>
 		<implementation>
-			<field name="mButtons">null</field>			
+			<field name="mButtons">null</field>
 			<field name="mOrderBills">null</field>
 			<field name="mOrderCreditNotes">null</field>
-			<field name="mAddress">null</field>				
+			<field name="mAddress">null</field>
 			<field name="mInitData">null</field>
 			
 			<constructor><![CDATA[
@@ -38,12 +38,11 @@
 				
 				this.mButtons.CancelOrderButton = this.addActionButton("${transui:m.order.bo.actions.cancel-order,ucf,js}", wToolkit.getIcon('reject', 'small'));
 				this.mButtons.CancelOrderButton.addEventListener('command', function(event) { me.onCancelOrder(); }, true);
-				this.mButtons.CancelOrderButton.disabled = true;				
-		
+				this.mButtons.CancelOrderButton.disabled = true;
+				
 				this.addEventListener("gridInitialised", function (event) {return me.onGridInitialised(event);}, true);
-				this.addEventListener("addressInitialised", function (event) {return me.onAddressInitialised(event);}, true);		
+				this.addEventListener("addressInitialised", function (event) {return me.onAddressInitialised(event);}, true);
 			]]></constructor>
-			
 			
 			<method name="lockCommandsUI">
 				<body><![CDATA[
@@ -52,7 +51,7 @@
 						this.mButtons[n].disabled = true;
 					}
 				]]></body>
-			</method>	
+			</method>
 			
 			<method name="updateCommandsUI">
 				<body><![CDATA[
@@ -90,16 +89,16 @@
 			
 			<method name="fireCancelOrderComplete">
 				<parameter name="result" />
-				<body><![CDATA[			
+				<body><![CDATA[
 					if (result.status == "OK")
-					{					
-						this.documentEditor.clearTabs();				
-						this.fireInitializeComplete(result);						
+					{
+						this.documentEditor.clearTabs();
+						this.fireInitializeComplete(result);
 						this.showTextMessage("${transui:m.order.bo.doceditor.message.order-canceled,ucf,js}");
 					}
 					else
 					{
-						this.showErrorMessage(result.contents.errorMessage);					
+						this.showErrorMessage(result.contents.errorMessage);
 					}
 				]]></body>
 			</method>
@@ -107,13 +106,13 @@
 			<method name="onCreateCreditNote">
 				<parameter name="event" />
 				<body><![CDATA[
-				var id = this.documentEditor.documentid;	
-				var uri = ['order', 'createCreditNoteForOrder', 'modules_order_creditnote', id].join(',');
-				var from = ['order', 'openDocument', 'modules_order_order', id, 'financial'].join(',');
-				openActionUri(uri, from);
+					var id = this.documentEditor.documentid;
+					var uri = ['order', 'createCreditNoteForOrder', 'modules_order_creditnote', id].join(',');
+					var from = ['order', 'openDocument', 'modules_order_order', id, 'financial'].join(',');
+					openActionUri(uri, from);
 				]]></body>
 			</method>
-						
+			
 			<method name="onGridInitialised">
 				<parameter name="event" />
 				<body><![CDATA[	
@@ -124,7 +123,7 @@
 						if (this.mInitData && this.mInitData.billArray)
 						{
 							this.mOrderBills.initJSONDataset(this.mInitData.billArray);
-						}	
+						}
 						else
 						{
 							this.mOrderBills.initJSONDataset(null);
@@ -136,18 +135,18 @@
 						if (this.mInitData && this.mInitData.creditnoteArray)
 						{
 							this.mOrderCreditNotes.initJSONDataset(this.mInitData.creditnoteArray);
-						}	
+						}
 						else
 						{
 							this.mOrderCreditNotes.initJSONDataset(null);
-						} 
+						}
 					}
 				]]></body>
 			</method>
 
 			<method name="onAddressInitialised">
 				<parameter name="event" />
-				<body><![CDATA[	
+				<body><![CDATA[
 					var grid = event.originalTarget;
 					if (grid.className == 'customeraddress')
 					{
@@ -160,28 +159,28 @@
 						{
 							this.mAddress.initJSONDataset(null);
 						}
-					}	
+					}
 				]]></body>
-			</method>	
-					
+			</method>
+			
 			<method name="getInitializeParameters">
 				<body><![CDATA[
 					return {
 						action: 'LoadOrderFinancial',
-						cmpref: this.documentEditor.documentid, 
+						cmpref: this.documentEditor.documentid,
 						lang : this.documentEditor.documentInfos.vo
 					};
 				]]></body>
 			</method>
-												
+			
 			<method name="fireInitializeComplete">
 				<parameter name="result" />
-				<body><![CDATA[					
+				<body><![CDATA[
 					if (result.status != 'OK')
-					{	
+					{
 						this.lockCommandsUI();
 						this.showErrorMessage(result.contents.errorMessage);
-						this.collapseContentZone(true);						
+						this.collapseContentZone(true);
 						this.mInitialized = true;
 						return;
 					}
@@ -198,9 +197,8 @@
 					if (this.mAddress)
 					{
 						this.mAddress.initJSONDataset(this.mInitData.address);
-					}	
+					}
 					
-								
 					this.updateCommandsUI();
 					this.collapseContentZone(false);
 					this.mInitialized = true;
@@ -208,7 +206,6 @@
 					this.gotoTop();
 				]]></body>
 			</method>
-		
 		</implementation>
 	</binding>
 </bindings>

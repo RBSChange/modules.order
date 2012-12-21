@@ -52,13 +52,16 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		return $this->pp->createQuery('modules_order/order');
 	}
 	
-	
 	/**
 	 * @param order_persistentdocument_order $document
 	 * @return string
 	 */
 	public function getNavigationLabel($document)
 	{
+		if ($document->hasTemporaryNumber())
+		{
+			return $document->getLabel();
+		}
 		return $document->getOrderNumber();
 	}
 	
@@ -88,7 +91,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$address['province'] = $billingAddress->getProvince();
 		$address['country'] = $billingAddress->getCountry()->getLabel();
 		$address['phone'] = $billingAddress->getPhone();
-		$address['fax'] = $billingAddress->getFax();	
+		$address['fax'] = $billingAddress->getFax();
 		$result['address'] = $address;
 		$result['totalAmount'] = $order->formatPrice($order->getTotalAmountWithTax());
 		
@@ -115,7 +118,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		$address['province'] = $shippingAddress->getProvince();
 		$address['country'] = $shippingAddress->getCountry()->getLabel();
 		$address['phone'] = $shippingAddress->getPhone();
-		$address['fax'] = $shippingAddress->getFax();	
+		$address['fax'] = $shippingAddress->getFax();
 		$result['address'] = $address;
 		
 		if (order_ModuleService::getInstance()->useOrderPreparationEnabled())
@@ -126,7 +129,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 				$result['createOrderPreparation'] = true;
 			}
 		}
-				
+		
 		$result['expeditionArray'] = order_ExpeditionService::getInstance()->getBoList($order);	
 		if (count($result['expeditionArray']))
 		{
@@ -1095,10 +1098,26 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		
 		if ($document->getOrderNumber() === null)
 		{
-			$document->setOrderNumber(order_OrderNumberGenerator::getInstance()->generate($document));
+			$this->applyNumber($document);
 		}
 	}
 
+	/**
+	 * @param order_persistentdocument_order $document
+	 * @param boolean $forceGeneration
+	 */
+	public function applyNumber($document, $forceGeneration = false)
+	{
+		if (!$forceGeneration && order_ModuleService::getInstance()->delayNumberGeneration())
+		{
+			$document->setOrderNumber(order_ModuleService::TEMPORARY_NUMBER);
+		}
+		else
+		{
+			$document->setOrderNumber(order_OrderNumberGenerator::getInstance()->generate($document));
+		}
+	}
+	
 	/**
 	 * @param order_persistentdocument_order $document
 	 * @param Integer $parentNodeId Parent node ID where to save the document (optionnal => can be null !).
@@ -1499,17 +1518,19 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		{
 			case 'payment' :
 				$referenceProperty = 'bill.transactionDate';
-				break;			
+				break;
 			default :
 			case 'shipment' :
 				$referenceProperty = 'expedition.shippingDate';
 				break;
 		}
 		$referenceDate = date_Calendar::getInstance();
-		$referenceDate->sub(date_Calendar::DAY, $ms->getPreferenceValue('order', 'commentReminderPeriod'));		
+		$referenceDate->sub(date_Calendar::DAY, $ms->getPreferenceValue('order', 'commentReminderPeriod'));
 		$query = $this->createQuery()->add(Restrictions::isNull('lastCommentReminder'));
 		$query->add(Restrictions::lt($referenceProperty, $referenceDate->toString()));
 		$query->add(Restrictions::gt('id', $lastId))->addOrder(Order::asc('id'))->setMaxResults($chunkSize);
+		// Do not send comment reminder to orders with temporary orderNumber.
+		$query->add(Restrictions::ne('orderNumber', order_ModuleService::TEMPORARY_NUMBER));
 		return $query->setProjection(Projections::groupProperty('id', 'id'))->findColumn('id');
 	}
 	
@@ -1518,6 +1539,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function sendCommentReminder($order)
 	{
+		// Here the order is suposed to have a final orderNumber (cf getOrderIdsToRemind()), so no need to delay notification.
 		$user = $order->getCustomer()->getUser();
 		if ($user->isPublished())
 		{
@@ -1537,14 +1559,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		}
 		$order->setLastCommentReminder(date_calendar::getInstance()->toString());
 		$order->save();
-	}	
-	
-	/**
-	 * @deprecated
-	 */
-	public function sendCommentReminders()
-	{
-		return;
 	}
 	
 	/**
@@ -1628,8 +1642,6 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		}
 		return array_values($products);
 	}
-
-
 
 	/**
 	 * @param catalog_persistentdocument_product[] $products
@@ -1718,7 +1730,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	 */
 	public function addTreeAttributes($document, $moduleName, $treeType, &$nodeAttributes)
 	{
-		$nodeAttributes['label'] = $document->getOrderNumber();	
+		$nodeAttributes['label'] = $document->getOrderNumber();
 		if ($treeType === 'wtree' || $treeType === 'wlist')
 		{
 			$nodeAttributes['orderStatus'] = $document->getOrderStatus();
@@ -1814,7 +1826,7 @@ class order_OrderService extends f_persistentdocument_DocumentService
 			}
 		}
 		
-		return $query->find();		
+		return $query->find();
 	}
 
 	// Deprecated
@@ -1874,5 +1886,13 @@ class order_OrderService extends f_persistentdocument_DocumentService
 	public function getBoStatusLabel($orderStatus)
 	{
 		return LocaleService::getInstance()->transBO('m.order.frontoffice.status.' . $orderStatus, array('ucf', 'html'));
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	public function sendCommentReminders()
+	{
+		return;
 	}
 }

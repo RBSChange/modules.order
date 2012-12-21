@@ -6,6 +6,14 @@
 class order_persistentdocument_bill extends order_persistentdocument_billbase implements payment_Order
 {
 	/**
+	 * @return boolean
+	 */
+	public function hasTemporaryNumber()
+	{
+		return $this->getLabel() == order_ModuleService::TEMPORARY_NUMBER;
+	}
+	
+	/**
 	 * @return String
 	 */
 	public function getStatusLabel()
@@ -27,6 +35,10 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	 */
 	public function getArchiveBoURL()
 	{
+		if ($this->hasTemporaryNumber() || $this->getOrder()->hasTemporaryNumber())
+		{
+			return "-3";
+		}
 		if (!$this->getDocumentService()->generateBillIsActive())
 		{
 			return "-2";
@@ -150,6 +162,10 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	 */
 	function getPaymentReference()
 	{
+		if ($this->hasTemporaryNumber())
+		{
+			return $this->getId();
+		}
 		return $this->getLabel() . '/' . $this->getId();
 	}
 	

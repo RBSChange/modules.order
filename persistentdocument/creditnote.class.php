@@ -4,7 +4,15 @@
  * @package modules.order.persistentdocument
  */
 class order_persistentdocument_creditnote extends order_persistentdocument_creditnotebase 
-{	
+{
+	/**
+	 * @return boolean
+	 */
+	public function hasTemporaryNumber()
+	{
+		return $this->getLabel() == order_ModuleService::TEMPORARY_NUMBER;
+	}
+	
 	/**
 	 * @var double
 	 */

@@ -86,4 +86,5 @@
   <key id="confirm-cancel-expedition">êtes-vous sur de vouloir annuler cette expedition ?</key>
   <key id="canceled-by">annulé par</key>
   <key id="na">N.A.</key>
+  <key id="task-generate-numbers">génération différée des numéros de commandes, factures, etc.</key>
 </i18n>

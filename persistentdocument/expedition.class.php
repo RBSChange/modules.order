@@ -5,6 +5,13 @@
  */
 class order_persistentdocument_expedition extends order_persistentdocument_expeditionbase 
 {
+	/**
+	 * @return boolean
+	 */
+	public function hasTemporaryNumber()
+	{
+		return $this->getLabel() == order_ModuleService::TEMPORARY_NUMBER;
+	}
 	
 	/**
 	 * @param String $packetNumber
@@ -100,7 +107,7 @@ class order_persistentdocument_expedition extends order_persistentdocument_exped
 	{
 		$url = parent::getTrackingURL();
 		if (empty($url)) { return null; }
-		return str_replace('{NumeroColis}', $this->getTrackingNumber(), $url);
+		return str_replace('{NumeroColis}', urlencode($this->getTrackingNumber()), $url);
 	}
 	
 	/**

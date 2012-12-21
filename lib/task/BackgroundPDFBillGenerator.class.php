@@ -3,7 +3,6 @@ class order_BackgroundPDFBillGenerator extends task_SimpleSystemTask
 {
 	/**
 	 * @see task_SimpleSystemTask::execute()
-	 *
 	 */
 	protected function execute()
 	{
@@ -13,9 +12,7 @@ class order_BackgroundPDFBillGenerator extends task_SimpleSystemTask
 			return;
 		}
 		
-		$query = $obs->createQuery()->add(Restrictions::published())
-		->add(Restrictions::isNull("archive"));
-		
+		$query = $obs->createQuery()->add(Restrictions::published())->add(Restrictions::isNull('archive'));
 		foreach ($query->find() as $bill)
 		{
 			$obs->genBill($bill);

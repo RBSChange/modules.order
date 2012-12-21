@@ -74,8 +74,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			return;
 		}
 		
-		$query = $this->createQuery()->add(Restrictions::published())
-			->add(Restrictions::isNull("archive"));
+		$query = $this->createQuery()->add(Restrictions::published())->add(Restrictions::isNull("archive"));
 
 		foreach ($query->find() as $bill)
 		{
@@ -89,7 +88,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function genBill($bill)
 	{	
-		if (!$this->generateBillIsActive() || !$bill->isPublished() || $bill->getArchive() !== null)
+		if (!$this->generateBillIsActive() || !$bill->isPublished() || $bill->hasTemporaryNumber() || $bill->getArchive() !== null)
 		{
 			return;
 		}
@@ -104,7 +103,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$label = $bill->getLabel();
 			$media->setLabel($label);
 			$media->setTitle($label);
-			$media->setNewFileName($tmpPath, "bill-" . $bill->getId() .".pdf");
+			$media->setNewFileName($tmpPath, 'bill-' . $bill->getId() . '.pdf');
 			$media->save();
 			$bill->setArchive($media);
 			$bill->save();
@@ -330,7 +329,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 					$this->confirmPayment($bill);
 					break;
 			}
-			$this->tm->commit();	
+			$this->tm->commit();
 		}
 		catch (Exception $e)
 		{
@@ -382,7 +381,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 		foreach ($query->find() as $bill)
 		{
 			$bill->setTransactionDate(null);
-			$bill->setStatus(self::FAILED);			
+			$bill->setStatus(self::FAILED);
 			$backendUser = users_UserService::getInstance()->getCurrentBackEndUser();
 			if (f_util_StringUtils::isEmpty($bill->getTransactionId()))
 			{
@@ -401,16 +400,16 @@ class order_BillService extends f_persistentdocument_DocumentService
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
-	 */	
+	 */
 	protected function confirmPayment($bill)
 	{
 		if ($bill->getPublicationstatus() == 'FILED')
-        {
+		{
 			$bill->setPublicationstatus('DRAFT');
 			$this->save($bill);
 		}
-		$order = $bill->getOrder();	
-		$bill->setLabel(order_BillNumberGenerator::getInstance()->generate($bill));
+		$order = $bill->getOrder();
+		$this->applyNumber($bill);
 		$this->activate($bill->getId());
 		if ($bill->getStatus() == self::SUCCESS)
 		{
@@ -421,6 +420,22 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$order->getDocumentService()->processOrder($order);
 			order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_' . $bill->getStatus(), $order, $bill);
 			order_ModuleService::getInstance()->sendAdminNotification('modules_order/bill_admin_' . $bill->getStatus(), $order, $bill);
+		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_bill $document
+	 * @param boolean $forceGeneration
+	 */
+	public function applyNumber($document, $forceGeneration = false)
+	{
+		if (!$forceGeneration && order_ModuleService::getInstance()->delayNumberGeneration())
+		{
+			$document->setLabel(order_ModuleService::TEMPORARY_NUMBER);
+		}
+		else
+		{
+			$document->setLabel(order_BillNumberGenerator::getInstance()->generate($document));
 		}
 	}
 	
@@ -513,7 +528,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			'label' => $bill->getLabel(),
 			'archive' => $bill->getArchiveBoURL(),
 			'amount' => $bill->getAmountFormated(),
-		);		
+		);
 		return $result;
 	}
 	
