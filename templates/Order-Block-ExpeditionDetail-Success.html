@@ -10,7 +10,15 @@
 		<h2 change:h="">${trans:m.order.frontoffice.general-informations,ucf}</h2>
 		<dl tal:define="shippingMode expedition/getShippingMode" class="inline-items normal-margin">
 			<dt>${trans:m.order.frontoffice.related-order,ucf}</dt>
-			<dd><a change:link="document order">${order/getOrderNumber}</a> (${datetime:order/getUICreationdate}) (<a class="link popup" target="_blank" href="${actionurl:'order', 'PrintExpedition', cmpref=expedition/getId, attr}">${trans:m.order.frontoffice.delivery,ucf}</a>)</dd>
+			<dd>
+				<tal:block tal:condition="not:order/hasTemporaryNumber">
+					<a change:link="document order">${order/getOrderNumber}</a> (${datetime:order/getUICreationdate})
+					(<a class="link popup" target="_blank" href="${actionurl:'order', 'PrintExpedition', cmpref=expedition/getId, attr}">${trans:m.order.frontoffice.delivery,ucf}</a>)
+				</tal:block>
+				<tal:block tal:condition="order/hasTemporaryNumber">
+					<a change:link="document order">${datetime:order/getUICreationdate}</a>
+				</tal:block>
+			</dd>
 			<dt>${trans:m.order.frontoffice.expedition-status,ucf}</dt>
 			<dd>${expedition/getStatusLabel}</dd>
 			<dt>${trans:m.order.frontoffice.transport-name,ucf}</dt>
@@ -18,10 +26,6 @@
 			<tal:block tal:condition="expedition/getShippingDate">
 				<dt>${trans:m.order.document.expedition.shippingdate,ucf}</dt>
 				<dd>${datetime:expedition/getUIShippingDate}</dd>
-			</tal:block>
-			<tal:block tal:condition="expedition/getTrackingNumber">
-				<dt>${trans:m.order.frontoffice.tracking-number,ucf}</dt>
-				<dd><a class="link" href="${expedition/getTrackingURL}">${expedition/getTrackingNumber}</a></dd>
 			</tal:block>
 			<tal:block tal:condition="expedition/getTrackingText">
 				<dt>${trans:m.order.frontoffice.tracking-text,ucf}</dt>
@@ -33,17 +37,17 @@
 		<h2 change:h="">${trans:m.order.frontoffice.shippingaddress,ucf}</h2>
 		<ul tal:define="address expedition/getAddress" class="address normal-margin">
 			<li>${structure address/getLabelAsHtml}</li>
-			<li>${address/getAddressLine1}</li>
-			<li tal:condition="address/getAddressLine2">${address/getAddressLine2}</li>
-			<li tal:condition="address/getAddressLine3">${address/getAddressLine3}</li>
-			<li>${address/getZipcode} ${address/getCity}</li>
-			<li tal:condition="address/getProvince">${address/getProvince}</li>
-			<li>${address/getCountry/getLabel}</li>
-			<li tal:condition="address/getPhone">${address/getPhone}</li>
-			<li tal:condition="address/getFax">${address/getFax}</li>
+			<li>${address/getAddressLine1AsHtml}</li>
+			<li tal:condition="address/getAddressLine2">${address/getAddressLine2AsHtml}</li>
+			<li tal:condition="address/getAddressLine3">${address/getAddressLine3AsHtml}</li>
+			<li>${address/getZipcodeAsHtml} ${address/getCityAsHtml}</li>
+			<li tal:condition="address/getProvince">${address/getProvinceAsHtml}</li>
+			<li>${address/getCountry/getLabelAsHtml}</li>
+			<li tal:condition="address/getPhone">${address/getPhoneAsHtml}</li>
+			<li tal:condition="address/getFax">${address/getFaxAsHtml}</li>
 		</ul>
 	</div>
-</div>		
+</div>
 
 <h2 change:h="">${trans:m.order.frontoffice.expedition-lines,ucf}</h2>
 <tal:block tal:repeat="packetLines packetByExpedition">
@@ -88,7 +92,7 @@
 				<td>${line/getQuantity} / ${line/getOrderProductQuantity}</td>
 				</tal:block>
 			</tr>
-		</tbody>	
+		</tbody>
 	</table>
 	<hr tal:condition="not: repeat/packetLines/end" />
 </tal:block>

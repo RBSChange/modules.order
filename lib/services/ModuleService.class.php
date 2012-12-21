@@ -6,7 +6,14 @@
 class order_ModuleService extends ModuleBaseService
 {
 	const ORDER_SESSION_NAMESPACE = 'ecommerce-order';
-		
+	
+	/**
+	 * This is the value set as temporary number when number generation is delayed.
+	 * @see order_ModuleService::delayNumberGeneration()
+	 * @var string
+	 */
+	const TEMPORARY_NUMBER = 'TEMPORARY';
+	
 	/**
 	 * Clears the service cached data.
 	 * This method should be used only by unit tests.
@@ -39,10 +46,7 @@ class order_ModuleService extends ModuleBaseService
 				if ($locateDocumentId !== null)
 				{
 					$startIndex = 0;
-					$idsArray = order_OrderService::getInstance()->createQuery()
-					->add(Restrictions::between('creationdate', $startdate, $endate))
-					->addOrder(Order::desc('id'))
-					->setProjection(Projections::property('id', 'id'))->findColumn('id');
+					$idsArray = order_OrderService::getInstance()->createQuery()->add(Restrictions::between('creationdate', $startdate, $endate))->addOrder(Order::desc('id'))->setProjection(Projections::property('id', 'id'))->findColumn('id');
 					$totalCount = count($idsArray);
 					foreach ($idsArray as $index => $id)
 					{
@@ -57,10 +61,7 @@ class order_ModuleService extends ModuleBaseService
 			}
 			else
 			{
-				return generic_FolderService::getInstance()->createQuery()
-				->add(Restrictions::childOf($document->getId()))
-				->addOrder(Order::desc('label'))
-				->find();
+				return generic_FolderService::getInstance()->createQuery()->add(Restrictions::childOf($document->getId()))->addOrder(Order::desc('label'))->find();
 			}
 		}
 		return null;
@@ -75,13 +76,11 @@ class order_ModuleService extends ModuleBaseService
 		if ($document instanceof order_persistentdocument_order)
 		{
 			$folderName = date_Formatter::format($document->getUICreationdate(), 'Y-m-d');
-			return generic_FolderService::getInstance()->createQuery()
-				->add(Restrictions::descendentOf(ModuleService::getInstance()->getRootFolderId('order')))
-				->add(Restrictions::eq('label', $folderName))->setMaxResults(1)->findUnique();
+			return generic_FolderService::getInstance()->createQuery()->add(Restrictions::descendentOf(ModuleService::getInstance()->getRootFolderId('order')))->add(Restrictions::eq('label', $folderName))->setMaxResults(1)->findUnique();
 		}
 		return null;
 	}
-		
+	
 	/**
 	 * Checks if the order process is enable or not.
 	 * 
@@ -131,7 +130,7 @@ class order_ModuleService extends ModuleBaseService
 		// Check dates.
 		if ($beginDate !== null && $endDate !== null)
 		{
-			return ! $now->isBetween($beginDate, $endDate, true);
+			return !$now->isBetween($beginDate, $endDate, true);
 		}
 		else if ($beginDate !== null)
 		{
@@ -160,18 +159,13 @@ class order_ModuleService extends ModuleBaseService
 			}
 			$lang = RequestContext::getInstance()->getLang();
 			$message = $pref->getOrderProcessClosedDateMessage();
-			return str_replace(
-				array('{beginDate}', '{endDate}'),
-				array(
-					date_Formatter::toDefaultDate($pref->getOrderProcessClosedBeginDate()), 
-					date_Formatter::toDefaultDate($pref->getOrderProcessClosedEndDate())
-				),
-				$message
-			);
+			return str_replace(array('{beginDate}', '{endDate}'), array(
+				date_Formatter::toDefaultDate($pref->getOrderProcessClosedBeginDate()), 
+				date_Formatter::toDefaultDate($pref->getOrderProcessClosedEndDate())), $message);
 		}
 		return null;
 	}
-		
+	
 	/**
 	 * Returns the currently logged customer.
 	 * @return customer_persistentdocument_customer
@@ -179,7 +173,7 @@ class order_ModuleService extends ModuleBaseService
 	public final function getCustomer()
 	{
 		return customer_CustomerService::getInstance()->getCurrentCustomer();
-	}	
+	}
 	
 	/**
 	 * @return boolean
@@ -196,7 +190,7 @@ class order_ModuleService extends ModuleBaseService
 	{
 		return $this->areCommentsEnabled() && $this->getEnableCommentReminderPreference();
 	}
-		
+	
 	/**
 	 * @var order_persistentdocument_preferences
 	 */
@@ -238,8 +232,8 @@ class order_ModuleService extends ModuleBaseService
 			return $pref->getOrderConfirmedNotificationUserArray();
 		}
 		return array();
-	}	
-		
+	}
+	
 	/**
 	 * @param string $notifCodeName
 	 * @param order_persistentdocument_order $order
@@ -250,11 +244,15 @@ class order_ModuleService extends ModuleBaseService
 	 */
 	public function sendCustomerNotification($notifCodeName, $order, $bill = null, $expedition = null, $specificParams = null)
 	{
+		if ($this->delayNotificationIfNeeded(__METHOD__, func_get_args()))
+		{
+			return true;
+		}
 		$ns = notification_NotificationService::getInstance();
 		$configuredNotif = $ns->getConfiguredByCodeName($notifCodeName, $order->getWebsiteId(), $order->getLang());
 		return $this->doSendCustomerNotification($configuredNotif, $order, $bill, $expedition, $specificParams);
 	}
-		
+	
 	/**
 	 * @param string $notifCodeName
 	 * @param string $suffix
@@ -266,6 +264,10 @@ class order_ModuleService extends ModuleBaseService
 	 */
 	public function sendCustomerSuffixedNotification($notifCodeName, $suffix, $order, $bill = null, $expedition = null, $specificParams = null)
 	{
+		if ($this->delayNotificationIfNeeded(__METHOD__, func_get_args()))
+		{
+			return true;
+		}
 		$ns = notification_NotificationService::getInstance();
 		$configuredNotif = $ns->getConfiguredByCodeNameAndSuffix($notifCodeName, $suffix, $order->getWebsiteId(), $order->getLang());
 		return $this->doSendCustomerNotification($configuredNotif, $order, $bill, $expedition, $specificParams);
@@ -281,6 +283,10 @@ class order_ModuleService extends ModuleBaseService
 	 */
 	public function sendAdminNotification($notifCodeName, $order, $bill = null, $expedition = null, $specificParams = null)
 	{
+		if ($this->delayNotificationIfNeeded(__METHOD__, func_get_args()))
+		{
+			return true;
+		}
 		$ns = notification_NotificationService::getInstance();
 		$configuredNotif = $ns->getConfiguredByCodeName($notifCodeName, $order->getWebsiteId(), $order->getLang());
 		return $this->doSendAdminNotification($configuredNotif, $order, $bill, $expedition, $specificParams);
@@ -297,9 +303,112 @@ class order_ModuleService extends ModuleBaseService
 	 */
 	public function sendAdminSuffixedNotification($notifCodeName, $suffix, $order, $bill = null, $expedition = null, $specificParams = null)
 	{
+		if ($this->delayNotificationIfNeeded(__METHOD__, func_get_args()))
+		{
+			return true;
+		}
 		$ns = notification_NotificationService::getInstance();
 		$configuredNotif = $ns->getConfiguredByCodeNameAndSuffix($notifCodeName, $suffix, $order->getWebsiteId(), $order->getLang());
 		return $this->doSendAdminNotification($configuredNotif, $order, $bill, $expedition, $specificParams);
+	}
+	
+	/**
+	 * @param string $fullMethodName
+	 * @param array $arguments
+	 * @return boolean true if the notification is delayed, false if it should be sent now.
+	 */
+	public function delayNotificationIfNeeded($fullMethodName, $arguments)
+	{
+		foreach ($arguments as $argument)
+		{
+			if ($argument instanceof f_persistentdocument_PersistentDocument && method_exists($argument, 'hasTemporaryNumber') && $argument->hasTemporaryNumber())
+			{
+				$this->delayNotification($argument, $fullMethodName, $arguments);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * @param f_persistentdocument_PersistentDocument $target
+	 * @param string $fullMethodName
+	 * @param array $arguments
+	 */
+	protected function delayNotification($target, $fullMethodName, $arguments)
+	{
+		$target->addMetaValue('delayedNotifications', $this->encodeArgs($fullMethodName, $arguments));
+		$target->saveMeta();
+	}
+	
+	/**
+	 * @param array $arguments
+	 * @return string
+	 */
+	protected function encodeArgs($fullMethodName, $arguments)
+	{
+		$encodedArray = array($fullMethodName);
+		foreach ($arguments as $agument)
+		{
+			if ($agument instanceof f_persistentdocument_PersistentDocument)
+			{
+				$encodedArray[] = new order_SerializableDocument($agument);
+			}
+			else
+			{
+				$encodedArray[] = $agument;
+			}
+		}
+		return serialize($encodedArray);
+	}
+	
+	/**
+	 * @param string $serializedArguments
+	 * @return array
+	 */
+	protected function decodeArgs($serializedArguments)
+	{
+		$arguments = array();
+		foreach (unserialize($serializedArguments) as $encoded)
+		{
+			if ($encoded instanceof order_SerializableDocument)
+			{
+				$arguments[] = $encoded->getDocumentInstance();
+			}
+			else
+			{
+				$arguments[] = $encoded;
+			}
+		}
+		$fullMethodName = array_shift($arguments);
+		return array($fullMethodName, $arguments);
+	}
+	
+	/**
+	 * @param f_persistentdocument_PersistentDocument $target
+	 */
+	public function sendDelayedNotifications($target)
+	{
+		if ($target->hasMeta('delayedNotifications'))
+		{
+			foreach ($target->getMetaMultiple('delayedNotifications') as $serializedArguments)
+			{
+				try
+				{
+					list ($fullMethodName, $arguments) = $this->decodeArgs($serializedArguments);
+					list ($serviceName, $methodName) = explode('::', $fullMethodName);
+					$service = call_user_func(array($serviceName, 'getInstance'));
+					call_user_func_array(array($service, $methodName), $arguments);
+				}
+				catch (Exception $e)
+				{
+					Framework::exception($e);
+				}
+			}
+			
+			$target->setMeta('delayedNotifications', null);
+			$target->saveMeta();
+		}
 	}
 	
 	/**
@@ -325,14 +434,14 @@ class order_ModuleService extends ModuleBaseService
 			{
 				$configuredNotif->registerCallback($bill->getDocumentService(), 'getNotificationParameters', $bill);
 			}
-	
+			
 			if ($expedition instanceof order_persistentdocument_expedition)
 			{
 				$configuredNotif->registerCallback($expedition->getDocumentService(), 'getNotificationParameters', $expedition);
 			}
 		}
-	}	
-		
+	}
+	
 	/**
 	 * @param notification_persistentdocument_notification $configuredNotif
 	 * @param order_persistentdocument_order $order
@@ -354,7 +463,7 @@ class order_ModuleService extends ModuleBaseService
 				}
 			}
 			$this->registerNotificationCallback($configuredNotif, $order, $bill, $expedition);
-			$user = $order->getCustomer()->getUser();			
+			$user = $order->getCustomer()->getUser();
 			return $configuredNotif->sendToUser($user);
 		}
 		else if (Framework::isInfoEnabled())
@@ -363,7 +472,7 @@ class order_ModuleService extends ModuleBaseService
 		}
 		return true;
 	}
-		
+	
 	/**
 	 * @param notification_persistentdocument_notification $configuredNotif
 	 * @param order_persistentdocument_order $order
@@ -400,9 +509,9 @@ class order_ModuleService extends ModuleBaseService
 		{
 			Framework::info(__METHOD__ . " No notification found");
 		}
-		return $result;			
+		return $result;
 	}
-		
+	
 	/**
 	 * @return boolean
 	 */
@@ -410,21 +519,19 @@ class order_ModuleService extends ModuleBaseService
 	{
 		return Framework::getConfigurationValue('modules/order/useOrderPreparation', 'false') == 'true';
 	}
-
 	
 	/**
 	 * @return boolean
 	 */
 	public function isDefaultExpeditionGenerationEnabled()
 	{
-		return !$this->useOrderPreparationEnabled() && 
-			Framework::getConfigurationValue('modules/order/generateDefaultExpedition', 'true') == 'true';
+		return !$this->useOrderPreparationEnabled() && Framework::getConfigurationValue('modules/order/generateDefaultExpedition', 'true') == 'true';
 	}
 	
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @param integer $maxAge in minutes
-	 */	
+	 */
 	public function checkOrderProcessing($order)
 	{
 		$generateDefaultExpedition = $this->isDefaultExpeditionGenerationEnabled();
@@ -436,7 +543,7 @@ class order_ModuleService extends ModuleBaseService
 		$orderStatus = $order->getOrderStatus();
 		if ($orderStatus == order_OrderService::IN_PROGRESS)
 		{
-			foreach ($this->getDraftBills($order) as $bill) 
+			foreach ($this->getDraftBills($order) as $bill)
 			{
 				$this->clearDraftBill($bill);
 			}
@@ -452,7 +559,7 @@ class order_ModuleService extends ModuleBaseService
 					$oos->cancelOrder($order);
 				}
 			}
-			elseif ($generateDefaultExpedition && order_BillService::getInstance()->hasPublishedBill($order))
+			elseif ($generateDefaultExpedition && !$order->hasTemporaryNumber() && order_BillService::getInstance()->hasPublishedBill($order))
 			{
 				//Génération de l'expedition par défaut en PREPARATION
 				$oess->createForOrder($order);
@@ -463,12 +570,12 @@ class order_ModuleService extends ModuleBaseService
 			//Payment interompu en cours de processus
 			$orderDate = $order->getCreationdate();
 			$limitDate = date_Calendar::getInstance()->sub(date_Calendar::MINUTE, $maxAge)->toString();
-						
+			
 			if ($orderDate < $limitDate)
 			{
 				$cancel = true;
-									
-				foreach ($this->getDraftBills($order) as $bill) 
+				
+				foreach ($this->getDraftBills($order) as $bill)
 				{
 					if ($bill->getCreationdate() > $limitDate)
 					{
@@ -543,9 +650,8 @@ class order_ModuleService extends ModuleBaseService
 		else
 		{
 			throw new BaseException('Invalid Order Status', 'm.order.bo.actions.invalid-order-status');
-		}	
+		}
 	}
-	
 	
 	/**
 	 * @param order_persistentdocument_order $order
@@ -553,10 +659,7 @@ class order_ModuleService extends ModuleBaseService
 	 */
 	protected function getDraftBills($order)
 	{
-		return order_BillService::getInstance()->createQuery()
-				->add(Restrictions::eq('publicationstatus', 'DRAFT'))
-				->add(Restrictions::eq('order', $order))
-				->find();
+		return order_BillService::getInstance()->createQuery()->add(Restrictions::eq('publicationstatus', 'DRAFT'))->add(Restrictions::eq('order', $order))->find();
 	}
 	
 	/**
@@ -569,18 +672,59 @@ class order_ModuleService extends ModuleBaseService
 		
 		if ($bill->getTransactionId())
 		{
-			Framework::info(__METHOD__ . ' FILED ' . $order->getOrderNumber() . ' / ' .$bill->getId());
-			UserActionLoggerService::getInstance()->getInstance()->addUserDocumentEntry($user, 'filed.bill', $order, 
-					array('orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
+			Framework::info(__METHOD__ . ' FILED ' . $order->getOrderNumber() . ' / ' . $bill->getId());
+			UserActionLoggerService::getInstance()->getInstance()->addUserDocumentEntry($user, 'filed.bill', $order, array(
+				'orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
 			$bill->setPublicationstatus('FILED');
 			$bill->save();
 		}
 		else
 		{
-			Framework::info(__METHOD__ . ' DELETE ' . $order->getOrderNumber() . ' / ' .$bill->getId());
-			UserActionLoggerService::getInstance()->getInstance()->addUserDocumentEntry($user, 'purge.bill', $order, 
-					array('orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
+			Framework::info(__METHOD__ . ' DELETE ' . $order->getOrderNumber() . ' / ' . $bill->getId());
+			UserActionLoggerService::getInstance()->getInstance()->addUserDocumentEntry($user, 'purge.bill', $order, array(
+				'orderNumber' => $order->getOrderNumber(), 'billId' => $bill->getId(), 'billLabel' => $bill->getLabel()), 'order');
 			$bill->delete();
-		}		
+		}
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	public function delayNumberGeneration()
+	{
+		return Framework::getConfigurationValue('modules/order/delayNumberGeneration') == 'true';
+	}
+}
+
+/**
+ * Used in methods order_ModuleService::encodeArgs and order_ModuleService::decodeArgs
+ */
+class order_SerializableDocument
+{
+	/**
+	 * @var integer
+	 */
+	public $id;
+	
+	/**
+	 * @var string
+	 */
+	public $modelName;
+	
+	/**
+	 * @param f_persistentdocument_PersistentDocument $document
+	 */
+	public function __construct($document)
+	{
+		$this->id = $document->getId();
+		$this->modelName = $document->getDocumentModelName();
+	}
+	
+	/**
+	 * @return f_persistentdocument_PersistentDocument
+	 */
+	public function getDocumentInstance()
+	{
+		return DocumentHelper::getDocumentInstance($this->id, $this->modelName);
 	}
 }

@@ -6,12 +6,25 @@
 
 <h1 change:h=""><span>${trans:m.order.frontoffice.shipping-number,ucf}</span> ${structure expedition/getLabelAsHtml}</h1>
 <h2 change:h="">${trans:m.order.frontoffice.general-informations,ucf}</h2>
-<ul tal:define="shippingMode expedition/getShippingMode" class="normal">
-	<li><span>${trans:m.order.frontoffice.related-order,ucf,lab}</span> <a change:link="document order">${order/getOrderNumber}</a> (${datetime:order/getCreationdate})</li>
-	<li><span>${trans:m.order.frontoffice.expedition-status,ucf,lab}</span> ${expedition/getStatusLabel}</li>
-	<li><span>${trans:m.order.frontoffice.transport-name,ucf,lab}</span> ${structure shippingMode/getLabelAsHtml}</li>
-	<li tal:condition="expedition/getShippingDate"><span>${trans:m.order.document.expedition.shippingdate,ucf,lab}</span> ${datetime:expedition/getUIShippingDate}</li>
-</ul>
+<dl tal:define="shippingMode expedition/getShippingMode" class="inline-items normal-margin">
+	<dt>${trans:m.order.frontoffice.related-order,ucf}</dt>
+	<dd>
+		<tal:block tal:condition="not:order/hasTemporaryNumber">
+			<a change:link="document order">${order/getOrderNumber}</a> (${datetime:order/getUICreationdate})
+		</tal:block>
+		<tal:block tal:condition="order/hasTemporaryNumber">
+			<a change:link="document order">${datetime:order/getUICreationdate}</a>
+		</tal:block>
+	</dd>
+	<dt>${trans:m.order.frontoffice.expedition-status,ucf}</dt>
+	<dd>${expedition/getStatusLabel}</dd>
+	<dt>${trans:m.order.frontoffice.transport-name,ucf}</dt>
+	<dd>${shippingMode/getLabelAsHtml}</dd>
+	<tal:block tal:condition="expedition/getShippingDate">
+		<dt>${trans:m.order.document.expedition.shippingdate,ucf}</dt>
+		<dd>${datetime:expedition/getUIShippingDate}</dd>
+	</tal:block>
+</dl>
 
 <h2 change:h="">${trans:m.order.frontoffice.expedition-lines,ucf}</h2>
 <table class="normal">

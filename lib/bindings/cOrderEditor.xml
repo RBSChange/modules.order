@@ -9,7 +9,8 @@
 			<xul:hbox align="center">
 				<xul:clabel value="${trans:m.order.bo.general.email,ucf,attr}" />
 				<xul:label xbl:inherits="value=email" />
-				<xul:toolbarbutton label="${trans:m.order.bo.doceditor.panel.properties.view-customer,ucf,attr}" image="{IconsBase}/small/customer.png" oncommand="showCustomer()" />
+				<xul:toolbarbutton label="${trans:m.order.bo.doceditor.panel.properties.view-customer,ucf,attr}" image="{IconsBase}/small/customer.png"
+					oncommand="showCustomer()" />
 				<xul:spacer flex="1" />
 			</xul:hbox>
 		</content>
@@ -32,11 +33,11 @@
 		<implementation>
 			<constructor><![CDATA[
 				this.fireEvent('gridInitialised');
-			]]></constructor>				
-		</implementation>	
+			]]></constructor>
+		</implementation>
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
-				<xul:columns>	
+				<xul:columns>
 					<xul:column flex="1" />
 					<xul:column flex="5" />
 					<xul:column flex="1" />
@@ -45,40 +46,40 @@
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
-						<xul:label name="codeReference" value="${trans:m.order.frontoffice.codereference,ucf,attr}" sortonfield="true"/>
-						<xul:label name="productLabel" value="${trans:m.order.frontoffice.designation,ucf,attr}" sortonfield="true"/>
-						<xul:label name="unitPriceWithTax" value="${trans:m.customer.bo.doceditor.panel.carts.unit-price,ucf,attr}" sortonfield="true"/>
-						<xul:label name="quantity" value="${trans:m.order.frontoffice.quantity,ucf,attr}" sortonfield="true"/>
-						<xul:label name="totalPriceWithTax" value="${trans:m.customer.bo.doceditor.panel.carts.total-price,ucf,attr}" sortonfield="true"/>
+						<xul:label name="codeReference" value="${trans:m.order.frontoffice.codereference,ucf,attr}" sortonfield="true" />
+						<xul:label name="productLabel" value="${trans:m.order.frontoffice.designation,ucf,attr}" sortonfield="true" />
+						<xul:label name="unitPriceWithTax" value="${trans:m.customer.bo.doceditor.panel.carts.unit-price,ucf,attr}" sortonfield="true" />
+						<xul:label name="quantity" value="${trans:m.order.frontoffice.quantity,ucf,attr}" sortonfield="true" />
+						<xul:label name="totalPriceWithTax" value="${trans:m.customer.bo.doceditor.panel.carts.total-price,ucf,attr}" sortonfield="true" />
 					</xul:row>
 				</xul:rows>
-			</xul:grid>		
+			</xul:grid>
 			<xul:row anonid="template-row" class="document" hidden="true">
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />
-			</xul:row>				
+			</xul:row>
 		</content>
 	</binding>
-	
+
 	<binding id="cDiscountLines" extends="widgets.cGrid#cAbstractSortableGrid">
 		<implementation>
 			<constructor><![CDATA[
 				this.fireEvent('gridInitialised');
-			]]></constructor>				
-		</implementation>	
+			]]></constructor>
+		</implementation>
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
-				<xul:columns>	
+				<xul:columns>
 					<xul:column flex="5" />
 					<xul:column flex="1" />
 					<xul:column flex="1" />
 				</xul:columns>
 				<xul:rows anonid="document-rows">
 					<xul:row class="head" anonid="head-row">
-						<xul:label name="label" value="Label" sortonfield="true"/>
+						<xul:label name="label" value="Label" sortonfield="true" />
 						<xul:label name="valueWithoutTax" value="Montant HT" />
 						<xul:label name="valueWithTax" value="Montant TTC" />
 					</xul:row>
@@ -91,11 +92,11 @@
 			</xul:row>
 		</content>
 	</binding>
-	
+
 	<binding id="cCustomerAddress" extends="layout.cDocumentEditor#cFieldsGroup">
 		<implementation>
 			<field name="mLabelNames">["label", "line1","line2","line3","zipAndCity","province","country","phone","fax"]</field>
-			
+
 			<method name="fireEvent">
 				<parameter name="name" />
 				<body><![CDATA[
@@ -104,11 +105,11 @@
 					this.dispatchEvent(evt);
 				]]></body>
 			</method>
-			
+
 			<constructor><![CDATA[
 				this.fireEvent('addressInitialised');
 			]]></constructor>
-			
+
 			<method name="initJSONDataset">
 				<parameter name="dataset" />
 				<body><![CDATA[
@@ -128,35 +129,62 @@
 				]]></body>
 			</method>
 		</implementation>
-		
+
 		<content>
 			<xul:groupbox flex="1">
-				<xul:caption xbl:inherits="label"/>
+				<xul:caption xbl:inherits="label" />
 				<xul:grid flex="1">
 					<xul:columns>
-						<xul:column/>
-						<xul:column flex="1"/>
+						<xul:column />
+						<xul:column flex="1" />
 					</xul:columns>
 					<xul:rows>
-						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="label"/></xul:row>
-						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="line1"/></xul:row>
-						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="line2"/></xul:row>
-						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="line3"/></xul:row>
-						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="zipAndCity"/></xul:row>
-						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="province"/></xul:row>
-						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="country"/></xul:row>
-						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="phone"/></xul:row>
-						<xul:row><xul:label style="padding-left: 21px"/><xul:cselectablelabel anonid="fax"/></xul:row>
+						<xul:row>
+							<xul:label style="padding-left: 21px" />
+							<xul:cselectablelabel anonid="label" />
+						</xul:row>
+						<xul:row>
+							<xul:label style="padding-left: 21px" />
+							<xul:cselectablelabel anonid="line1" />
+						</xul:row>
+						<xul:row>
+							<xul:label style="padding-left: 21px" />
+							<xul:cselectablelabel anonid="line2" />
+						</xul:row>
+						<xul:row>
+							<xul:label style="padding-left: 21px" />
+							<xul:cselectablelabel anonid="line3" />
+						</xul:row>
+						<xul:row>
+							<xul:label style="padding-left: 21px" />
+							<xul:cselectablelabel anonid="zipAndCity" />
+						</xul:row>
+						<xul:row>
+							<xul:label style="padding-left: 21px" />
+							<xul:cselectablelabel anonid="province" />
+						</xul:row>
+						<xul:row>
+							<xul:label style="padding-left: 21px" />
+							<xul:cselectablelabel anonid="country" />
+						</xul:row>
+						<xul:row>
+							<xul:label style="padding-left: 21px" />
+							<xul:cselectablelabel anonid="phone" />
+						</xul:row>
+						<xul:row>
+							<xul:label style="padding-left: 21px" />
+							<xul:cselectablelabel anonid="fax" />
+						</xul:row>
 					</xul:rows>
 				</xul:grid>
 				<children />
 			</xul:groupbox>
 		</content>
-		
-	</binding>	
-	
+
+	</binding>
+
 	<!-- Messages panel -->
-	
+
 	<binding id="messageSection">
 		<resources>
 			<stylesheet src="modules.order.cOrderEditor" />
@@ -177,7 +205,9 @@
 						<xul:row>
 							<xul:label value="${trans:m.order.document.message.content,ucf,attr}" />
 							<xul:hbox flex="1">
-								<html:div flex="1" anonid="content" class="allow-text-selection"><xbl:children /></html:div>
+								<html:div flex="1" anonid="content" class="allow-text-selection">
+									<xbl:children />
+								</html:div>
 							</xul:hbox>
 						</xul:row>
 					</xul:rows>
@@ -185,17 +215,19 @@
 			</xul:groupbox>
 		</content>
 	</binding>
-	
+
 	<!-- Bills and shipping. -->
 	<binding id="cBillgenerator" extends="form.cField#cHiddenField">
 		<content>
 			<children />
 			<xul:vbox>
 				<xul:hbox>
-					<xul:button xbl:inherits="hidden=hide-generate,disabled=disable-generate" label="${trans:m.order.bo.actions.generatebill,ucf,attr}" oncommand="generate()" image="{IconsBase}/small/document-text.png" />
-					<xul:button xbl:inherits="hidden=hide-dl" hidden="true" label="${trans:m.order.bo.actions.downloadbill,ucf,attr}" oncommand="download()" image="{IconsBase}/small/download.png" />
+					<xul:button xbl:inherits="hidden=hide-generate,disabled=disable-generate" label="${trans:m.order.bo.actions.generatebill,ucf,attr}"
+						oncommand="generate()" image="{IconsBase}/small/document-text.png" />
+					<xul:button xbl:inherits="hidden=hide-dl" hidden="true" label="${trans:m.order.bo.actions.downloadbill,ucf,attr}" oncommand="download()"
+						image="{IconsBase}/small/download.png" />
 					<xul:label xbl:inherits="hidden=hide-msg" value="${trans:m.order.bo.actions.cannotgeneratebillmsg,ucf,attr}" />
-					
+
 				</xul:hbox>
 			</xul:vbox>
 		</content>
@@ -282,26 +314,26 @@
 			</method>
 		</implementation>
 	</binding>
-	
+
 	<binding id="cBillsSoratbleGrid" extends="widgets.cGrid#cAbstractSortableGrid">
 		<implementation>
 			<constructor><![CDATA[
 				this.fireEvent('gridInitialised');
 			]]></constructor>
-			
+
 			<method name="execute_edit">
 				<parameter name="rowNode" />
-				<parameter name="rowData" />			
+				<parameter name="rowData" />
 				<body><![CDATA[
 					if (this.disabled) {return;}
 					var uri = ['order', 'openDocument', rowData.type, rowData.id].join(',');
 					openActionUri(uri);
 				]]></body>
 			</method>
-			
+
 			<method name="execute_validate">
 				<parameter name="rowNode" />
-				<parameter name="rowData" />			
+				<parameter name="rowData" />
 				<body><![CDATA[
 					if (this.disabled) {return;}
 					var me = this;
@@ -311,7 +343,7 @@
 					getController().openModalDialog(this, 'ValidateBill', {callBack: callBack, rowData: rowData});
 				]]></body>
 			</method>
-			
+
 			<method name="onValidate">
 				<parameter name="rowNode" />
 				<parameter name="rowData" />
@@ -327,10 +359,10 @@
 					module.refreshMainViewDeck();
 				]]></body>
 			</method>
-			
+
 			<method name="execute_generate">
 				<parameter name="rowNode" />
-				<parameter name="rowData" />	
+				<parameter name="rowData" />
 				<body><![CDATA[
 					var propspanel = this.parentNode;
 					var propspanel = this.parentNode;
@@ -342,7 +374,7 @@
 					try
 					{
 						propspanel.showTextMessage("${trans:m.order.bo.actions.generatingbill,ucf,js}");
-						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: rowData.id, lang: rowData.lang}, null , true); 
+						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: rowData.id, lang: rowData.lang}, null , true);
 						if (result.status === 'OK')
 						{
 							propspanel.showTextMessage("${trans:m.order.bo.actions.generatingbilldone,ucf,js}");
@@ -360,7 +392,7 @@
 					}
 				]]></body>
 			</method>
-			
+
 			<method name="execute_download">
 				<parameter name="rowNode" />
 				<parameter name="rowData" />
@@ -369,7 +401,7 @@
 					wToolkit.downloadurl(rowData.archive);
 				]]></body>
 			</method>
-			
+
 			<method name="setCellValue">
 				<parameter name="cell" />
 				<parameter name="name" />
@@ -377,7 +409,7 @@
 				<body><![CDATA[	
 					if (name === 'archive')
 					{
-						this.setCellArchiveValue(cell, dataRow);	
+						this.setCellArchiveValue(cell, dataRow);
 					}
 					else
 					{
@@ -392,13 +424,13 @@
 							else
 							{
 								cell.removeAttribute('class');
-								cell.removeAttribute('action');								
+								cell.removeAttribute('action');
 							}
 						}
 					}
 				]]></body>
 			</method>
-			
+
 			<method name="setCellArchiveValue">
 				<parameter name="cell" />
 				<parameter name="dataRow" />
@@ -410,6 +442,10 @@
 					else if (dataRow.archive == "-2")
 					{
 						cell.setAttribute('value', "-");
+					}
+					else if (dataRow.archive == "-3")
+					{
+						cell.setAttribute('value', "${transui:m.order.bo.actions.cannotgeneratebillmsg-temporary-number,ucf,js}");
 					}
 					else if (dataRow.archive == "")
 					{
@@ -424,11 +460,11 @@
 						cell.setAttribute('action', 'download');
 					}
 				]]></body>
-			</method>	
+			</method>
 		</implementation>
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
-				<xul:columns>	
+				<xul:columns>
 					<xul:column flex="1" />
 					<xul:column flex="1" />
 					<xul:column flex="1" />
@@ -440,9 +476,9 @@
 					<xul:row class="head" anonid="head-row">
 						<xul:label name="label" value="${trans:m.order.document.bill.label,ucf,attr}" />
 						<xul:label name="amount" value="${trans:m.order.document.bill.amount,ucf,attr}" />
-						<xul:label name="trsid" value="${trans:m.order.document.bill.transactionid,ucf,attr}" />					
+						<xul:label name="trsid" value="${trans:m.order.document.bill.transactionid,ucf,attr}" />
 						<xul:label name="status" value="${trans:m.order.document.bill.status,ucf,attr}" />
-						<xul:label name="archive" value="${trans:m.order.document.bill.archive,ucf,attr}" />						
+						<xul:label name="archive" value="${trans:m.order.document.bill.archive,ucf,attr}" />
 						<xul:label name="actionrow" value="${trans:m.order.bo.doceditor.actions,ucf,attr}" />
 					</xul:row>
 				</xul:rows>
@@ -459,13 +495,13 @@
 			</xul:row>
 		</content>
 	</binding>
-	
+
 	<binding id="cExpeditionsSoratbleGrid" extends="widgets.cGrid#cAbstractSortableGrid">
 		<implementation>
 			<constructor><![CDATA[
 				this.fireEvent('gridInitialised');
 			]]></constructor>
-			
+
 			<method name="execute_edit">
 				<parameter name="rowNode" />
 				<parameter name="rowData" />
@@ -475,7 +511,7 @@
 					openActionUri(uri);
 				]]></body>
 			</method>
-			
+
 			<method name="execute_shipped">
 				<parameter name="rowNode" />
 				<parameter name="rowData" />
@@ -488,7 +524,7 @@
 					getController().openModalDialog(this, 'ShipExpedition', {callBack: callBack, rowData: rowData});
 				]]></body>
 			</method>
-			
+
 			<method name="execute_tracking">
 				<parameter name="rowNode" />
 				<parameter name="rowData" />
@@ -497,7 +533,7 @@
 					wToolkit.openurl(rowData.trackingurl);
 				]]></body>
 			</method>
-					
+
 			<method name="onShipped">
 				<parameter name="rowNode" />
 				<parameter name="rowData" />
@@ -513,9 +549,9 @@
 					module.refreshMainViewDeck();
 				]]></body>
 			</method>
-			
+
 			<method name="setCellValue">
-				<parameter name="cell" />	
+				<parameter name="cell" />
 				<parameter name="name" />
 				<parameter name="dataRow" />
 				<body><![CDATA[	
@@ -551,7 +587,7 @@
 		</implementation>
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
-				<xul:columns>	
+				<xul:columns>
 					<xul:column />
 					<xul:column />
 					<xul:column />
@@ -582,7 +618,7 @@
 			</xul:row>
 		</content>
 	</binding>
-	
+
 	<binding id="validateBillDialog" extends="core.wDialog#wDialog">
 		<implementation>
 			<property name="transactionId" readonly="true">
@@ -596,13 +632,13 @@
 					return document.getAnonymousElementByAttribute(this, 'anonid', 'transactiontext').value;
 				]]></getter>
 			</property>
-			
+
 			<property name="transactionDate" readonly="true">
 				<getter><![CDATA[
 					return document.getAnonymousElementByAttribute(this, 'anonid', 'transactiondate').value;
 				]]></getter>
 			</property>
-			
+
 			<method name="onInitialize">
 				<body><![CDATA[
 					this.autoResize(500, 200);
@@ -627,7 +663,7 @@
 					this.controller.closeModalDialog();
 				]]></body>
 			</method>
-			
+
 			<method name="onOk">
 				<body><![CDATA[
 					var rowData = this.parameters.rowData;
@@ -649,7 +685,7 @@
 					}
 				]]></body>
 			</method>
-			
+
 			<method name="onFail">
 				<body><![CDATA[
 					if (confirm("${trans:m.order.bo.general.confirm-cancel-bill,ucf,js}"))
@@ -679,11 +715,12 @@
 					<xul:label value="${trans:m.order.bo.general.validate-bill,ucf,attr}" class="dialog-title" />
 					<xul:spacer flex="1" />
 					<xul:vbox pack="center">
-						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" tooltiptexts="${trans:m.uixul.bo.dialog.cancel,ucf,attr}" />
+						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();"
+							tooltiptexts="${trans:m.uixul.bo.dialog.cancel,ucf,attr}" />
 					</xul:vbox>
 				</xul:hbox>
 				<xul:grid flex="1">
-					<xul:columns>	
+					<xul:columns>
 						<xul:column />
 						<xul:column flex="1" />
 					</xul:columns>
@@ -698,11 +735,12 @@
 						</xul:row>
 						<xul:row>
 							<xul:label value="${trans:m.order.document.bill.transactiondate,ucf,attr}" />
-							<xul:cfield name="transactiondate" anonid="transactiondate" hidehelp="true" fieldtype="datetime" initialvalue="" timeoffset="30"/>
+							<xul:cfield name="transactiondate" anonid="transactiondate" hidehelp="true" fieldtype="datetime" initialvalue=""
+								timeoffset="30" />
 						</xul:row>
 						<xul:row>
 							<xul:label value="${trans:m.order.document.bill.transactionid,ucf,attr}" />
-							<xul:textbox anonid="transactionid" value="" size="30" maxlength="30" onchange="checkValidate()"/>							
+							<xul:textbox anonid="transactionid" value="" size="30" maxlength="30" onchange="checkValidate()" />
 						</xul:row>
 						<xul:row>
 							<xul:label value="${trans:m.order.document.bill.transactiontext,ucf,attr}" />
@@ -711,14 +749,15 @@
 					</xul:rows>
 				</xul:grid>
 				<xul:hbox pack="center" style="height: 32px">
-					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="${trans:m.order.bo.general.validate,ucf,attr}" />
+					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()"
+						label="${trans:m.order.bo.general.validate,ucf,attr}" />
 					<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="${trans:m.order.bo.general.cancel,ucf,attr}" />
 					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="${trans:m.uixul.bo.dialog.close,ucf,attr}" />
 				</xul:hbox>
 			</xul:vbox>
 		</xbl:content>
 	</binding>
-	
+
 	<binding id="shipExpeditionDialog" extends="core.wDialog#wDialog">
 		<implementation>
 			<property name="shippingDate" readonly="true">
@@ -732,13 +771,13 @@
 					return document.getAnonymousElementByAttribute(this, 'anonid', 'trackingnumber').value;
 				]]></getter>
 			</property>
-			
+
 			<property name="packetNumber" readonly="true">
 				<getter><![CDATA[
 					return document.getAnonymousElementByAttribute(this, 'anonid', 'packetnumber').value;
 				]]></getter>
 			</property>
-			
+
 			<method name="onInitialize">
 				<body><![CDATA[
 					this.autoResize(500, 200);
@@ -761,7 +800,7 @@
 					this.controller.closeModalDialog();
 				]]></body>
 			</method>
-			
+
 			<method name="onOk">
 				<body><![CDATA[
 					var rowData = this.parameters.rowData;
@@ -782,7 +821,7 @@
 					}
 				]]></body>
 			</method>
-			
+
 			<method name="onFail">
 				<body><![CDATA[
 					if (confirm("${trans:m.order.bo.general.confirm-cancel-expedition,ucf,js}"))
@@ -812,11 +851,12 @@
 					<xul:label value="${trans:m.order.bo.general.ship-expedition,ucf,attr}" class="dialog-title" />
 					<xul:spacer flex="1" />
 					<xul:vbox pack="center">
-						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" tooltiptexts="${trans:m.uixul.bo.dialog.cancel,ucf,attr}" />
+						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();"
+							tooltiptexts="${trans:m.uixul.bo.dialog.cancel,ucf,attr}" />
 					</xul:vbox>
 				</xul:hbox>
 				<xul:grid flex="1">
-					<xul:columns>	
+					<xul:columns>
 						<xul:column />
 						<xul:column flex="1" />
 					</xul:columns>
@@ -831,20 +871,21 @@
 						</xul:row>
 						<xul:row>
 							<xul:label value="${trans:m.order.document.expedition.shippingdate,ucf,attr}" />
-							<xul:cfield name="shippingdate" anonid="shippingdate" hidehelp="true" fieldtype="datetime" initialvalue="" timeoffset="30"/>
+							<xul:cfield name="shippingdate" anonid="shippingdate" hidehelp="true" fieldtype="datetime" initialvalue="" timeoffset="30" />
 						</xul:row>
 						<xul:row>
 							<xul:label value="${trans:m.order.document.expedition.trackingnumber,ucf,attr}" />
-							<xul:textbox anonid="trackingnumber" value="" maxlength="30" />							
+							<xul:textbox anonid="trackingnumber" value="" maxlength="30" />
 						</xul:row>
 						<xul:row>
 							<xul:label value="${trans:m.order.document.expedition.packetnumber,ucf,attr}" />
-							<xul:textbox anonid="packetnumber" value="" maxlength="30" />							
+							<xul:textbox anonid="packetnumber" value="" maxlength="30" />
 						</xul:row>
 					</xul:rows>
 				</xul:grid>
 				<xul:hbox pack="center" style="height: 32px">
-					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" label="${trans:m.order.bo.general.validate,ucf,attr}" />
+					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()"
+						label="${trans:m.order.bo.general.validate,ucf,attr}" />
 					<xul:button image="{IconsBase}/small/forbidden.png" anonid="ok" oncommand="onFail()" label="${trans:m.order.bo.general.cancel,ucf,attr}" />
 					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="${trans:m.uixul.bo.dialog.close,ucf,attr}" />
 				</xul:hbox>
@@ -856,13 +897,13 @@
 			]]></xbl:handler>
 		</xbl:handlers>
 	</binding>
-	
+
 	<!-- Expedition resume -->
-	
+
 	<binding id="cExpeditionLinesResumeSection" extends="layout.cDocumentEditor#cResumeSection">
 		<implementation>
-			<field name="mTmpData">null</field>	
-				
+			<field name="mTmpData">null</field>
+
 			<method name="setValues">
 				<parameter name="values" />
 				<body><![CDATA[
@@ -892,7 +933,7 @@
 			</method>
 		</implementation>
 	</binding>
-	
+
 	<binding id="cExpeditionLinesGrid" extends="widgets.cGrid#cAbstractSortableGrid">
 		<implementation>
 			<constructor><![CDATA[
@@ -924,13 +965,13 @@
 			</xul:row>
 		</content>
 	</binding>
-	
+
 	<binding id="cEditExpeditionLinesGrid" extends="widgets.cGrid#cAbstractSortableGrid">
 		<implementation>
 			<constructor><![CDATA[
 				this.fireEvent('gridInitialised');
 			]]></constructor>
-			
+
 			<method name="getDatarowKey">
 				<parameter name="datarow" />
 				<body><![CDATA[
@@ -947,9 +988,9 @@
 					this.mCurrentDatasetKey = this.generateDatasetKey(dataset);
 					this.dispatchChanged();
 				]]></body>
-			</method>		
+			</method>
 		</implementation>
-		
+
 		<xbl:handlers>
 			<xbl:handler event="input"><![CDATA[
 				var ctrl = event.originalTarget;
@@ -963,10 +1004,10 @@
 				}
 			]]></xbl:handler>
 		</xbl:handlers>
-		
+
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
-				<xul:columns>	
+				<xul:columns>
 					<xul:column />
 					<xul:column flex="1" />
 					<xul:column />
@@ -979,7 +1020,7 @@
 						<xul:label name="label" value="${trans:m.order.frontoffice.designation,ucf,attr}" />
 						<xul:label name="codereference" value="${trans:m.order.frontoffice.codereference,ucf,attr}" />
 						<xul:label name="packetnumber" value="${trans:m.order.document.expedition.packetnumber,ucf,attr}" />
-						<xul:label name="trackingnumber" value="${trans:m.order.document.expedition.trackingnumber,ucf,attr}" />	
+						<xul:label name="trackingnumber" value="${trans:m.order.document.expedition.trackingnumber,ucf,attr}" />
 					</xul:row>
 				</xul:rows>
 			</xul:grid>
@@ -987,7 +1028,7 @@
 				<xul:label value="" />
 				<xul:label value="" />
 				<xul:label value="" />
-				<xul:textbox value="" size="15" cn="packetnumber"/>
+				<xul:textbox value="" size="15" cn="packetnumber" />
 				<xul:textbox value="" size="15" cn="trackingnumber" />
 			</xul:row>
 		</content>
@@ -996,7 +1037,7 @@
 	<binding id="cShipExpeditionProperty" extends="layout.cDocumentEditor#cLinkProperty">
 		<implementation>
 			<field name="rowData" />
-		
+
 			<method name="setValue">
 				<parameter name="val" />
 				<body><![CDATA[
@@ -1023,7 +1064,7 @@
 					}
 				]]></body>
 			</method>
-		
+
 			<method name="click">
 				<body><![CDATA[
 					if (this.rowData !== null)
@@ -1034,7 +1075,7 @@
 					}
 				]]></body>
 			</method>
-			
+
 			<method name="onShipped">
 				<body><![CDATA[
 					var module = this.parentNode;
@@ -1047,15 +1088,15 @@
 			</method>
 		</implementation>
 	</binding>
-	
+
 	<!-- Credit notes -->
-	
+
 	<binding id="cCreditNotesSoratbleGrid" extends="widgets.cGrid#cAbstractSortableGrid">
 		<implementation>
 			<constructor><![CDATA[
 				this.fireEvent('gridInitialised');
 			]]></constructor>
-			
+
 			<method name="execute_edit">
 				<parameter name="rowNode" />
 				<parameter name="rowData" />
@@ -1065,7 +1106,7 @@
 					openActionUri(uri);
 				]]></body>
 			</method>
-			
+
 			<method name="execute_manualrecredit">
 				<parameter name="rowNode" />
 				<parameter name="rowData" />
@@ -1113,7 +1154,7 @@
 		</implementation>
 		<content>
 			<xul:grid flex="1" anonid="grid" xbl:inherits="disabled">
-				<xul:columns>	
+				<xul:columns>
 					<xul:column />
 					<xul:column flex="1" />
 					<xul:column flex="1" />
@@ -1124,8 +1165,8 @@
 					<xul:row class="head" anonid="head-row">
 						<xul:label name="status" value="${transui:m.order.document.creditnote.status-header,ucf,attr}" />
 						<xul:label name="label" value="${trans:m.order.document.creditnote.label,ucf,attr}" />
-						<xul:label name="amount" value="${trans:m.order.document.creditnote.amount,ucf,attr}" />	
-						<xul:label name="amountNotApplied" value="${trans:m.order.document.creditnote.amountnotapplied,ucf,attr}" />				
+						<xul:label name="amount" value="${trans:m.order.document.creditnote.amount,ucf,attr}" />
+						<xul:label name="amountNotApplied" value="${trans:m.order.document.creditnote.amountnotapplied,ucf,attr}" />
 						<xul:label name="actionrow" value="${trans:m.order.bo.doceditor.actions,ucf,attr}" />
 					</xul:row>
 				</xul:rows>
@@ -1142,7 +1183,7 @@
 			</xul:row>
 		</content>
 	</binding>
-	
+
 	<binding id="cReCreditNoteDialog" extends="core.wDialog#wDialog">
 		<implementation>
 			<method name="onInitialize">
@@ -1164,31 +1205,31 @@
 					}
 				]]></body>
 			</method>
-			
+
 			<method name="onCancel">
 				<body><![CDATA[
 					this.controller.closeModalDialog();
 				]]></body>
 			</method>
-			
+
 			<property name="transactionText" readonly="true">
 				<getter><![CDATA[
 					return document.getAnonymousElementByAttribute(this, 'anonid', 'transactiontext').value;
 				]]></getter>
 			</property>
-			
+
 			<property name="transactionDate" readonly="true">
 				<getter><![CDATA[
 					return document.getAnonymousElementByAttribute(this, 'anonid', 'transactiondate').value;
 				]]></getter>
 			</property>
-			
+
 			<method name="onOk">
 				<body><![CDATA[
 					var rowData = this.parameters.rowData;
 					var parameters = {cmpref: rowData.id, lang: rowData.lang, 
 						transactiontext: this.transactionText, transactiondate: this.transactionDate};
-					var result = wCore.executeJSON("order", "ReCreditNote", parameters, null , true); 	
+					var result = wCore.executeJSON("order", "ReCreditNote", parameters, null , true);
 					if (result.status === 'OK')
 					{
 						this.parameters.rowData.canReCreditNote = result.contents.canReCreditNote;
@@ -1212,12 +1253,12 @@
 					<xul:label value="${trans:m.order.document.creditnote.recredit-dialog-title,ucf,attr}" class="dialog-title" />
 					<xul:spacer flex="1" />
 					<xul:vbox pack="center">
-						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();" 
+						<xul:toolbarbutton height="16" width="16" image="{IconsBase}/small/delete.png" oncommand="onCancel();"
 							tooltiptexts="${trans:m.uixul.bo.dialog.cancel,ucf,attr}" />
 					</xul:vbox>
 				</xul:hbox>
 				<xul:grid flex="1">
-					<xul:columns>	
+					<xul:columns>
 						<xul:column />
 						<xul:column flex="1" />
 					</xul:columns>
@@ -1225,23 +1266,24 @@
 						<xul:row>
 							<xul:label value="${trans:m.order.document.creditnote.label,ucf,attr}" />
 							<xul:label anonid="number" value="-" />
-						</xul:row>	
+						</xul:row>
 						<xul:row>
 							<xul:label value="${trans:m.order.document.creditnote.amount,ucf,attr}" />
 							<xul:label anonid="amount" value="-" />
-						</xul:row>	
-						<xul:row>
-							<xul:label value="${trans:m.order.document.creditnote.transactiondate,ucf,attr}" />
-							<xul:cfield name="transactiondate" anonid="transactiondate" hidehelp="true" fieldtype="datetime" initialvalue="" timeoffset="30"/>
 						</xul:row>
 						<xul:row>
-							<xul:label  value="${trans:m.order.document.creditnote.transactiontext,ucf,attr}" />
+							<xul:label value="${trans:m.order.document.creditnote.transactiondate,ucf,attr}" />
+							<xul:cfield name="transactiondate" anonid="transactiondate" hidehelp="true" fieldtype="datetime" initialvalue=""
+								timeoffset="30" />
+						</xul:row>
+						<xul:row>
+							<xul:label value="${trans:m.order.document.creditnote.transactiontext,ucf,attr}" />
 							<xul:textbox anonid="transactiontext" value="" multiline="true" maxlength="512" cols="40" rows="5" />
 						</xul:row>
 					</xul:rows>
 				</xul:grid>
 				<xul:hbox pack="center" style="height: 32px">
-					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()" 
+					<xul:button image="{IconsBase}/small/check.png" disabled="true" anonid="ok" oncommand="onOk()"
 						label="${trans:m.order.document.creditnote.recredit-action,ucf,attr}" />
 					<xul:button image="{IconsBase}/small/delete.png" oncommand="onCancel()" label="${trans:m.uixul.bo.dialog.close,ucf,attr}" />
 				</xul:hbox>

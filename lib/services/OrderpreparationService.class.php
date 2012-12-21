@@ -144,7 +144,7 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 		
 		if ($document->getGenerateNumber() && $document->getLabel() == null)
 		{
-			$document->setLabel($this->getNextNumber($document));
+			$this->applyNumber($document);
 		}
 	}
 	
@@ -165,6 +165,22 @@ class order_OrderpreparationService extends f_persistentdocument_DocumentService
 	public function getNextNumber($document)
 	{
 		return order_OrderPreparationNumberGenerator::getInstance()->generate($document);
+	}
+	
+	/**
+	 * @param order_persistentdocument_orderpreparation $document
+	 * @param boolean $forceGeneration
+	 */
+	public function applyNumber($document, $forceGeneration = false)
+	{
+		if (!$forceGeneration && order_ModuleService::getInstance()->delayNumberGeneration())
+		{
+			$document->setLabel(order_ModuleService::TEMPORARY_NUMBER);
+		}
+		else
+		{
+			$document->setLabel($this->getNextNumber($document));
+		}
 	}
 	
 	/**

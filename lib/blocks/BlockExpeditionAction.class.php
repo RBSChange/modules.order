@@ -1,18 +1,15 @@
 <?php
 /**
- * order_BlockExpeditionAction
- * @package modules.order.lib.blocks
+ * @package modules.order
  */
 class order_BlockExpeditionAction extends website_BlockAction
 {
 	/**
-	 * @see website_BlockAction::execute()
-	 *
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
 	 * @return string
 	 */
-	function execute($request, $response)
+	public function execute($request, $response)
 	{
 		$expedition = $this->getExpeditionDocument();
 		if ($expedition === null)
@@ -28,12 +25,12 @@ class order_BlockExpeditionAction extends website_BlockAction
 	/**
 	 * @return order_persistentdocument_expedition
 	 */
-	private function getExpeditionDocument()
+	protected function getExpeditionDocument()
 	{
 		$expedition = null;
 		$expeditionId = $this->findLocalParameterValue('expeditionid');
 		Framework::info(__METHOD__ . ' ' . $expeditionId);
-		if (intval($expeditionId)>0)
+		if (intval($expeditionId) > 0)
 		{
 			$expedition = DocumentHelper::getDocumentInstance($expeditionId, 'modules_order/expedition');
 		}

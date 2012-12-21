@@ -10,18 +10,21 @@
 </ul>
 
 <h1 change:h="">
-	${trans:m.order.frontoffice.order-number-title,ucf,orderNumber=order/getOrderNumber}
+	${trans:m.order.frontoffice.order-detail-title,ucf}
 </h1>
 
 <dl class="inline-items">
+	<tal:block tal:condition="not:order/hasTemporaryNumber">
+		<dt>${trans:m.order.standardprocess.result-order-number,ucf}</dt>
+		<dd>${order/getOrderNumberAsHtml}</dd>
+	</tal:block>
 	<dt>${trans:m.order.fo.order-date,ucf}</dt>
 	<dd>${datetime:order/getUICreationdate}</dd>
 	<dt>${trans:m.order.frontoffice.status,ucf}</dt>
 	<dd>${order/getFoOrderStatusLabel}</dd>
-	
 	<tal:block tal:condition="order/getContextId">
-	<dt>${trans:m.order.fo.context-label,ucf}</dt>
-	<dd>${structure order/getContextDocumentLabelAsHtml}</dd>	
+		<dt>${trans:m.order.fo.context-label,ucf}</dt>
+		<dd>${structure order/getContextDocumentLabelAsHtml}</dd>
 	</tal:block>
 </dl>
 

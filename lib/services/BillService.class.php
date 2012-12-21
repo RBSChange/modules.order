@@ -9,9 +9,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 	const WAITING = "waiting";
 	const SUCCESS = "success";
 	const FAILED = "failed";
-	
 	const BILL_STATUS_MODIFIED_EVENT = 'order_billStatusChanged';
-
+	
 	/**
 	 * @return order_persistentdocument_bill
 	 */
@@ -19,7 +18,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	{
 		return $this->getNewDocumentInstanceByModelName('modules_order/bill');
 	}
-
+	
 	/**
 	 * Create a query based on 'modules_order/bill' model.
 	 * Return document that are instance of modules_order/bill,
@@ -49,7 +48,6 @@ class order_BillService extends f_persistentdocument_DocumentService
 	{
 		return Framework::getConfigurationValue("modules/order/genBill") == 'true';
 	}
-	
 	public function genBills()
 	{
 		if (!$this->generateBillIsActive())
@@ -57,9 +55,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 			return;
 		}
 		
-		$query = $this->createQuery()->add(Restrictions::published())
-			->add(Restrictions::isNull("archive"));
-
+		$query = $this->createQuery()->add(Restrictions::published())->add(Restrictions::isNull("archive"));
+		
 		foreach ($query->find() as $bill)
 		{
 			$this->genBill($bill);
@@ -71,12 +68,12 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 * @throws Exception
 	 */
 	public function genBill($bill)
-	{	
-		if (!$this->generateBillIsActive() || !$bill->isPublished() || $bill->getArchive() !== null)
+	{
+		if (!$this->generateBillIsActive() || !$bill->isPublished() || $bill->hasTemporaryNumber() || $bill->getArchive() !== null)
 		{
 			return;
 		}
-
+		
 		$tmpPath = f_util_FileUtils::getTmpFile();
 		$this->createBill($bill, $tmpPath);
 		
@@ -87,7 +84,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$label = $bill->getLabel();
 			$media->setLabel($label);
 			$media->setTitle($label);
-			$media->setNewFileName($tmpPath, "bill-" . $bill->getId() .".pdf");
+			$media->setNewFileName($tmpPath, 'bill-' . $bill->getId() . '.pdf');
 			$media->save();
 			$bill->setArchive($media);
 			$bill->save();
@@ -134,25 +131,19 @@ class order_BillService extends f_persistentdocument_DocumentService
 				$order->setOrderStatus(order_OrderService::INITIATED);
 				$order->setLabel(date_Calendar::now()->toString());
 				$this->getPersistentProvider()->updateDocument($order);
-			}			
+			}
 			
-			$bill = $this->createQuery()->add(Restrictions::eq('publicationstatus', 'DRAFT'))
-				->add(Restrictions::eq('order', $order))
-				->findUnique();
-				
+			$bill = $this->createQuery()->add(Restrictions::eq('publicationstatus', 'DRAFT'))->add(Restrictions::eq('order', $order))->findUnique();
+			
 			if ($bill === null)
 			{
 				$bill = $this->getNewDocumentInstance();
 			}
 			
-	
-							
 			$this->fillBillByOrder($bill, $order);
 			$connector = $bill->getPaymentConnector();
-			$connector->getDocumentService()->initializePayment($bill);			
+			$connector->getDocumentService()->initializePayment($bill);
 			$bill->save();
-			
-
 			
 			$this->getTransactionManager()->commit();
 		}
@@ -174,41 +165,35 @@ class order_BillService extends f_persistentdocument_DocumentService
 		parent::preInsert($document, $parentNodeId);
 		$document->setClientIp(RequestContext::getInstance()->getClientIp());
 	}
-
+	
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @return order_persistentdocument_bill[]
 	 */
 	public function getByOrder($order)
 	{
-		$query = $this->createQuery()->add(Restrictions::eq('order', $order))
-				->add(Restrictions::ne('publicationstatus', 'DRAFT'))
-				->addOrder(Order::asc('id'));
+		$query = $this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::ne('publicationstatus', 'DRAFT'))->addOrder(Order::asc('id'));
 		return $query->find();
 	}
-
+	
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @return order_persistentdocument_bill[]
 	 */
 	public function getValidByOrder($order)
 	{
-		$query = $this->createQuery()->add(Restrictions::eq('order', $order))
-				->add(Restrictions::ne('publicationstatus', 'DRAFT'))
-				->add(Restrictions::in('status', array(self::WAITING, self::SUCCESS)))
-				->addOrder(Order::asc('status'))
-				->addOrder(Order::asc('id'));
+		$query = $this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::ne('publicationstatus', 'DRAFT'))->add(Restrictions::in('status', array(
+			self::WAITING, self::SUCCESS)))->addOrder(Order::asc('status'))->addOrder(Order::asc('id'));
 		return $query->find();
 	}
-		
+	
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @return order_persistentdocument_bill[]
 	 */
 	public function getByOrderForPayment($order)
 	{
-		$query = $this->createQuery()->add(Restrictions::eq('order', $order))
-				->addOrder(Order::asc('document_id'));
+		$query = $this->createQuery()->add(Restrictions::eq('order', $order))->addOrder(Order::asc('document_id'));
 		return $query->find();
 	}
 	
@@ -219,11 +204,10 @@ class order_BillService extends f_persistentdocument_DocumentService
 	public function getNotPaidAmountByOrder($order)
 	{
 		$query = order_BillService::getInstance()->createQuery()->add(Restrictions::eq('order', $order));
-		$query->add(Restrictions::ne('status', self::SUCCESS))
-			->setProjection(Projections::sum('amount', 'amount'));
+		$query->add(Restrictions::ne('status', self::SUCCESS))->setProjection(Projections::sum('amount', 'amount'));
 		return f_util_ArrayUtils::firstElement($query->findColumn('amount'));
 	}
-
+	
 	/**
 	 * @param order_persistentdocument_order $order
 	 * @return double
@@ -254,11 +238,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 * @return boolean
 	 */
 	public function hasValidBill($order)
-	{		
-		$result = $this->createQuery()
-			->add(Restrictions::eq('order', $order))
-			->add(Restrictions::ne('publicationstatus', 'FILED'))
-			->setProjection(Projections::rowCount('rowCount'))->findColumn('rowCount');
+	{
+		$result = $this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::ne('publicationstatus', 'FILED'))->setProjection(Projections::rowCount('rowCount'))->findColumn('rowCount');
 		return $result[0] > 0;
 	}
 	
@@ -268,12 +249,9 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function hasPublishedBill($order)
 	{
-		$result = $this->createQuery()
-			->add(Restrictions::eq('order', $order))
-			->add(Restrictions::published())
-			->setProjection(Projections::rowCount('rowCount'))->findColumn('rowCount');
+		$result = $this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::published())->setProjection(Projections::rowCount('rowCount'))->findColumn('rowCount');
 		return $result[0] > 0;
-	}	
+	}
 	
 	/**
 	 * @param integer $orderId
@@ -283,15 +261,11 @@ class order_BillService extends f_persistentdocument_DocumentService
 	{
 		if (Framework::isInfoEnabled())
 		{
-			Framework::info(__METHOD__. ' for orderId' . $orderId);
+			Framework::info(__METHOD__ . ' for orderId' . $orderId);
 		}
-		$result = $this->createQuery()
-			->add(Restrictions::eq('order.id', $orderId))
-			->add(Restrictions::ne('publicationstatus', 'FILED'))
-			->add(Restrictions::ne('publicationstatus', 'DRAFT'))
-			->setProjection(Projections::rowCount('rowCount'))->findColumn('rowCount');
+		$result = $this->createQuery()->add(Restrictions::eq('order.id', $orderId))->add(Restrictions::ne('publicationstatus', 'FILED'))->add(Restrictions::ne('publicationstatus', 'DRAFT'))->setProjection(Projections::rowCount('rowCount'))->findColumn('rowCount');
 		return $result[0] > 0;
-	}		
+	}
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
@@ -300,20 +274,20 @@ class order_BillService extends f_persistentdocument_DocumentService
 	public function updatePaymentStatus($bill, $newStatus)
 	{
 		$oldStatus = $bill->getStatus();
-		try 
+		try
 		{
 			$this->getTransactionManager()->beginTransaction();
 			$bill->setStatus($newStatus);
-			switch ($newStatus) 
+			switch ($newStatus)
 			{
-				case self::FAILED:
+				case self::FAILED :
 					$this->cancelPayment($bill);
 					break;
-				default: // success, waiting
+				default : // success, waiting
 					$this->confirmPayment($bill);
 					break;
 			}
-			$this->getTransactionManager()->commit();	
+			$this->getTransactionManager()->commit();
 		}
 		catch (Exception $e)
 		{
@@ -322,7 +296,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 		}
 		if ($oldStatus != $newStatus)
 		{
-			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 'oldStatus' => $oldStatus));
+			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 
+				'oldStatus' => $oldStatus));
 		}
 	}
 	
@@ -331,7 +306,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	protected function cancelPayment($bill)
 	{
-		$order = $bill->getOrder();	
+		$order = $bill->getOrder();
 		order_ModuleService::getInstance()->sendCustomerNotification('modules_order/bill_failed', $order, $bill);
 		$this->cancelBill($bill);
 		$order->getDocumentService()->cancelOrder($order, false);
@@ -359,32 +334,29 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function cleanByOrder($order)
 	{
-		$query = $this->createQuery()
-			->add(Restrictions::eq('order', $order))
-			->add(Restrictions::eq('status', self::WAITING));
+		$query = $this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::eq('status', self::WAITING));
 		foreach ($query->find() as $bill)
 		{
 			$bill->setTransactionDate(null);
-			$bill->setStatus(self::FAILED);			
+			$bill->setStatus(self::FAILED);
 			$backendUser = users_UserService::getInstance()->getCurrentBackEndUser();
 			if (f_util_StringUtils::isEmpty($bill->getTransactionId()))
 			{
-				$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ?  $backendUser->getId() : 'UNKNOWN'));
+				$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ? $backendUser->getId() : 'UNKNOWN'));
 			}
 			$bill->setTransactionText(LocaleService::getInstance()->trans('m.order.bo.general.canceled-by', array('ucf', 'lab')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
 			$this->save($bill);
 			$this->cancelBill($bill);
-			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 'oldStatus' => self::WAITING));
+			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 
+				'oldStatus' => self::WAITING));
 		}
-
-		$this->createQuery()
-			->add(Restrictions::eq('order', $order))
-			->add(Restrictions::eq('status', self::INITIATED))->delete();
+		
+		$this->createQuery()->add(Restrictions::eq('order', $order))->add(Restrictions::eq('status', self::INITIATED))->delete();
 	}
 	
 	/**
 	 * @param order_persistentdocument_bill $bill
-	 */	
+	 */
 	protected function confirmPayment($bill)
 	{
 		if ($bill->getPublicationstatus() == 'FILED')
@@ -392,8 +364,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$bill->setPublicationstatus('DRAFT');
 			$this->save($bill);
 		}
-		$order = $bill->getOrder();	
-		$bill->setLabel(order_BillNumberGenerator::getInstance()->generate($bill));
+		$order = $bill->getOrder();
+		$this->applyNumber($bill);
 		$this->activate($bill->getId());
 		if ($bill->getStatus() == self::SUCCESS)
 		{
@@ -408,8 +380,24 @@ class order_BillService extends f_persistentdocument_DocumentService
 	}
 	
 	/**
+	 * @param order_persistentdocument_bill $document
+	 * @param boolean $forceGeneration
+	 */
+	public function applyNumber($document, $forceGeneration = false)
+	{
+		if (!$forceGeneration && order_ModuleService::getInstance()->delayNumberGeneration())
+		{
+			$document->setLabel(order_ModuleService::TEMPORARY_NUMBER);
+		}
+		else
+		{
+			$document->setLabel(order_BillNumberGenerator::getInstance()->generate($document));
+		}
+	}
+	
+	/**
 	 * @param order_persistentdocument_bill $bill
-	 */		
+	 */
 	protected function validatePayment($bill)
 	{
 		$order = $bill->getOrder();
@@ -458,11 +446,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function getNotificationParameters($bill)
 	{
-		$params = array(
-			'billnumber' => $bill->getLabelAsHtml(), 
-			'billdate' => $bill->getUITransactionDate(),
-			'billtransaction' => $bill->getTransactionTextAsHtml()
-		);
+		$params = array('billnumber' => $bill->getLabelAsHtml(), 'billdate' => $bill->getUITransactionDate(), 
+			'billtransaction' => $bill->getTransactionTextAsHtml());
 		return $params;
 	}
 	
@@ -473,11 +458,11 @@ class order_BillService extends f_persistentdocument_DocumentService
 	public function getBoList($order)
 	{
 		$result = array();
-		foreach ($this->getByOrder($order) as $bill) 
+		foreach ($this->getByOrder($order) as $bill)
 		{
 			$result[] = $this->buildBoRow($bill);
 		}
-		return $result;	
+		return $result;
 	}
 	
 	/**
@@ -486,17 +471,10 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	private function buildBoRow($bill)
 	{
-		$result = array(
-			'id' => $bill->getId(),
-			'lang' => $bill->getLang(),
-			'type' => str_replace('/', '_', $bill->getDocumentModelName()),
-			'st' => $bill->getStatus(),
-			'trsid' => $bill->getTransactionId(),
-			'status' => $bill->getBoStatusLabel(),
-			'label' => $bill->getLabel(),
-			'archive' => $bill->getArchiveBoURL(),
-			'amount' => $bill->getAmountFormated(),
-		);		
+		$result = array('id' => $bill->getId(), 'lang' => $bill->getLang(), 
+			'type' => str_replace('/', '_', $bill->getDocumentModelName()), 'st' => $bill->getStatus(), 
+			'trsid' => $bill->getTransactionId(), 'status' => $bill->getBoStatusLabel(), 'label' => $bill->getLabel(), 
+			'archive' => $bill->getArchiveBoURL(), 'amount' => $bill->getAmountFormated());
 		return $result;
 	}
 	
@@ -509,12 +487,9 @@ class order_BillService extends f_persistentdocument_DocumentService
 	 */
 	public function validateBillFromBo($bill, $transactionDate, $transactionId, $transactionText)
 	{
-		if ($bill->getStatus() == self::WAITING 
-			&& f_util_StringUtils::isNotEmpty($transactionDate)
-			&& f_util_StringUtils::isNotEmpty($transactionId)
-			&& f_util_StringUtils::isNotEmpty($transactionText))
+		if ($bill->getStatus() == self::WAITING && f_util_StringUtils::isNotEmpty($transactionDate) && f_util_StringUtils::isNotEmpty($transactionId) && f_util_StringUtils::isNotEmpty($transactionText))
 		{
-			try 
+			try
 			{
 				$this->getTransactionManager()->beginTransaction();
 				
@@ -532,7 +507,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 				$this->getTransactionManager()->rollBack($e);
 				throw $e;
 			}
-			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 'oldStatus' => self::WAITING));
+			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 
+				'oldStatus' => self::WAITING));
 		}
 		else
 		{
@@ -557,7 +533,7 @@ class order_BillService extends f_persistentdocument_DocumentService
 			$backendUser = users_UserService::getInstance()->getCurrentBackEndUser();
 			if (f_util_StringUtils::isEmpty($bill->getTransactionId()))
 			{
-				$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ?  $backendUser->getId() : 'UNKNOWN'));
+				$bill->setTransactionId('CANCEL-BY-' . (($backendUser) ? $backendUser->getId() : 'UNKNOWN'));
 			}
 			$bill->setTransactionText(LocaleService::getInstance()->trans('m.order.bo.general.canceled-by', array('ucf', 'lab')) . ' ' . (($backendUser) ? $backendUser->getFullname() : 'UNKNOWN'));
 			$this->save($bill);
@@ -573,7 +549,8 @@ class order_BillService extends f_persistentdocument_DocumentService
 		}
 		if ($oldStatus != self::FAILED)
 		{
-			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 'oldStatus' => $oldStatus));
+			f_event_EventManager::dispatchEvent(self::BILL_STATUS_MODIFIED_EVENT, $this, array('document' => $bill, 
+				'oldStatus' => $oldStatus));
 		}
 		return $this->buildBoRow($bill);
 	}
@@ -599,11 +576,11 @@ class order_BillService extends f_persistentdocument_DocumentService
 		
 		if ($document->getTransactionDate())
 		{
-			$dateTimeFormatted = date_Formatter::toDefaultDateTimeBO($document->getUITransactionDate());			
+			$dateTimeFormatted = date_Formatter::toDefaultDateTimeBO($document->getUITransactionDate());
 			$data['transaction']['transactionDate'] = $dateTimeFormatted;
 		}
 		$order = $document->getOrder();
-		try 
+		try
 		{
 			$connector = $document->getPaymentConnector();
 			if ($connector)

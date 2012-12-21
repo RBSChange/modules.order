@@ -1,6 +1,5 @@
 <?php
 /**
- * order_Setup
  * @package modules.order
  */
 class order_Setup extends object_InitDataSetup
@@ -25,8 +24,13 @@ class order_Setup extends object_InitDataSetup
 		$task->setLabel('order_BackgroundCommentReminder');
 		$task->save(ModuleService::getInstance()->getSystemFolderId('task', 'order'));
 		
+		$task = task_PlannedtaskService::getInstance()->getNewDocumentInstance();
+		$task->setSystemtaskclassname('order_GenerateNumbers');
+		$task->setLabel('m.order.bo.general.task-generate-numbers');
+		$task->save(ModuleService::getInstance()->getSystemFolderId('task', 'order'));
+		
 		$this->executeModuleScript('init.xml');
-
+		
 		$mbs = uixul_ModuleBindingService::getInstance();
 		$mbs->addImportInPerspective('catalog', 'order', 'catalog.perspective');
 		$mbs->addImportInActions('catalog', 'order', 'catalog.actions');
@@ -38,6 +42,9 @@ class order_Setup extends object_InitDataSetup
 		change_PermissionService::getInstance()->addImportInRight('catalog', 'order', 'catalog.rights');
 	}
 	
+	/**
+	 * @var string
+	 */
 	private $resourceDir = null;
 	
 	/**

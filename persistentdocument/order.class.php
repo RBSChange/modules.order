@@ -6,6 +6,14 @@
 class order_persistentdocument_order extends order_persistentdocument_orderbase
 {
 	/**
+	 * @return boolean
+	 */
+	public function hasTemporaryNumber()
+	{
+		return $this->getOrderNumber() == order_ModuleService::TEMPORARY_NUMBER;
+	}
+	
+	/**
 	 * @return string
 	 */
 	public function getBoOrderStatusLabel()

@@ -50,7 +50,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		
 		if ($document->getLabel() == null)
 		{
-			$document->setLabel(order_CreditNoteNumberGenerator::getInstance()->generate($document));
+			$this->applyNumber($document);
 		}
 		$order = $document->getOrder();
 		
@@ -66,6 +66,22 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		if ($document->getAmountnotapplied() === null)
 		{
 			$document->setAmountnotapplied($document->getAmount());
+		}
+	}
+	
+	/**
+	 * @param order_persistentdocument_creditnote $document
+	 * @param boolean $forceGeneration
+	 */
+	public function applyNumber($document, $forceGeneration = false)
+	{
+		if (!$forceGeneration && order_ModuleService::getInstance()->delayNumberGeneration())
+		{
+			$document->setLabel(order_ModuleService::TEMPORARY_NUMBER);
+		}
+		else
+		{
+			$this->applyNumber($document);
 		}
 	}
 	
@@ -231,7 +247,7 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 
 		$order->setCreditNoteDataArray($newCreditNoteDataArray);
 		
-		//Save removed credit note
+		// Save removed credit note.
 		foreach ($oldCreditnotes as $creditNote) 
 		{
 			if (!isset($newCreditNoteDataArray[$creditNote->getId()]))
@@ -363,13 +379,26 @@ class order_CreditnoteService extends f_persistentdocument_DocumentService
 		$this->save($document);
 		
 		// Send the notification.
-		$order = $document->getOrder();		
+		$this->sendReCreditNoteNotification($document, $reCreditedAmount);
+	}
+	
+	/**
+	 * @param order_persistentdocument_creditnote $document
+	 */
+	public function sendReCreditNoteNotification($document, $reCreditedAmount)
+	{
+		if (order_ModuleService::getInstance()->delayNotificationIfNeeded(__METHOD__, func_get_args()))
+		{
+			return;
+		}
+		
+		$order = $document->getOrder();
 		$notification = notification_NotificationService::getInstance()->getConfiguredByCodeName('modules_order/reCreditNote', $order->getWebsiteId(), $order->getLang());
 		if ($notification)
 		{
 			$notification->setSendingModuleName('order');
 			$notification->addGlobalParam('repaymentAmount', $order->formatPrice($reCreditedAmount));
-			$notification->registerCallback($this, 'getNotificationParameter', $document);		
+			$notification->registerCallback($this, 'getNotificationParameter', $document);
 			$user = $order->getCustomer()->getUser();
 			$notification->sendToUser($user);
 		}

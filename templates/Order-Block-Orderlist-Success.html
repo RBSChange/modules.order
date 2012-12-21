@@ -15,7 +15,12 @@
 		</thead>
 		<tbody>
 			<tr tal:repeat="order orders" class="${alternateclass:orderIndex}">	
-				<td><a change:link="document order">${order/getOrderNumber}</a></td>
+				<td>
+					<a change:link="document order">
+						<tal:block tal:condition="not:order/hasTemporaryNumber">${order/getOrderNumber}</tal:block>
+						<tal:block tal:condition="order/hasTemporaryNumber">${trans:m.order.frontoffice.new-order,ucf}</tal:block>
+					</a>
+				</td>
 				<td>${datetime:order/getUICreationdate}</td>
 				<td>${order/getBillingMode}</td>
 				<td class="price">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>

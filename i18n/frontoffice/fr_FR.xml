@@ -139,6 +139,7 @@
 	<key id="cart-recup">votre ancien panier a été récupéré</key>
 	<key id="order-title">détail d'une commande</key>
 	<key id="order-number-title">détail de la commande numéro {orderNumber}</key>
+	<key id="order-detail-title">détail de la commande</key>
 	<key id="order-back-to-list">revenir à la liste des commandes</key>
 	<key id="add-order-articles-to-cart">Ajouter les articles de cette commande au panier</key>
 	<key id="add-order-articles-title">Re-commander les articles</key>
@@ -163,7 +164,8 @@
 	<key id="back-to-cart">revenir à l'étape précédente</key>
 	<key id="payment-failed">paiement echoué</key>
 	<key id="payment-failed-text">Votre paiement a échoué. Il est possible que les informations bancaires que vous avez fournit soient inexactes.</key>
-	<key id="shipping-number">Expedition N°</key>
+	<key id="shipping-number">expédition N°</key>
+	<key id="shipping-without-number">expédition</key>
 	<key id="transport-name">Transporteur</key>
 	<key id="tracking-number">Numéro de suivi</key>
 	<key id="tracking-text">état de la livraison</key>
@@ -199,4 +201,6 @@
 	<key id="delivery-date">date de remise</key>
 	<key id="delivery">bon de livraison</key>
 	<key id="available-credit-notes">Vous disposez d'un avoir de {value}.</key>
+	<key id="new-order">nouvelle commande</key>
+	<key id="new-creditnote">nouvel avoir</key>
 </i18n>

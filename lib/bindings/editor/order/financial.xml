@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl"
-	xmlns:html="http://www.w3.org/1999/xhtml"
+<bindings xmlns="http://www.mozilla.org/xbl" xmlns:xbl="http://www.mozilla.org/xbl" xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<binding id="order_financial" extends="layout.cDocumentEditor#cDocumentEditorPanel">
 		<content>
 			<xul:vbox flex="1">
-				<xul:cmessageinfo anonid="message"/>
+				<xul:cmessageinfo anonid="message" />
 				<xul:hbox anonid="action-bar">
 				</xul:hbox>
 				<xul:scrollbox anonid="scrollctrl" flex="1" class="editordatacontainer" orient="vertical">
-					<xul:cfieldsgroup class="customeraddress" label="${trans:m.order.bo.general.billing-address,ucf,attr}"/>
-					
+					<xul:cfieldsgroup class="customeraddress" label="${trans:m.order.bo.general.billing-address,ucf,attr}" />
+
 					<xul:cfieldsgroup label="${trans:m.order.bo.doceditor.bills,ucf,attr}">
 						<xul:cfieldsgroup class="orderbills" />
 					</xul:cfieldsgroup>
-					
+
 					<xul:cfieldsgroup label="${trans:m.order.bo.doceditor.creditnotes,ucf,attr}">
 						<xul:cfieldsgroup class="ordercreditnotes" />
 					</xul:cfieldsgroup>
 				</xul:scrollbox>
-			</xul:vbox>	
+			</xul:vbox>
 		</content>
 		<implementation>
-			<field name="mButtons">null</field>			
+			<field name="mButtons">null</field>
 			<field name="mOrderBills">null</field>
 			<field name="mOrderCreditNotes">null</field>
-			<field name="mAddress">null</field>				
+			<field name="mAddress">null</field>
 			<field name="mInitData">null</field>
-			
+
 			<constructor><![CDATA[
 				var me = this;
 				this.mButtons = {};
@@ -43,8 +42,7 @@
 				this.addEventListener("gridInitialised", function (event) {return me.onGridInitialised(event);}, true);
 				this.addEventListener("addressInitialised", function (event) {return me.onAddressInitialised(event);}, true);		
 			]]></constructor>
-			
-			
+
 			<method name="lockCommandsUI">
 				<body><![CDATA[
 					for (var n in this.mButtons)
@@ -52,8 +50,8 @@
 						this.mButtons[n].disabled = true;
 					}
 				]]></body>
-			</method>	
-			
+			</method>
+
 			<method name="updateCommandsUI">
 				<body><![CDATA[
 					this.lockCommandsUI();
@@ -64,7 +62,7 @@
 					}
 				]]></body>
 			</method>
-					
+
 			<method name="onCancelOrder">
 				<parameter name="event" />
 				<body><![CDATA[
@@ -76,34 +74,34 @@
 					}
 				]]></body>
 			</method>
-			
+
 			<method name="getCancelOrderParameters">
 				<body><![CDATA[
 					var attributes = {
 						action: 'CancelOrderJSON',
-						cmpref: this.documentEditor.documentid, 
+						cmpref: this.documentEditor.documentid,
 						lang : this.documentEditor.documentInfos.vo
 					};
 					return attributes;
 				]]></body>
 			</method>
-			
+
 			<method name="fireCancelOrderComplete">
 				<parameter name="result" />
-				<body><![CDATA[			
+				<body><![CDATA[
 					if (result.status == "OK")
-					{					
-						this.documentEditor.clearTabs();				
-						this.fireInitializeComplete(result);						
+					{
+						this.documentEditor.clearTabs();
+						this.fireInitializeComplete(result);
 						this.showTextMessage("${trans:m.order.bo.doceditor.message.order-canceled,ucf,js}");
 					}
 					else
 					{
-						this.showErrorMessage(result.contents.errorMessage);					
+						this.showErrorMessage(result.contents.errorMessage);
 					}
 				]]></body>
 			</method>
-			
+
 			<method name="onCreateCreditNote">
 				<parameter name="event" />
 				<body><![CDATA[
@@ -113,7 +111,7 @@
 				openActionUri(uri, from);
 				]]></body>
 			</method>
-						
+
 			<method name="onGridInitialised">
 				<parameter name="event" />
 				<body><![CDATA[	
@@ -162,8 +160,8 @@
 						}
 					}	
 				]]></body>
-			</method>	
-					
+			</method>
+
 			<method name="getInitializeParameters">
 				<body><![CDATA[
 					return {
@@ -173,15 +171,15 @@
 					};
 				]]></body>
 			</method>
-												
+
 			<method name="fireInitializeComplete">
 				<parameter name="result" />
-				<body><![CDATA[					
+				<body><![CDATA[
 					if (result.status != 'OK')
 					{	
 						this.lockCommandsUI();
 						this.showErrorMessage(result.contents.errorMessage);
-						this.collapseContentZone(true);						
+						this.collapseContentZone(true);
 						this.mInitialized = true;
 						return;
 					}
@@ -198,9 +196,8 @@
 					if (this.mAddress)
 					{
 						this.mAddress.initJSONDataset(this.mInitData.address);
-					}	
+					}
 					
-								
 					this.updateCommandsUI();
 					this.collapseContentZone(false);
 					this.mInitialized = true;
@@ -208,7 +205,6 @@
 					this.gotoTop();
 				]]></body>
 			</method>
-		
 		</implementation>
 	</binding>
 </bindings>
