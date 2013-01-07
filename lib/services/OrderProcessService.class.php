@@ -89,9 +89,11 @@ class order_OrderProcessService extends BaseService
 	 */
 	protected function getFromSession()
 	{
-		if (isset($_SESSION['order_OrderProcess']) && $_SESSION['order_OrderProcess'] instanceof order_OrderProcess)
+		$ns = order_CartService::CART_SESSION_NAMESPACE;
+		$session = Controller::getInstance()->getContext()->getUser();
+		if ($session->hasAttribute('order_OrderProcess', $ns) && $session->getAttribute('order_OrderProcess', $ns) instanceof order_OrderProcess)
 		{
-			return $_SESSION['order_OrderProcess'];
+			return $session->getAttribute('order_OrderProcess', $ns);
 		}
 		return null;
 	}
@@ -101,13 +103,15 @@ class order_OrderProcessService extends BaseService
 	 */
 	protected function saveToSession($orderProcess)
 	{
+		$ns = order_CartService::CART_SESSION_NAMESPACE;
+		$session = Controller::getInstance()->getContext()->getUser();
 		if ($orderProcess instanceof order_OrderProcess) 
 		{
-			$_SESSION['order_OrderProcess'] = $orderProcess;
-		}		
+			$session->setAttribute('order_OrderProcess', $orderProcess, $ns);
+		}
 		else
 		{
-			$_SESSION['order_OrderProcess'] = null;
+			$session->setAttribute('order_OrderProcess', null, $ns);
 		}
 	}	
 	
