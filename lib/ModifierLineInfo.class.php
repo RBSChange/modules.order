@@ -4,7 +4,6 @@
  */
 class order_ModifierLineInfo extends order_CartLineInfo
 {
-	
 	/**
 	 * @var string
 	 */
@@ -53,7 +52,7 @@ class order_ModifierLineInfo extends order_CartLineInfo
 	 */
 	public function getLabel()
 	{
-		return $this->getProperties('label');
+		return $this->getProperty('label');
 	}
 	
 	/**
@@ -61,7 +60,7 @@ class order_ModifierLineInfo extends order_CartLineInfo
 	 */
 	public function setLabel($label)
 	{
-		$this->setProperties('label', $label);
+		$this->setProperty('label', $label);
 	}
 	
 	/**
@@ -69,7 +68,7 @@ class order_ModifierLineInfo extends order_CartLineInfo
 	 */
 	public function getVisual()
 	{
-		$id = $this->getProperties('visualId');
+		$id = $this->getProperty('visualId');
 		if ($id)
 		{
 			$visual = DocumentHelper::getDocumentInstanceIfExists($id);

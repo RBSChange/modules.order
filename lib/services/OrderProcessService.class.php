@@ -15,7 +15,7 @@ class order_OrderProcessService extends change_BaseService
 		{
 			$orderProcess = $this->getNewOrderProcessInstance();
 			$this->saveToSession($orderProcess);
-		}		
+		}
 		return $orderProcess;
 	}
 	
@@ -70,13 +70,12 @@ class order_OrderProcessService extends change_BaseService
 		return $this->getOrderProcessURL($orderProcess, null);
 	}
 	
-	
 	/**
 	 * @return order_OrderProcess || null
 	 */
 	protected function getFromSession()
 	{
-		$op = change_Controller::getInstance()->getStorage()->read('order_OrderProcess');
+		$op = change_Controller::getInstance()->getStorage()->readForUser('order_OrderProcess');
 		if ($op instanceof order_OrderProcess)
 		{
 			return $op;
@@ -91,11 +90,11 @@ class order_OrderProcessService extends change_BaseService
 	{
 		if ($orderProcess instanceof order_OrderProcess) 
 		{
-			change_Controller::getInstance()->getStorage()->write('order_OrderProcess', $orderProcess);
+			change_Controller::getInstance()->getStorage()->writeForUser('order_OrderProcess', $orderProcess);
 		}		
 		else
 		{
-			change_Controller::getInstance()->getStorage()->remove('order_OrderProcess');
+			change_Controller::getInstance()->getStorage()->removeForUser('order_OrderProcess');
 		}
 	}	
 	

@@ -133,13 +133,13 @@
 				<td>${trans:m.order.frontoffice.total-withtax-abr,ucf,lab}</td>
 				<td class="price">${php:order.formatPrice(order.getTotalAmountWithTax() + order.getTotalCreditNoteAmount())}</td>
 			</tr>
-			<tal:block tal:condition="order/hasCreditNote">				
-				<tr>	
+			<tal:block tal:condition="order/hasCreditNote">
+				<tr>
 					<td>${trans:m.order.frontoffice.creditnote-amount,ucf,lab}</td>
 					<td class="price">-${php:order.formatPrice(order.getTotalCreditNoteAmount())}</td>
 				</tr>
 			</tal:block>
-			<tr class="big" tal:condition="shop/getDisplayPrice">				
+			<tr class="big" tal:condition="shop/getDisplayPrice">
 				<td>${trans:m.order.frontoffice.total-net-payable,ucf,lab}</td>
 				<td class="price">${php:order.formatPrice(order.getTotalAmountWithTax())}</td>
 			</tr>
@@ -158,7 +158,7 @@
 			<script tal:condition="not:cart/isEmpty" type="text/javascript" >
 				/* <![CDATA[ */
 				jQuery(document).ready(function(){
-					var a = jQuery("#actionAddOrderToCart > a:first-child");	
+					var a = jQuery("#actionAddOrderToCart > a:first-child");
 					a.attr('href', "javascript:void 0;");
 					a.click(function(){
 						jQuery("#addPopin").dialog({title: "${trans:m.order.frontoffice.add-order-articles-title,ucf,js}", modal: true, width: 300, closeOnEscape: true});

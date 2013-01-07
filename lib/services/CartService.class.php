@@ -13,9 +13,7 @@ class order_CartService extends change_BaseService
 	 */
 	public function hasCartInSession()
 	{
-		$session = change_Controller::getInstance()->getContext()->getUser();
-		$key = $this->getSessionKey('CartInfo');
-		$cart = change_Controller::getInstance()->getStorage()->read($key);
+		$cart = change_Controller::getInstance()->getStorage()->readForUser($this->getSessionKey('CartInfo'));
 		return ($cart instanceof order_CartInfo);
 	}
 	
@@ -26,8 +24,7 @@ class order_CartService extends change_BaseService
 	{	
 		if ($this->hasCartInSession())
 		{
-			$session = change_Controller::getInstance()->getContext()->getUser();
-			$cart = change_Controller::getInstance()->getStorage()->read($this->getSessionKey('CartInfo'));
+			$cart = change_Controller::getInstance()->getStorage()->readForUser($this->getSessionKey('CartInfo'));
 			$this->clearCartIfNeeded($cart);
 		}
 		else
@@ -173,7 +170,7 @@ class order_CartService extends change_BaseService
 			$this->resetCartOrder($cart);
 		}
 
-		change_Controller::getInstance()->getStorage()->write($this->getSessionKey('CartInfo'), $cart);
+		change_Controller::getInstance()->getStorage()->writeForUser($this->getSessionKey('CartInfo'), $cart);
 		
 		$customer = customer_CustomerService::getInstance()->getCurrentCustomer();
 		if ($customer !== null)
