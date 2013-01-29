@@ -80,7 +80,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	}	
 		
 	/**
-	 * @return Array<String, Array<String, String>>
+	 * @return array<string, array<string, string>>
 	 */
 	public function getTotalTaxInfoArray()
 	{
@@ -99,7 +99,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	
 	/**
 	 * @param string $propertyName
-	 * @param Mixed $value serializable data.
+	 * @param mixed $value serializable data.
 	 */
 	public function setGlobalProperty($propertyName, $value)
 	{
@@ -108,7 +108,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	
 	/**
 	 * @param string $propertyName
-	 * @return Mixed
+	 * @return mixed
 	 */
 	public function getGlobalProperty($propertyName)
 	{
@@ -301,7 +301,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	{
 		$this->setGlobalProperty('__discount', $discountDataArray);
 	}
-		
+	
 	/**
 	 * @return boolean
 	 */
@@ -410,7 +410,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		{
 			$result = array();
 		}
-		return $result;		
+		return $result;
 	}
 	
 	/**
@@ -442,7 +442,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		}
 		
 		$this->setGlobalProperty('__shipping', $shippingArray);
-	}	
+	}
 	
 	/**
 	 * @param shipping_persistentdocument_mode $shippingMode
@@ -455,7 +455,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 			$this->setOrderProperty('shippingModeLabel', $shippingMode->getLabel());
 			$this->setOrderProperty('shippingModeCode', $shippingMode->getCode());
 		}
-		else 
+		else
 		{
 			$this->setShippingModeId(null);
 			$this->setOrderProperty('shippingModeLabel', null);
@@ -511,7 +511,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 				}
 			}
 		} 
-		return implode(', ', $result);		
+		return implode(', ', $result);
 	}
 	
 	/**
@@ -576,7 +576,7 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 		{
 			$this->setBillingModeId(null);
 			$this->setOrderProperty('paymentConnectorLabel', null);
-			$this->setOrderProperty('paymentConnectorCode', null);			
+			$this->setOrderProperty('paymentConnectorCode', null);
 		}
 	}
 	
@@ -867,5 +867,5 @@ class order_persistentdocument_order extends order_persistentdocument_orderbase
 	public function getTreeNodeLabel()
 	{
 		return $this->getOrderNumber();
-	}	
+	}
 }
