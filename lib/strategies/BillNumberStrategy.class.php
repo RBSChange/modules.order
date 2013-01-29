@@ -78,12 +78,16 @@ class order_BillNumberGenerator
 	{
 		$billCount = $bill->getDocumentService()->createQuery()
 			->add(Restrictions::ne('publicationstatus', 'DRAFT'))
-			->setProjection(Projections::rowCount("billCount"))
-			->findColumn("billCount");
+			->add(Restrictions::like('label', '_____', MatchMode::EXACT()))
+			->setProjection(Projections::max('label', 'max'))
+			->findColumn('max');
 		return str_pad(strval($billCount[0]+1), 5, '0', STR_PAD_LEFT);
 	}
 }
 
+/**
+ * /!\ This strategy is incompatible with immediate order numbering (same numbering format than orders).
+ */
 class order_BillNumberYearSequenceStrategy implements order_BillNumberStrategy
 {
 	/**
@@ -93,18 +97,21 @@ class order_BillNumberYearSequenceStrategy implements order_BillNumberStrategy
 	public function generate($bill)
 	{
 		$year = ($bill->getCreationdate()) ? substr($bill->getCreationdate(), 0, 4) : date("Y");
-		$beginDate = date_Converter::convertDateToGMT($year.'-01-01 00:00:00');
-		$endDate = date_Converter::convertDateToGMT(($year+1).'-01-01 00:00:00');
-		
-		$billCount = $bill->getDocumentService()->createQuery()
-						->setProjection(Projections::rowCount("billCount"))
-						->add(Restrictions::ne('publicationstatus', 'DRAFT'))
-						->add(Restrictions::ne('id', $bill->getId()))
-						->add(Restrictions::ge('transactionDate', $beginDate))
-						->add(Restrictions::lt('transactionDate', $endDate))
-						->findColumn("billCount");
-		$newCount = strval($billCount[0]+1);
+		$row = $bill->getDocumentService()->createQuery()
+			->add(Restrictions::ne('publicationstatus', 'DRAFT'))
+			->add(Restrictions::ne('id', $bill->getId()))
+			->add(Restrictions::like('label', $year.'________', MatchMode::EXACT()))
+			->addOrder(Order::desc('label'))
+			->setProjection(Projections::property('label'))
+			->findUnique();
+		if (is_array($row))
+		{
+			$newCount = strval(intval(substr($row['label'], 4))+1);
+		}
+		else
+		{
+			$newCount = '1';
+		}
 		return $year . str_pad($newCount, 8, '0', STR_PAD_LEFT);
 	}
 }
-
