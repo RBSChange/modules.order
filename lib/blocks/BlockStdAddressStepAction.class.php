@@ -12,7 +12,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	{
 		return website_BlockView::SUCCESS;
 	}
-		
+	
 	/**
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
@@ -23,7 +23,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 		if ($this->isInBackoffice())
 		{
 			return website_BlockView::NONE;
-		}		
+		}
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
 		if ($cart->isEmpty()) {$this->redirectToCart($cart);}
 		
@@ -40,8 +40,14 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			$this->setAuthenticateRequestParams($request, $cart);
 			return 'Authenticate';
 		}
-	
+		
 		$this->setRequestParams($request, $cart);
+		
+		// The order process is started, so init lastAbandonedOrderDate.
+		$customer = $cart->getCustomer();
+		$customer->setLastAbandonedOrderDate(date_Calendar::getInstance()->toString());
+		$customer->save();
+		
 		return $this->getInputViewName();
 	}
 	
@@ -202,7 +208,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 		}
 		$email = $cart->getUser()->getEmail();
 		
-		$valid = $this->processValidationRules($validationRules, $request, null);		
+		$valid = $this->processValidationRules($validationRules, $request, null);
 		if ($valid)
 		{
 			$this->importRequestInAddress($request, $cart->getAddressInfo()->billingAddress, 'billing');
@@ -307,7 +313,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	 */
 	protected function setRequestParams($request, $cart)
 	{
-		$request->setAttribute('cart', $cart);	
+		$request->setAttribute('cart', $cart);
 		$user = $cart->getUser();
 		$customer = $cart->getCustomer();
 		$email = $request->getParameter('email', ($user	!== null) ? $user->getEmail() : null); 
@@ -330,7 +336,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			$addressInfo->shippingAddress = clone($addressInfo->billingAddress);
 		}
 		
-		if (!$request->hasParameter('submited'))	
+		if (!$request->hasParameter('submited'))
 		{
 			if ($user === null)
 			{	
@@ -376,7 +382,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	protected function exportAddressToRequest($address, $request, $type)
 	{
 		$addressParams = $this->getAddressParams();
-		foreach ($addressParams as $requestName => $propertyName) 
+		foreach ($addressParams as $requestName => $propertyName)
 		{
 			$request->setAttribute($type . '-' . $requestName, $address->{$propertyName});
 		}
@@ -390,7 +396,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	protected function importRequestInAddress($request, $address, $type)
 	{
 		$addressParams = $this->getAddressParams();
-		foreach ($addressParams as $requestName => $propertyName) 
+		foreach ($addressParams as $requestName => $propertyName)
 		{
 			$value = $request->getParameter($type . '-'. $requestName, '');
 			if ($value !== null && is_string($value))
