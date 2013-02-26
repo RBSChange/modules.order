@@ -20,7 +20,7 @@
 				<a change:link="tag ctx_customer_password-lost" class="link shown-with-account">${trans:m.order.standardprocess.address-lost-password,ucf}</a>
 				<p class="help-text nojs">${trans:m.order.fo.blocks.stdaddressstep.password-help,ucf}</p>
 			</li>
-			<li class="visible-without-account visible-without-generate-password">
+			<li class="visible-without-account visible-without-generate-password clean-when-not-visible">
 				<input change:passwordinput="name password-validate; required true" labeli18n="m.order.fo.blocks.stdaddressstep.password-validate" />
 				<p class="help-text nojs">${trans:m.order.fo.blocks.stdaddressstep.password-validate-help,ucf}</p>
 			</li>
@@ -36,6 +36,7 @@
 		if (this.checked)
 		{
 			jQuery('.visible-without-generate-password').addClass('visibility-hidden');
+			jQuery('.visible-without-generate-password.clean-when-not-visible input').val('');
 		}
 		else
 		{
@@ -47,6 +48,7 @@
 		jQuery('.shown-without-account').hide();
 		jQuery('.shown-with-account').show();
 		jQuery('.visible-without-account').addClass('visibility-hidden');
+		jQuery('.visible-without-account.clean-when-not-visible input').val('');
 		jQuery('.visible-with-account').removeClass('visibility-hidden');
 	});
 	
@@ -55,6 +57,7 @@
 		jQuery('.shown-with-account').hide();
 		jQuery('.visible-without-account').removeClass('visibility-hidden');
 		jQuery('.visible-with-account').addClass('visibility-hidden');
+		jQuery('.visible-with-account.clean-when-not-visible input').val('');
 		jQuery('#orderauth-generate-password-field').change();
 	});
 	
