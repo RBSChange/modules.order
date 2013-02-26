@@ -211,6 +211,13 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 		$valid = $this->processValidationRules($validationRules, $request, null);
 		if ($valid)
 		{
+			// Check that countryId realy represent a country to avoid fatal errors in BO.
+			zone_persistentdocument_zone::getInstanceById($request->getParameter('billing-country'));
+			if (!$sameAddress)
+			{
+				zone_persistentdocument_zone::getInstanceById($request->getParameter('shipping-country'));
+			}
+			
 			$this->importRequestInAddress($request, $cart->getAddressInfo()->billingAddress, 'billing');
 			$cart->getAddressInfo()->billingAddress->Email = $email;
 			if ($sameAddress)
