@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <i18n baseKey="m.order.bo.strategy" lcid="fr_FR">
-  <key id="fees-strategylabel">Libellé des frais</key>
-   
-  <key id="defaultshippingstrategy-strategylabel">Libellé des frais</key>
-  <key id="defaultshippingstrategy-section">Paramètre d'application : Frais de livraison fixe</key>
-    
-  <key id="cartpriceshippingstrategy-section">Paramètre d'application : Frais de livraison degressif</key>
-  <key id="cartpriceshippingstrategy-strategylabel">Libellé des frais</key>
-  <key id="cartpriceshippingstrategy-ranges">Plage de frais</key>
-  <key id="cartpriceshippingstrategy-ranges-help">Ex : '500=0,250=10' ce traduit en gratuit pour 500 et plus, 10EUR pour 250 et plus, sinon valeur par defaut.</key>
-    
-   <key id="feesvaluestrategy-section">Paramètre d'application : Frais fixe</key>
-   
-   <key id="feesrangesvaluestrategy-section">Paramètre d'application : Frais fonction du montant des lignes du panier</key>
-   <key id="feesrangesvaluestrategy-min">frais minimum</key>
-   <key id="feesrangesvaluestrategy-min-help">frais minimum ne s'applique pas si 0, la catégorie de taxe est utilisé pour les plages de frais</key>
-   <key id="feesrangesvaluestrategy-ranges">Plage de frais</key>
-   <key id="feesrangesvaluestrategy-ranges-help">Ex : '500=0,250=9.58' Les montants sont indiqué TTC. Ce traduit en pour 500 et plus pas de frais, pour 250HT et plus 9.58HT, moins de 250 montant minimum.</key>
+	<key id="fees-strategylabel">Libellé des frais</key>
+
+	<key id="defaultshippingstrategy-strategylabel">Libellé des frais</key>
+	<key id="defaultshippingstrategy-section">Paramètre d'application : montant fixe</key>
+
+	<key id="cartpriceshippingstrategy-section">Paramètre d'application : en fonction du montant des lignes du panier</key>
+	<key id="cartpriceshippingstrategy-strategylabel">Libellé des frais</key>
+	<key id="cartpriceshippingstrategy-ranges">Plage de frais</key>
+	<key id="cartpriceshippingstrategy-ranges-help">Ex : '500=0,250=10' ce traduit en gratuit pour 500 et plus, 10EUR pour 250 et plus, sinon valeur par defaut.</key>
+
+	<key id="feesvaluestrategy-section">Paramètre d'application : montant fixe</key>
+
+	<key id="feesrangesvaluestrategy-section">Paramètre d'application : en fonction du montant des lignes du panier</key>
+	<key id="feesrangesvaluestrategy-min">frais minimum</key>
+	<key id="feesrangesvaluestrategy-min-help">frais minimum ne s'applique pas si 0, la catégorie de taxe est utilisé pour les plages de frais</key>
+	<key id="feesrangesvaluestrategy-ranges">Plage de frais</key>
+	<key id="feesrangesvaluestrategy-ranges-help">Ex : '500=0,250=9.58' Les montants sont indiqué TTC. Ce traduit en pour 500 et plus pas de frais, pour 250HT et plus 9.58HT,
+		moins de 250 montant minimum.</key>
 </i18n>
