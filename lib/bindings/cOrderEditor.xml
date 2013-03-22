@@ -114,8 +114,9 @@
 				<parameter name="dataset" />
 				<body><![CDATA[
 					if (!dataset) {dataset = {};}
-					for each (var name in this.mLabelNames)
+					for (var index in this.mLabelNames)
 					{
+						var name = this.mLabelNames[index];
 						var ctrl = document.getAnonymousElementByAttribute(this, "anonid", name);
 						if (name in dataset)
 						{

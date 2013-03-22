@@ -5,22 +5,22 @@
 		<sectionrow labeli18n="modules.order.bo.general.Reference" id="reference" />
 		<sectionrow labeli18n="modules.order.bo.general.Date" id="creationdate" />
 		<section class="customer" />
-		<field name="commentadmin" type="longtext" />	
-	</section>	
-	
-	<section labeli18n="modules.order.bo.general.Order-details" >
-		<section class="orderlines"/>
+		<field name="commentadmin" type="longtext" />
 	</section>
-	
+
+	<section labeli18n="modules.order.bo.general.Order-details">
+		<section class="orderlines" />
+	</section>
+
 	<section labeli18n="modules.order.bo.general.Coupon" class="couponSection">
 		<sectionrow labeli18n="modules.order.bo.general.Coupon-name" id="couponSectionName" />
 		<sectionrow labeli18n="modules.order.bo.general.Coupon-code" id="couponSectionCode" />
 	</section>
-		
+
 	<section labeli18n="modules.order.bo.doceditor.section.Discounts" class="discountsSection">
 		<section class="discountlines" />
 	</section>
-	
+
 	<section labeli18n="modules.order.bo.general.Amount">
 		<sectionrow labeli18n="modules.order.bo.general.Sub-total" id="subTotal" />
 		<sectionrow labeli18n="modules.order.frontoffice.Coupon-name" id="couponName" />
@@ -37,28 +37,28 @@
 		<javascript>
 			<constructor><![CDATA[
 				var me = this;
-				this.extendMethod("fireInitializeComplete", this.initializeExtra);				
+				this.extendMethod("fireInitializeComplete", this.initializeExtra);
 				this.addEventListener("gridInitialised", function (event) { return me.onGridInitialised(event); }, true);
 				
 				// Print order button.
 				var button = this.addActionButton("${transui:m.order.bo.actions.view-printable-version,ucf,js}", "{IconsBase}/small/printer.png");
 				button.addEventListener('command', function () { me.printOrder(); }, true);
 			]]></constructor>
-			
+
 			<field name="mPropIds">["website", "reference", "creationdate",
 				"subTotal", "couponName", "shippingFees", "billingMode", "billingFees",
 				"tvaAmounts", "discountTotal", "usedCreditNote", "totalAmount",
-				"couponSectionName", "couponSectionCode"]</field>
-			
+				"couponSectionName", "couponSectionCode"]
+			</field>
 
 			<field name="mOrderlines">null</field>
 			<field name="mDiscountLines">null</field>
-			
+
 			<field name="mInitData">null</field>
-	
+
 			<method name="onGridInitialised">
 				<parameter name="event" />
-				<body><![CDATA[	
+				<body><![CDATA[
 					var grid = event.originalTarget;
 					if (grid.className == 'orderlines')
 					{
@@ -83,10 +83,10 @@
 						{
 							this.mDiscountLines.initJSONDataset(null);
 						}
-					}		
+					}
 				]]></body>
 			</method>
-						
+
 			<method name="initializeExtra">
 				<parameter name="result" />
 				<body><![CDATA[	
@@ -96,11 +96,12 @@
 						return;
 					}
 					
-					this.mInitData = result.contents;					
+					this.mInitData = result.contents;
 					var informations = this.mInitData.informations;
 					
-					for each (var name in this.mPropIds)
+					for (var index in this.mPropIds)
 					{
+						var name = this.mPropIds[index];
 						var node = document.getAnonymousElementByAttribute(this, "anonid", name);
 						if (informations[name])
 						{
@@ -147,10 +148,10 @@
 					}	
 				]]></body>
 			</method>
-			
+
 			<method name="printOrder">
 				<body><![CDATA[	
-					var url = wCore.buildServerUrl('order', 'PrintOrder', { mode: 'Properties', cmpref: this.documentEditor.documentid, lang: this.documentEditor.vo });												
+					var url = wCore.buildServerUrl('order', 'PrintOrder', { mode: 'Properties', cmpref: this.documentEditor.documentid, lang: this.documentEditor.vo });
 					wToolkit.openurl(url);
 				]]></body>
 			</method>
