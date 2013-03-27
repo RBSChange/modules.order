@@ -162,9 +162,9 @@ class order_persistentdocument_bill extends order_persistentdocument_billbase im
 	 */
 	function getPaymentReference()
 	{
-		if ($this->hasTemporaryNumber())
+		if (order_ModuleService::getInstance()->delayNumberGeneration())
 		{
-			return $this->getId();
+			return $this->getCreationdate() . '/' . $this->getId();
 		}
 		return $this->getLabel() . '/' . $this->getId();
 	}
