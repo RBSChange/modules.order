@@ -44,11 +44,21 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 		$this->setRequestParams($request, $cart);
 		
 		// The order process is started, so init lastAbandonedOrderDate.
-		$customer = $cart->getCustomer();
-		$customer->setLastAbandonedOrderDate(date_Calendar::getInstance()->toString());
-		$customer->save();
+		$this->initLastAbandonnedOrderDate($cart->getCustomer());
 		
 		return $this->getInputViewName();
+	}
+
+	/**
+	 * @param customer_persistentdocument_customer $customer
+	 */
+	protected function initLastAbandonnedOrderDate($customer)
+	{
+		if ($customer !== null)
+		{
+			$customer->setLastAbandonedOrderDate(date_Calendar::getInstance()->toString());
+			$customer->save();
+		}
 	}
 	
 	/**
@@ -182,12 +192,13 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 		$this->setRequestParams($request, $cart);
 		return $this->getInputViewName();
 	}
-	
+
 	/**
 	 * @param f_mvc_Request $request
 	 * @param f_mvc_Response $response
+	 * @throws Exception
 	 * @return string
-	 */	
+	 */
 	public function executeNextStep($request, $response)
 	{
 		$cart = order_CartService::getInstance()->getDocumentInstanceFromSession();
@@ -240,6 +251,9 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 				if ($customer !== null)
 				{
 					$cart->setCustomer($customer);
+
+					// When the order process started, the customer didn't exist yet, so init lastAbandonedOrderDate.
+					$this->initLastAbandonnedOrderDate($customer);
 					
 					// Update user infos.
 					$address = $cart->getAddressInfo()->billingAddress;
@@ -262,7 +276,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-account', array('ucf', 'html'));
 					$this->addError($error);
 					$this->addErrorForProperty('email', $error);
-					$valid = false;	
+					$valid = false;
 				}
 			}
 			
@@ -323,7 +337,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 		$request->setAttribute('cart', $cart);
 		$user = $cart->getUser();
 		$customer = $cart->getCustomer();
-		$email = $request->getParameter('email', ($user	!== null) ? $user->getEmail() : null); 
+		$email = $request->getParameter('email', ($user	!== null) ? $user->getEmail() : null);
 		$addressInfo = $cart->getAddressInfo();
 		if ($addressInfo->billingAddress->Email === null)
 		{
