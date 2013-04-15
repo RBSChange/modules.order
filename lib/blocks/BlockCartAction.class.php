@@ -121,8 +121,20 @@ class order_BlockCartAction extends website_BlockAction
 	public function executeRefresh($request, $response)
 	{
 		return $this->execute($request, $response);
-	}	
-	
+	}
+
+	/**
+	 * @return string[]|null
+	 */
+	public function getEvaluateshippingBeanInclude()
+	{
+		if (Framework::getConfigurationValue('modules/website/useBeanPopulateStrictMode') != 'false')
+		{
+			return array('shippingAddress.Zipcode', 'shippingAddress.City', 'shippingAddress.CountryId');
+		}
+		return null;
+	}
+
 	/**
 	 * @param f_mvc_Request $request
 	 * @return array 
