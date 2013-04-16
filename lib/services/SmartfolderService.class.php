@@ -76,6 +76,7 @@ class order_SmartfolderService extends filter_QueryfolderService
 			Framework::warn(__METHOD__ . ' total order > 1000');
 			$ids = array_slice($ids, 0, 1000);	
 		}
+		$totalCount = count($ids);
 		$query = order_OrderService::getInstance()->createQuery()
 					->add(Restrictions::in('id', $ids))
 					->setFirstResult($startIndex)->setMaxResults($pageSize);
