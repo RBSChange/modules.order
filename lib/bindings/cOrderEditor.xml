@@ -194,7 +194,7 @@
 				<xul:caption xbl:inherits="label" />
 				<xul:grid flex="1">
 					<xul:columns>
-						<xul:column />
+						<xul:column width="150" />
 						<xul:column flex="1" />
 					</xul:columns>
 					<xul:rows>
@@ -204,18 +204,16 @@
 						</xul:row>
 						<xul:row>
 							<xul:label value="${transui:m.order.document.message.Content,ucf,attr}" />
-							<xul:hbox flex="1">
-								<html:div flex="1" anonid="content" class="allow-text-selection">
-									<xbl:children />
-								</html:div>
-							</xul:hbox>
+							<xul:label  flex="1" anonid="content">
+								<xbl:children />
+							</xul:label>
 						</xul:row>
 					</xul:rows>
 				</xul:grid>
 			</xul:groupbox>
 		</content>
 	</binding>
-	
+
 	<!-- Bills and shipping. -->
 	<binding id="cBillgenerator" extends="form.cField#cHiddenField">
 		<content>
@@ -277,14 +275,14 @@
 					try
 					{
 						propspanel.showTextMessage("${transui:m.order.bo.actions.GeneratingBill,ucf,js}");
-						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: edt.documentid, lang: edt.mDocumentInfos.vo}, null , true); 	
+						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: edt.documentid, lang: edt.mDocumentInfos.vo}, null , true);
 						if (result.status === 'OK')
 						{
 							propspanel.showTextMessage("${transui:m.order.bo.actions.GeneratingBillDone,ucf,js}");
 							this.tmpBillUrl = result.contents.url;
 							this.setAttribute('hide-generate', true);
 							this.removeAttribute('hide-dl');
-							
+
 						}
 						else
 						{
@@ -348,7 +346,7 @@
 				<body><![CDATA[
 					this.setCellValue(rowNode.childNodes[2], 'status', rowNode.mDataRow);
 					this.setCellArchiveValue(rowNode.childNodes[3], rowNode.mDataRow);
-					
+
 					var module = this.parentNode;
 					while (module && module.tagName != "wmodule")
 					{
@@ -368,11 +366,11 @@
 					{
 						propspanel = propspanel.parentNode;
 					}
-					
+
 					try
 					{
 						propspanel.showTextMessage("${transui:m.order.bo.actions.GeneratingBill,ucf,js}");
-						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: rowData.id, lang: rowData.lang}, null , true); 
+						var result = wCore.executeJSON("order", "GenerateBill", {cmpref: rowData.id, lang: rowData.lang}, null , true);
 						if (result.status === 'OK')
 						{
 							propspanel.showTextMessage("${transui:m.order.bo.actions.GeneratingBillDone,ucf,js}");
@@ -404,7 +402,7 @@
 				<parameter name="cell" />
 				<parameter name="name" />
 				<parameter name="dataRow" />
-				<body><![CDATA[	
+				<body><![CDATA[
 					if (name === 'archive')
 					{
 						this.setCellArchiveValue(cell, dataRow);
@@ -538,7 +536,7 @@
 				<body><![CDATA[
 					this.setCellValue(rowNode.childNodes[1], 'status', rowNode.mDataRow);
 					this.setCellValue(rowNode.childNodes[3], 'traking', rowNode.mDataRow);
-					
+
 					var module = this.parentNode;
 					while (module && module.tagName != "wmodule")
 					{
@@ -552,7 +550,7 @@
 				<parameter name="cell" />
 				<parameter name="name" />
 				<parameter name="dataRow" />
-				<body><![CDATA[	
+				<body><![CDATA[
 					cell.setAttribute('value', dataRow[name]);
 					if (name === 'status')
 					{
@@ -665,10 +663,10 @@
 			<method name="onOk">
 				<body><![CDATA[
 					var rowData = this.parameters.rowData;
-					var parameters = {cmpref: rowData.id, lang: rowData.lang, 
-							transactionDate: this.transactionDate, transactionId: this.transactionId, 
+					var parameters = {cmpref: rowData.id, lang: rowData.lang,
+							transactionDate: this.transactionDate, transactionId: this.transactionId,
 							transactionText: this.transactionText};
-					var result = wCore.executeJSON("order", "ValidateBill", parameters, null , true); 	
+					var result = wCore.executeJSON("order", "ValidateBill", parameters, null , true);
 					if (result.status === 'OK')
 					{
 						this.parameters.rowData.status = result.contents.status;
@@ -802,9 +800,9 @@
 			<method name="onOk">
 				<body><![CDATA[
 					var rowData = this.parameters.rowData;
-					var parameters = {cmpref: rowData.id, lang: rowData.lang, 
+					var parameters = {cmpref: rowData.id, lang: rowData.lang,
 							shippingDate: this.shippingDate, trackingNumber: this.trackingNumber, packetNumber: this.packetNumber};
-					var result = wCore.executeJSON("order", "ShipExpedition", parameters, null , true); 	
+					var result = wCore.executeJSON("order", "ShipExpedition", parameters, null , true);
 					if (result.status === 'OK')
 					{
 						this.parameters.rowData.status = result.contents.status;
@@ -921,7 +919,7 @@
 							}
 						}
 						section.addEventListener('gridInitialised', handler, false);
-						this.appendChild(section);	
+						this.appendChild(section);
 					}
 					else if ('setJSONDataset' in section)
 					{
@@ -1115,7 +1113,7 @@
 					{
 						var me = this;
 						getController().openModalDialog(this, 'ReCreditNote', {
-							cmpref: rowData.id, 
+							cmpref: rowData.id,
 							lang: rowData.lang,
 							rowData: rowData,
 							callBack : function() {
@@ -1191,10 +1189,10 @@
 					this.autoResize(500, 200);
 					document.getAnonymousElementByAttribute(this, 'anonid', 'number')
 						.setAttribute('value', this.parameters.rowData.label);
-					
+
 					document.getAnonymousElementByAttribute(this, 'anonid', 'amount')
 						.setAttribute('value', this.parameters.rowData.amountNotApplied);
-					
+
 					if (this.parameters.rowData.canReCreditNote)
 					{
 						document.getAnonymousElementByAttribute(this, 'anonid', 'ok').disabled = false;
@@ -1227,9 +1225,9 @@
 			<method name="onOk">
 				<body><![CDATA[
 					var rowData = this.parameters.rowData;
-					var parameters = {cmpref: rowData.id, lang: rowData.lang, 
+					var parameters = {cmpref: rowData.id, lang: rowData.lang,
 						transactiontext: this.transactionText, transactiondate: this.transactionDate};
-					var result = wCore.executeJSON("order", "ReCreditNote", parameters, null , true); 	
+					var result = wCore.executeJSON("order", "ReCreditNote", parameters, null , true);
 					if (result.status === 'OK')
 					{
 						this.parameters.rowData.canReCreditNote = result.contents.canReCreditNote;
@@ -1315,22 +1313,22 @@
 					{
 						var info = infos[i];
 						var hbox = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:hbox');
-						
+
 						var label = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:label');
 						label.setAttribute("value", info.label);
 						label.setAttribute("class", "label");
 						hbox.appendChild(label);
-						
+
 						var sep = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:label');
 						sep.setAttribute("value", ":");
 						sep.setAttribute("class", "label separator");
 						hbox.appendChild(sep);
-						
+
 						var value = document.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'xul:label');
 						value.setAttribute("class", "value allow-text-selection");
 						value.appendChild(document.createTextNode(info.value));
 						hbox.appendChild(value);
-						
+
 						infosElem.appendChild(hbox);
 					}
 				]]></body>

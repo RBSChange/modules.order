@@ -41,6 +41,12 @@
 				this.getElementByAnonId('print_button').addEventListener('command', function () { me.printMessages(); }, true);
 			]]></constructor>
 
+			<property name="panelWidth" readonly="true">
+				<getter><![CDATA[
+						return this.boxObject.width;
+					]]></getter>
+			</property>
+
 			<method name="getInitializeParameters">
 				<body><![CDATA[
 					return {
@@ -59,11 +65,12 @@
 						this.showErrorMessage(result.contents.errorMessage);
 					}
 					else
-					{									
+					{
 						var messages = result.contents.messages;
 						var message;
 						var section;
 						var messagesNode = document.getAnonymousElementByAttribute(this, "anonid", 'messages');
+						var textStyle = 'class="allow-text-selection" style="width:'+(this.panelWidth - 200)+'px"';
 						for (var i = 0; i < messages.length; i++)
 						{
 							message = messages[i];
@@ -77,7 +84,10 @@
 							else
 							{
 								section.removeAttribute('collapsed');
-								section.removeChild(section.firstChild);
+								while(section.lastChild)
+								{
+									section.removeChild(section.lastChild);
+								}
 							}
 							
 							for (var name in message)
@@ -92,8 +102,9 @@
 									section.setAttribute(name+'hidden', true);
 								}
 							}
-							
-							section.appendChild(document.createTextNode(message['content']));
+
+							var doc = new DOMParser().parseFromString('<div xmlns="http://www.w3.org/1999/xhtml" '+textStyle+'>' + message.content + '</div>', 'text/xml');
+							section.appendChild(doc.documentElement);
 						}
 						while ((section = messagesNode.childNodes[i]) != null)
 						{
