@@ -1021,7 +1021,9 @@ class order_OrderService extends f_persistentdocument_DocumentService
 		{
 			foreach ($expedition->getLineArray() as $line)
 			{
-				$shippedAmount += $line->getQuantity() *  $line->getUnitPriceWithTax() ;
+				/* @var $line order_persistentdocument_expeditionline */
+				$orderLine = order_persistentdocument_orderline::getInstanceById($line->getOrderlineid());
+				$shippedAmount += $line->getQuantity() * $orderLine->getUnitPriceWithTax() ;
 			}
 		}
 		return $paidAmount - $shippedAmount;
