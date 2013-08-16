@@ -29,4 +29,5 @@
   <actiondef modulename="order" actionname="activate.creditnote" label="m.order.bo.useractionlogger.activate-creditnote"/>
   <actiondef modulename="order" actionname="deactivated.creditnote" label="m.order.bo.useractionlogger.deactivated-creditnote"/>
   <actiondef modulename="order" actionname="reactivate.creditnote" label="m.order.bo.useractionlogger.reactivate-creditnote"/>
+  <actiondef modulename="order" actionname="delete.smartfolder" label="m.order.bo.useractionlogger.delete-smartfolder"/>
 </script>

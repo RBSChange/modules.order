@@ -50,7 +50,13 @@
 													
 				this.addEventListener("gridInitialised", function (event) {return me.onGridInitialised(event);}, true);
 				this.addEventListener("addressInitialised", function (event) {return me.onAddressInitialised(event);}, true);
-				this.addEventListener("generateExpedition", function (event) {return me.onGenerateExpedition(event);}, true);		
+				this.addEventListener("generateExpedition", function (event) {return me.onGenerateExpedition(event);}, true);
+
+
+				if (getController().hasModule('kiala'))
+				{
+					this.documentEditor.module.addKialaButtons(this);
+				}
 			]]></constructor>
 			
 			<method name="initUI">
@@ -74,7 +80,7 @@
 				this.setAttribute('uiinitiated', 'true');
 				]]></body>
 			</method>
-			
+
 			<method name="lockCommandsUI">
 				<body><![CDATA[
 					for (var n in this.mButtons)
@@ -99,6 +105,11 @@
 						if (('GenerateDefaultExpedition' in this.mButtons) && ('generateDefaultExpedition' in this.mInitData))
 						{
 							this.mButtons.GenerateDefaultExpedition.disabled = false;
+						}
+
+						if (getController().hasModule('kiala'))
+						{
+							this.documentEditor.module.showKialaButtons(this);
 						}
 					}
 				]]></body>
@@ -329,8 +340,8 @@
 					{
 						this.mAddress.initJSONDataset(idts.address);
 					}
-					
-					this.updateCommandsUI();												
+
+					this.updateCommandsUI();
 					this.collapseContentZone(false);
 					this.mInitialized = true;
 					this.fireEvent("panelInitializeComplete");

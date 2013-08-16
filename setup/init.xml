@@ -57,7 +57,7 @@
 			body="Votre commande d'un montant de &lt;em&gt;{orderAmount}&lt;/em&gt; a été enregistrée sous le numéro &lt;em&gt;{orderId}&lt;/em&gt;."
 			footer="&lt;p&gt;&lt;strong&gt;Nous vous remercions de l'intérêt que vous portez à nos produits.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;L'équipe {website-url}.&lt;/p&gt;"
 			template="default" />
-			
+
 		<notification codename="modules_order/bill_success"
 			label="Paiement accepté"
 			availableparameters="{orderId}, {orderAmount}, {orderAmountWithTax}, {orderAmountWithoutTax}, {title}, {fullname}, {orderDetail}, {billingMode}, {shippingMode}, {shippingFeesWithTax}, {shippingFeesWithoutTax}, {date}, {billnumber}, {billdate}, {billtransaction}, {website-url}"
@@ -138,6 +138,8 @@
 	<rootfolder module="order">
 		<waitingresponseorderfolder byLabel="m.order.document.waitingresponseorderfolder.document-name" />
 		<smartfolder byLabel="Commandes des dernières 24 heures" query='[{"class":"order_CreationDateOrderFilter","parameters":{"count":[null,null,"1"],"unit":[null,null,"day"]}}]' />
-		<smartfolder byLabel="Commandes des sept derniers jours" query='[{"class":"order_CreationDateOrderFilter","parameters":{"count":[null,null,"1"],"unit":[null,null,"week"]}}]' />
+        <smartfolder byLabel="Commandes des sept derniers jours" query='[{"class":"order_CreationDateOrderFilter","parameters":{"count":[null,null,"1"],"unit":[null,null,"week"]}}]' />
+        <smartfolder byLabel="Commandes à expédier avec KIALA" query='{"operator":"and","elements":[{"class":"shipping_ShippingModeFilter","parameters":{"type":[null,null,"modules_kiala/kialamode"]}},{"class":"order_OrderFilter","parameters":{"field":["modules_order/order.orderStatus","eq","in_progress"]}}]}' />
+
 	</rootfolder>
 </script>
