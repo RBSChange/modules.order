@@ -6,7 +6,7 @@
 	<key id="password">mot de passe</key>
 	<key id="password-help" format="html"><![CDATA[Obligatoire pour se connecter.<br />Obligatoire pour s'inscrire si la case "Générer un mot de passe" n'est pas cochée.]]></key>
 	<key id="password-validate">confimer le mot de passe</key>
-	<key id="password-validate-help">À remplir que lors d'une inscription où la case "Générer un mot de passe" n'est pas cochée.</key>
+	<key id="password-validate-help">À ne remplir que lors d'une inscription où la case "Générer un mot de passe" n'est pas cochée.</key>
 
 	<key id="billing-civility">civilité</key>
 	<key id="billing-firstname">prenom</key>

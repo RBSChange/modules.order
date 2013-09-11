@@ -84,24 +84,20 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 			$user = $wfus->getIdentifiedFrontendUser($login, $password, $website->getId());
 			if ($user === null)
 			{
-				$user = $wfus->getFrontendUserByLogin($login, $website->getId());
-				if ($user)
+				if ($wfus->getFrontendUserByLogin($login, $website->getId()) && $request->getParameter('haveAccount') !== 'false')
 				{
-					if ($user->isPublished())
-					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-password-or-inactive-account', array('ucf', 'html'));
-						$this->addError($error);
-						$this->addErrorForProperty('password', $error);
-						$valid = false;
-					}
-					else
-					{
-						$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-password-or-inactive-account', array('ucf', 'html'));
-						$this->addError($error);
-						$this->addErrorForProperty('email', $error);
-						$valid = false;
-					}
-					$user = null;
+					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.invalid-password-or-inactive-account', array('ucf', 'html'));
+					$this->addError($error);
+					$this->addErrorForProperty('password', $error);
+					$this->addErrorForProperty('email', $error);
+					$valid = false;
+				}
+				elseif ($request->getParameter('haveAccount') === 'true')
+				{
+					$error = LocaleService::getInstance()->transFO('m.order.standardprocess.nonexistent-account', array('ucf', 'html'));
+					$this->addError($error);
+					$this->addErrorForProperty('email', $error);
+					$valid = false;
 				}
 				else
 				{
@@ -126,7 +122,7 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 					{
 						$password = users_UserService::getInstance()->generatePassword();
 					}
-					$valid = $this->processValidationRules($validationRules, $request, null);
+					$valid = $valid && $this->processValidationRules($validationRules, $request, null);
 					
 					// If all is valid, create the user.
 					if ($valid)
