@@ -598,7 +598,10 @@ class order_BillService extends f_persistentdocument_DocumentService
 				$bill->setTransactionText($transactionText);
 				$this->save($bill);
 				$this->validatePayment($bill);
-				
+
+				$customer =  $bill->getOrder()->getCustomer();
+				$customer->getDocumentService()->setLastOrderForCustomer($bill->getOrder(), $customer);
+
 				$this->tm->commit();
 			}
 			catch (Exception $e)
