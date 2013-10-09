@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.rbs.fr/schema/change-component/1.0 http://www.rbschange.fr/static/schema/change-component/1.0.xsd">
 	<name>order</name>
 	<type>change-module</type>
-	<version>3.6.6</version>
+	<version>3.6.8</version>
 	<description>Gestion du processus de commande et des commandes clients pour l'e-commerce</description>
 	<license>os</license>
 	<repository>public</repository>
@@ -11,19 +11,19 @@
 		<dependency>
 			<name>change-module/catalog</name>
 			<versions>
-				<version>3.6.6</version>
+				<version>3.6.8</version>
 			</versions>
 		</dependency>
 		<dependency>
 			<name>change-module/customer</name>
 			<versions>
-				<version>3.6.6</version>
+				<version>3.6.8</version>
 			</versions>
 		</dependency>
 		<dependency>
 			<name>change-module/payment</name>
 			<versions>
-				<version>3.6.6</version>
+				<version>3.6.8</version>
 			</versions>
 		</dependency>
 		<dependency>

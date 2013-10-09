@@ -23,10 +23,11 @@
   <key id="address-lost-password">mot de passe perdu</key>
   
   <key id="bad-password">mot de passe non valide</key>
-  <key id="invalid-account">Cette adresse e-mail n'est pas un identifiant de compte valide</key>
+  <key id="invalid-account">Cette adresse e-mail n'est pas un identifiant de compte valide ou bien est déjà utilisée</key>
   <key id="invalid-password-validate">Mot de passe non confirmé</key>
   <key id="invalid-password-or-inactive-account">Un compte existe pour cet identifiant mais le mot de passe est invalide ou le compte n'est pas activé</key>
-  
+  <key id="nonexistent-account">Aucun compte n'existe pour cet identifiant</key>
+
   <key id="address-generate-password">générer un mot de passe</key>
   <key id="address-password-validate">confimer le mot de passe</key>
   

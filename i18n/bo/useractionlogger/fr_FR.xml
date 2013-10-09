@@ -53,4 +53,6 @@
   <key id="log-deactivated-creditnote">log deactivated creditnote</key>
   <key id="reactivate-creditnote">reactivate.creditnote {documentlabel}</key>
   <key id="log-reactivate-creditnote">log reactivate creditnote</key>
+  <key id="delete-smartfolder">delete.smartfolder {documentlabel}</key>
+  <key id="log-delete-smartfolder">log delete smartfolder</key>
 </i18n>
