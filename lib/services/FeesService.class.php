@@ -178,7 +178,7 @@ class order_FeesService extends order_CartmodifierService
 				$element->setAttribute('hidehelp', 'true');
 			}
 		}
-		return '';
+		return $element;
 	}
 	
 	public static function XSLParameters()
