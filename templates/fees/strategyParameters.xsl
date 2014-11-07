@@ -69,9 +69,9 @@
 	<xsl:template match="field">
 		<xul:row>
 			<xsl:attribute name="anonid">row_<xsl:value-of select="@name" /></xsl:attribute>
-			<xsl:value-of select="php:function('order_FeesService::XSLSetDefaultParInfo', .)"/>
-			<xsl:apply-templates select="." mode="fieldLabel"/>
-			<xsl:apply-templates select="." mode="fieldInput"/>
+			<xsl:variable name="elem" select="php:function('order_FeesService::XSLSetDefaultParInfo', .)" />
+			<xsl:apply-templates select="$elem" mode="fieldLabel"/>
+			<xsl:apply-templates select="$elem" mode="fieldInput"/>
 		</xul:row>
 	</xsl:template>
 	
