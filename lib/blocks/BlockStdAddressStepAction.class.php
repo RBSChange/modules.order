@@ -56,8 +56,18 @@ class order_BlockStdAddressStepAction extends website_BlockAction
 	{
 		if ($customer !== null)
 		{
-			$customer->setLastAbandonedOrderDate(date_Calendar::getInstance()->toString());
-			$customer->save();
+			$tm = f_persistentdocument_TransactionManager::getInstance();
+			try
+			{
+				$tm->beginTransaction();
+				$customer->setLastAbandonedOrderDate(date_Calendar::getInstance()->toString());
+				$customer->save();
+				$tm->commit();
+			}
+			catch (Exception $e)
+			{
+				throw $tm->rollBack($e);
+			}
 		}
 	}
 	
